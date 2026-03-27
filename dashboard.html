@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -5,6 +6,53 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Checklist de Posicionamento — FACE 100K</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<!-- ═══════════════════════════════════════════════════════════
+     FIREBASE CONFIG — substitua pelos seus dados
+     Obtido em: Firebase Console → Project Settings → Your Apps
+════════════════════════════════════════════════════════════ -->
+<script type="module">
+  import { initializeApp }          from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+  import { getFirestore, doc, onSnapshot, setDoc, getDoc }
+                                    from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey:            "AIzaSyAyupUdCsEb6pPVmTs2clhayS84-TUovGA",
+    authDomain:        "dashboard-e465d.firebaseapp.com",
+    projectId:         "dashboard-e465d",
+    storageBucket:     "dashboard-e465d.firebasestorage.app",
+    messagingSenderId: "865986158280",
+    appId:             "1:865986158280:web:1531d13630f9835a9f0ffd"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db  = getFirestore(app);
+
+  // Pega o ID do cliente pela URL ?cliente=xxx
+  const params = new URLSearchParams(window.location.search);
+  const clientId = params.get('cliente') || 'cliente';
+  window._clientId = clientId;
+
+  const REF = doc(db, "dashboards", clientId);
+
+  window._fb = {
+    async load(){
+      const snap = await getDoc(REF);
+      return snap.exists() ? snap.data() : null;
+    },
+    async save(state){
+      await setDoc(REF, state, { merge: true });
+    },
+    listen(cb){
+      return onSnapshot(REF, snap => {
+        if(snap.exists()) cb(snap.data());
+      });
+    }
+  };
+
+  window.dispatchEvent(new Event("fb-ready"));
+</script>
+
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -15,7 +63,6 @@
   --amber:#F5A623;
   --amber-dim:rgba(245,166,35,0.10);
   --amber-border:rgba(245,166,35,0.20);
-  --amber-glow:rgba(245,166,35,0.06);
   --border:#3E4249;
   --border-light:rgba(62,66,73,0.6);
   --text:#F0F0F0;
@@ -35,7 +82,23 @@
   --blue-border:rgba(59,130,246,0.22);
 }
 html,body{height:100%;overflow:hidden}
-body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:13px;line-height:1.5;display:flex}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:13px;line-height:1.5;display:flex;width:100%;max-width:100%}
+
+/* ── LOADING SCREEN ── */
+#loading-screen{position:fixed;inset:0;background:var(--bg);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
+#loading-screen.hidden{display:none}
+.loading-logo{font-family:'Montserrat',sans-serif;font-size:22px;font-weight:800;color:var(--text)}
+.loading-logo span{color:var(--amber);font-style:italic}
+.loading-spinner{width:36px;height:36px;border:3px solid rgba(245,166,35,0.15);border-top-color:var(--amber);border-radius:50%;animation:spin .8s linear infinite}
+.loading-txt{font-size:12px;color:var(--text-sec)}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── SYNC INDICATOR ── */
+.sync-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);flex-shrink:0;transition:background .3s}
+.sync-dot.saving{background:var(--yellow);box-shadow:0 0 6px var(--yellow);animation:pulse .6s infinite alternate}
+.sync-dot.error{background:var(--red);box-shadow:0 0 6px var(--red)}
+@keyframes pulse{from{opacity:.5}to{opacity:1}}
+.sync-label{font-size:10px;color:var(--text-sec)}
 
 /* ── SIDEBAR ── */
 .sidebar{width:220px;min-width:220px;height:100vh;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
@@ -53,15 +116,14 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 .nav-icon{width:16px;height:16px;flex-shrink:0;opacity:.6}
 .nav-item.active .nav-icon{opacity:1}
 .nav-badge{margin-left:auto;background:var(--red);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:10px;font-family:'Montserrat',sans-serif}
-.sidebar-client{padding:14px 18px;border-top:1px solid var(--border);background:var(--surface)}
+.sidebar-client{padding:14px 18px;border-top:1px solid var(--border)}
 .client-avatar{width:32px;height:32px;border-radius:50%;background:var(--amber-dim);border:1px solid var(--amber-border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--amber);font-family:'Montserrat',sans-serif;flex-shrink:0}
 .client-info{display:flex;align-items:center;gap:10px}
 .client-name{font-size:12px;font-weight:600;color:var(--text)}
 .client-role{font-size:10px;color:var(--text-sec)}
-.online-dot{width:7px;height:7px;border-radius:50%;background:var(--green);margin-left:auto;box-shadow:0 0 6px var(--green)}
 
 /* ── MAIN ── */
-.main{flex:1;height:100vh;overflow-y:auto;background:var(--bg)}
+.main{flex:1;min-width:0;height:100vh;overflow-y:auto;background:var(--bg)}
 .topbar{height:52px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 28px;gap:16px;position:sticky;top:0;z-index:50}
 .topbar-title{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;letter-spacing:.04em;color:var(--text)}
 .topbar-sep{width:1px;height:16px;background:var(--border)}
@@ -75,14 +137,12 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 .gb-ready{background:var(--green-dim);color:var(--green);border:1px solid var(--green-border)}
 
 .content{padding:24px 28px 40px}
-
-/* ── PAGE toggle ── */
 .page{display:none}
 .page.active{display:block}
 
 /* ── SUMMARY CARDS ── */
-.summary-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin-bottom:22px}
-.scard{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;position:relative;overflow:hidden}
+.summary-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px;margin-bottom:22px}
+.scard{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;position:relative;overflow:hidden;min-width:0;word-break:break-word}
 .scard::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
 .scard-amber::before{background:var(--amber)}
 .scard-green::before{background:var(--green)}
@@ -91,15 +151,10 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 .scard-yellow::before{background:var(--yellow)}
 .scard-label{font-size:9px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.12em;margin-bottom:8px;font-family:'Montserrat',sans-serif;font-weight:600}
 .scard-val{font-size:26px;font-weight:700;line-height:1;font-family:'Montserrat',sans-serif}
-.sv-amber{color:var(--amber)}
-.sv-green{color:var(--green)}
-.sv-red{color:var(--red)}
-.sv-blue{color:var(--blue)}
-.sv-yellow{color:var(--yellow)}
-.sv-white{color:var(--text)}
+.sv-amber{color:var(--amber)}.sv-green{color:var(--green)}.sv-red{color:var(--red)}.sv-blue{color:var(--blue)}.sv-yellow{color:var(--yellow)}.sv-white{color:var(--text)}
 .scard-sub{font-size:10px;color:var(--text-sec);margin-top:5px}
 
-/* ── PROGRESS MAIN ── */
+/* ── PROGRESS ── */
 .prog-section{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px 22px;margin-bottom:22px}
 .prog-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
 .prog-title{font-size:11px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.12em;font-family:'Montserrat',sans-serif;font-weight:600}
@@ -111,23 +166,21 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 .ebar-label{font-size:9px;color:var(--text-sec);margin-bottom:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ebar-bar{height:4px;background:rgba(255,255,255,0.07);border-radius:2px;overflow:hidden;margin-bottom:4px}
 .ebar-fill{height:100%;border-radius:2px;transition:width .5s}
-.ef-done{background:var(--green)}
-.ef-active{background:var(--amber)}
-.ef-locked{background:var(--border)}
+.ef-done{background:var(--green)}.ef-active{background:var(--amber)}.ef-locked{background:var(--border)}
 .ebar-pct{font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--text-sec)}
 
-/* ── MESSAGE BOX ── */
+/* ── MESSAGE ── */
 .msg-box{display:flex;align-items:flex-start;gap:12px;padding:14px 18px;border-radius:8px;margin-bottom:22px;font-size:12px;line-height:1.6}
 .msg-blocked{background:var(--red-dim);border:1px solid var(--red-border);color:var(--red)}
 .msg-ready{background:var(--green-dim);border:1px solid var(--green-border);color:var(--green)}
 .msg-icon{flex-shrink:0;margin-top:1px}
-.msg-text strong{font-weight:600}
+.msg-text strong{font-weight:600;display:block;margin-bottom:2px}
 
-/* ── ETAPA BLOCK ── */
+/* ── ETAPA ── */
 .etapa-block{background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:14px;overflow:hidden}
 .etapa-head{display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;user-select:none;transition:background .15s}
 .etapa-head:hover{background:var(--surface2)}
-.etapa-num-badge{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;flex-shrink:0;transition:all .2s}
+.etapa-num-badge{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;flex-shrink:0}
 .enb-done{background:var(--green);color:#000}
 .enb-active{background:var(--amber);color:#000}
 .enb-pending{background:rgba(255,255,255,0.07);color:var(--text-sec);border:1px solid var(--border)}
@@ -148,7 +201,7 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 .tasks-table th{padding:8px 14px;text-align:left;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--text-sec);font-family:'Montserrat',sans-serif;border-bottom:1px solid var(--border)}
 .tasks-table td{padding:11px 14px;border-bottom:1px solid var(--border-light);vertical-align:top}
 .tasks-table tbody tr:last-child td{border-bottom:none}
-.tasks-table tbody tr:hover{background:rgba(255,255,255,0.02)}
+.tasks-table tbody tr:hover{background:rgba(255,255,255,0.015)}
 .task-check-btn{width:18px;height:18px;border-radius:3px;border:1.5px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .18s;background:transparent;flex-shrink:0}
 .tcb-done{background:var(--green);border-color:var(--green)}
 .tcb-progress{background:var(--yellow-dim);border-color:var(--yellow)}
@@ -162,11 +215,6 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 .field-cell{font-size:11px;color:var(--text-sec);max-width:120px;word-break:break-word}
 .field-cell.has-val{color:var(--text)}
 
-/* ── INLINE EDIT ── */
-.field-editable{cursor:pointer;border-bottom:1px dashed var(--border);padding-bottom:1px;transition:border-color .15s}
-.field-editable:hover{border-color:var(--amber);color:var(--amber)}
-.inline-input{background:var(--surface3);border:1px solid var(--amber-border);border-radius:4px;color:var(--text);font-family:'Inter',sans-serif;font-size:11px;padding:3px 7px;width:100%;outline:none}
-
 /* ── CTA ── */
 .cta-section{margin-top:28px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px 24px}
 .cta-btn{padding:13px 32px;border-radius:6px;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-family:'Montserrat',sans-serif;cursor:pointer;transition:all .2s;border:none}
@@ -176,18 +224,18 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 .cta-hint-text{font-size:11px;color:var(--text-sec);line-height:1.6}
 .cta-hint-text strong{color:var(--text);display:block;font-size:12px;margin-bottom:2px}
 
-/* ── PENDÊNCIAS PAGE ── */
+/* ── PENDÊNCIAS ── */
 .pend-count-row{display:flex;align-items:center;gap:14px;margin-bottom:20px}
 .pend-title{font-size:18px;font-weight:700;font-family:'Montserrat',sans-serif}
 .pend-title span{color:var(--amber)}
-.pend-item{background:var(--surface);border-radius:8px;padding:16px 18px;margin-bottom:10px;border-left:3px solid var(--red);border:1px solid var(--border);border-left:3px solid var(--red)}
+.pend-item{background:var(--surface);border-radius:8px;padding:16px 18px;margin-bottom:10px;border:1px solid var(--border);border-left:3px solid var(--red)}
 .pend-etapa-tag{font-size:10px;color:var(--red);text-transform:uppercase;letter-spacing:.1em;font-weight:600;font-family:'Montserrat',sans-serif;margin-bottom:5px}
 .pend-task-name{font-size:13px;font-weight:600;margin-bottom:4px}
 .pend-task-desc{font-size:11px;color:var(--text-sec);margin-bottom:10px}
 .pend-quick-btn{padding:5px 14px;border-radius:4px;font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border);cursor:pointer;font-family:'Montserrat',sans-serif;transition:all .15s}
 .pend-quick-btn:hover{background:var(--amber);color:#000}
 
-/* ── RESUMO PAGE ── */
+/* ── RESUMO ── */
 .resumo-header-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:22px}
 .r-big-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:22px 24px;position:relative;overflow:hidden}
 .r-big-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
@@ -207,9 +255,7 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 .timeline::before{content:'';position:absolute;top:14px;left:14px;right:14px;height:1px;background:var(--border)}
 .tl-step{display:flex;flex-direction:column;align-items:center;gap:8px;flex:1;position:relative;z-index:1}
 .tl-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;font-family:'Montserrat',sans-serif}
-.tld-done{background:var(--green);color:#000}
-.tld-active{background:var(--amber);color:#000}
-.tld-future{background:var(--surface2);color:var(--text-sec);border:1px solid var(--border)}
+.tld-done{background:var(--green);color:#000}.tld-active{background:var(--amber);color:#000}.tld-future{background:var(--surface2);color:var(--text-sec);border:1px solid var(--border)}
 .tl-name{font-size:10px;color:var(--text-sec);text-align:center;max-width:80px;line-height:1.3}
 .tl-pct{font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--text-dim);text-align:center}
 .obs-section{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px 22px}
@@ -220,7 +266,7 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 .obs-text{font-size:12px;color:var(--text-sec);line-height:1.6}
 
 /* ── MODAL ── */
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:200;align-items:center;justify-content:center}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:200;align-items:center;justify-content:center}
 .modal-overlay.open{display:flex}
 .modal{background:var(--surface);border:1px solid var(--border);border-radius:12px;width:520px;max-width:95vw;max-height:85vh;overflow-y:auto;padding:28px}
 .modal-title{font-size:16px;font-weight:700;font-family:'Montserrat',sans-serif;margin-bottom:4px}
@@ -234,7 +280,7 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 .modal-actions{display:flex;gap:10px;margin-top:20px;justify-content:flex-end}
 .btn-secondary{padding:9px 20px;border-radius:5px;font-size:12px;font-weight:600;background:transparent;color:var(--text-sec);border:1px solid var(--border);cursor:pointer;font-family:'Montserrat',sans-serif;transition:all .15s}
 .btn-secondary:hover{border-color:var(--text-sec);color:var(--text)}
-.btn-primary{padding:9px 22px;border-radius:5px;font-size:12px;font-weight:700;background:var(--amber);color:#000;border:none;cursor:pointer;font-family:'Montserrat',sans-serif;transition:all .15s;letter-spacing:.04em}
+.btn-primary{padding:9px 22px;border-radius:5px;font-size:12px;font-weight:700;background:var(--amber);color:#000;border:none;cursor:pointer;font-family:'Montserrat',sans-serif;letter-spacing:.04em}
 .btn-primary:hover{opacity:.9}
 
 /* ── TOAST ── */
@@ -243,27 +289,81 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 .toast.success{border-left-color:var(--green)}
 .toast.error{border-left-color:var(--red)}
 
-/* ── MISC ── */
+.brand-rail{height:2px;background:linear-gradient(90deg,rgba(245,166,35,0) 0%,var(--amber) 40%,var(--amber) 60%,rgba(245,166,35,0) 100%);margin-bottom:22px}
 .section-title-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
 .section-title{font-size:13px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--text)}
 .section-sub{font-size:11px;color:var(--text-sec)}
-.brand-rail{height:2px;background:linear-gradient(90deg,rgba(245,166,35,0) 0%,var(--amber) 40%,var(--amber) 60%,rgba(245,166,35,0) 100%);margin-bottom:22px}
 
+.mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--border);z-index:100}
+.mobile-nav-inner{display:flex;align-items:stretch}
+.mobile-nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 4px 16px;border:none;background:transparent;color:var(--text-sec);font-size:9px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;font-family:"Montserrat",sans-serif;cursor:pointer;position:relative;transition:color .15s}
+.mobile-nav-btn.active{color:var(--amber)}
+.mobile-nav-btn svg{width:20px;height:20px;flex-shrink:0}
+.mobile-nav-badge{position:absolute;top:5px;right:calc(50% - 18px);background:var(--red);color:#fff;font-size:8px;font-weight:700;padding:1px 5px;border-radius:10px}
+.mobile-topbar{display:none;height:52px;background:var(--surface);border-bottom:1px solid var(--border);align-items:center;padding:0 16px;gap:10px;position:sticky;top:0;z-index:50;flex-shrink:0}
+.mobile-logo{font-family:"Montserrat",sans-serif;font-size:14px;font-weight:800;color:var(--text)}
+.mobile-logo span{color:var(--amber);font-style:italic}
+.mobile-sync{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--text-sec);margin-left:auto}
 @media(max-width:900px){
+  html,body{height:auto;overflow:auto}
+  body{display:block}
   .sidebar{display:none}
-  .summary-grid{grid-template-columns:repeat(4,1fr)}
-  .etapa-bars{grid-template-columns:repeat(3,1fr)}
+  .main{height:auto;width:100%;display:flex;flex-direction:column}
+  .topbar{display:none}
+  .mobile-topbar{display:flex}
+  .mobile-nav{display:block}
+  .content{padding:14px 14px 88px}
+  .summary-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .etapa-bars{grid-template-columns:repeat(2,minmax(0,1fr))}
   .resumo-header-cards{grid-template-columns:1fr}
-}
-@media(max-width:600px){
-  .summary-grid{grid-template-columns:repeat(2,1fr)}
+  .brand-rail{margin-bottom:14px}
+  .tasks-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .tasks-table{min-width:560px}
+  .cta-section{flex-direction:column;align-items:flex-start;gap:12px}
   .resumo-info-grid{grid-template-columns:1fr}
+  .etapa-right{display:none}
   .timeline{flex-wrap:wrap;gap:16px}
   .timeline::before{display:none}
+}
+@media(max-width:480px){
+  .content{padding:12px 12px 88px}
+  .scard{padding:10px 12px}
+  .scard-val{font-size:20px}
+  .scard-label{font-size:8px}
+  .r-big-val{font-size:26px}
+  .modal{padding:18px 14px;margin:12px}
+  .prog-section{padding:12px 14px}
+  .pend-item{padding:12px 14px}
+  .etapa-head{padding:12px 14px;gap:10px}
+  .etapa-name{font-size:12px}
+  .obs-section,.r-info-card,.resumo-header-cards .r-big-card{padding:14px 16px}
 }
 </style>
 </head>
 <body>
+
+<!-- MOBILE TOPBAR -->
+<div class="mobile-topbar" id="mobile-topbar">
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+    <rect width="20" height="20" rx="5" fill="#1A2025"/>
+    <path d="M5 6.5L10 5L15 6.5L15 12C15 14.5 12.8 16.3 10 17C7.2 16.3 5 14.5 5 12Z" stroke="#F5A623" stroke-width="1.3" fill="none"/>
+    <path d="M7.5 11.5L9 13L13 9" stroke="#F5A623" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  <a href="painel.html" style="display:flex;align-items:center;color:var(--text-sec);text-decoration:none;margin-right:4px"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+  <div class="mobile-logo">FACE <span>100K</span></div>
+  <div class="mobile-sync">
+    <div class="sync-dot" id="sync-dot-mobile"></div>
+    <span id="sync-text-mobile">Sync</span>
+  </div>
+  <div class="global-badge gb-blocked" id="global-badge-mobile" style="font-size:9px;padding:4px 10px">...</div>
+</div>
+
+<!-- LOADING -->
+<div id="loading-screen">
+  <div class="loading-logo">FACE <span>100K</span></div>
+  <div class="loading-spinner"></div>
+  <div class="loading-txt">Conectando ao Firebase...</div>
+</div>
 
 <!-- SIDEBAR -->
 <div class="sidebar">
@@ -279,12 +379,11 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
     </div>
     <div class="logo-tagline">System Digital</div>
   </div>
-
   <div class="sidebar-section">Painel</div>
   <nav class="nav">
     <button class="nav-item active" onclick="showPage('checklist',this)">
       <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="10" rx="2" stroke="currentColor" stroke-width="1.3"/><path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      Checklist de Posicionamento
+      Checklist
     </button>
     <button class="nav-item" onclick="showPage('pendencias',this)">
       <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.3"/><path d="M8 5v4M8 11v.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
@@ -296,104 +395,75 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
       Resumo Executivo
     </button>
   </nav>
-
   <div class="sidebar-client">
     <div class="client-info">
-      <div class="client-avatar">CB</div>
+      <div class="client-avatar" id="sidebar-avatar">?</div>
       <div>
-        <div class="client-name">Carla Baioni</div>
-        <div class="client-role">Resp: Matheus Lopes</div>
+        <div class="client-name" id="sidebar-client-name">—</div>
+        <div class="client-role" id="sidebar-client-role">—</div>
       </div>
-      <div class="online-dot"></div>
+      <div style="margin-left:auto;display:flex;flex-direction:column;align-items:center;gap:3px">
+        <div class="sync-dot" id="sync-dot"></div>
+        <div class="sync-label" id="sync-label">Sync</div>
+      </div>
     </div>
   </div>
 </div>
 
 <!-- MAIN -->
 <div class="main">
-  <!-- TOPBAR -->
   <div class="topbar">
-    <div class="topbar-title">Checklist de Posicionamento</div>
+    <a href="painel.html" style="display:flex;align-items:center;gap:6px;color:var(--text-sec);font-size:11px;text-decoration:none;padding:5px 10px;border-radius:5px;border:1px solid var(--border);transition:all .15s" onmouseover="this.style.borderColor='var(--amber)'" onmouseout="this.style.borderColor='var(--border)'"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Painel</a>
+    <div class="topbar-title" id="topbar-client-name">Checklist de Posicionamento</div>
     <div class="topbar-sep"></div>
-    <div class="topbar-sub">Liberação de Tráfego — Carla Baioni</div>
+    <div class="topbar-sub" id="topbar-sub-name">Liberação de Tráfego</div>
     <div class="topbar-right">
-      <div class="topbar-date" id="top-date">—</div>
+      <div class="topbar-date" id="top-date"></div>
+      <div id="sync-status" style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-sec)">
+        <div class="sync-dot" id="sync-dot-top"></div>
+        <span id="sync-text-top">Conectando...</span>
+      </div>
       <div class="global-badge gb-blocked" id="global-badge">Tráfego Bloqueado</div>
     </div>
   </div>
 
   <div class="content">
 
-    <!-- ═══════════════ PAGE: CHECKLIST ═══════════════ -->
+    <!-- CHECKLIST PAGE -->
     <div id="page-checklist" class="page active">
-
       <div class="brand-rail"></div>
-
-      <!-- Summary cards -->
       <div class="summary-grid">
-        <div class="scard scard-amber">
-          <div class="scard-label">Progresso</div>
-          <div class="scard-val sv-amber" id="sc-pct">0%</div>
-          <div class="scard-sub">do checklist concluído</div>
-        </div>
-        <div class="scard scard-green">
-          <div class="scard-label">Concluídas</div>
-          <div class="scard-val sv-green" id="sc-done">0</div>
-          <div class="scard-sub">tarefas finalizadas</div>
-        </div>
-        <div class="scard scard-red">
-          <div class="scard-label">Pendentes</div>
-          <div class="scard-val sv-red" id="sc-pend">23</div>
-          <div class="scard-sub">tarefas em aberto</div>
-        </div>
-        <div class="scard" style="border-top:2px solid var(--yellow)">
-          <div class="scard-label">Em andamento</div>
-          <div class="scard-val sv-yellow" id="sc-prog">0</div>
-          <div class="scard-sub">tarefas iniciadas</div>
-        </div>
-        <div class="scard" style="border-top:2px solid var(--blue)">
-          <div class="scard-label">Total tarefas</div>
-          <div class="scard-val sv-white" id="sc-total">23</div>
-          <div class="scard-sub">no checklist completo</div>
-        </div>
-        <div class="scard scard-amber">
-          <div class="scard-label">Etapa atual</div>
-          <div class="scard-val sv-white" style="font-size:13px;font-weight:600;margin-top:4px" id="sc-etapa">Base do Perfil</div>
-          <div class="scard-sub" id="sc-next-task">Próxima: ajustar nome</div>
-        </div>
-        <div class="scard scard-red">
-          <div class="scard-label">Status Tráfego</div>
-          <div class="scard-val sv-red" style="font-size:14px;font-weight:700;margin-top:6px" id="sc-traffic">Bloqueado</div>
-          <div class="scard-sub" id="sc-traffic-sub">pendências ativas</div>
-        </div>
+        <div class="scard scard-amber"><div class="scard-label">Progresso</div><div class="scard-val sv-amber" id="sc-pct">0%</div><div class="scard-sub">do checklist</div></div>
+        <div class="scard scard-green"><div class="scard-label">Concluídas</div><div class="scard-val sv-green" id="sc-done">0</div><div class="scard-sub">tarefas finalizadas</div></div>
+        <div class="scard scard-red"><div class="scard-label">Pendentes</div><div class="scard-val sv-red" id="sc-pend">23</div><div class="scard-sub">em aberto</div></div>
+        <div class="scard" style="border-top:2px solid var(--yellow)"><div class="scard-label">Em andamento</div><div class="scard-val sv-yellow" id="sc-prog">0</div><div class="scard-sub">iniciadas</div></div>
+        <div class="scard" style="border-top:2px solid var(--blue)"><div class="scard-label">Total</div><div class="scard-val sv-white" id="sc-total">23</div><div class="scard-sub">tarefas</div></div>
+        <div class="scard scard-amber"><div class="scard-label">Etapa atual</div><div class="scard-val sv-white" style="font-size:12px;font-weight:600;margin-top:4px" id="sc-etapa">—</div><div class="scard-sub" id="sc-next-task">—</div></div>
+        <div class="scard scard-red"><div class="scard-label">Status Tráfego</div><div class="scard-val sv-red" style="font-size:13px;font-weight:700;margin-top:6px" id="sc-traffic">Bloqueado</div><div class="scard-sub" id="sc-traffic-sub">—</div></div>
       </div>
 
-      <!-- Main progress bar -->
       <div class="prog-section">
         <div class="prog-header">
           <span class="prog-title">Progresso Geral</span>
-          <span class="prog-pct" id="prog-main-pct">0% — 0 / 23 tarefas</span>
+          <span class="prog-pct" id="prog-main-pct">0% — 0 / 23</span>
         </div>
         <div class="prog-bar"><div class="prog-fill" id="prog-main-fill" style="width:0%"></div></div>
         <div class="etapa-bars" id="etapa-bars-mini"></div>
       </div>
 
-      <!-- Message box -->
       <div class="msg-box msg-blocked" id="msg-box">
         <svg class="msg-icon" width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" stroke="currentColor" stroke-width="1.5"/><path d="M9 6v4.5M9 12.5v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-        <div class="msg-text"><strong id="msg-title">Tráfego bloqueado</strong><span id="msg-body">O tráfego ainda não pode ser iniciado porque ainda existem tarefas obrigatórias a serem cumpridas. Conclua todas as etapas do checklist para liberar.</span></div>
+        <div class="msg-text"><strong id="msg-title">Tráfego bloqueado</strong><span id="msg-body">O tráfego ainda não pode ser iniciado porque ainda existem tarefas obrigatórias a serem cumpridas.</span></div>
       </div>
 
-      <!-- Etapas -->
       <div class="section-title-row">
         <div>
           <div class="section-title">Etapas do Posicionamento</div>
-          <div class="section-sub">Clique no checkbox para avançar o status · Clique no nome para editar detalhes</div>
+          <div class="section-sub">Clique no checkbox para avançar · Botão Editar para preencher detalhes · Sincronizado em tempo real</div>
         </div>
       </div>
       <div id="etapas-container"></div>
 
-      <!-- CTA -->
       <div class="cta-section">
         <button class="cta-btn cta-disabled" id="cta-main-btn" onclick="onIniciarTrafego()">Iniciar Tráfego</button>
         <div class="cta-hint-text">
@@ -403,7 +473,7 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
       </div>
     </div>
 
-    <!-- ═══════════════ PAGE: PENDÊNCIAS ═══════════════ -->
+    <!-- PENDÊNCIAS PAGE -->
     <div id="page-pendencias" class="page">
       <div class="brand-rail"></div>
       <div class="pend-count-row">
@@ -412,57 +482,29 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
       </div>
       <div class="msg-box msg-blocked" style="margin-bottom:18px">
         <svg class="msg-icon" width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" stroke="currentColor" stroke-width="1.5"/><path d="M9 6v4.5M9 12.5v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-        <div class="msg-text">Estas são as tarefas que estão impedindo a liberação do tráfego. Cada item marcado como concluído atualiza o checklist em tempo real.</div>
+        <div>Estas são as tarefas que estão impedindo a liberação do tráfego. Atualizações são sincronizadas em tempo real para todos os usuários.</div>
       </div>
       <div id="pend-list"></div>
     </div>
 
-    <!-- ═══════════════ PAGE: RESUMO ═══════════════ -->
+    <!-- RESUMO PAGE -->
     <div id="page-resumo" class="page">
       <div class="brand-rail"></div>
-
       <div class="resumo-header-cards">
-        <div class="r-big-card rbc-amber">
-          <div class="r-big-label">Progresso total</div>
-          <div class="r-big-val" id="r-pct" style="color:var(--amber)">0%</div>
-          <div class="r-big-sub" id="r-pct-sub">0 de 23 tarefas concluídas</div>
-        </div>
-        <div class="r-big-card rbc-red">
-          <div class="r-big-label">Tarefas pendentes</div>
-          <div class="r-big-val" id="r-pend-big" style="color:var(--red)">23</div>
-          <div class="r-big-sub">bloqueando o tráfego</div>
-        </div>
-        <div class="r-big-card rbc-green">
-          <div class="r-big-label">Status de liberação</div>
-          <div class="r-big-val" id="r-status-big" style="font-size:20px;font-weight:700;color:var(--red);margin-top:4px">Bloqueado</div>
-          <div class="r-big-sub" id="r-days-big">Previsão: a definir</div>
-        </div>
+        <div class="r-big-card rbc-amber"><div class="r-big-label">Progresso total</div><div class="r-big-val" id="r-pct" style="color:var(--amber)">0%</div><div class="r-big-sub" id="r-pct-sub">0 de 23 tarefas</div></div>
+        <div class="r-big-card rbc-red"><div class="r-big-label">Tarefas pendentes</div><div class="r-big-val" id="r-pend-big" style="color:var(--red)">23</div><div class="r-big-sub">bloqueando tráfego</div></div>
+        <div class="r-big-card rbc-green"><div class="r-big-label">Previsão de liberação</div><div class="r-big-val" id="r-status-big" style="font-size:18px;font-weight:700;color:var(--red);margin-top:4px">Bloqueado</div><div class="r-big-sub" id="r-days-big">—</div></div>
       </div>
-
       <div class="resumo-info-grid">
-        <div class="r-info-card">
-          <div class="r-info-label">Etapa atual</div>
-          <div class="r-info-val" id="r-etapa-atual">Estrutura Base do Perfil</div>
-        </div>
-        <div class="r-info-card">
-          <div class="r-info-label">Próxima ação</div>
-          <div class="r-info-val" id="r-next-action">—</div>
-        </div>
-        <div class="r-info-card">
-          <div class="r-info-label">Data de início</div>
-          <div class="r-info-val">27 de março de 2026</div>
-        </div>
-        <div class="r-info-card">
-          <div class="r-info-label">Responsável</div>
-          <div class="r-info-val">Matheus Lopes</div>
-        </div>
+        <div class="r-info-card"><div class="r-info-label">Etapa atual</div><div class="r-info-val" id="r-etapa-atual">—</div></div>
+        <div class="r-info-card"><div class="r-info-label">Próxima ação</div><div class="r-info-val" id="r-next-action">—</div></div>
+        <div class="r-info-card"><div class="r-info-label">Data de início</div><div class="r-info-val">27 de março de 2026</div></div>
+        <div class="r-info-card"><div class="r-info-label">Responsável</div><div class="r-info-val">Matheus Lopes</div></div>
       </div>
-
       <div class="timeline-section">
         <div class="timeline-title">Jornada das Etapas</div>
         <div class="timeline" id="resumo-timeline"></div>
       </div>
-
       <div class="obs-section">
         <div class="obs-title">Observações Gerais</div>
         <div class="obs-item"><div class="obs-dot"></div><div class="obs-text">Cliente iniciou onboarding em 27/03/2026. Primeiras orientações enviadas via grupo de acompanhamento.</div></div>
@@ -472,91 +514,202 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
         <div class="obs-item"><div class="obs-dot"></div><div class="obs-text">Destaques desorganizados e sem identidade visual consistente — ação necessária na Etapa 3.</div></div>
       </div>
     </div>
-  </div><!-- /content -->
-</div><!-- /main -->
+  </div>
+</div>
 
 <!-- MODAL -->
 <div class="modal-overlay" id="modal" onclick="closeModalOutside(event)">
   <div class="modal">
     <div class="modal-title" id="modal-task-name">Tarefa</div>
     <div class="modal-sub" id="modal-task-desc">—</div>
-    <div class="modal-field">
-      <div class="modal-label">Status</div>
+    <div class="modal-field"><div class="modal-label">Status</div>
       <select class="modal-select" id="modal-status">
         <option value="pending">Não iniciada</option>
         <option value="progress">Em andamento</option>
         <option value="done">Concluída</option>
-      </select>
-    </div>
-    <div class="modal-field">
-      <div class="modal-label">Responsável</div>
-      <input class="modal-input" id="modal-resp" type="text" placeholder="Nome do responsável...">
-    </div>
-    <div class="modal-field">
-      <div class="modal-label">Data de conclusão</div>
-      <input class="modal-input" id="modal-date" type="text" placeholder="dd/mm/aaaa">
-    </div>
-    <div class="modal-field">
-      <div class="modal-label">Evidência / Link</div>
-      <input class="modal-input" id="modal-ev" type="text" placeholder="Link ou descrição da evidência...">
-    </div>
-    <div class="modal-field">
-      <div class="modal-label">Observação</div>
-      <textarea class="modal-textarea" id="modal-obs" placeholder="Observações sobre esta tarefa..."></textarea>
-    </div>
+      </select></div>
+    <div class="modal-field"><div class="modal-label">Responsável</div><input class="modal-input" id="modal-resp" placeholder="Nome do responsável..."></div>
+    <div class="modal-field"><div class="modal-label">Data de conclusão</div><input class="modal-input" id="modal-date" placeholder="dd/mm/aaaa"></div>
+    <div class="modal-field"><div class="modal-label">Evidência / Link</div><input class="modal-input" id="modal-ev" placeholder="Link ou descrição da evidência..."></div>
+    <div class="modal-field"><div class="modal-label">Observação</div><textarea class="modal-textarea" id="modal-obs" placeholder="Observações sobre esta tarefa..."></textarea></div>
     <div class="modal-actions">
       <button class="btn-secondary" onclick="closeModal()">Cancelar</button>
-      <button class="btn-primary" onclick="saveModal()">Salvar tarefa</button>
+      <button class="btn-primary" onclick="saveModal()">Salvar e sincronizar</button>
     </div>
   </div>
 </div>
 
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
+<!-- MOBILE BOTTOM NAV -->
+<div class="mobile-nav">
+  <div class="mobile-nav-inner">
+    <button class="mobile-nav-btn active" id="mnav-checklist" onclick="showPage('checklist',this,'mnav-checklist')">
+      <svg viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="10" rx="2" stroke="currentColor" stroke-width="1.3"/><path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Checklist
+    </button>
+    <button class="mobile-nav-btn" id="mnav-pendencias" onclick="showPage('pendencias',this,'mnav-pendencias')">
+      <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.3"/><path d="M8 5v4M8 11v.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+      Pendências
+      <span class="mobile-nav-badge" id="pend-mobile-badge" style="display:none">0</span>
+    </button>
+    <button class="mobile-nav-btn" id="mnav-resumo" onclick="showPage('resumo',this,'mnav-resumo')">
+      <svg viewBox="0 0 16 16" fill="none"><path d="M3 12V8M6 12V6M9 12V4M12 12V9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+      Resumo
+    </button>
+  </div>
+</div>
+
 <script>
-// ── DATA ──
+// ── SCHEMA ──
 const ETAPAS = [
-  {id:1, num:"01", title:"Estrutura Base do Perfil", tasks:[
-    {id:"t1",  name:"Trocar ou ajustar foto de perfil",      desc:"A foto deve transmitir autoridade e ser de alta qualidade, com fundo neutro.",           status:"done",     obs:"Foto trocada para imagem profissional com fundo neutro.",             ev:"instagram.com/carlabaioni", resp:"Carla Baioni",  date:"28/03/2026"},
-    {id:"t2",  name:"Ajustar nome do perfil",                desc:"O nome deve conter nome + especialidade para rankeamento orgânico no Instagram.",         status:"progress", obs:"Em ajuste — aguardando definição da nomenclatura oficial da clínica.",  ev:"—",                         resp:"Carla Baioni",  date:"—"},
+  {id:1,num:"01",title:"Estrutura Base do Perfil",tasks:[
+    {id:"t1",name:"Trocar ou ajustar foto de perfil",desc:"A foto deve transmitir autoridade e ser de alta qualidade, com fundo neutro."},
+    {id:"t2",name:"Ajustar nome do perfil",desc:"O nome deve conter nome + especialidade para rankeamento orgânico no Instagram."},
   ]},
-  {id:2, num:"02", title:"Bio", tasks:[
-    {id:"t3",  name:"Escrever bio corretamente",              desc:"A bio deve comunicar o resultado que o cliente entrega, não apenas o que ele faz.",       status:"pending",  obs:"", ev:"—", resp:"—", date:"—"},
-    {id:"t4",  name:"Inserir CTA claro na bio",               desc:"Deve haver uma chamada para ação direta com direcionamento ao WhatsApp.",                  status:"pending",  obs:"", ev:"—", resp:"—", date:"—"},
-    {id:"t5",  name:"Configurar link do WhatsApp",            desc:"Link direto com mensagem pré-formatada via wa.me com texto personalizado.",               status:"pending",  obs:"", ev:"—", resp:"—", date:"—"},
-    {id:"t6",  name:"Remover erros da bio",                   desc:"Verificar ortografia, emojis excessivos e informações desnecessárias.",                   status:"pending",  obs:"", ev:"—", resp:"—", date:"—"},
+  {id:2,num:"02",title:"Bio",tasks:[
+    {id:"t3",name:"Escrever bio corretamente",desc:"A bio deve comunicar o resultado que o cliente entrega, não apenas o que ele faz."},
+    {id:"t4",name:"Inserir CTA claro na bio",desc:"Deve haver uma chamada para ação direta com direcionamento ao WhatsApp."},
+    {id:"t5",name:"Configurar link do WhatsApp",desc:"Link direto com mensagem pré-formatada via wa.me com texto personalizado."},
+    {id:"t6",name:"Remover erros da bio",desc:"Verificar ortografia, emojis excessivos e informações desnecessárias."},
   ]},
-  {id:3, num:"03", title:"Posicionamento Visual", tasks:[
-    {id:"t7",  name:"Organizar destaques",                    desc:"Destaques devem seguir identidade visual e apresentar prova social, resultados e processo.",status:"pending", obs:"", ev:"—", resp:"—", date:"—"},
-    {id:"t8",  name:"Fixar 3 conteúdos corretos",             desc:"Os 3 posts fixados devem ser os de maior autoridade e conversão do feed.",                status:"pending",  obs:"", ev:"—", resp:"—", date:"—"},
-    {id:"t9",  name:"Ajustar legendas dos conteúdos principais","desc":"Legendas devem ter gancho, CTA e uso correto de palavras-chave de nicho.",           status:"pending",  obs:"", ev:"—", resp:"—", date:"—"},
+  {id:3,num:"03",title:"Posicionamento Visual",tasks:[
+    {id:"t7",name:"Organizar destaques",desc:"Destaques devem seguir identidade visual e apresentar prova social, resultados e processo."},
+    {id:"t8",name:"Fixar 3 conteúdos corretos",desc:"Os 3 posts fixados devem ser os de maior autoridade e conversão do feed."},
+    {id:"t9",name:"Ajustar legendas dos conteúdos principais",desc:"Legendas devem ter gancho, CTA e uso correto de palavras-chave de nicho."},
   ]},
-  {id:4, num:"04", title:"Descoberta do Perfil", tasks:[
-    {id:"t10", name:"Criar estratégia de hashtags",            desc:"Definir conjunto de hashtags de nicho, localização e procedimento específico.",           status:"pending",  obs:"", ev:"—", resp:"—", date:"—"},
-    {id:"t11", name:"Marcar localização nas publicações",      desc:"Geotag ativo nas publicações para rankeamento local e descoberta orgânica.",              status:"pending",  obs:"", ev:"—", resp:"—", date:"—"},
+  {id:4,num:"04",title:"Descoberta do Perfil",tasks:[
+    {id:"t10",name:"Criar estratégia de hashtags",desc:"Definir conjunto de hashtags de nicho, localização e procedimento específico."},
+    {id:"t11",name:"Marcar localização nas publicações",desc:"Geotag ativo nas publicações para rankeamento local e descoberta orgânica."},
   ]},
-  {id:5, num:"05", title:"Rotina Mínima", tasks:[
-    {id:"t12", name:"Publicar stories diariamente",            desc:"Mínimo de 3 stories por dia com conteúdo de bastidores, resultados e prova social.",     status:"pending",  obs:"", ev:"—", resp:"—", date:"—"},
-    {id:"t13", name:"Manter frequência mínima no feed",        desc:"Mínimo de 3 publicações semanais de qualidade no feed principal.",                        status:"pending",  obs:"", ev:"—", resp:"—", date:"—"},
-    {id:"t14", name:"Manter estética visual consistente",      desc:"Paleta de cores, filtros e fontes devem ser padronizados em todo o perfil.",              status:"pending",  obs:"", ev:"—", resp:"—", date:"—"},
+  {id:5,num:"05",title:"Rotina Mínima",tasks:[
+    {id:"t12",name:"Publicar stories diariamente",desc:"Mínimo de 3 stories por dia com conteúdo de bastidores, resultados e prova social."},
+    {id:"t13",name:"Manter frequência mínima no feed",desc:"Mínimo de 3 publicações semanais de qualidade no feed principal."},
+    {id:"t14",name:"Manter estética visual consistente",desc:"Paleta de cores, filtros e fontes devem ser padronizados em todo o perfil."},
   ]},
-  {id:6, num:"06", title:"Remoção de Bloqueios", tasks:[
-    {id:"t15", name:"Remover promoções do perfil",             desc:"Posts com desconto ou promoção devem ser removidos ou arquivados imediatamente.",         status:"pending",  obs:"", ev:"—", resp:"—", date:"—"},
-    {id:"t16", name:"Remover conteúdo técnico em excesso",     desc:"Posts com linguagem muito técnica afastam pacientes e devem ser revisados.",              status:"pending",  obs:"", ev:"—", resp:"—", date:"—"},
-    {id:"t17", name:"Remover imagens que gerem rejeição",      desc:"Fotos de procedimentos invasivos ou com sangue devem ser removidas do feed.",             status:"pending",  obs:"", ev:"—", resp:"—", date:"—"},
-    {id:"t18", name:"Remover conteúdos desalinhados",          desc:"Posts fora do nicho principal devem ser arquivados para manter o posicionamento.",        status:"pending",  obs:"", ev:"—", resp:"—", date:"—"},
-    {id:"t19", name:"Remover casos com resultados fracos",     desc:"Casos com resultados mediocres devem ser retirados para preservar autoridade.",           status:"pending",  obs:"", ev:"—", resp:"—", date:"—"},
-    {id:"t20", name:"Remover conteúdos que criem objeções",    desc:"Posts com preço, comparativos ou dúvidas sobre segurança devem ser revisados.",           status:"pending",  obs:"", ev:"—", resp:"—", date:"—"},
+  {id:6,num:"06",title:"Remoção de Bloqueios",tasks:[
+    {id:"t15",name:"Remover promoções do perfil",desc:"Posts com desconto ou promoção devem ser removidos ou arquivados imediatamente."},
+    {id:"t16",name:"Remover conteúdo técnico em excesso",desc:"Posts com linguagem muito técnica afastam pacientes e devem ser revisados."},
+    {id:"t17",name:"Remover imagens que gerem rejeição",desc:"Fotos de procedimentos invasivos ou com sangue devem ser removidas do feed."},
+    {id:"t18",name:"Remover conteúdos desalinhados",desc:"Posts fora do nicho principal devem ser arquivados para manter o posicionamento."},
+    {id:"t19",name:"Remover casos com resultados fracos",desc:"Casos com resultados mediocres devem ser retirados para preservar autoridade."},
+    {id:"t20",name:"Remover conteúdos que criem objeções",desc:"Posts com preço, comparativos ou dúvidas sobre segurança devem ser revisados."},
   ]},
 ];
 
-// STATE — map taskId → task data
+// Estado local (espelho do Firestore)
 const S = {};
-ETAPAS.forEach(e => e.tasks.forEach(t => { S[t.id] = { status: t.status, obs: t.obs, ev: t.ev, resp: t.resp, date: t.date }; }));
+const defaultTaskState = () => ({ status:"pending", obs:"", ev:"", resp:"", date:"" });
+ETAPAS.forEach(e => e.tasks.forEach(t => {
+  S[t.id] = defaultTaskState();
+}));
+
+// Dados mockados iniciais
 
 let currentModalId = null;
-let openEtapas = new Set([1]); // which etapas are open
+let openEtapas = new Set([1]);
+let fbReady = false;
+let isSaving = false;
+
+// ── FIREBASE SYNC ──
+function setSyncStatus(state){
+  // state: 'ok' | 'saving' | 'error' | 'connecting'
+  const dots = document.querySelectorAll('.sync-dot');
+  const topLabel = document.getElementById('sync-text-top');
+  const sideLabel = document.getElementById('sync-label');
+  dots.forEach(d => {
+    d.className = 'sync-dot';
+    if(state==='saving') d.classList.add('saving');
+    if(state==='error')  d.classList.add('error');
+    // ok = default green
+  });
+  const labels = {
+    ok:         'Sincronizado',
+    saving:     'Salvando...',
+    error:      'Erro de conexão',
+    connecting: 'Conectando...'
+  };
+  if(topLabel) topLabel.textContent = labels[state]||'';
+  if(sideLabel) sideLabel.textContent = labels[state]||'';
+}
+
+async function loadFromFirebase(){
+  if(!window._fb) return;
+  try {
+    const data = await window._fb.load();
+    if(data){
+      const clientName = data.name || window._clientId || 'Cliente';
+      const clientResp = data.resp || '—';
+      const initials = clientName.split(' ').filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase() || '?';
+      // Topbar
+      const el1 = document.getElementById('topbar-client-name');
+      const el2 = document.getElementById('topbar-sub-name');
+      if(el1) el1.textContent = clientName;
+      if(el2) el2.textContent = 'Liberação de Tráfego — ' + clientName;
+      document.title = clientName + ' — Checklist FACE 100K';
+      // Sidebar
+      const av = document.getElementById('sidebar-avatar');
+      if(av) av.textContent = initials;
+      const cn = document.getElementById('sidebar-client-name');
+      if(cn) cn.textContent = clientName;
+      const cr = document.getElementById('sidebar-client-role');
+      if(cr) cr.textContent = clientResp !== '—' ? 'Resp: ' + clientResp : '—';
+      if(data.tasks){
+        Object.keys(data.tasks).forEach(tid => {
+          if(S[tid]) S[tid] = { ...defaultTaskState(), ...data.tasks[tid] };
+        });
+      }
+    }
+  } catch(e){ console.warn('Firebase load error:', e); }
+}
+
+async function saveToFirebase(){
+  if(!window._fb || isSaving) return;
+  isSaving = true;
+  setSyncStatus('saving');
+  try {
+    await window._fb.save({ tasks: S, updatedAt: new Date().toISOString() });
+    setSyncStatus('ok');
+  } catch(e){
+    setSyncStatus('error');
+    showToast('Erro ao sincronizar. Verifique a conexão.','error');
+  } finally { isSaving=false; }
+}
+
+function subscribeFirebase(){
+  if(!window._fb) return;
+  window._fb.listen(data => {
+    if(data && data.tasks){
+      Object.keys(data.tasks).forEach(tid => {
+        if(S[tid]) S[tid] = { ...defaultTaskState(), ...data.tasks[tid] };
+      });
+      renderAll();
+      setSyncStatus('ok');
+    }
+  });
+}
+
+// Inicializa Firebase quando pronto
+window.addEventListener('fb-ready', async () => {
+  fbReady = true;
+  setSyncStatus('connecting');
+  await loadFromFirebase();
+  document.getElementById('loading-screen').classList.add('hidden');
+  renderAll();
+  subscribeFirebase();
+  setSyncStatus('ok');
+  showToast('Conectado ao Firebase — sincronização ativa!','success');
+});
+
+// Fallback: se Firebase não carregar em 4s, exibe dashboard offline
+setTimeout(() => {
+  if(!fbReady){
+    document.getElementById('loading-screen').classList.add('hidden');
+    renderAll();
+    setSyncStatus('error');
+    showToast('Firebase não configurado — modo offline ativo','');
+  }
+}, 4000);
 
 // ── HELPERS ──
 const total  = () => ETAPAS.reduce((a,e)=>a+e.tasks.length, 0);
@@ -576,101 +729,71 @@ function nextTaskName(){
 }
 function getGlobalStatus(){
   const p=pct();
-  if(p===100) return {label:"Tráfego Liberado", cls:"gb-ready", traf:"Liberado", trafColor:"var(--green)"};
-  if(p>=70)   return {label:"Quase Pronto",     cls:"gb-almost",traf:"Aguardando",trafColor:"var(--blue)"};
-  if(p>=20)   return {label:"Em Andamento",     cls:"gb-progress",traf:"Em espera",trafColor:"var(--yellow)"};
-  return              {label:"Tráfego Bloqueado",cls:"gb-blocked", traf:"Bloqueado",trafColor:"var(--red)"};
+  if(p===100) return {label:"Tráfego Liberado", cls:"gb-ready",    traf:"Liberado",   trafColor:"var(--green)"};
+  if(p>=70)   return {label:"Quase Pronto",     cls:"gb-almost",   traf:"Aguardando", trafColor:"var(--blue)"};
+  if(p>=20)   return {label:"Em Andamento",     cls:"gb-progress", traf:"Em espera",  trafColor:"var(--yellow)"};
+  return              {label:"Tráfego Bloqueado",cls:"gb-blocked",  traf:"Bloqueado",  trafColor:"var(--red)"};
 }
+function set(id,val){ const el=document.getElementById(id); if(el) el.textContent=val; }
 
-// ── RENDER ALL ──
+// ── RENDER ──
 function renderAll(){
   const d=doneN(), t=total(), p=pct(), pend=pendN(), pr=progN(), gS=getGlobalStatus();
-
-  // topbar badge
   const gb=document.getElementById('global-badge');
   gb.textContent=gS.label; gb.className='global-badge '+gS.cls;
-
-  // summary cards
-  set('sc-pct', p+'%');
-  set('sc-done', d);
-  set('sc-pend', pend);
-  set('sc-prog', pr);
-  set('sc-total', t);
+  set('sc-pct',p+'%'); set('sc-done',d); set('sc-pend',pend);
+  set('sc-prog',pr); set('sc-total',t);
   set('sc-etapa', currentEtapaName().split(' ').slice(0,3).join(' '));
-  set('sc-next-task', 'Próxima: '+nextTaskName().substring(0,28)+(nextTaskName().length>28?'...':''));
-  set('sc-traffic', gS.traf);
-  document.getElementById('sc-traffic').style.color = gS.trafColor;
-  set('sc-traffic-sub', pend===0?'tráfego liberado':'pendência'+(pend!==1?'s':'')+' ativas');
-
-  // main progress bar
-  set('prog-main-pct', p+'% — '+d+' / '+t+' tarefas');
-  document.getElementById('prog-main-fill').style.width = p+'%';
-
-  // etapa mini bars
-  renderEtapaMini();
-
-  // message
+  set('sc-next-task','Próxima: '+nextTaskName().substring(0,26));
+  set('sc-traffic',gS.traf);
+  document.getElementById('sc-traffic').style.color=gS.trafColor;
+  set('sc-traffic-sub',pend===0?'tráfego liberado':pend+' pendências');
+  set('prog-main-pct',p+'% — '+d+' / '+t+' tarefas');
+  document.getElementById('prog-main-fill').style.width=p+'%';
+  renderEtapaMini(); renderEtapas(); renderPendencias(); renderResumo(d,t,p,pend,gS);
+  const mbadge=document.getElementById('pend-mobile-badge'); if(mbadge){mbadge.textContent=pend;mbadge.style.display=pend===0?'none':'';} const gmb=document.getElementById('global-badge-mobile'); if(gmb){gmb.textContent=gS.traf;gmb.className='global-badge '+gS.cls;} const nb=document.getElementById('pend-nav-badge');
+  nb.textContent=pend; nb.style.display=pend===0?'none':'';
   const mb=document.getElementById('msg-box');
   if(p===100){
     mb.className='msg-box msg-ready';
     set('msg-title','Checklist concluído — Tráfego liberado!');
     set('msg-body','Todas as tarefas obrigatórias foram concluídas. O cliente está pronto para iniciar o tráfego pago.');
-  } else {
-    mb.className='msg-box msg-blocked';
-    set('msg-title','Tráfego bloqueado — '+pend+' tarefa'+(pend!==1?'s':'')+' pendente'+(pend!==1?'s':''));
-    set('msg-body','O tráfego ainda não pode ser iniciado porque ainda existem tarefas obrigatórias a serem cumpridas. Conclua todas as etapas do checklist para liberar.');
-  }
-
-  // CTA
-  const btn=document.getElementById('cta-main-btn');
-  if(p===100){
-    btn.className='cta-btn cta-enabled';
+    document.getElementById('cta-main-btn').className='cta-btn cta-enabled';
     set('cta-title','Tráfego Liberado!');
     set('cta-sub','Todas as tarefas foram concluídas. Clique para confirmar o início do tráfego.');
   } else {
-    btn.className='cta-btn cta-disabled';
+    mb.className='msg-box msg-blocked';
+    set('msg-title','Tráfego bloqueado — '+pend+' tarefa'+(pend!==1?'s':'')+' pendente'+(pend!==1?'s':''));
+    set('msg-body','O tráfego ainda não pode ser iniciado porque ainda existem tarefas obrigatórias a serem cumpridas.');
+    document.getElementById('cta-main-btn').className='cta-btn cta-disabled';
     set('cta-title','Complete todas as tarefas para habilitar');
-    set('cta-sub', pend+' tarefa'+(pend!==1?'s':'')+' pendente'+(pend!==1?'s':'')+'. O botão será desbloqueado automaticamente quando o checklist estiver 100% concluído.');
+    set('cta-sub',pend+' tarefa'+(pend!==1?'s':'')+' pendente'+(pend!==1?'s':'')+'. O botão será desbloqueado automaticamente.');
   }
-
-  // etapas list
-  renderEtapas();
-
-  // nav badge
-  const nb=document.getElementById('pend-nav-badge');
-  nb.textContent=pend; nb.style.display=pend===0?'none':'';
-
-  // pendências page
-  renderPendencias();
-
-  // resumo page
-  renderResumo(d,t,p,pend,gS);
 }
 
 function renderEtapaMini(){
   const c=document.getElementById('etapa-bars-mini'); c.innerHTML='';
-  let prevAllDone=true;
+  let prev=true;
   ETAPAS.forEach(e=>{
-    const dc=etapaDone(e), tot=e.tasks.length, p=Math.round(dc/tot*100);
-    const allDone=dc===tot, isActive=prevAllDone&&!allDone;
-    const fillCls=allDone?'ef-done':(isActive?'ef-active':'ef-locked');
-    c.innerHTML+=`<div class="ebar"><div class="ebar-label">${e.num} ${e.title.split(' ').slice(0,2).join(' ')}</div><div class="ebar-bar"><div class="ebar-fill ${fillCls}" style="width:${p}%"></div></div><div class="ebar-pct">${p}%</div></div>`;
-    if(!allDone) prevAllDone=false;
+    const dc=etapaDone(e),tot=e.tasks.length,p=Math.round(dc/tot*100);
+    const allDone=dc===tot,isActive=prev&&!allDone;
+    const fc=allDone?'ef-done':isActive?'ef-active':'ef-locked';
+    c.innerHTML+=`<div class="ebar"><div class="ebar-label">${e.num} ${e.title.split(' ').slice(0,2).join(' ')}</div><div class="ebar-bar"><div class="ebar-fill ${fc}" style="width:${p}%"></div></div><div class="ebar-pct">${p}%</div></div>`;
+    if(!allDone) prev=false;
   });
 }
 
 function renderEtapas(){
   const c=document.getElementById('etapas-container'); c.innerHTML='';
-  let prevAllDone=true;
+  let prev=true;
   ETAPAS.forEach(e=>{
-    const dc=etapaDone(e), tot=e.tasks.length, p=Math.round(dc/tot*100);
-    const allDone=dc===tot, isActive=prevAllDone&&!allDone;
-    const numCls=allDone?'enb-done':(isActive?'enb-active':'enb-pending');
-    const fillCls=allDone?'ef-done':(isActive?'ef-active':'ef-locked');
+    const dc=etapaDone(e),tot=e.tasks.length,p=Math.round(dc/tot*100);
+    const allDone=dc===tot,isActive=prev&&!allDone;
+    const numCls=allDone?'enb-done':isActive?'enb-active':'enb-pending';
+    const fc=allDone?'ef-done':isActive?'ef-active':'ef-locked';
     const numInner=allDone?`<svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#000" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`:e.num;
     const isOpen=openEtapas.has(e.id);
-
-    const div=document.createElement('div'); div.className='etapa-block'; div.id='etapa-'+e.id;
+    const div=document.createElement('div'); div.className='etapa-block';
     div.innerHTML=`
       <div class="etapa-head" onclick="toggleEtapa(${e.id})">
         <div class="etapa-num-badge ${numCls}">${numInner}</div>
@@ -680,7 +803,7 @@ function renderEtapas(){
         </div>
         <div class="etapa-right">
           <div class="etapa-prog-wrap">
-            <div class="etapa-prog-bar"><div class="etapa-prog-fill ${fillCls}" style="width:${p}%"></div></div>
+            <div class="etapa-prog-bar"><div class="etapa-prog-fill ${fc}" style="width:${p}%"></div></div>
             <div class="etapa-pct-txt">${p}%</div>
           </div>
         </div>
@@ -698,41 +821,33 @@ function renderEtapas(){
             <th style="width:80px">Data</th>
             <th style="width:60px"></th>
           </tr></thead>
-          <tbody>${e.tasks.map(t=>renderTaskRow(t)).join('')}</tbody>
+          <tbody>${e.tasks.map(t=>renderTaskRow(t,e)).join('')}</tbody>
         </table>
       </div>`;
     c.appendChild(div);
-    if(!allDone) prevAllDone=false;
+    if(!allDone) prev=false;
   });
 }
 
-function renderTaskRow(t){
+function renderTaskRow(t,e){
   const s=S[t.id];
-  const isDone=s.status==='done', isProg=s.status==='progress';
-  const checkCls=isDone?'tcb-done':(isProg?'tcb-progress':'');
+  const isDone=s.status==='done',isProg=s.status==='progress';
+  const checkCls=isDone?'tcb-done':isProg?'tcb-progress':'';
   const nameCls=isDone?'task-name-done':'';
-  const sBadge=isDone?'tsp-done':(isProg?'tsp-progress':'tsp-pending');
-  const sLabel=isDone?'Concluída':(isProg?'Em andamento':'Não iniciada');
-  const chkSvg=isDone?`<svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#000" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`:'';
-  const obsVal=s.obs&&s.obs!=='—'?s.obs:'—';
-  const evVal=s.ev&&s.ev!=='—'?s.ev:'—';
-  const respVal=s.resp&&s.resp!=='—'?s.resp:'—';
-  const dateVal=s.date&&s.date!=='—'?s.date:'—';
+  const sBadge=isDone?'tsp-done':isProg?'tsp-progress':'tsp-pending';
+  const sLabel=isDone?'Concluída':isProg?'Em andamento':'Não iniciada';
+  const chk=isDone?`<svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#000" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`:'';
+  const obs=s.obs||'—', ev=s.ev||'—', resp=s.resp||'—', date=s.date||'—';
   return `<tr>
-    <td><div class="task-check-btn ${checkCls}" onclick="cycleTask('${t.id}')">${chkSvg}</div></td>
+    <td><div class="task-check-btn ${checkCls}" onclick="cycleTask('${t.id}')">${chk}</div></td>
     <td><div class="task-name-col ${nameCls}">${t.name}</div><div class="task-desc-col">${t.desc}</div></td>
     <td><span class="task-status-pill ${sBadge}">${sLabel}</span></td>
-    <td><div class="field-cell ${obsVal!=='—'?'has-val':''}">${obsVal}</div></td>
-    <td><div class="field-cell ${evVal!=='—'?'has-val':''}">${evVal}</div></td>
-    <td><div class="field-cell ${respVal!=='—'?'has-val':''}">${respVal}</div></td>
-    <td><div class="field-cell ${dateVal!=='—'?'has-val':''}" style="font-family:'JetBrains Mono',monospace;font-size:10px">${dateVal}</div></td>
-    <td><button style="padding:4px 10px;border-radius:4px;font-size:10px;font-weight:600;background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border);cursor:pointer;font-family:'Montserrat',sans-serif" onclick="openModal('${t.id}','${e_id(t.id)}')">Editar</button></td>
+    <td><div class="field-cell ${obs!=='—'?'has-val':''}">${obs}</div></td>
+    <td><div class="field-cell ${ev!=='—'?'has-val':''}">${ev}</div></td>
+    <td><div class="field-cell ${resp!=='—'?'has-val':''}">${resp}</div></td>
+    <td><div class="field-cell ${date!=='—'?'has-val':''}" style="font-family:'JetBrains Mono',monospace;font-size:10px">${date}</div></td>
+    <td><button style="padding:4px 10px;border-radius:4px;font-size:10px;font-weight:600;background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border);cursor:pointer;font-family:'Montserrat',sans-serif" onclick="openModal('${t.id}')">Editar</button></td>
   </tr>`;
-}
-
-function e_id(tid){
-  for(const e of ETAPAS) if(e.tasks.find(t=>t.id===tid)) return e.id;
-  return 0;
 }
 
 function renderPendencias(){
@@ -741,72 +856,61 @@ function renderPendencias(){
   const badge=document.getElementById('pend-badge');
   badge.textContent=pend+' pendência'+(pend!==1?'s':'');
   badge.className='global-badge '+(pend>0?'gb-blocked':'gb-ready');
-  if(pend===0){
-    list.innerHTML='<div class="msg-box msg-ready"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" stroke="currentColor" stroke-width="1.5"/><path d="M5.5 9l2.5 2.5L13 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><div>Nenhuma pendência! O tráfego está liberado.</div></div>';
-    return;
-  }
+  if(pend===0){list.innerHTML='<div class="msg-box msg-ready"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" stroke="currentColor" stroke-width="1.5"/><path d="M5.5 9l2.5 2.5L13 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><div>Nenhuma pendência! O tráfego está liberado.</div></div>';return;}
   ETAPAS.forEach(e=>{
     e.tasks.filter(t=>S[t.id].status!=='done').forEach(t=>{
       const d=document.createElement('div'); d.className='pend-item';
-      d.innerHTML=`
-        <div class="pend-etapa-tag">Etapa ${e.num} — ${e.title}</div>
-        <div class="pend-task-name">${t.name}</div>
-        <div class="pend-task-desc">${t.desc}</div>
-        <div style="display:flex;gap:8px;margin-top:8px">
-          <button class="pend-quick-btn" onclick="markDone('${t.id}')">Marcar como concluída</button>
-          <button class="pend-quick-btn" style="background:var(--yellow-dim);color:var(--yellow);border-color:var(--yellow-border)" onclick="openModal('${t.id}',${e.id})">Editar detalhes</button>
-        </div>`;
+      d.innerHTML=`<div class="pend-etapa-tag">Etapa ${e.num} — ${e.title}</div><div class="pend-task-name">${t.name}</div><div class="pend-task-desc">${t.desc}</div><div style="display:flex;gap:8px;margin-top:8px"><button class="pend-quick-btn" onclick="markDone('${t.id}')">Marcar concluída</button><button class="pend-quick-btn" style="background:var(--yellow-dim);color:var(--yellow);border-color:var(--yellow-border)" onclick="openModal('${t.id}')">Editar detalhes</button></div>`;
       list.appendChild(d);
     });
   });
 }
 
 function renderResumo(d,t,p,pend,gS){
-  set('r-pct', p+'%');
-  document.getElementById('r-pct').style.color = p===100?'var(--green)':'var(--amber)';
-  set('r-pct-sub', d+' de '+t+' tarefas concluídas');
-  set('r-pend-big', pend);
-  set('r-status-big', gS.traf);
-  document.getElementById('r-status-big').style.color = p===100?'var(--green)':(p>=70?'var(--blue)':p>=20?'var(--yellow)':'var(--red)');
-  const days = pend===0?0:Math.max(1, Math.ceil(pend*1.5));
-  set('r-days-big', pend===0?'Imediato — liberar agora':'~'+days+' dias estimados');
-  set('r-etapa-atual', currentEtapaName());
-  set('r-next-action', nextTaskName());
-
-  // timeline
+  set('r-pct',p+'%');
+  document.getElementById('r-pct').style.color=p===100?'var(--green)':'var(--amber)';
+  set('r-pct-sub',d+' de '+t+' tarefas concluídas');
+  set('r-pend-big',pend);
+  set('r-status-big',gS.traf);
+  document.getElementById('r-status-big').style.color=gS.trafColor;
+  const days=pend===0?0:Math.max(1,Math.ceil(pend*1.5));
+  set('r-days-big',pend===0?'Imediato — liberar agora':'~'+days+' dias estimados');
+  set('r-etapa-atual',currentEtapaName());
+  set('r-next-action',nextTaskName());
   const tl=document.getElementById('resumo-timeline'); tl.innerHTML='';
-  let prevAllDone=true;
+  let prev=true;
   ETAPAS.forEach(e=>{
-    const dc=etapaDone(e), tot=e.tasks.length, p2=Math.round(dc/tot*100);
-    const allDone=dc===tot, isActive=prevAllDone&&!allDone;
-    const dotCls=allDone?'tld-done':(isActive?'tld-active':'tld-future');
+    const dc=etapaDone(e),tot=e.tasks.length,p2=Math.round(dc/tot*100);
+    const allDone=dc===tot,isActive=prev&&!allDone;
+    const dotCls=allDone?'tld-done':isActive?'tld-active':'tld-future';
     const dotInner=allDone?`<svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#000" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`:e.num;
     tl.innerHTML+=`<div class="tl-step"><div class="tl-dot ${dotCls}">${dotInner}</div><div class="tl-name">${e.title}</div><div class="tl-pct">${p2}%</div></div>`;
-    if(!allDone) prevAllDone=false;
+    if(!allDone) prev=false;
   });
 }
 
 // ── ACTIONS ──
 function cycleTask(id){
   const cur=S[id].status;
-  S[id].status = cur==='pending'?'progress':cur==='progress'?'done':'pending';
+  S[id].status=cur==='pending'?'progress':cur==='progress'?'done':'pending';
   renderAll();
-  showToast(S[id].status==='done'?'Tarefa concluída!':S[id].status==='progress'?'Tarefa em andamento':'Tarefa reaberta', S[id].status==='done'?'success':'');
+  saveToFirebase();
+  showToast(S[id].status==='done'?'Tarefa concluída e sincronizada!':S[id].status==='progress'?'Tarefa em andamento':'Tarefa reaberta','success');
 }
 
 function markDone(id){
   S[id].status='done';
   renderAll();
-  showToast('Tarefa marcada como concluída!','success');
+  saveToFirebase();
+  showToast('Tarefa concluída e sincronizada!','success');
 }
 
 function toggleEtapa(id){
-  if(openEtapas.has(id)) openEtapas.delete(id);
-  else openEtapas.add(id);
+  if(openEtapas.has(id)) openEtapas.delete(id); else openEtapas.add(id);
   renderAll();
 }
 
-function openModal(tid, eid){
+function openModal(tid){
   currentModalId=tid;
   let task=null;
   for(const e of ETAPAS){ const f=e.tasks.find(t=>t.id===tid); if(f){task=f;break;} }
@@ -814,10 +918,10 @@ function openModal(tid, eid){
   document.getElementById('modal-task-name').textContent=task.name;
   document.getElementById('modal-task-desc').textContent=task.desc;
   document.getElementById('modal-status').value=S[tid].status;
-  document.getElementById('modal-resp').value=S[tid].resp==='—'?'':S[tid].resp;
-  document.getElementById('modal-date').value=S[tid].date==='—'?'':S[tid].date;
-  document.getElementById('modal-ev').value=S[tid].ev==='—'?'':S[tid].ev;
-  document.getElementById('modal-obs').value=S[tid].obs==='—'?'':S[tid].obs;
+  document.getElementById('modal-resp').value=S[tid].resp==='—'?'':S[tid].resp||'';
+  document.getElementById('modal-date').value=S[tid].date==='—'?'':S[tid].date||'';
+  document.getElementById('modal-ev').value=S[tid].ev==='—'?'':S[tid].ev||'';
+  document.getElementById('modal-obs').value=S[tid].obs==='—'?'':S[tid].obs||'';
   document.getElementById('modal').classList.add('open');
 }
 
@@ -833,44 +937,36 @@ function saveModal(){
   S[currentModalId].obs=document.getElementById('modal-obs').value||'—';
   closeModal();
   renderAll();
-  showToast('Tarefa atualizada com sucesso!','success');
+  saveToFirebase();
+  showToast('Tarefa salva e sincronizada com todos!','success');
 }
 
 function onIniciarTrafego(){
-  if(pct()===100){
-    showToast('🚀 Tráfego iniciado com sucesso! Cliente ativado.','success');
-    document.getElementById('global-badge').textContent='Tráfego Ativo';
-  }
+  if(pct()===100) showToast('Tráfego iniciado com sucesso! Cliente ativado.','success');
 }
 
-function showPage(name, btn){
+function showPage(name,btn,mobileId){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.mobile-nav-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('page-'+name).classList.add('active');
-  btn.classList.add('active');
+  if(btn) btn.classList.add('active');
+  if(mobileId){ const mb=document.getElementById(mobileId); if(mb) mb.classList.add('active'); }
+  window.scrollTo(0,0);
 }
 
-function showToast(msg, type=''){
+function showToast(msg,type=''){
   const t=document.getElementById('toast');
-  t.textContent=msg;
-  t.className='toast '+(type==='success'?'success':type==='error'?'error':'');
+  t.textContent=msg; t.className='toast '+(type==='success'?'success':type==='error'?'error':'');
   t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),3000);
+  setTimeout(()=>t.classList.remove('show'),3200);
 }
 
-function set(id, val){ const el=document.getElementById(id); if(el) el.textContent=val; }
-
-// ── DATE ──
 function updateDate(){
   const d=new Date();
-  const opts={day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'};
-  document.getElementById('top-date').textContent=d.toLocaleDateString('pt-BR',opts);
+  document.getElementById('top-date').textContent=d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
 }
-updateDate();
-setInterval(updateDate,60000);
-
-// ── INIT ──
-renderAll();
+updateDate(); setInterval(updateDate,60000);
 </script>
 </body>
 </html>
