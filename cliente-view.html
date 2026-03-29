@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -5,9 +6,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Meu Programa — FACE 100K</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-  import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+  import { getFirestore, doc, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
   const firebaseConfig = {
     apiKey:"AIzaSyAyupUdCsEb6pPVmTs2clhayS84-TUovGA",
     authDomain:"dashboard-e465d.firebaseapp.com",
@@ -22,205 +24,236 @@
   const clientId = params.get('cliente') || '';
   window._clientId = clientId;
   if(clientId){
-    window._fb = { listen(cb){ return onSnapshot(doc(db,'entrega',clientId), s=>{ if(s.exists()) cb(s.data()); }); } };
+    const REF = doc(db,'entrega',clientId);
+    window._fb = {
+      listen(cb){ return onSnapshot(REF, s=>{ if(s.exists()) cb(s.data()); else cb(null); }); },
+      async save(data){ await setDoc(REF, data, {merge:true}); }
+    };
   }
   window.dispatchEvent(new Event("fb-ready"));
 </script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#0D1117;--surface:#1A2025;--surface2:#212830;--surface3:#272F38;
-  --amber:#F5A623;--amber-dim:rgba(245,166,35,0.10);--amber-border:rgba(245,166,35,0.20);
-  --border:#3E4249;
-  --text:#F0F0F0;--text-sec:#A0A0A8;--text-dim:rgba(255,255,255,0.2);
-  --green:#22C55E;--green-dim:rgba(34,197,94,0.10);--green-border:rgba(34,197,94,0.22);
-  --red:#EF4444;--red-dim:rgba(239,68,68,0.10);
+  --bg:#0D1117;--s1:#1A2025;--s2:#212830;--s3:#272F38;
+  --amber:#F5A623;--ad:rgba(245,166,35,0.10);--ab:rgba(245,166,35,0.22);
+  --border:#3E4249;--bl:rgba(62,66,73,0.5);
+  --text:#F0F0F0;--ts:#A0A0A8;--td:rgba(255,255,255,0.18);
+  --green:#22C55E;--gd:rgba(34,197,94,0.10);--gb:rgba(34,197,94,0.22);
+  --red:#EF4444;--rd:rgba(239,68,68,0.10);
   --yellow:#EAB308;
-  --blue:#3B82F6;--blue-dim:rgba(59,130,246,0.10);--blue-border:rgba(59,130,246,0.22);
+  --blue:#3B82F6;--bd:rgba(59,130,246,0.10);--bb:rgba(59,130,246,0.22);
 }
 html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:13px;line-height:1.5}
-body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(0deg,transparent 24%,rgba(245,166,35,0.025) 25%,rgba(245,166,35,0.025) 26%,transparent 27%),linear-gradient(90deg,transparent 24%,rgba(245,166,35,0.025) 25%,rgba(245,166,35,0.025) 26%,transparent 27%);background-size:50px 50px;pointer-events:none;z-index:0}
+
 @keyframes spin{to{transform:rotate(360deg)}}
-@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{from{opacity:.4}to{opacity:1}}
+@keyframes fillBar{from{width:0}to{width:var(--w)}}
+@keyframes countUp{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:scale(1)}}
 
-/* LOADING */
-#loading{position:fixed;inset:0;background:var(--bg);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
+#loading{position:fixed;inset:0;background:var(--bg);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px}
 #loading.hidden{display:none}
-.loading-logo{font-family:'Montserrat',sans-serif;font-size:24px;font-weight:800;color:var(--text)}
-.loading-logo span{color:var(--amber);font-style:italic}
-.spinner{width:36px;height:36px;border:3px solid rgba(245,166,35,0.15);border-top-color:var(--amber);border-radius:50%;animation:spin .8s linear infinite}
+.l-logo{font-family:'Montserrat',sans-serif;font-size:26px;font-weight:800;color:var(--text);letter-spacing:.04em}
+.l-logo span{color:var(--amber);font-style:italic}
+.l-spinner{width:40px;height:40px;border:3px solid rgba(245,166,35,0.12);border-top-color:var(--amber);border-radius:50%;animation:spin .8s linear infinite}
+.l-txt{font-size:12px;color:var(--ts)}
 
-/* NOT FOUND */
-#not-found{display:none;position:fixed;inset:0;background:var(--bg);z-index:99;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:24px}
+#not-found{display:none;position:fixed;inset:0;background:var(--bg);z-index:99;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:24px}
 #not-found.show{display:flex}
-.nf-title{font-family:'Montserrat',sans-serif;font-size:20px;font-weight:700;color:var(--text)}
-.nf-sub{font-size:13px;color:var(--text-sec);max-width:360px;line-height:1.6}
+.nf-icon{width:56px;height:56px;border-radius:14px;background:var(--s1);border:1px solid var(--border);display:flex;align-items:center;justify-content:center}
+.nf-title{font-family:'Montserrat',sans-serif;font-size:18px;font-weight:700}
+.nf-sub{font-size:12px;color:var(--ts);max-width:320px;line-height:1.7}
 
-/* LAYOUT */
-#app{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:0 0 60px;animation:fadeIn .4s ease}
+#app{display:none;animation:fadeUp .5s ease}
 
 /* TOPBAR */
-.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:50}
+.topbar{background:var(--s1);border-bottom:1px solid var(--border);height:54px;display:flex;align-items:center;padding:0 28px;gap:14px;position:sticky;top:0;z-index:50}
 .logo{font-family:'Montserrat',sans-serif;font-size:15px;font-weight:800;color:var(--text);letter-spacing:.04em}
 .logo span{color:var(--amber);font-style:italic}
 .tb-sep{width:1px;height:16px;background:var(--border)}
-.tb-client{font-size:12px;color:var(--text-sec)}
-.tb-right{margin-left:auto;display:flex;align-items:center;gap:8px}
-.tb-badge{padding:4px 12px;border-radius:16px;font-size:10px;font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:.08em;background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border)}
+.tb-sub{font-size:12px;color:var(--ts)}
+.tb-right{margin-left:auto;display:flex;gap:8px;align-items:center}
+.tb-pill{padding:5px 13px;border-radius:16px;font-size:10px;font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:.08em}
+.tp-amber{background:var(--ad);color:var(--amber);border:1px solid var(--ab)}
+.tp-green{background:var(--gd);color:var(--green);border:1px solid var(--gb)}
 
 /* HERO */
-.hero{background:var(--surface);border-bottom:1px solid var(--border);padding:32px 28px 26px}
-.hero-greeting{font-size:10px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.16em;font-family:'Montserrat',sans-serif;font-weight:600;margin-bottom:6px}
-.hero-name{font-size:28px;font-weight:800;font-family:'Montserrat',sans-serif;color:var(--text);margin-bottom:4px}
-.hero-sub{font-size:13px;color:var(--text-sec);margin-bottom:22px}
-.hero-prog-label{font-size:10px;color:var(--text-sec);margin-bottom:8px;font-family:'Montserrat',sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:.1em}
-.hero-prog-wrap{display:flex;align-items:center;gap:14px;margin-bottom:6px}
-.hero-prog-bar{flex:1;height:10px;background:rgba(255,255,255,0.06);border-radius:5px;overflow:hidden}
-.hero-prog-fill{height:100%;border-radius:5px;background:var(--amber);transition:width .8s ease}
-.hero-prog-pct{font-size:18px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--amber);min-width:44px;text-align:right}
-.hero-prog-sub{font-size:11px;color:var(--text-sec)}
+.hero{background:var(--s1);border-bottom:1px solid var(--border);padding:32px 28px 28px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--amber)}
+.hero-inner{display:flex;align-items:flex-start;gap:28px}
+.hero-left{flex:1;min-width:0}
+.hero-tag{font-size:9px;color:var(--amber);text-transform:uppercase;letter-spacing:.2em;font-family:'Montserrat',sans-serif;font-weight:700;margin-bottom:8px}
+.hero-name{font-size:28px;font-weight:800;font-family:'Montserrat',sans-serif;color:var(--text);line-height:1.15;margin-bottom:6px}
+.hero-sub{font-size:12px;color:var(--ts);margin-bottom:22px}
+.hero-prog-section{display:flex;align-items:center;gap:20px}
+.ring-wrap{position:relative;width:96px;height:96px;flex-shrink:0}
+.ring-wrap svg{display:block}
+.ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring-pct{font-size:20px;font-weight:800;font-family:'Montserrat',sans-serif;color:var(--amber);line-height:1}
+.ring-lbl{font-size:8px;color:var(--ts);text-transform:uppercase;letter-spacing:.1em;margin-top:2px}
+.prog-steps{flex:1;display:flex;flex-direction:column;gap:7px}
+.ps-row{display:flex;align-items:center;gap:9px}
+.ps-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.ps-name{font-size:11px;color:var(--ts);min-width:130px}
+.ps-bar{flex:1;height:5px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden}
+.ps-fill{height:100%;border-radius:3px;transition:width .8s ease}
+.ps-pct{font-size:10px;font-family:'Montserrat',sans-serif;font-weight:600;min-width:28px;text-align:right}
+
+/* HEALTH SCORE CARD */
+.hs-card{background:var(--s2);border:1px solid var(--border);border-radius:12px;padding:16px 18px;text-align:center;flex-shrink:0;width:120px}
+.hs-num{font-size:36px;font-weight:800;font-family:'Montserrat',sans-serif;line-height:1;animation:countUp .6s ease}
+.hs-lbl{font-size:9px;color:var(--ts);text-transform:uppercase;letter-spacing:.12em;font-weight:600;margin-top:4px}
+.hs-pill{display:inline-block;font-size:9px;font-weight:700;padding:3px 9px;border-radius:8px;margin-top:7px;font-family:'Montserrat',sans-serif}
 
 /* STATS */
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:20px 28px;background:var(--bg)}
-.stat{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;position:relative;overflow:hidden}
-.stat::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
-.s-amber::before{background:var(--amber)}.s-green::before{background:var(--green)}.s-blue::before{background:var(--blue)}.s-white::before{background:var(--border)}
-.stat-label{font-size:9px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.14em;font-family:'Montserrat',sans-serif;font-weight:600;margin-bottom:8px}
-.stat-val{font-size:24px;font-weight:800;font-family:'Montserrat',sans-serif;line-height:1;margin-bottom:3px}
-.sv-amber{color:var(--amber)}.sv-green{color:var(--green)}.sv-blue{color:var(--blue)}.sv-white{color:var(--text)}
-.stat-sub{font-size:10px;color:var(--text-sec)}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;padding:18px 28px;background:var(--bg)}
+.stat{background:var(--s1);border:1px solid var(--border);border-radius:10px;padding:14px 16px;position:relative;overflow:hidden}
+.stat::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px}
+.sa::after{background:var(--amber)}.sg::after{background:var(--green)}.sb::after{background:var(--blue)}.sw::after{background:var(--border)}
+.st-lbl{font-size:9px;color:var(--ts);text-transform:uppercase;letter-spacing:.14em;font-weight:600;font-family:'Montserrat',sans-serif;margin-bottom:7px}
+.st-val{font-size:22px;font-weight:800;font-family:'Montserrat',sans-serif;line-height:1;margin-bottom:3px}
+.st-sub{font-size:10px;color:var(--ts)}
 
 /* CONTENT */
-.content{padding:20px 28px;display:flex;flex-direction:column;gap:16px}
+.content{padding:18px 28px;display:flex;flex-direction:column;gap:14px;max-width:1000px;margin:0 auto}
+
+/* MSG */
+.msg{background:rgba(245,166,35,0.06);border:1px solid rgba(245,166,35,0.2);border-radius:12px;padding:18px 20px;display:flex;gap:14px;align-items:flex-start;display:none}
+.msg.show{display:flex}
+.msg-av{width:40px;height:40px;border-radius:50%;background:var(--ad);border:1px solid var(--ab);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--amber);font-family:'Montserrat',sans-serif;flex-shrink:0}
+.msg-from{font-size:9px;color:var(--amber);text-transform:uppercase;letter-spacing:.14em;font-weight:700;font-family:'Montserrat',sans-serif;margin-bottom:6px}
+.msg-txt{font-size:12px;color:var(--ts);line-height:1.7}
 
 /* SECTION CARDS */
-.scard{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden}
-.scard-hdr{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
-.scard-icon{width:28px;height:28px;border-radius:6px;background:var(--amber-dim);border:1px solid var(--amber-border);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.scard-title{font-size:13px;font-weight:600;font-family:'Montserrat',sans-serif;color:var(--text);flex:1}
-.scard-sub{font-size:10px;color:var(--text-sec)}
-.scard-body{padding:18px 20px}
-
-/* MENSAGEM */
-.msg-card{background:rgba(245,166,35,0.06);border:1px solid rgba(245,166,35,0.2);border-radius:12px;padding:18px 20px;display:flex;gap:14px;align-items:flex-start}
-.msg-avatar{width:40px;height:40px;border-radius:50%;background:var(--amber-dim);border:1px solid var(--amber-border);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--amber);font-family:'Montserrat',sans-serif;flex-shrink:0}
-.msg-body{flex:1}
-.msg-from{font-size:10px;color:var(--amber);font-weight:600;font-family:'Montserrat',sans-serif;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px}
-.msg-text{font-size:12px;color:var(--text-sec);line-height:1.7}
-
-/* EQUIPE */
-.team-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.team-item{display:flex;align-items:center;gap:10px;background:var(--surface2);border:0.5px solid var(--border);border-radius:8px;padding:12px 14px;transition:border-color .15s}
-.team-item:hover{border-color:var(--amber-border)}
-.team-avatar{width:38px;height:38px;border-radius:50%;background:var(--amber-dim);border:1px solid var(--amber-border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--amber);font-family:'Montserrat',sans-serif;flex-shrink:0}
-.team-name{font-size:12px;font-weight:600;color:var(--text);margin-bottom:2px}
-.team-role{font-size:10px;color:var(--text-sec)}
-
-/* TIMELINE */
-.timeline-wrap{position:relative;padding:8px 0}
-.timeline-line{position:absolute;top:18px;left:18px;right:18px;height:1px;background:var(--border)}
-.timeline{display:flex;position:relative;z-index:1}
-.tl-step{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1}
-.tl-dot{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;transition:all .3s}
-.td-done{background:var(--green);color:#000}
-.td-active{background:var(--amber);color:#000}
-.td-future{background:var(--surface2);color:var(--text-sec);border:1px solid var(--border)}
-.tl-name{font-size:10px;color:var(--text-sec);text-align:center;max-width:80px;line-height:1.4}
-.tl-status{font-size:9px;text-align:center;font-weight:600;font-family:'Montserrat',sans-serif}
+.sc{background:var(--s1);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.sc-hdr{display:flex;align-items:center;gap:10px;padding:14px 20px;border-bottom:1px solid var(--border)}
+.sc-ico{width:30px;height:30px;border-radius:7px;background:var(--ad);border:1px solid var(--ab);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sc-title{font-size:13px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--text);flex:1;letter-spacing:.02em}
+.sc-sub{font-size:10px;color:var(--ts)}
+.sc-body{padding:18px 20px}
 
 /* TAREFAS */
 .task-list{display:flex;flex-direction:column;gap:8px}
-.task-item{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;background:var(--surface2);border:0.5px solid var(--border);border-radius:8px;transition:border-color .15s}
-.task-item.mine{border-color:rgba(245,166,35,0.3);background:rgba(245,166,35,0.04);cursor:pointer}
-.task-item.mine:hover{border-color:var(--amber)}
-.task-check{width:20px;height:20px;border-radius:4px;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.task{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:9px;border:0.5px solid var(--border);background:var(--s2);transition:all .15s}
+.task.mine{border-color:rgba(245,166,35,0.3);background:rgba(245,166,35,0.04);cursor:pointer}
+.task.mine:hover{border-color:var(--amber);background:rgba(245,166,35,0.07)}
+.task.mine:active{transform:scale(.99)}
+.task.completed{opacity:.5}
+.t-chk{width:22px;height:22px;border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s}
 .tc-done{background:var(--green)}
-.tc-mine{background:transparent;border:2px solid rgba(245,166,35,0.5)}
+.tc-mine{border:2px solid rgba(245,166,35,0.5);background:transparent}
 .tc-mine.checked{background:var(--amber);border-color:var(--amber)}
-.tc-team{background:transparent;border:1.5px solid var(--border)}
-.task-info{flex:1;min-width:0}
-.task-name{font-size:12px;font-weight:500;color:var(--text);margin-bottom:2px}
-.task-name.done{text-decoration:line-through;color:var(--text-dim)}
-.task-resp{font-size:10px;color:var(--text-sec)}
-.task-pill{font-size:9px;padding:2px 9px;border-radius:8px;font-weight:600;font-family:'Montserrat',sans-serif;white-space:nowrap;flex-shrink:0;margin-left:auto;align-self:flex-start;margin-top:1px}
-.tp-done{background:var(--green-dim);color:var(--green)}
-.tp-mine{background:var(--amber-dim);color:var(--amber);border:0.5px solid var(--amber-border)}
-.tp-team{background:rgba(255,255,255,0.06);color:var(--text-sec)}
-.task-legend{display:flex;gap:16px;margin-top:12px;padding-top:12px;border-top:0.5px solid var(--border);flex-wrap:wrap}
-.leg-item{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--text-sec)}
-.leg-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+.tc-team{border:1.5px solid var(--border);background:transparent}
+.t-body{flex:1;min-width:0}
+.t-name{font-size:12px;font-weight:500;color:var(--text);margin-bottom:1px;transition:all .15s}
+.t-name.struck{text-decoration:line-through;color:var(--td)}
+.t-resp{font-size:10px;color:var(--ts)}
+.t-tag{font-size:9px;padding:3px 9px;border-radius:7px;font-weight:700;font-family:'Montserrat',sans-serif;white-space:nowrap;flex-shrink:0}
+.tt-mine{background:var(--ad);color:var(--amber);border:0.5px solid var(--ab)}
+.tt-team{background:rgba(255,255,255,0.06);color:var(--ts)}
+.tt-done{background:var(--gd);color:var(--green)}
+.task-footer{margin-top:14px;padding-top:14px;border-top:0.5px solid var(--border);display:flex;align-items:center;gap:10px}
+.tf-bar{flex:1;height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden}
+.tf-fill{height:100%;border-radius:3px;background:var(--amber);transition:width .4s ease}
+.tf-txt{font-size:10px;color:var(--ts);font-family:'Montserrat',sans-serif;font-weight:600;white-space:nowrap}
+.task-legend{display:flex;gap:14px;margin-top:10px;flex-wrap:wrap}
+.tleg{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--ts)}
+.tleg-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+
+/* TIMELINE */
+.tl{display:flex;position:relative;padding:6px 0}
+.tl::before{content:'';position:absolute;top:22px;left:18px;right:18px;height:1px;background:var(--border)}
+.tl-step{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;position:relative;z-index:1}
+.tl-dot{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;font-family:'Montserrat',sans-serif;transition:all .3s}
+.td-done{background:var(--green);color:#000}
+.td-active{background:var(--amber);color:#000}
+.td-next{background:var(--s2);color:var(--ts);border:2px solid var(--border)}
+.td-future{background:var(--s2);color:var(--td);border:1px solid var(--border)}
+.tl-name{font-size:10px;color:var(--ts);text-align:center;max-width:80px;line-height:1.4;font-weight:500}
+.tl-badge{font-size:9px;padding:2px 8px;border-radius:6px;font-weight:700;font-family:'Montserrat',sans-serif;text-align:center}
+.tb-done{background:var(--gd);color:var(--green)}
+.tb-active{background:var(--ad);color:var(--amber)}
+.tb-soon{background:rgba(255,255,255,0.06);color:var(--ts)}
 
 /* METAS */
-.metas-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}
-.meta-card{background:var(--surface2);border:0.5px solid var(--border);border-radius:10px;padding:14px 16px;position:relative;overflow:hidden}
-.meta-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--amber)}
-.meta-label{font-size:9px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.12em;font-family:'Montserrat',sans-serif;font-weight:600;margin-bottom:8px}
-.meta-val{font-size:20px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--amber);line-height:1;margin-bottom:3px}
-.meta-sub{font-size:10px;color:var(--text-sec)}
-.fat-card{background:var(--surface2);border:1px solid rgba(34,197,94,0.3);border-radius:10px;padding:16px 18px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.meta-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:12px}
+.mc{background:var(--s2);border:0.5px solid var(--border);border-radius:10px;padding:14px 16px;position:relative;overflow:hidden}
+.mc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--amber)}
+.mc-lbl{font-size:9px;color:var(--ts);text-transform:uppercase;letter-spacing:.12em;font-weight:600;font-family:'Montserrat',sans-serif;margin-bottom:7px}
+.mc-val{font-size:18px;font-weight:800;font-family:'Montserrat',sans-serif;color:var(--amber);line-height:1;margin-bottom:3px}
+.mc-sub{font-size:10px;color:var(--ts)}
+.fat-card{background:var(--s2);border:1px solid rgba(34,197,94,0.3);border-radius:10px;padding:16px 18px;display:flex;align-items:center;justify-content:space-between;gap:14px;position:relative;overflow:hidden;margin-bottom:14px}
 .fat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--green)}
-.fat-left{}
-.fat-label{font-size:9px;color:var(--green);text-transform:uppercase;letter-spacing:.12em;font-family:'Montserrat',sans-serif;font-weight:600;margin-bottom:6px}
-.fat-val{font-size:28px;font-weight:800;font-family:'Montserrat',sans-serif;color:var(--green);line-height:1;margin-bottom:4px}
-.fat-sub{font-size:11px;color:var(--text-sec)}
-.fat-badge{background:var(--green-dim);color:var(--green);border:1px solid var(--green-border);border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;font-family:'Montserrat',sans-serif;white-space:nowrap}
+.fat-val{font-size:28px;font-weight:800;font-family:'Montserrat',sans-serif;color:var(--green);line-height:1;margin-bottom:3px}
+.fat-lbl{font-size:9px;color:var(--green);text-transform:uppercase;letter-spacing:.12em;font-weight:700;font-family:'Montserrat',sans-serif;margin-bottom:5px}
+.fat-sub{font-size:11px;color:var(--ts)}
+.fat-badge{padding:8px 14px;border-radius:8px;font-size:12px;font-weight:800;font-family:'Montserrat',sans-serif;white-space:nowrap}
+.chart-wrap{height:160px;position:relative;margin-top:4px}
 
-/* APRESENTACAO */
-.apres-card{background:rgba(245,166,35,0.07);border:1px solid rgba(245,166,35,0.25);border-radius:12px;padding:20px 22px;display:flex;align-items:center;gap:18px;transition:border-color .2s}
-.apres-card:hover{border-color:rgba(245,166,35,0.5)}
-.apres-icon{width:48px;height:48px;border-radius:12px;background:var(--amber-dim);border:1px solid var(--amber-border);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+/* APRESENTAÇÃO */
+.apres{background:rgba(245,166,35,0.07);border:1px solid rgba(245,166,35,0.28);border-radius:12px;padding:22px 24px;display:flex;align-items:center;gap:20px;transition:border-color .2s;display:none}
+.apres.show{display:flex}
+.apres:hover{border-color:rgba(245,166,35,0.5)}
+.apres-ico{width:56px;height:56px;border-radius:14px;background:var(--ad);border:1px solid var(--ab);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.apres-tag{font-size:9px;color:var(--amber);text-transform:uppercase;letter-spacing:.16em;font-weight:700;font-family:'Montserrat',sans-serif;margin-bottom:5px}
+.apres-title{font-size:16px;font-weight:800;font-family:'Montserrat',sans-serif;color:var(--text);margin-bottom:5px}
+.apres-sub{font-size:11px;color:var(--ts)}
 .apres-info{flex:1;min-width:0}
-.apres-title{font-size:15px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--text);margin-bottom:4px}
-.apres-sub{font-size:11px;color:var(--text-sec)}
-.apres-btn{background:var(--amber);color:#000;border:none;border-radius:8px;padding:11px 22px;font-size:12px;font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:.04em;cursor:pointer;white-space:nowrap;transition:opacity .15s;text-decoration:none;display:inline-block}
+.apres-btn{background:var(--amber);color:#000;border:none;border-radius:9px;padding:13px 24px;font-size:13px;font-weight:800;font-family:'Montserrat',sans-serif;letter-spacing:.04em;cursor:pointer;white-space:nowrap;transition:opacity .15s;text-decoration:none;display:inline-block}
 .apres-btn:hover{opacity:.88}
-.apres-empty{font-size:12px;color:var(--text-sec);padding:20px;text-align:center}
+
+/* EQUIPE */
+.team-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.tm{display:flex;align-items:center;gap:12px;background:var(--s2);border:0.5px solid var(--border);border-radius:9px;padding:12px 16px;transition:border-color .15s}
+.tm:hover{border-color:var(--ab)}
+.tm-av{width:40px;height:40px;border-radius:50%;background:var(--ad);border:1px solid var(--ab);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--amber);font-family:'Montserrat',sans-serif;flex-shrink:0}
+.tm-name{font-size:12px;font-weight:600;color:var(--text);margin-bottom:2px}
+.tm-role{font-size:10px;color:var(--ts)}
 
 /* CALLS */
 .call-list{display:flex;flex-direction:column}
-.call-item{padding:14px 0;border-bottom:0.5px solid var(--border);display:flex;align-items:flex-start;gap:14px}
+.call-item{display:flex;gap:14px;padding:14px 0;border-bottom:0.5px solid var(--border)}
 .call-item:last-child{border-bottom:none;padding-bottom:0}
-.call-type-badge{font-size:9px;padding:3px 10px;border-radius:8px;font-weight:600;font-family:'Montserrat',sans-serif;background:var(--blue-dim);color:var(--blue);border:0.5px solid var(--blue-border);white-space:nowrap;flex-shrink:0;margin-top:2px}
-.call-info{flex:1;min-width:0}
-.call-summary{font-size:12px;color:var(--text);margin-bottom:4px;line-height:1.6}
-.call-meta{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
-.call-date{font-size:10px;color:var(--text-sec)}
-.call-resp{font-size:10px;color:var(--text-sec)}
-.call-next{font-size:11px;color:var(--amber);margin-top:6px;line-height:1.5}
-.call-next-label{font-weight:600;margin-right:4px}
-.call-empty{font-size:12px;color:var(--text-sec);text-align:center;padding:20px}
+.call-badge{font-size:9px;padding:3px 10px;border-radius:7px;font-weight:700;font-family:'Montserrat',sans-serif;background:var(--bd);color:var(--blue);border:0.5px solid var(--bb);white-space:nowrap;flex-shrink:0;margin-top:2px}
+.call-body{flex:1;min-width:0}
+.call-txt{font-size:12px;color:var(--text);margin-bottom:4px;line-height:1.6}
+.call-meta{font-size:10px;color:var(--ts)}
+.call-next{font-size:11px;color:var(--amber);margin-top:5px;line-height:1.5}
+.call-next-lbl{font-weight:700;margin-right:4px}
+.call-empty{font-size:12px;color:var(--ts);text-align:center;padding:20px}
 
 /* PLAYBOOK */
-.playbook-sections{display:flex;flex-direction:column;gap:8px}
-.pb-section{background:var(--surface2);border:0.5px solid var(--border);border-radius:8px;overflow:hidden;transition:border-color .15s}
-.pb-section:hover{border-color:var(--amber-border)}
-.pb-section-hdr{padding:14px 16px;display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
-.pb-section-num{width:26px;height:26px;border-radius:50%;background:var(--amber-dim);border:1px solid var(--amber-border);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--amber);font-family:'Montserrat',sans-serif;flex-shrink:0}
-.pb-section-title{font-size:12px;font-weight:600;color:var(--text);flex:1}
-.pb-section-chev{font-size:16px;color:var(--text-sec);transition:transform .2s}
-.pb-section-body{padding:0 16px 16px;display:none}
-.pb-section-body.open{display:block}
-.pb-content{font-size:12px;color:var(--text-sec);line-height:1.8;white-space:pre-wrap}
-.pb-empty{font-size:12px;color:var(--text-sec);text-align:center;padding:20px}
+.pb-list{display:flex;flex-direction:column;gap:8px}
+.pb-sec{background:var(--s2);border:0.5px solid var(--border);border-radius:9px;overflow:hidden;transition:border-color .15s}
+.pb-sec:hover{border-color:var(--ab)}
+.pb-hdr{display:flex;align-items:center;gap:10px;padding:14px 16px;cursor:pointer;user-select:none}
+.pb-num{width:28px;height:28px;border-radius:50%;background:var(--ad);border:1px solid var(--ab);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:var(--amber);font-family:'Montserrat',sans-serif;flex-shrink:0}
+.pb-title{font-size:12px;font-weight:600;color:var(--text);flex:1}
+.pb-chev{font-size:18px;color:var(--ts);transition:transform .2s;flex-shrink:0}
+.pb-body{padding:0 16px 16px;display:none}
+.pb-body.open{display:block}
+.pb-content{font-size:12px;color:var(--ts);line-height:1.8;white-space:pre-wrap}
 
-/* MOBILE */
 @media(max-width:700px){
-  .topbar{padding:12px 16px}
+  .topbar{padding:0 16px}
   .hero{padding:24px 16px 20px}
-  .hero-name{font-size:22px}
+  .hero-inner{flex-direction:column;gap:18px}
+  .hs-card{width:100%}
   .stats{grid-template-columns:repeat(2,1fr);padding:14px 16px;gap:8px}
   .content{padding:14px 16px}
-  .metas-grid{grid-template-columns:repeat(2,1fr)}
+  .meta-grid{grid-template-columns:repeat(2,1fr)}
   .team-grid{grid-template-columns:1fr}
-  .apres-card{flex-direction:column;align-items:flex-start}
+  .apres.show{flex-direction:column;align-items:flex-start}
   .apres-btn{width:100%;text-align:center}
-  .timeline-line{display:none}
-  .timeline{flex-wrap:wrap;gap:14px;justify-content:center}
+  .tl{flex-wrap:wrap;gap:16px;justify-content:center}
+  .tl::before{display:none}
   .tl-step{min-width:80px}
   .fat-card{flex-direction:column;align-items:flex-start;gap:10px}
+  .hero-prog-section{flex-direction:column;align-items:flex-start}
 }
 @media(max-width:480px){
-  .metas-grid{grid-template-columns:1fr}
+  .meta-grid{grid-template-columns:1fr}
   .stats{grid-template-columns:1fr 1fr}
 }
 </style>
@@ -228,151 +261,172 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 <body>
 
 <div id="loading">
-  <div class="loading-logo">FACE <span>100K</span></div>
-  <div class="spinner"></div>
-  <div style="font-size:12px;color:#A0A0A8">Carregando seu programa...</div>
+  <div class="l-logo">FACE <span>100K</span></div>
+  <div class="l-spinner"></div>
+  <div class="l-txt">Carregando seu programa...</div>
 </div>
 
 <div id="not-found">
-  <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><rect width="48" height="48" rx="12" fill="#1A2025"/><path d="M16 18L24 14L32 18V28C32 33 28.4 36.4 24 37.5C19.6 36.4 16 33 16 28Z" stroke="#F5A623" stroke-width="1.8" fill="none"/><path d="M20 26L23 29L29 23" stroke="#F5A623" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-  <div class="nf-title">Link inválido</div>
-  <div class="nf-sub">Este link de acompanhamento não foi encontrado. Verifique com sua equipe da System Digital.</div>
+  <div class="nf-icon">
+    <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><path d="M6 9.5L13 7L20 9.5V17C20 20.5 17 23 13 24C9 23 6 20.5 6 17Z" stroke="#F5A623" stroke-width="1.5" fill="none"/><path d="M10 16L12.5 18.5L17 13" stroke="#F5A623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
+  <div class="nf-title">Link não encontrado</div>
+  <div class="nf-sub">Este link de acompanhamento é inválido ou expirou. Verifique com sua equipe da System Digital.</div>
 </div>
 
-<div id="app" style="display:none">
-
+<div id="app">
   <div class="topbar">
     <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect width="22" height="22" rx="5" fill="#212830"/><path d="M5.5 7.5L11 6L16.5 7.5V13C16.5 16 14.2 17.8 11 18.5C7.8 17.8 5.5 16 5.5 13Z" stroke="#F5A623" stroke-width="1.3" fill="none"/><path d="M8.5 12L10.5 14L14.5 10" stroke="#F5A623" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
     <div class="logo">FACE <span>100K</span></div>
     <div class="tb-sep"></div>
-    <div class="tb-client" id="tb-client">Meu programa</div>
+    <div class="tb-sub" id="tb-sub">Meu programa</div>
     <div class="tb-right">
-      <div class="tb-badge" id="tb-week">Carregando...</div>
+      <div class="tb-pill tp-amber" id="tb-week">—</div>
+      <div class="tb-pill tp-green" id="tb-traffic" style="display:none">Tráfego ativo</div>
     </div>
   </div>
 
   <div class="hero">
-    <div class="hero-greeting" id="hero-greeting">Olá</div>
-    <div class="hero-name" id="hero-name">—</div>
-    <div class="hero-sub" id="hero-sub">—</div>
-    <div class="hero-prog-label">Progresso geral do programa</div>
-    <div class="hero-prog-wrap">
-      <div class="hero-prog-bar"><div class="hero-prog-fill" id="hero-prog-fill" style="width:0%"></div></div>
-      <div class="hero-prog-pct" id="hero-prog-pct">0%</div>
+    <div class="hero-inner">
+      <div class="hero-left">
+        <div class="hero-tag" id="hero-tag">Olá</div>
+        <div class="hero-name" id="hero-name">Minha evolução<br>no programa</div>
+        <div class="hero-sub" id="hero-sub">—</div>
+        <div class="hero-prog-section">
+          <div class="ring-wrap">
+            <svg width="96" height="96" viewBox="0 0 96 96">
+              <circle cx="48" cy="48" r="40" fill="none" stroke="#3E4249" stroke-width="8"/>
+              <circle cx="48" cy="48" r="40" fill="none" stroke="#F5A623" stroke-width="8" id="ring-fill" stroke-dasharray="251" stroke-dashoffset="251" stroke-linecap="round" style="transform:rotate(-90deg);transform-origin:48px 48px;transition:stroke-dashoffset 1s ease"/>
+            </svg>
+            <div class="ring-center">
+              <div class="ring-pct" id="ring-pct">0%</div>
+              <div class="ring-lbl">Progresso</div>
+            </div>
+          </div>
+          <div class="prog-steps" id="prog-steps"></div>
+        </div>
+      </div>
+      <div class="hs-card">
+        <div class="hs-num" id="hs-num">—</div>
+        <div class="hs-lbl">Health Score</div>
+        <div class="hs-pill" id="hs-pill">—</div>
+      </div>
     </div>
-    <div class="hero-prog-sub" id="hero-prog-sub">—</div>
   </div>
 
   <div class="stats">
-    <div class="stat s-amber"><div class="stat-label">Semana atual</div><div class="stat-val sv-amber" id="st-week">—</div><div class="stat-sub" id="st-week-sub">do programa</div></div>
-    <div class="stat s-white"><div class="stat-label">Checkpoint</div><div class="stat-val sv-white" id="st-cp" style="font-size:16px;padding-top:4px">—</div><div class="stat-sub" id="st-cp-sub">—</div></div>
-    <div class="stat s-blue"><div class="stat-label">Próximo passo</div><div class="stat-val sv-white" id="st-next" style="font-size:13px;padding-top:4px;font-weight:600">—</div><div class="stat-sub">meta desta semana</div></div>
-    <div class="stat s-green"><div class="stat-label">Health Score</div><div class="stat-val" id="st-health" style="color:var(--green)">—</div><div class="stat-sub" id="st-health-sub">—</div></div>
+    <div class="stat sa"><div class="st-lbl">Semana atual</div><div class="st-val" id="st-week" style="color:var(--amber)">—</div><div class="st-sub" id="st-week-sub">do programa</div></div>
+    <div class="stat sw"><div class="st-lbl">Checkpoint</div><div class="st-val" id="st-cp" style="color:var(--text);font-size:15px;padding-top:3px">—</div><div class="st-sub" id="st-cp-sub">—</div></div>
+    <div class="stat sb"><div class="st-lbl">Próximo passo</div><div class="st-val" id="st-next" style="color:var(--text);font-size:12px;padding-top:4px;font-weight:700">—</div><div class="st-sub">meta desta semana</div></div>
+    <div class="stat sg"><div class="st-lbl">Faturamento atual</div><div class="st-val" id="st-fat" style="color:var(--green)">R$—</div><div class="st-sub" id="st-fat-sub">registrado pela equipe</div></div>
   </div>
 
   <div class="content">
 
-    <div class="msg-card" id="msg-card" style="display:none">
-      <div class="msg-avatar" id="msg-avatar">ML</div>
-      <div class="msg-body">
+    <div class="msg" id="msg">
+      <div class="msg-av" id="msg-av">SD</div>
+      <div>
         <div class="msg-from" id="msg-from">System Digital</div>
-        <div class="msg-text" id="msg-text">—</div>
+        <div class="msg-txt" id="msg-txt">—</div>
       </div>
     </div>
 
-    <div class="scard">
-      <div class="scard-hdr">
-        <div class="scard-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="3" stroke="#F5A623" stroke-width="1.3"/><path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="#F5A623" stroke-width="1.3" stroke-linecap="round"/></svg></div>
-        <div class="scard-title">Minha equipe</div>
-        <div class="scard-sub">responsáveis pelo seu programa</div>
+    <div class="sc">
+      <div class="sc-hdr">
+        <div class="sc-ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="2" stroke="#F5A623" stroke-width="1.3"/><path d="M5 8.5L7 10.5L11 6" stroke="#F5A623" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="sc-title" id="tasks-title">Tarefas da semana</div>
+        <div class="sc-sub" id="tasks-sub">—</div>
       </div>
-      <div class="scard-body">
-        <div class="team-grid" id="team-grid"></div>
-      </div>
-    </div>
-
-    <div class="scard">
-      <div class="scard-hdr">
-        <div class="scard-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2l1.5 4h4l-3.5 2.5 1.5 4L8 10l-3.5 2.5 1.5-4L2.5 6h4z" stroke="#F5A623" stroke-width="1.3" stroke-linejoin="round"/></svg></div>
-        <div class="scard-title">Minha jornada</div>
-        <div class="scard-sub" id="journey-sub">24 semanas · 4 checkpoints</div>
-      </div>
-      <div class="scard-body">
-        <div class="timeline-wrap">
-          <div class="timeline-line"></div>
-          <div class="timeline" id="timeline"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="scard">
-      <div class="scard-hdr">
-        <div class="scard-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="11" rx="1.5" stroke="#F5A623" stroke-width="1.3"/><path d="M5 1v3M11 1v3M2 7h12" stroke="#F5A623" stroke-width="1.3" stroke-linecap="round"/></svg></div>
-        <div class="scard-title" id="tasks-title">Tarefas da semana</div>
-        <div class="scard-sub" id="tasks-sub">o que você precisa fazer agora</div>
-      </div>
-      <div class="scard-body">
+      <div class="sc-body">
         <div class="task-list" id="task-list"></div>
+        <div class="task-footer">
+          <div class="tf-bar"><div class="tf-fill" id="tf-fill" style="width:0%"></div></div>
+          <div class="tf-txt" id="tf-txt">0 / 0</div>
+        </div>
         <div class="task-legend">
-          <div class="leg-item"><div class="leg-dot" style="background:rgba(245,166,35,0.4);border:1px solid rgba(245,166,35,0.5)"></div>Você executa</div>
-          <div class="leg-item"><div class="leg-dot" style="background:rgba(255,255,255,0.08);border:1px solid #3E4249"></div>Equipe executa</div>
-          <div class="leg-item"><div class="leg-dot" style="background:#22C55E"></div>Concluída</div>
+          <div class="tleg"><div class="tleg-dot" style="background:rgba(245,166,35,0.4);border:1px solid rgba(245,166,35,0.5)"></div>Você executa</div>
+          <div class="tleg"><div class="tleg-dot" style="background:rgba(255,255,255,0.08);border:1px solid #3E4249"></div>Equipe executa</div>
+          <div class="tleg"><div class="tleg-dot" style="background:#22C55E"></div>Concluída</div>
         </div>
       </div>
     </div>
 
-    <div class="scard">
-      <div class="scard-hdr">
-        <div class="scard-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 13V9M6 13V6M9 13V4M12 13V8" stroke="#F5A623" stroke-width="1.3" stroke-linecap="round"/></svg></div>
-        <div class="scard-title">Minhas metas</div>
-        <div class="scard-sub">evolução do faturamento</div>
+    <div class="sc">
+      <div class="sc-hdr">
+        <div class="sc-ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5l1.5 4h4l-3 2.5 1 4L8 10l-3.5 2 1-4-3-2.5h4z" stroke="#F5A623" stroke-width="1.2" stroke-linejoin="round"/></svg></div>
+        <div class="sc-title">Jornada do programa</div>
+        <div class="sc-sub" id="journey-sub">24 semanas · 4 checkpoints</div>
       </div>
-      <div class="scard-body">
-        <div class="metas-grid">
-          <div class="meta-card"><div class="meta-label">Meta base</div><div class="meta-val" id="m-base">R$—</div><div class="meta-sub">quando entrou</div></div>
-          <div class="meta-card"><div class="meta-label">Meta alvo</div><div class="meta-val" id="m-alvo">R$—</div><div class="meta-sub">objetivo do programa</div></div>
-          <div class="meta-card"><div class="meta-label">Super meta</div><div class="meta-val">R$100K</div><div class="meta-sub">por semana</div></div>
+      <div class="sc-body">
+        <div class="tl" id="timeline"></div>
+      </div>
+    </div>
+
+    <div class="sc">
+      <div class="sc-hdr">
+        <div class="sc-ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 13V9M6 13V6M9 13V4M12 13V7" stroke="#F5A623" stroke-width="1.3" stroke-linecap="round"/></svg></div>
+        <div class="sc-title">Minhas metas</div>
+        <div class="sc-sub">evolução do faturamento</div>
+      </div>
+      <div class="sc-body">
+        <div class="meta-grid">
+          <div class="mc"><div class="mc-lbl">Meta base</div><div class="mc-val" id="m-base">R$—</div><div class="mc-sub">ao entrar no programa</div></div>
+          <div class="mc"><div class="mc-lbl">Meta alvo</div><div class="mc-val" id="m-alvo">R$—</div><div class="mc-sub">objetivo do programa</div></div>
+          <div class="mc"><div class="mc-lbl">Super meta</div><div class="mc-val">R$100K</div><div class="mc-sub">por semana</div></div>
         </div>
         <div class="fat-card">
-          <div class="fat-left">
-            <div class="fat-label">Faturamento atual</div>
-            <div class="fat-val" id="fat-atual">R$—</div>
+          <div>
+            <div class="fat-lbl">Faturamento atual</div>
+            <div class="fat-val" id="fat-val">R$—</div>
             <div class="fat-sub" id="fat-sub">registrado pela equipe</div>
           </div>
-          <div class="fat-badge" id="fat-badge">—</div>
+          <div class="fat-badge" id="fat-badge" style="display:none">—</div>
         </div>
+        <div class="chart-wrap"><canvas id="fat-chart"></canvas></div>
       </div>
     </div>
 
-    <div class="apres-card" id="apres-card" style="display:none">
-      <div class="apres-icon">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="4" y="3" width="16" height="18" rx="2" stroke="#F5A623" stroke-width="1.5"/><path d="M8 8h8M8 12h8M8 16h5" stroke="#F5A623" stroke-width="1.5" stroke-linecap="round"/></svg>
+    <div class="apres" id="apres">
+      <div class="apres-ico">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="4" y="3" width="20" height="22" rx="3" stroke="#F5A623" stroke-width="1.5"/><path d="M9 9h10M9 13h10M9 17h6" stroke="#F5A623" stroke-width="1.5" stroke-linecap="round"/></svg>
       </div>
       <div class="apres-info">
+        <div class="apres-tag">Exclusivo para você</div>
         <div class="apres-title">Sua apresentação de vendas</div>
-        <div class="apres-sub">Personalizada pela equipe System Digital</div>
+        <div class="apres-sub">Criada e personalizada pela equipe System Digital</div>
       </div>
       <a class="apres-btn" id="apres-btn" href="#" target="_blank">Abrir apresentação</a>
     </div>
 
-    <div class="scard" id="playbook-section" style="display:none">
-      <div class="scard-hdr">
-        <div class="scard-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="3" y="2" width="10" height="12" rx="1.5" stroke="#F5A623" stroke-width="1.3"/><path d="M6 5h4M6 8h4M6 11h2" stroke="#F5A623" stroke-width="1.3" stroke-linecap="round"/></svg></div>
-        <div class="scard-title">Playbook de vendas</div>
-        <div class="scard-sub">metodologia System Digital</div>
+    <div class="sc" id="playbook-card" style="display:none">
+      <div class="sc-hdr">
+        <div class="sc-ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="3" y="2" width="10" height="12" rx="1.5" stroke="#F5A623" stroke-width="1.3"/><path d="M6 5h4M6 8h4M6 11h2" stroke="#F5A623" stroke-width="1.3" stroke-linecap="round"/></svg></div>
+        <div class="sc-title">Playbook de vendas</div>
+        <div class="sc-sub">metodologia System Digital</div>
       </div>
-      <div class="scard-body">
-        <div class="playbook-sections" id="playbook-sections"></div>
+      <div class="sc-body">
+        <div class="pb-list" id="pb-list"></div>
       </div>
     </div>
 
-    <div class="scard">
-      <div class="scard-hdr">
-        <div class="scard-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="#F5A623" stroke-width="1.3"/><path d="M8 5v3l2 1.5" stroke="#F5A623" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <div class="scard-title">Histórico de sessões</div>
-        <div class="scard-sub" id="calls-sub">calls realizadas</div>
+    <div class="sc">
+      <div class="sc-hdr">
+        <div class="sc-ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="2.5" stroke="#F5A623" stroke-width="1.3"/><path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="#F5A623" stroke-width="1.3" stroke-linecap="round"/></svg></div>
+        <div class="sc-title">Minha equipe</div>
+        <div class="sc-sub">System Digital</div>
       </div>
-      <div class="scard-body">
+      <div class="sc-body">
+        <div class="team-grid" id="team-grid"></div>
+      </div>
+    </div>
+
+    <div class="sc">
+      <div class="sc-hdr">
+        <div class="sc-ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="#F5A623" stroke-width="1.3"/><path d="M8 5v3l2 1.5" stroke="#F5A623" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="sc-title">Histórico de sessões</div>
+        <div class="sc-sub" id="calls-sub">calls realizadas</div>
+      </div>
+      <div class="sc-body">
         <div class="call-list" id="call-list"></div>
       </div>
     </div>
@@ -381,107 +435,148 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 </div>
 
 <script>
-const WEEK_TASKS = {
-  1:[{id:'w1t1',name:'Confirmar contrato e pagamento',resp:'CS1',mine:false},{id:'w1t2',name:'Acessar plataforma de aulas e iniciar trilha',resp:'Você',mine:true},{id:'w1t3',name:'Entrar no grupo do SDR',resp:'Você',mine:true},{id:'w1t4',name:'Configurar Flashboard e CRM',resp:'CS1',mine:false}],
+const CPS=[
+  {id:1,title:'Primeira venda',weeks:[1,2,3,4]},
+  {id:2,title:'Consistência',weeks:[5,6,7,8,9,10,11,12]},
+  {id:3,title:'Metas batendo',weeks:[13,14,15,16,17,18,19,20]},
+  {id:4,title:'Escala e recompra',weeks:[21,22,23,24]},
+];
+const CP_NEXT={1:'Realizar primeira venda',2:'Garantir 4 vendas/semana',3:'Bater meta mensal',4:'Validar resultado final'};
+const WEEK_TASKS={
+  1:[{id:'w1t1',name:'Acessar plataforma de aulas e iniciar trilha',resp:'Você',mine:true},{id:'w1t2',name:'Entrar no grupo do SDR',resp:'Você',mine:true},{id:'w1t3',name:'Cadastro nas plataformas e configuração',resp:'CS1',mine:false}],
   2:[{id:'w2t1',name:'Assistir aula de esteira de produto',resp:'Você',mine:true},{id:'w2t2',name:'Preencher formulário da esteira (24h)',resp:'Você',mine:true},{id:'w2t3',name:'Call de esteira de produtos',resp:'CS2',mine:false}],
-  3:[{id:'w3t1',name:'Assistir tutoria 6 e consulta da Dra. Deborah',resp:'Você',mine:true},{id:'w3t2',name:'Call de análise da apresentação',resp:'CS3',mine:false},{id:'w3t3',name:'Gravar consulta de venda',resp:'Você',mine:true},{id:'w3t4',name:'Call de tráfego',resp:'Tráfego',mine:false}],
+  3:[{id:'w3t1',name:'Assistir tutoria 6 e consulta gravada',resp:'Você',mine:true},{id:'w3t2',name:'Gravar consulta de venda',resp:'Você',mine:true},{id:'w3t3',name:'Call de análise da apresentação',resp:'CS3',mine:false},{id:'w3t4',name:'Call de tráfego',resp:'Tráfego',mine:false}],
   4:[{id:'w4t1',name:'Realizar primeira venda',resp:'Você',mine:true},{id:'w4t2',name:'Preencher Flashboard diariamente',resp:'Você',mine:true},{id:'w4t3',name:'Call de Checkpoint 1',resp:'CS3',mine:false}],
 };
 for(let w=5;w<=24;w++){
   if(!WEEK_TASKS[w]){
-    const t=[{id:`w${w}t1`,name:'Preencher Flashboard diariamente',resp:'Você',mine:true}];
-    if(w%4===2) t.push({id:`w${w}t2`,name:'Participar das tutorias de segunda e terça',resp:'Você',mine:true},{id:`w${w}t3`,name:'Call de vendas',resp:'CS3',mine:false});
-    if(w%4===3) t.push({id:`w${w}t2`,name:'Acompanhar funil no CRM',resp:'Você',mine:true},{id:`w${w}t3`,name:'Call de análise de conversão',resp:'Tráfego',mine:false});
-    if(w%4===0) t.push({id:`w${w}t2`,name:'Garantir 4 vendas nesta semana',resp:'Você',mine:true});
-    if(w===0||w%4===1) t.push({id:`w${w}t2`,name:'Revisar script de vendas',resp:'Você',mine:true});
+    const t=[{id:`w${w}ta`,name:'Preencher Flashboard diariamente',resp:'Você',mine:true}];
+    if(w%4===2) t.push({id:`w${w}tb`,name:'Participar das tutorias de segunda e terça',resp:'Você',mine:true},{id:`w${w}tc`,name:'Call de vendas',resp:'CS3',mine:false});
+    if(w%4===3) t.push({id:`w${w}tb`,name:'Acompanhar funil no CRM',resp:'Você',mine:true},{id:`w${w}tc`,name:'Call de análise de conversão',resp:'Tráfego',mine:false});
+    if(w%4===0||w%4===1) t.push({id:`w${w}tb`,name:'Garantir 4 vendas nesta semana',resp:'Você',mine:true});
+    if(w===12||w===20||w===24) t.push({id:`w${w}tcp`,name:'Call de Checkpoint',resp:'CS3',mine:false});
     WEEK_TASKS[w]=t;
   }
 }
 
-const CPS=[
-  {id:1,title:'Primeira venda',sub:'S1–S4',weeks:[1,2,3,4]},
-  {id:2,title:'Consistência de vendas',sub:'S5–S12',weeks:[5,6,7,8,9,10,11,12]},
-  {id:3,title:'Metas batendo',sub:'S13–S20',weeks:[13,14,15,16,17,18,19,20]},
-  {id:4,title:'Escala e recompra',sub:'S21–S24',weeks:[21,22,23,24]},
-];
-
-const CP_NEXT_STEP={1:'Realizar primeira venda',2:'Garantir 4 vendas/semana',3:'Bater meta mensal',4:'Validar resultado'};
-
 let S={};
+let fatChart=null;
 
-function ini(n){ return (n||'?').split(' ').filter(Boolean).slice(0,2).map(x=>x[0]).join('').toUpperCase(); }
-function fmtCurrency(v){ if(!v&&v!==0) return 'R$ —'; return 'R$ '+Number(v).toLocaleString('pt-BR'); }
+function ini(n){ return (n||'?').trim().split(' ').filter(Boolean).slice(0,2).map(x=>x[0]).join('').toUpperCase(); }
+function fmt(v){ if(!v&&v!==0) return 'R$—'; return 'R$'+Number(v).toLocaleString('pt-BR'); }
 function getW(){ return S.currentWeek||1; }
-function getWeekState(w){ return (S.weekStates&&S.weekStates[w])||{}; }
-function getHealthLabel(s){ if(s>=80) return 'Saudável'; if(s>=60) return 'Em atenção'; return 'Em risco'; }
-function getHealthColor(s){ if(s>=80) return 'var(--green)'; if(s>=60) return 'var(--yellow)'; return 'var(--red)'; }
+function getWS(w){ return (S.weekStates&&S.weekStates[w])||{}; }
 function getCPForWeek(w){ for(const cp of CPS){ if(cp.weeks.includes(w)) return cp; } return CPS[0]; }
-function calcProgress(){
-  let done=0,total=0;
-  const w=getW();
-  for(let i=1;i<w;i++){ const t=WEEK_TASKS[i]||[]; total+=t.length; done+=t.filter(t2=>(getWeekState(i)[t2.id]||'pending')==='done').length; }
-  const totalWeeks=S.program==='ativacao'?12:24;
-  return Math.round((w-1)/totalWeeks*100);
+function calcProg(){
+  const w=getW(); const totalW=S.program==='ativacao'?12:24;
+  return Math.min(99,Math.round((w-1)/totalW*100));
 }
+function hColor(s){ if(s>=80) return {c:'var(--green)',bg:'var(--gd)',b:'var(--gb)',lbl:'Saudável'}; if(s>=60) return {c:'var(--yellow)',bg:'rgba(234,179,8,0.1)',b:'rgba(234,179,8,0.22)',lbl:'Em atenção'}; return {c:'var(--red)',bg:'var(--rd)',b:'rgba(239,68,68,0.22)',lbl:'Em risco'}; }
 
 function renderAll(){
   const name=S.name||'Cliente';
   const w=getW();
   const cp=getCPForWeek(w);
   const score=S.healthScore||0;
-  const prog=calcProgress();
+  const prog=calcProg();
   const totalW=S.program==='ativacao'?12:24;
+  const h=hColor(score);
 
-  document.title=`${name} — Meu Programa FACE 100K`;
-  document.getElementById('tb-client').textContent=`Meu programa — ${name}`;
+  document.title=`${name} — FACE 100K`;
+  document.getElementById('tb-sub').textContent=`Meu programa — ${name}`;
   document.getElementById('tb-week').textContent=`CP${cp.id} · Semana ${w} de ${totalW}`;
-  document.getElementById('hero-greeting').textContent=`Olá, ${name.split(' ')[0]}`;
-  document.getElementById('hero-name').textContent='Minha evolução no programa';
-  const prog2=S.program==='ativacao'?'Ativação 17K':'Aceleração 42K';
-  document.getElementById('hero-sub').textContent=`${prog2}${S.startDate?' · Iniciado em '+new Date(S.startDate).toLocaleDateString('pt-BR'):''}`;
-  document.getElementById('hero-prog-fill').style.width=prog+'%';
-  document.getElementById('hero-prog-pct').textContent=prog+'%';
-  document.getElementById('hero-prog-sub').textContent=`Semana ${w} de ${totalW} · CP${cp.id} — ${cp.title}`;
-
+  document.getElementById('tb-traffic').style.display=S.trafficActive?'':'none';
+  document.getElementById('hero-tag').textContent=`Olá, ${name.split(' ')[0]}`;
+  document.getElementById('hero-sub').textContent=`${S.program==='ativacao'?'Ativação 17K':'Aceleração 42K'}${S.startDate?' · Iniciado em '+new Date(S.startDate).toLocaleDateString('pt-BR'):''}`;
   document.getElementById('st-week').textContent=w;
   document.getElementById('st-week-sub').textContent=`de ${totalW} semanas`;
   document.getElementById('st-cp').textContent=`CP${cp.id}`;
   document.getElementById('st-cp-sub').textContent=cp.title;
-  document.getElementById('st-next').textContent=CP_NEXT_STEP[cp.id]||'—';
-  const hEl=document.getElementById('st-health'); hEl.textContent=score||'—'; hEl.style.color=getHealthColor(score);
-  document.getElementById('st-health-sub').textContent=score?getHealthLabel(score):'aguardando';
+  document.getElementById('st-next').textContent=CP_NEXT[cp.id]||'—';
+  document.getElementById('journey-sub').textContent=`${totalW} semanas · 4 checkpoints`;
 
+  const hsEl=document.getElementById('hs-num'); hsEl.textContent=score||'—'; hsEl.style.color=h.c;
+  const hsPill=document.getElementById('hs-pill'); hsPill.textContent=score?h.lbl:'aguardando'; hsPill.style.background=h.bg; hsPill.style.color=h.c; hsPill.style.border=`0.5px solid ${h.b}`;
+
+  const ringFill=document.getElementById('ring-fill');
+  const circumference=251;
+  const offset=circumference-(prog/100*circumference);
+  setTimeout(()=>{ ringFill.style.strokeDashoffset=offset; },100);
+  document.getElementById('ring-pct').textContent=prog+'%';
+
+  renderProgSteps(cp.id);
   renderMsg();
-  renderTeam();
-  renderTimeline(cp.id,w);
   renderTasks(w);
+  renderTimeline(cp.id,w);
   renderMetas();
-  renderApresentacao();
+  renderApres();
   renderPlaybook();
+  renderTeam();
   renderCalls();
 }
 
-function renderMsg(){
-  const ws=getWeekState(getW());
-  const obs=ws._obs||'';
-  const card=document.getElementById('msg-card');
-  const resp=S.cs3||S.cs2||S.cs1||'System Digital';
-  if(!obs){ card.style.display='none'; return; }
-  card.style.display='flex';
-  document.getElementById('msg-avatar').textContent=ini(resp);
-  document.getElementById('msg-from').textContent=resp+' — System Digital';
-  document.getElementById('msg-text').textContent=obs;
+function renderProgSteps(currentCP){
+  const el=document.getElementById('prog-steps');
+  el.innerHTML=CPS.map(cp=>{
+    const w=getW();
+    const allDone=cp.weeks.every(wk=>wk<w);
+    const isActive=cp.id===currentCP;
+    const pct=allDone?100:isActive?Math.round((w-cp.weeks[0])/(cp.weeks.length)*100):0;
+    const color=allDone?'var(--green)':isActive?'var(--amber)':'var(--td)';
+    return `<div class="ps-row">
+      <div class="ps-dot" style="background:${color}"></div>
+      <div class="ps-name" style="color:${isActive?'var(--text)':'var(--ts)'}">CP${cp.id} — ${cp.title}</div>
+      <div class="ps-bar"><div class="ps-fill" style="width:${pct}%;background:${color}"></div></div>
+      <div class="ps-pct" style="color:${color}">${pct}%</div>
+    </div>`;
+  }).join('');
 }
 
-function renderTeam(){
-  const members=[['CS1',S.cs1],['CS2 — Implementação',S.cs2],['CS3 — Resultados',S.cs3],['Head de Tráfego',S.traffic]].filter(x=>x[1]);
-  const grid=document.getElementById('team-grid');
-  if(members.length===0){ grid.innerHTML='<div style="color:var(--text-sec);font-size:12px">Equipe não configurada</div>'; return; }
-  grid.innerHTML=members.map(([role,name])=>`
-    <div class="team-item">
-      <div class="team-avatar">${ini(name)}</div>
-      <div><div class="team-name">${name}</div><div class="team-role">${role}</div></div>
-    </div>`).join('');
+function renderMsg(){
+  const ws=getWS(getW()); const obs=ws._obs||'';
+  const el=document.getElementById('msg');
+  if(!obs){ el.classList.remove('show'); return; }
+  el.classList.add('show');
+  const resp=S.cs3||S.cs2||S.cs1||'SD';
+  document.getElementById('msg-av').textContent=ini(resp);
+  document.getElementById('msg-from').textContent=resp+' — System Digital';
+  document.getElementById('msg-txt').textContent=obs;
+}
+
+function renderTasks(w){
+  const tasks=WEEK_TASKS[w]||[];
+  const ws=getWS(w);
+  const done=tasks.filter(t=>ws[t.id]==='done').length;
+  document.getElementById('tasks-title').textContent=`Tarefas da semana ${w}`;
+  document.getElementById('tasks-sub').textContent=`${done} de ${tasks.length} concluídas`;
+  const pct=tasks.length?Math.round(done/tasks.length*100):0;
+  document.getElementById('tf-fill').style.width=pct+'%';
+  document.getElementById('tf-txt').textContent=`${done} / ${tasks.length} concluídas`;
+  const list=document.getElementById('task-list');
+  list.innerHTML=tasks.map(t=>{
+    const st=ws[t.id]||'pending';
+    const isDone=st==='done';
+    const chkCls=isDone?'tc-done':t.mine?'tc-mine':'tc-team';
+    const chkInner=isDone?`<svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L4 7.5L10 1.5" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`:'';
+    const tag=isDone?`<span class="t-tag tt-done">Concluída</span>`:t.mine?`<span class="t-tag tt-mine">Você faz</span>`:`<span class="t-tag tt-team">Equipe faz</span>`;
+    return `<div class="task${t.mine&&!isDone?' mine':''}${isDone?' completed':''}" onclick="${t.mine&&!isDone?`toggleTask('${t.id}',${w})`:''}">
+      <div class="t-chk ${chkCls}" id="chk-${t.id}">${chkInner}</div>
+      <div class="t-body">
+        <div class="t-name${isDone?' struck':''}">${t.name}</div>
+        <div class="t-resp">${t.resp}</div>
+      </div>
+      ${tag}
+    </div>`;
+  }).join('');
+}
+
+async function toggleTask(tid,w){
+  if(!S.weekStates) S.weekStates={};
+  if(!S.weekStates[w]) S.weekStates[w]={};
+  const cur=S.weekStates[w][tid]||'pending';
+  S.weekStates[w][tid]=cur==='done'?'pending':'done';
+  renderTasks(w);
+  if(window._fb) await window._fb.save({weekStates:S.weekStates});
 }
 
 function renderTimeline(currentCP,w){
@@ -489,136 +584,131 @@ function renderTimeline(currentCP,w){
   el.innerHTML=CPS.map(cp=>{
     const allDone=cp.weeks.every(wk=>wk<w);
     const isActive=cp.id===currentCP;
-    const dotCls=allDone?'td-done':isActive?'td-active':'td-future';
-    const inner=allDone?`<svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`:cp.id;
-    const statusColor=allDone?'var(--green)':isActive?'var(--amber)':'var(--text-dim)';
-    const statusTxt=allDone?'Concluído':isActive?'Em andamento':'Em breve';
+    const dotCls=allDone?'td-done':isActive?'td-active':cp.id===currentCP+1?'td-next':'td-future';
+    const inner=allDone?`<svg width="13" height="11" viewBox="0 0 13 11" fill="none"><path d="M1 5.5L5 9.5L12 1.5" stroke="#000" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`:cp.id;
+    const badgeCls=allDone?'tb-done':isActive?'tb-active':'tb-soon';
+    const badgeTxt=allDone?'Concluído':isActive?`Semana ${w}`:'Em breve';
     return `<div class="tl-step">
       <div class="tl-dot ${dotCls}">${inner}</div>
       <div class="tl-name">CP${cp.id} — ${cp.title}</div>
-      <div class="tl-status" style="color:${statusColor}">${statusTxt}</div>
+      <div class="tl-badge ${badgeCls}">${badgeTxt}</div>
     </div>`;
   }).join('');
-}
-
-function renderTasks(w){
-  const tasks=WEEK_TASKS[w]||[];
-  const ws=getWeekState(w);
-  const title=document.getElementById('tasks-title');
-  const sub=document.getElementById('tasks-sub');
-  const list=document.getElementById('task-list');
-  const done=tasks.filter(t=>ws[t.id]==='done').length;
-  title.textContent=`Tarefas da semana ${w}`;
-  sub.textContent=`${done} de ${tasks.length} concluídas`;
-  list.innerHTML=tasks.map(t=>{
-    const st=ws[t.id]||'pending';
-    const isDone=st==='done';
-    const isMine=t.mine&&!isDone;
-    const chkCls=isDone?'tc-done':t.mine?'tc-mine':'tc-team';
-    const chkInner=isDone?`<svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#000" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`:'';
-    const pill=isDone?'<span class="task-pill tp-done">Concluída</span>':t.mine?'<span class="task-pill tp-mine">Você faz</span>':'<span class="task-pill tp-team">Equipe faz</span>';
-    return `<div class="task-item${t.mine&&!isDone?' mine':''}" onclick="${t.mine&&!isDone?`toggleMyTask('${t.id}',${w})`:''}">
-      <div class="task-check ${chkCls}" id="chk-${t.id}">${chkInner}</div>
-      <div class="task-info">
-        <div class="task-name${isDone?' done':''}">${t.name}</div>
-        <div class="task-resp">${t.resp}</div>
-      </div>
-      ${pill}
-    </div>`;
-  }).join('');
-}
-
-function toggleMyTask(tid,w){
-  if(!S.weekStates) S.weekStates={};
-  if(!S.weekStates[w]) S.weekStates[w]={};
-  const cur=S.weekStates[w][tid]||'pending';
-  S.weekStates[w][tid]=cur==='done'?'pending':'done';
-  renderTasks(w);
 }
 
 function renderMetas(){
-  const metas=S.metas||{};
-  document.getElementById('m-base').textContent=fmtCurrency(metas.base);
-  document.getElementById('m-alvo').textContent=fmtCurrency(metas.alvo);
+  const m=S.metas||{};
+  document.getElementById('m-base').textContent=fmt(m.base);
+  document.getElementById('m-alvo').textContent=fmt(m.alvo);
   const fats=S.faturamento||{};
   const weeks=Object.keys(fats).map(Number).sort((a,b)=>b-a);
-  const lastW=weeks[0];
-  const lastFat=lastW?fats[lastW]:null;
-  document.getElementById('fat-atual').textContent=fmtCurrency(lastFat);
+  const lastW=weeks[0]; const lastFat=lastW?Number(fats[lastW]):null;
+  document.getElementById('fat-val').textContent=fmt(lastFat);
   document.getElementById('fat-sub').textContent=lastW?`semana ${lastW} do programa`:'registrado pela equipe';
-  const meta=metas.base||0;
+  document.getElementById('st-fat').textContent=fmt(lastFat);
+  document.getElementById('st-fat-sub').textContent=lastW?`semana ${lastW}`:'pela equipe';
   const badge=document.getElementById('fat-badge');
-  if(lastFat&&meta){
-    const diff=Math.round((lastFat-meta)/meta*100);
+  if(lastFat&&m.base){
+    const diff=Math.round((lastFat-m.base)/m.base*100);
+    badge.style.display='block';
     badge.textContent=(diff>=0?'+':'')+diff+'% vs meta base';
-    badge.style.background=diff>=0?'var(--green-dim)':'var(--red-dim)';
+    badge.style.background=diff>=0?'var(--gd)':'var(--rd)';
     badge.style.color=diff>=0?'var(--green)':'var(--red)';
-    badge.style.borderColor=diff>=0?'var(--green-border)':'rgba(239,68,68,0.25)';
-  } else {
-    badge.textContent='—';
-  }
+    badge.style.border=`1px solid ${diff>=0?'var(--gb)':'rgba(239,68,68,0.25)'}`;
+  } else badge.style.display='none';
+  renderChart();
 }
 
-function renderApresentacao(){
+function renderChart(){
+  const canvas=document.getElementById('fat-chart'); if(!canvas) return;
+  const fats=S.faturamento||{};
+  const labels=[],data=[],metaLine=[];
+  const meta=S.metas?.alvo||0;
+  for(let w=1;w<=24;w++){
+    if(fats[w]!==undefined){ labels.push('S'+w); data.push(Number(fats[w])||0); metaLine.push(meta); }
+  }
+  if(fatChart) fatChart.destroy();
+  if(!labels.length) return;
+  fatChart=new Chart(canvas,{
+    type:'bar',
+    data:{
+      labels,
+      datasets:[
+        {label:'Faturamento',data,backgroundColor:data.map((_,i)=>i===data.length-1?'#F5A623':'rgba(245,166,35,0.35)'),borderRadius:4,borderSkipped:false},
+        {label:'Meta alvo',data:metaLine,type:'line',borderColor:'rgba(34,197,94,0.6)',borderDash:[5,3],pointRadius:0,borderWidth:1.5,fill:false}
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{color:'#A0A0A8',font:{size:10},boxWidth:10}}},
+      scales:{
+        x:{ticks:{color:'#A0A0A8',font:{size:10}},grid:{color:'rgba(62,66,73,0.3)'}},
+        y:{ticks:{color:'#A0A0A8',font:{size:10},callback:v=>'R$'+Number(v).toLocaleString('pt-BR')},grid:{color:'rgba(62,66,73,0.3)'}}
+      }
+    }
+  });
+}
+
+function renderApres(){
   const resources=S.resources||[];
   const apres=resources.find(r=>r.name&&r.name.toLowerCase().includes('apresenta')&&r.url);
-  const card=document.getElementById('apres-card');
+  const el=document.getElementById('apres');
   const btn=document.getElementById('apres-btn');
-  if(apres){ card.style.display='flex'; btn.href=apres.url; }
-  else card.style.display='none';
+  if(apres){ el.classList.add('show'); btn.href=apres.url; }
+  else el.classList.remove('show');
 }
 
 function renderPlaybook(){
   const sections=S.playbook||[];
-  const pbSection=document.getElementById('playbook-section');
-  const pbList=document.getElementById('playbook-sections');
-  if(!sections||sections.length===0){ pbSection.style.display='none'; return; }
-  pbSection.style.display='block';
-  pbList.innerHTML=sections.map((s,i)=>`
-    <div class="pb-section">
-      <div class="pb-section-hdr" onclick="togglePB(${i})">
-        <div class="pb-section-num">${i+1}</div>
-        <div class="pb-section-title">${s.title||'Seção '+(i+1)}</div>
-        <div class="pb-section-chev" id="pbchev-${i}">&#8964;</div>
+  const card=document.getElementById('playbook-card');
+  const list=document.getElementById('pb-list');
+  if(!sections.length){ card.style.display='none'; return; }
+  card.style.display='block';
+  list.innerHTML=sections.map((s,i)=>`
+    <div class="pb-sec">
+      <div class="pb-hdr" onclick="togglePB(${i})">
+        <div class="pb-num">${i+1}</div>
+        <div class="pb-title">${s.title||'Seção '+(i+1)}</div>
+        <div class="pb-chev" id="pbchev-${i}">&#8964;</div>
       </div>
-      <div class="pb-section-body" id="pbbody-${i}">
+      <div class="pb-body" id="pbbody-${i}">
         <div class="pb-content">${s.content||''}</div>
       </div>
     </div>`).join('');
 }
+function togglePB(i){ const b=document.getElementById('pbbody-'+i); const c=document.getElementById('pbchev-'+i); const open=b.classList.contains('open'); b.classList.toggle('open',!open); if(c) c.style.transform=open?'':'rotate(180deg)'; }
 
-function togglePB(i){
-  const body=document.getElementById('pbbody-'+i);
-  const chev=document.getElementById('pbchev-'+i);
-  const open=body.classList.contains('open');
-  body.classList.toggle('open',!open);
-  if(chev) chev.style.transform=open?'':'rotate(180deg)';
+function renderTeam(){
+  const members=[['CS1 — Onboarding',S.cs1],['CS2 — Implementação',S.cs2],['CS3 — Resultados',S.cs3],['Head de Tráfego',S.traffic]].filter(x=>x[1]);
+  const grid=document.getElementById('team-grid');
+  if(!members.length){ grid.innerHTML='<div style="color:var(--ts);font-size:12px">Equipe não configurada</div>'; return; }
+  grid.innerHTML=members.map(([role,name])=>`
+    <div class="tm">
+      <div class="tm-av">${ini(name)}</div>
+      <div><div class="tm-name">${name}</div><div class="tm-role">${role}</div></div>
+    </div>`).join('');
 }
 
 function renderCalls(){
   const calls=(S.calls||[]).slice().reverse();
-  const list=document.getElementById('call-list');
   const sub=document.getElementById('calls-sub');
   sub.textContent=calls.length+' sessão'+(calls.length!==1?'s':'')+' realizada'+(calls.length!==1?'s':'');
-  if(calls.length===0){ list.innerHTML='<div class="call-empty">Nenhuma sessão registrada ainda</div>'; return; }
+  const list=document.getElementById('call-list');
+  if(!calls.length){ list.innerHTML='<div class="call-empty">Nenhuma sessão registrada ainda</div>'; return; }
   list.innerHTML=calls.map(c=>`
     <div class="call-item">
-      <div class="call-type-badge">${c.type||'Call'}</div>
-      <div class="call-info">
-        <div class="call-summary">${c.summary||'—'}</div>
-        <div class="call-meta">
-          <span class="call-date">${c.date||'—'}</span>
-          ${c.resp?`<span class="call-resp">${c.resp}</span>`:''}
-        </div>
-        ${c.next?`<div class="call-next"><span class="call-next-label">Próximos passos:</span>${c.next}</div>`:''}
+      <div class="call-badge">${c.type||'Call'}</div>
+      <div class="call-body">
+        <div class="call-txt">${c.summary||'—'}</div>
+        <div class="call-meta">${c.date||'—'}${c.resp?' · '+c.resp:''}</div>
+        ${c.next?`<div class="call-next"><span class="call-next-lbl">Próximos passos:</span>${c.next}</div>`:''}
       </div>
     </div>`).join('');
 }
 
 window.addEventListener('fb-ready',()=>{
-  const clientId=window._clientId;
-  if(!clientId){ document.getElementById('loading').classList.add('hidden'); document.getElementById('not-found').classList.add('show'); return; }
-  if(!window._fb){ document.getElementById('loading').classList.add('hidden'); document.getElementById('not-found').classList.add('show'); return; }
+  const cid=window._clientId;
+  if(!cid||!window._fb){ document.getElementById('loading').classList.add('hidden'); document.getElementById('not-found').classList.add('show'); return; }
   window._fb.listen(data=>{
     if(!data){ document.getElementById('loading').classList.add('hidden'); document.getElementById('not-found').classList.add('show'); return; }
     Object.assign(S,data);
@@ -626,12 +716,7 @@ window.addEventListener('fb-ready',()=>{
     document.getElementById('app').style.display='block';
     renderAll();
   });
-  setTimeout(()=>{
-    if(!document.getElementById('loading').classList.contains('hidden')){
-      document.getElementById('loading').classList.add('hidden');
-      document.getElementById('not-found').classList.add('show');
-    }
-  },6000);
+  setTimeout(()=>{ if(!document.getElementById('loading').classList.contains('hidden')){ document.getElementById('loading').classList.add('hidden'); document.getElementById('not-found').classList.add('show'); }},6000);
 });
 </script>
 </body>
