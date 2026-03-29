@@ -411,19 +411,20 @@ function renderClients(){
     const score = c.healthScore||0;
     const alerts = getClientAlerts(c);
     const cp = 'cp'+(c.checkpoint||'1');
+    const prog = c.program||'aceleracao';
     const matchFilter =
       currentFilter==='all' ||
       (currentFilter==='alert' && alerts.length>0) ||
       (currentFilter==='risk' && score<60) ||
-      (currentFilter==='aceleracao' && (c.program||'aceleracao')==='aceleracao') ||
-      (currentFilter==='ativacao' && c.program==='ativacao') ||
+      (currentFilter==='aceleracao' && prog==='aceleracao') ||
+      (currentFilter==='ativacao' && prog==='ativacao') ||
       currentFilter===cp;
     const matchSearch = !search || (c.name||'').toLowerCase().includes(search) || (c.spec||'').toLowerCase().includes(search) || (c.cs2||'').toLowerCase().includes(search);
     return matchFilter && matchSearch;
   });
 
   filtered.sort((a,b)=>{
-    const progOrder = {aceleracao:0, ativacao:1, mentoria:2};
+    const progOrder = {aceleracao:0,ativacao:1,mentoria:2};
     const pa = progOrder[a.program||'aceleracao']??0;
     const pb = progOrder[b.program||'aceleracao']??0;
     if(pa!==pb) return pa-pb;
@@ -434,22 +435,24 @@ function renderClients(){
   });
 
   if(filtered.length===0){
-    grid.innerHTML = `<div class="empty-state"><div class="empty-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M11 5v6M11 14v1" stroke="#A0A0A8" stroke-width="1.5" stroke-linecap="round"/></svg></div><div class="empty-title">${allClients.length===0?'Nenhum cliente cadastrado':'Nenhum resultado'}</div><div class="empty-sub">${allClients.length===0?'Clique em "+ Novo cliente" para começar':'Tente outro filtro ou busca'}</div></div>`;
+    grid.innerHTML = `<div class="empty-state"><div class="empty-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M11 5v6M11 14v1" stroke="#A0A0A8" stroke-width="1.5" stroke-linecap="round"/></svg></div><div class="empty-title">${allClients.length===0?'Nenhum cliente cadastrado':'Nenhum resultado'}</div><div class="empty-sub">${allClients.length===0?'Clique em &quot;+ Novo cliente&quot; para começar':'Tente outro filtro ou busca'}</div></div>`;
     return;
   }
 
-  // Group by program and add dividers
+  let html = '';
   let lastProg = null;
-  const cards = [];
+
   filtered.forEach(c=>{
     const prog = c.program||'aceleracao';
+
     if(prog !== lastProg && currentFilter === 'all'){
       const label = prog==='ativacao'?'Ativação':prog==='mentoria'?'Mentoria':'Aceleração';
       const color = prog==='ativacao'?'#A855F7':prog==='mentoria'?'#14B8A6':'#3B82F6';
       const cnt = filtered.filter(x=>(x.program||'aceleracao')===prog).length;
-      cards.push(`<div class="section-divider"><div class="sd-label" style="color:${color}">${label}</div><div class="sd-line" style="background:${color};opacity:.25"></div><div style="font-size:10px;color:var(--text-sec)">${cnt} cliente${cnt!==1?'s':''}</div></div>`);
+      html += `<div class="section-divider"><div class="sd-label" style="color:${color}">${label}</div><div class="sd-line" style="background:${color};opacity:.25"></div><div style="font-size:10px;color:var(--text-sec)">${cnt} cliente${cnt!==1?'s':''}</div></div>`;
       lastProg = prog;
     }
+
     const score = c.healthScore||0;
     const h = getHealthColor(score);
     const alerts = getClientAlerts(c);
@@ -457,19 +460,20 @@ function renderClients(){
     const pct = Math.min(100,Math.max(0,c.progress||0));
     const ini = (c.name||'?').split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase();
     const startDate = c.startDate ? new Date(c.startDate).toLocaleDateString('pt-BR') : '—';
-        const progLabel = c.program==='ativacao'?'Ativação':c.program==='mentoria'?'Mentoria':'Aceleração';
-        const progBadgeCls = c.program==='ativacao'?'prog-badge-ativ':c.program==='mentoria'?'prog-badge-ment':'prog-badge-acel';
+    const progLabel = prog==='ativacao'?'Ativação':prog==='mentoria'?'Mentoria':'Aceleração';
+    const progBadgeCls = prog==='ativacao'?'prog-badge-ativ':prog==='mentoria'?'prog-badge-ment':'prog-badge-acel';
     const alertBanner = hasAlert
       ? `<div class="c-alert-banner cab-red"><div class="cab-dot" style="background:#EF4444"></div><span class="cab-txt" style="color:#EF4444">${alerts.length} tarefa${alerts.length!==1?'s':''} não cumprida${alerts.length!==1?'s':''} — semana ${c.currentWeek||'?'}</span><span class="cab-btn" style="border:0.5px solid rgba(239,68,68,0.3);border-radius:3px;color:#EF4444" onclick="event.stopPropagation();toggleAlertSection()">Ver alertas</span></div>`
       : `<div class="c-alert-banner cab-green"><div class="cab-dot" style="background:#22C55E;animation:none"></div><span class="cab-txt" style="color:#22C55E">Todas as tarefas desta semana em dia</span></div>`;
-    return `<div class="c-card${hasAlert?' has-alert':''}" onclick="openDashboard('${c.id}')">
+
+    html += `<div class="c-card${hasAlert?' has-alert':''}" onclick="openDashboard('${c.id}')">
       <div class="c-accent ${h.accentCls}"></div>
       <div class="c-body">
         <div class="c-top">
           <div class="c-avatar">${ini}</div>
           <div class="c-info">
-            <div class="c-name">${c.name||'—'}</div>
-            <div class="c-sub">${c.spec||''} ${c.spec&&(c.cs2||c.cs3)?'·':''} ${c.cs2?'CS2: '+c.cs2:''}</div>
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px"><div class="c-name" style="margin-bottom:0">${c.name||'—'}</div><span class="${progBadgeCls}">${progLabel}</span></div>
+            <div class="c-sub">${c.spec||''} ${c.cs2?'CS2: '+c.cs2:''}</div>
           </div>
           <div class="c-status-pill ${h.cls}">${h.label}</div>
         </div>
@@ -486,15 +490,18 @@ function renderClients(){
       </div>
       ${alertBanner}
       <div class="c-actions" onclick="event.stopPropagation()">
-        <button class="btn-open-dash" onclick="openDashboard('${c.id}')">Abrir dashboard</button><button class="btn-view-client" onclick="event.stopPropagation();openClientView('${c.id}')">Visão cliente</button>
+        <button class="btn-open-dash" onclick="openDashboard('${c.id}')">Abrir dashboard</button>
+        <button class="btn-view-client" onclick="event.stopPropagation();openClientView('${c.id}')">Visão cliente</button>
         <button class="btn-edit-client" onclick="openModal('${c.id}')">Editar</button>
-        <button class="btn-del-client" onclick="confirmDelete('${c.id}','${(c.name||'').replace(/'/g,"\\'")}')" title="Excluir">✕</button>
+        <button class="btn-del-client" onclick="confirmDelete('${c.id}','${(c.name||'').replace(/'/g,"\'")}') " title="Excluir">✕</button>
       </div>
     </div>`;
-  }).join('');
+  });
+
+  grid.innerHTML = html;
 }
 
-function openClientView(id){ window.open(`cliente-view.html?cliente=${encodeURIComponent(id)}`,'_blank'); }
+
 function openDashboard(id){ window.open(`${DASHBOARD_URL}?cliente=${encodeURIComponent(id)}`,'_blank'); }
 
 function setFilter(f,btn){
