@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -156,7 +157,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .c-actions{display:flex;gap:7px;padding:10px 18px 14px}
 .btn-open-dash{flex:1;padding:8px;border-radius:5px;font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:.04em;background:var(--amber);color:#000;border:none;cursor:pointer;transition:opacity .15s;text-align:center}
 .btn-open-dash:hover{opacity:.88}
-.btn-edit-client{padding:8px 14px;border-radius:5px;font-size:11px;font-weight:600;font-family:'Montserrat',sans-serif;background:var(--surface2);color:var(--text-sec);border:1px solid var(--border);cursor:pointer;transition:all .15s}
+.btn-view-client{padding:8px 12px;border-radius:5px;font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border);cursor:pointer;transition:all .15s;white-space:nowrap}.btn-view-client:hover{background:var(--amber);color:#000}.btn-edit-client{padding:8px 14px;border-radius:5px;font-size:11px;font-weight:600;font-family:'Montserrat',sans-serif;background:var(--surface2);color:var(--text-sec);border:1px solid var(--border);cursor:pointer;transition:all .15s}
 .btn-edit-client:hover{border-color:var(--amber);color:var(--amber)}
 .btn-del-client{padding:8px 12px;border-radius:5px;background:var(--surface2);color:var(--text-dim);border:1px solid var(--border);cursor:pointer;transition:all .15s;font-size:12px}
 .btn-del-client:hover{border-color:var(--red-border);color:var(--red);background:var(--red-dim)}
@@ -458,7 +459,7 @@ function renderClients(){
       </div>
       ${alertBanner}
       <div class="c-actions" onclick="event.stopPropagation()">
-        <button class="btn-open-dash" onclick="openDashboard('${c.id}')">Abrir dashboard</button>
+        <button class="btn-open-dash" onclick="openDashboard('${c.id}')">Abrir dashboard</button><button class="btn-view-client" onclick="event.stopPropagation();openClientView('${c.id}')">Visão cliente</button>
         <button class="btn-edit-client" onclick="openModal('${c.id}')">Editar</button>
         <button class="btn-del-client" onclick="confirmDelete('${c.id}','${(c.name||'').replace(/'/g,"\\'")}')" title="Excluir">✕</button>
       </div>
@@ -466,6 +467,7 @@ function renderClients(){
   }).join('');
 }
 
+function openClientView(id){ window.open(`cliente-view.html?cliente=${encodeURIComponent(id)}`,'_blank'); }
 function openDashboard(id){ window.open(`${DASHBOARD_URL}?cliente=${encodeURIComponent(id)}`,'_blank'); }
 
 function setFilter(f,btn){
