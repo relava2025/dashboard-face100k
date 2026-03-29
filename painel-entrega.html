@@ -117,6 +117,9 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 
 /* CLIENT GRID */
 .client-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+.section-divider{grid-column:1/-1;display:flex;align-items:center;gap:12px;padding:4px 0}
+.sd-label{font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;text-transform:uppercase;letter-spacing:.1em;white-space:nowrap}
+.sd-line{flex:1;height:1px;background:var(--border)}
 .c-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color .2s,transform .2s;cursor:pointer;display:flex;flex-direction:column}
 .c-card:hover{border-color:var(--amber-border);transform:translateY(-2px)}
 .c-card.has-alert{border-color:rgba(239,68,68,0.35)}
@@ -202,6 +205,9 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 
 /* CHECKPOINT BADGES */
 .cp-badge{font-size:9px;padding:2px 8px;border-radius:4px;font-weight:600;font-family:'Montserrat',sans-serif;background:var(--amber-dim);color:var(--amber);border:0.5px solid var(--amber-border)}
+.prog-badge-acel{font-size:9px;padding:2px 8px;border-radius:4px;font-weight:600;font-family:'Montserrat',sans-serif;background:var(--blue-dim);color:var(--blue);border:0.5px solid var(--blue-border)}
+.prog-badge-ativ{font-size:9px;padding:2px 8px;border-radius:4px;font-weight:600;font-family:'Montserrat',sans-serif;background:rgba(168,85,247,0.1);color:#A855F7;border:0.5px solid rgba(168,85,247,0.25)}
+.prog-badge-ment{font-size:9px;padding:2px 8px;border-radius:4px;font-weight:600;font-family:'Montserrat',sans-serif;background:rgba(20,184,166,0.1);color:#14B8A6;border:0.5px solid rgba(20,184,166,0.25)}
 
 @media(max-width:768px){
   .stats-row{grid-template-columns:repeat(2,1fr)}
@@ -268,6 +274,8 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
     <button class="filter-btn" onclick="setFilter('cp3',this)">CP3</button>
     <button class="filter-btn" onclick="setFilter('cp4',this)">CP4</button>
     <button class="filter-btn" onclick="setFilter('risk',this)">Em risco</button>
+    <button class="filter-btn" onclick="setFilter('aceleracao',this)">Aceleração</button>
+    <button class="filter-btn" onclick="setFilter('ativacao',this)">Ativação</button>
     <input class="search-input" id="search" type="text" placeholder="Buscar cliente..." oninput="renderClients()">
   </div>
 
@@ -407,12 +415,18 @@ function renderClients(){
       currentFilter==='all' ||
       (currentFilter==='alert' && alerts.length>0) ||
       (currentFilter==='risk' && score<60) ||
+      (currentFilter==='aceleracao' && (c.program||'aceleracao')==='aceleracao') ||
+      (currentFilter==='ativacao' && c.program==='ativacao') ||
       currentFilter===cp;
     const matchSearch = !search || (c.name||'').toLowerCase().includes(search) || (c.spec||'').toLowerCase().includes(search) || (c.cs2||'').toLowerCase().includes(search);
     return matchFilter && matchSearch;
   });
 
   filtered.sort((a,b)=>{
+    const progOrder = {aceleracao:0, ativacao:1, mentoria:2};
+    const pa = progOrder[a.program||'aceleracao']??0;
+    const pb = progOrder[b.program||'aceleracao']??0;
+    if(pa!==pb) return pa-pb;
     const aa = getClientAlerts(a).length>0?0:1;
     const bb = getClientAlerts(b).length>0?0:1;
     if(aa!==bb) return aa-bb;
@@ -424,7 +438,18 @@ function renderClients(){
     return;
   }
 
-  grid.innerHTML = filtered.map(c=>{
+  // Group by program and add dividers
+  let lastProg = null;
+  const cards = [];
+  filtered.forEach(c=>{
+    const prog = c.program||'aceleracao';
+    if(prog !== lastProg && currentFilter === 'all'){
+      const label = prog==='ativacao'?'Ativação':prog==='mentoria'?'Mentoria':'Aceleração';
+      const color = prog==='ativacao'?'#A855F7':prog==='mentoria'?'#14B8A6':'#3B82F6';
+      const cnt = filtered.filter(x=>(x.program||'aceleracao')===prog).length;
+      cards.push(`<div class="section-divider"><div class="sd-label" style="color:${color}">${label}</div><div class="sd-line" style="background:${color};opacity:.25"></div><div style="font-size:10px;color:var(--text-sec)">${cnt} cliente${cnt!==1?'s':''}</div></div>`);
+      lastProg = prog;
+    }
     const score = c.healthScore||0;
     const h = getHealthColor(score);
     const alerts = getClientAlerts(c);
@@ -432,6 +457,8 @@ function renderClients(){
     const pct = Math.min(100,Math.max(0,c.progress||0));
     const ini = (c.name||'?').split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase();
     const startDate = c.startDate ? new Date(c.startDate).toLocaleDateString('pt-BR') : '—';
+        const progLabel = c.program==='ativacao'?'Ativação':c.program==='mentoria'?'Mentoria':'Aceleração';
+        const progBadgeCls = c.program==='ativacao'?'prog-badge-ativ':c.program==='mentoria'?'prog-badge-ment':'prog-badge-acel';
     const alertBanner = hasAlert
       ? `<div class="c-alert-banner cab-red"><div class="cab-dot" style="background:#EF4444"></div><span class="cab-txt" style="color:#EF4444">${alerts.length} tarefa${alerts.length!==1?'s':''} não cumprida${alerts.length!==1?'s':''} — semana ${c.currentWeek||'?'}</span><span class="cab-btn" style="border:0.5px solid rgba(239,68,68,0.3);border-radius:3px;color:#EF4444" onclick="event.stopPropagation();toggleAlertSection()">Ver alertas</span></div>`
       : `<div class="c-alert-banner cab-green"><div class="cab-dot" style="background:#22C55E;animation:none"></div><span class="cab-txt" style="color:#22C55E">Todas as tarefas desta semana em dia</span></div>`;
