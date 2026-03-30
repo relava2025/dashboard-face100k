@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -541,7 +542,7 @@ function renderClients(){
         <button class="btn-open-dash" onclick="event.stopPropagation();openDashboard('${c.id}')">Abrir dashboard</button>
         <button class="btn-view-client" onclick="event.stopPropagation();openClientView('${c.id}')">Visão cliente</button>
         <button class="btn-edit-client" onclick="openModal('${c.id}')">Editar</button>
-        <button class="btn-del-client" onclick="confirmDelete('${c.id}','${(c.name||'').replace(/'/g,"\'")}') " title="Excluir">✕</button>
+        <button class="btn-del-client" onclick="confirmDelete('${c.id}','${(c.name||'').replace(/'/g,'')}') " title="Excluir">✕</button>
       </div>
     </div>`;
   });
@@ -551,6 +552,7 @@ function renderClients(){
 
 
 function openDashboard(id){ window.location.href=`${DASHBOARD_URL}?cliente=${encodeURIComponent(id)}`; }
+function openClientView(id){ window.open(`cliente-view.html?cliente=${encodeURIComponent(id)}`,'_blank'); }
 
 function setFilter(f,btn){
   currentFilter=f;
