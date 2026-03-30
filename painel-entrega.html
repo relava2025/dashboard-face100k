@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -514,7 +515,7 @@ function renderClients(){
       ? `<div class="c-alert-banner cab-red"><div class="cab-dot" style="background:#EF4444"></div><span class="cab-txt" style="color:#EF4444">${alerts.length} tarefa${alerts.length!==1?'s':''} não cumprida${alerts.length!==1?'s':''} — semana ${c.currentWeek||'?'}</span><span class="cab-btn" style="border:0.5px solid rgba(239,68,68,0.3);border-radius:3px;color:#EF4444" onclick="event.stopPropagation();toggleAlertSection()">Ver alertas</span></div>`
       : `<div class="c-alert-banner cab-green"><div class="cab-dot" style="background:#22C55E;animation:none"></div><span class="cab-txt" style="color:#22C55E">Todas as tarefas desta semana em dia</span></div>`;
 
-    html += `<div class="c-card${hasAlert?' has-alert':''}" onclick="openDashboard('${c.id}')">
+    html += `<div class="c-card${hasAlert?' has-alert':''}">
       <div class="c-accent ${h.accentCls}"></div>
       <div class="c-body">
         <div class="c-top">
@@ -538,7 +539,7 @@ function renderClients(){
       </div>
       ${alertBanner}
       <div class="c-actions" onclick="event.stopPropagation()">
-        <button class="btn-open-dash" onclick="openDashboard('${c.id}')">Abrir dashboard</button>
+        <button class="btn-open-dash" onclick="event.stopPropagation();openDashboard('${c.id}')">Abrir dashboard</button>
         <button class="btn-view-client" onclick="event.stopPropagation();openClientView('${c.id}')">Visão cliente</button>
         <button class="btn-edit-client" onclick="openModal('${c.id}')">Editar</button>
         <button class="btn-del-client" onclick="confirmDelete('${c.id}','${(c.name||'').replace(/'/g,"\'")}') " title="Excluir">✕</button>
