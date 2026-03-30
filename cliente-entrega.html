@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -641,7 +642,20 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
           </div>
           <div class="sc-body">
             <div class="resources-list" id="resources-list"></div>
-            <button class="btn-add-resource" onclick="addResource()">+ Adicionar recurso</button>
+            <div style="margin-bottom:10px">
+  <div style="font-size:9px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.12em;font-weight:600;font-family:'Montserrat',sans-serif;margin-bottom:8px">Adicionar rápido</div>
+  <div style="display:flex;flex-wrap:wrap;gap:6px">
+    <button onclick="addResourceWithName('Flashboard')" style="padding:5px 12px;border-radius:16px;font-size:10px;font-weight:600;font-family:'Montserrat',sans-serif;background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border);cursor:pointer;transition:all .15s" onmouseover="this.style.background='var(--amber)';this.style.color='#000'" onmouseout="this.style.background='var(--amber-dim)';this.style.color='var(--amber)'">+ Flashboard</button>
+    <button onclick="addResourceWithName('Drive do Cliente')" style="padding:5px 12px;border-radius:16px;font-size:10px;font-weight:600;font-family:'Montserrat',sans-serif;background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border);cursor:pointer;transition:all .15s" onmouseover="this.style.background='var(--amber)';this.style.color='#000'" onmouseout="this.style.background='var(--amber-dim)';this.style.color='var(--amber)'">+ Drive</button>
+    <button onclick="addResourceWithName('CRM')" style="padding:5px 12px;border-radius:16px;font-size:10px;font-weight:600;font-family:'Montserrat',sans-serif;background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border);cursor:pointer;transition:all .15s" onmouseover="this.style.background='var(--amber)';this.style.color='#000'" onmouseout="this.style.background='var(--amber-dim)';this.style.color='var(--amber)'">+ CRM</button>
+    <button onclick="addResourceWithName('Apresentação de Vendas')" style="padding:5px 12px;border-radius:16px;font-size:10px;font-weight:600;font-family:'Montserrat',sans-serif;background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border);cursor:pointer;transition:all .15s" onmouseover="this.style.background='var(--amber)';this.style.color='#000'" onmouseout="this.style.background='var(--amber-dim)';this.style.color='var(--amber)'">+ Apresentação</button>
+    <button onclick="addResourceWithName('Plataforma de Aulas')" style="padding:5px 12px;border-radius:16px;font-size:10px;font-weight:600;font-family:'Montserrat',sans-serif;background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border);cursor:pointer;transition:all .15s" onmouseover="this.style.background='var(--amber)';this.style.color='#000'" onmouseout="this.style.background='var(--amber-dim)';this.style.color='var(--amber)'">+ Plataforma de Aulas</button>
+    <button onclick="addResourceWithName('Grupo do WhatsApp')" style="padding:5px 12px;border-radius:16px;font-size:10px;font-weight:600;font-family:'Montserrat',sans-serif;background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border);cursor:pointer;transition:all .15s" onmouseover="this.style.background='var(--amber)';this.style.color='#000'" onmouseout="this.style.background='var(--amber-dim)';this.style.color='var(--amber)'">+ WhatsApp</button>
+    <button onclick="addResourceWithName('Projeto ChatGPT')" style="padding:5px 12px;border-radius:16px;font-size:10px;font-weight:600;font-family:'Montserrat',sans-serif;background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border);cursor:pointer;transition:all .15s" onmouseover="this.style.background='var(--amber)';this.style.color='#000'" onmouseout="this.style.background='var(--amber-dim)';this.style.color='var(--amber)'">+ ChatGPT</button>
+    <button onclick="addResourceWithName('Aula — ')" style="padding:5px 12px;border-radius:16px;font-size:10px;font-weight:600;font-family:'Montserrat',sans-serif;background:rgba(239,68,68,0.1);color:#EF4444;border:1px solid rgba(239,68,68,0.25);cursor:pointer;transition:all .15s" onmouseover="this.style.background='#EF4444';this.style.color='#fff'" onmouseout="this.style.background='rgba(239,68,68,0.1)';this.style.color='#EF4444'">+ Aula (vídeo)</button>
+  </div>
+</div>
+<button class="btn-add-resource" onclick="addResource()">+ Adicionar recurso livre</button>
           </div>
         </div>
       </div>
@@ -1091,12 +1105,40 @@ function renderFatChart(){
   });
 }
 
+function isPanda(url){
+  return url && (url.includes('pandavideo.com') || url.includes('player-vz-'));
+}
+
+function getPandaId(url){
+  const m = url.match(/v=([a-f0-9-]{36})/);
+  return m ? m[1] : null;
+}
+
 function renderResources(){
   const list=document.getElementById('resources-list'); if(!list) return;
   const resources=S.resources||[];
   if(resources.length===0){ list.innerHTML='<div style="text-align:center;padding:20px;color:var(--text-sec);font-size:12px">Nenhum recurso cadastrado</div>'; return; }
-  list.innerHTML=resources.map((r,i)=>`
-    <div class="resource-item">
+  list.innerHTML=resources.map((r,i)=>{
+    const isPandaVideo = isPanda(r.url||'');
+    const pandaId = isPandaVideo ? getPandaId(r.url) : null;
+    const embedSrc = pandaId ? `https://player-vz-ffeb7f32-c81.tv.pandavideo.com.br/embed/?v=${pandaId}` : null;
+    
+    if(isPandaVideo && embedSrc){
+      return `<div class="resource-item" style="flex-direction:column;align-items:flex-start;gap:10px">
+        <div style="display:flex;align-items:center;gap:10px;width:100%">
+          <div class="resource-icon" style="background:rgba(239,68,68,0.12);border-color:rgba(239,68,68,0.25)">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="4,2 12,7 4,12" fill="#EF4444"/></svg>
+          </div>
+          <input class="resource-name-input" value="${r.name||''}" placeholder="Nome do vídeo" onblur="updateResource(${i},'name',this.value)" style="flex:1">
+          <button class="resource-del" onclick="deleteResource(${i})">✕</button>
+        </div>
+        <div style="width:100%;border-radius:8px;overflow:hidden;background:#000;aspect-ratio:16/9">
+          <iframe src="${embedSrc}" style="border:none;width:100%;height:100%;display:block" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture" allowfullscreen></iframe>
+        </div>
+      </div>`;
+    }
+    
+    return `<div class="resource-item">
       <div class="resource-icon">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 3h10M2 7h10M2 11h6" stroke="#F5A623" stroke-width="1.3" stroke-linecap="round"/></svg>
       </div>
@@ -1104,7 +1146,8 @@ function renderResources(){
       <input class="resource-url-input" value="${r.url||''}" placeholder="Cole o link aqui..." onblur="updateResource(${i},'url',this.value)">
       ${r.url?`<button class="resource-open" onclick="window.open('${r.url}','_blank')">Abrir</button>`:''}
       <button class="resource-del" onclick="deleteResource(${i})">✕</button>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 
 function renderCalls(){
@@ -1232,6 +1275,7 @@ function closeMetaModal(){ document.getElementById('meta-modal').classList.remov
 function closeMetaModalOutside(e){ if(e.target===document.getElementById('meta-modal')) closeMetaModal(); }
 
 function addResource(){ if(!S.resources) S.resources=[]; S.resources.push({name:'',url:'',addedAt:new Date().toISOString()}); save({resources:S.resources}); renderResources(); }
+function addResourceWithName(name){ if(!S.resources) S.resources=[]; S.resources.push({name,url:'',addedAt:new Date().toISOString()}); save({resources:S.resources}); renderResources(); }
 function updateResource(i,key,val){ if(!S.resources||!S.resources[i]) return; S.resources[i][key]=val; save({resources:S.resources}); }
 function deleteResource(i){ if(!S.resources) return; S.resources.splice(i,1); save({resources:S.resources}); renderResources(); showToast('Recurso removido',''); }
 
