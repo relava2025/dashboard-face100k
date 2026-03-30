@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -178,6 +179,13 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
   .form-row{grid-template-columns:1fr}
 }
 </style>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#F5A623">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="FACE 100K">
+  <link rel="apple-touch-icon" href="/icon-192.png">
 </head>
 <body>
 
@@ -265,7 +273,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 <div class="toast" id="toast"></div>
 
 <script>
-const TOTAL_TASKS = 23;
+const TOTAL_TASKS = 20;
 const DASHBOARD_URL = 'dashboard.html';
 
 let allClients = [];
@@ -277,9 +285,20 @@ function slugify(str){
 }
 
 function getClientPct(c){
-  if(!c.tasks) return 0;
-  const done = Object.values(c.tasks).filter(t=>t.status==='done').length;
-  return Math.round(done/TOTAL_TASKS*100);
+  // Try tasks field first (standard format)
+  if(c.tasks && Object.keys(c.tasks).length>0){
+    const done = Object.values(c.tasks).filter(t=>t.status==='done').length;
+    return Math.round(done/TOTAL_TASKS*100);
+  }
+  // Try checklist field (alternative format from dashboard.html)
+  if(c.checklist && Object.keys(c.checklist).length>0){
+    const vals = Object.values(c.checklist);
+    const done = vals.filter(v=>v===true||v==='done'||v?.status==='done'||v?.done===true).length;
+    if(done>0) return Math.round(done/TOTAL_TASKS*100);
+  }
+  // Fallback to stored progress field
+  if(c.progress && c.progress>0) return c.progress;
+  return 0;
 }
 
 function getClientStatus(pct){
@@ -469,5 +488,6 @@ setTimeout(()=>{
 // Enter key no modal
 document.addEventListener('keydown', e=>{ if(e.key==='Enter'&&document.getElementById('modal').classList.contains('open')) saveClient(); if(e.key==='Escape') closeModal(); });
 </script>
+<script>if("serviceWorker" in navigator){window.addEventListener("load",()=>{navigator.serviceWorker.register("/sw.js").then(()=>console.log("SW ok")).catch(e=>console.log("SW err",e));});}</script>
 </body>
 </html>
