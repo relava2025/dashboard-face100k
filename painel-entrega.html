@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -52,6 +53,9 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .sync-dot.error{background:var(--red)}
 @keyframes pulse{from{opacity:.4}to{opacity:1}}
 .sync-txt{font-size:11px;color:var(--text-sec)}
+.btn-admin{background:var(--surface2);color:var(--text-sec);border:1px solid var(--border);border-radius:6px;padding:8px 14px;font-size:11px;font-weight:600;font-family:'Montserrat',sans-serif;cursor:pointer;transition:all .15s}
+.btn-admin:hover{border-color:var(--amber);color:var(--amber)}
+.btn-admin.active{background:var(--amber-dim);color:var(--amber);border-color:var(--amber-border)}
 .btn-new{background:var(--amber);color:#000;border:none;border-radius:6px;padding:8px 18px;font-size:12px;font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:.04em;cursor:pointer;transition:opacity .15s}
 .btn-new:hover{opacity:.88}
 .alert-topbtn{background:var(--red-dim);color:var(--red);border:1px solid var(--red-border);border-radius:6px;padding:6px 14px;font-size:11px;font-weight:600;font-family:'Montserrat',sans-serif;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .15s}
@@ -188,6 +192,31 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .btn-save:hover{opacity:.88}
 
 /* TOAST */
+/* ADMIN */
+.admin-section{display:none}
+.admin-section.active{display:block}
+.week-editor{background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:12px;overflow:hidden}
+.week-editor-hdr{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border);cursor:pointer;user-select:none;background:var(--surface2)}
+.week-editor-hdr:hover{background:var(--surface3)}
+.week-editor-num{font-size:10px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--amber);background:var(--amber-dim);border:1px solid var(--amber-border);border-radius:4px;padding:2px 8px}
+.week-editor-title{font-size:12px;font-weight:600;color:var(--text);flex:1}
+.week-editor-count{font-size:10px;color:var(--text-sec)}
+.week-editor-body{padding:14px 16px;display:none}
+.week-editor-body.open{display:block}
+.task-edit-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:0.5px solid var(--border-light)}
+.task-edit-row:last-child{border-bottom:none}
+.task-edit-name{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:5px;color:var(--text);font-family:'Inter',sans-serif;font-size:12px;padding:7px 10px;outline:none;transition:border-color .15s}
+.task-edit-name:focus{border-color:var(--amber)}
+.task-edit-resp{width:110px;background:var(--surface2);border:1px solid var(--border);border-radius:5px;color:var(--text);font-family:'Inter',sans-serif;font-size:12px;padding:7px 10px;outline:none;transition:border-color .15s}
+.task-edit-resp:focus{border-color:var(--amber)}
+.task-edit-del{padding:6px 10px;background:transparent;border:0.5px solid var(--border);border-radius:4px;color:var(--text-dim);cursor:pointer;font-size:11px;flex-shrink:0}
+.task-edit-del:hover{border-color:var(--red-border);color:var(--red);background:var(--red-dim)}
+.btn-add-task{width:100%;padding:8px;background:transparent;border:1px dashed var(--border);border-radius:6px;color:var(--text-sec);font-size:11px;cursor:pointer;transition:all .15s;font-family:'Montserrat',sans-serif;font-weight:600;letter-spacing:.04em;margin-top:10px}
+.btn-add-task:hover{border-color:var(--amber);color:var(--amber)}
+.btn-save-week{padding:7px 16px;background:var(--amber);color:#000;border:none;border-radius:5px;font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;cursor:pointer;margin-top:10px}
+.btn-save-week:hover{opacity:.88}
+.cp-group-label{font-size:10px;font-weight:700;font-family:'Montserrat',sans-serif;text-transform:uppercase;letter-spacing:.12em;color:var(--amber);margin:20px 0 10px;display:flex;align-items:center;gap:8px}
+.cp-group-label::after{content:'';flex:1;height:1px;background:var(--amber-border)}
 .toast{position:fixed;bottom:24px;right:24px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 18px;font-size:12px;color:var(--text);z-index:999;transform:translateY(80px);opacity:0;transition:all .3s;max-width:320px;border-left:3px solid var(--amber)}
 .toast.show{transform:translateY(0);opacity:1}
 .toast.success{border-left-color:var(--green)}
@@ -248,11 +277,12 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
     </div>
     <div class="sync-dot" id="sync-dot"></div>
     <span class="sync-txt" id="sync-txt">Conectando...</span>
+    <button class="btn-admin" onclick="toggleAdmin()" id="btn-admin">⚙ Configurações</button>
     <button class="btn-new" onclick="openModal()">+ Novo cliente</button>
   </div>
 </div>
 
-<div class="content">
+<div id="main-content"><div class="content">
   <div class="brand-rail"></div>
 
   <div class="stats-row">
@@ -286,6 +316,19 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
   </div>
 
   <div class="client-grid" id="client-grid"></div>
+</div>
+
+</div><!-- end main-content -->
+<!-- ADMIN SECTION -->
+<div class="admin-section" id="section-admin">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+    <div>
+      <div style="font-size:18px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--text)">Central de Administração</div>
+      <div style="font-size:12px;color:var(--text-sec);margin-top:3px">Edite as tarefas de cada semana do programa</div>
+    </div>
+    <button class="btn-new" onclick="saveAllTasks()" style="background:var(--green)">Salvar tudo</button>
+  </div>
+  <div id="admin-weeks-container"></div>
 </div>
 
 <!-- MODAL -->
@@ -508,7 +551,7 @@ function renderClients(){
 }
 
 
-function openDashboard(id){ window.open(`${DASHBOARD_URL}?cliente=${encodeURIComponent(id)}`,'_blank'); }
+function openDashboard(id){ window.location.href=`${DASHBOARD_URL}?cliente=${encodeURIComponent(id)}`; }
 
 function setFilter(f,btn){
   currentFilter=f;
@@ -606,6 +649,139 @@ function showToast(msg,type=''){
   t.className='toast'+(type==='success'?' success':type==='error'?' error':'');
   t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'),3200);
+}
+
+// ── ADMIN ──
+const WEEK_TASKS_DEFAULT = {
+  1:[{id:'w1t1',name:'Confirmar contrato e pagamento',resp:'CS1'},{id:'w1t2',name:'Cadastrar cliente nas plataformas',resp:'CS1'},{id:'w1t3',name:'Criar Drive do cliente',resp:'CS1'},{id:'w1t4',name:'Call de boas-vindas em até 24h',resp:'CS1'},{id:'w1t5',name:'Preencher diagnóstico inicial',resp:'CS1'},{id:'w1t6',name:'Direcionar SDR para grupo + tutorias',resp:'CS1'},{id:'w1t7',name:'Criar projeto no ChatGPT',resp:'CS1'}],
+  2:[{id:'w2t1',name:'Call de esteira de produtos',resp:'CS2'},{id:'w2t2',name:'Elaborar esteira e produto foco',resp:'CS2'},{id:'w2t3',name:'Enviar formulário (cobrar em 24h)',resp:'CS2'},{id:'w2t4',name:'Direcionar tutoria 6 + consulta Dra. Deborah',resp:'CS2'},{id:'w2t5',name:'Enviar Drive para design iniciar apresentação',resp:'CS2'}],
+  3:[{id:'w3t1',name:'Enviar apresentação ao cliente',resp:'CS2'},{id:'w3t2',name:'Call de análise da apresentação + SPIN',resp:'CS3'},{id:'w3t3',name:'Call de tráfego',resp:'Tráfego'},{id:'w3t4',name:'Enviar checklist de posicionamento',resp:'Tráfego'},{id:'w3t5',name:'Liberar acesso ao gerenciador',resp:'Tráfego'}],
+  4:[{id:'w4t1',name:'Ritual semanal obrigatório',resp:'CS2'},{id:'w4t2',name:'Validar comunicação e script',resp:'CS2'},{id:'w4t3',name:'Analisar primeiras vendas',resp:'CS3'},{id:'w4t4',name:'Call de Checkpoint 1',resp:'CS3'},{id:'w4t5',name:'Verificar checklist e liberar campanhas',resp:'Tráfego'}],
+};
+for(let w=5;w<=24;w++){
+  if(!WEEK_TASKS_DEFAULT[w]){
+    const t=[{id:`w${w}t1`,name:'Ritual semanal obrigatório',resp:'CS2'}];
+    if(w%4===2) t.push({id:`w${w}t2`,name:'Call de vendas',resp:'CS3'},{id:`w${w}t3`,name:'Pedir indicação ao cliente',resp:'CS3'});
+    if(w%4===3) t.push({id:`w${w}t2`,name:'Call de análise de conversão',resp:'Tráfego'});
+    if(w%4===0) t.push({id:`w${w}t2`,name:'WhatsApp com revisão de metas + Flashboard',resp:'CS2'});
+    if(w===12) t.push({id:`w12cp`,name:'Call de Checkpoint 2',resp:'CS3'});
+    if(w===20) t.push({id:`w20cp`,name:'Call de Checkpoint 3',resp:'CS3'});
+    if(w===24) t.push({id:`w24cp`,name:'Call de Checkpoint 4 — Encerramento',resp:'CS3'});
+    WEEK_TASKS_DEFAULT[w]=t;
+  }
+}
+
+let adminTasks = null;
+let adminOpen = false;
+
+function toggleAdmin(){
+  adminOpen = !adminOpen;
+  const btn = document.getElementById('btn-admin');
+  const section = document.getElementById('section-admin');
+  const mainContent = document.getElementById('main-content');
+  if(adminOpen){
+    btn.classList.add('active');
+    if(section) section.classList.add('active');
+    if(mainContent) mainContent.style.display='none';
+    renderAdminWeeks();
+  } else {
+    btn.classList.remove('active');
+    if(section) section.classList.remove('active');
+    if(mainContent) mainContent.style.display='';
+  }
+}
+
+async function loadAdminTasks(){
+  if(window._fb2) return;
+  const {getFirestore,doc,getDoc,setDoc} = await import('https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js');
+  const db = getFirestore();
+  const ref = doc(db,'config','weekTasks');
+  const snap = await getDoc(ref);
+  if(snap.exists()) adminTasks = snap.data().tasks;
+  else adminTasks = JSON.parse(JSON.stringify(WEEK_TASKS_DEFAULT));
+  window._fb2 = {db, ref, setDoc};
+}
+
+async function saveAllTasks(){
+  if(!adminTasks) return;
+  // Collect all edits from inputs
+  for(let w=1;w<=24;w++){
+    const tasks = adminTasks[w]||[];
+    tasks.forEach((t,i)=>{
+      const nameEl = document.getElementById(`admin-name-${w}-${i}`);
+      const respEl = document.getElementById(`admin-resp-${w}-${i}`);
+      if(nameEl) t.name = nameEl.value;
+      if(respEl) t.resp = respEl.value;
+    });
+  }
+  try{
+    const {setDoc} = await import('https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js');
+    const {getFirestore,doc} = await import('https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js');
+    const db = getFirestore();
+    await setDoc(doc(db,'config','weekTasks'),{tasks:adminTasks,updatedAt:new Date().toISOString()});
+    showToast('Tarefas salvas com sucesso!','success');
+  } catch(e){ showToast('Erro ao salvar: '+e.message,'error'); }
+}
+
+function addAdminTask(w){
+  if(!adminTasks[w]) adminTasks[w]=[];
+  const newId = `w${w}t${Date.now()}`;
+  adminTasks[w].push({id:newId,name:'Nova tarefa',resp:'CS2'});
+  renderAdminWeeks();
+}
+
+function removeAdminTask(w,i){
+  if(!adminTasks[w]) return;
+  adminTasks[w].splice(i,1);
+  renderAdminWeeks();
+}
+
+const CP_RANGES = [{cp:1,weeks:[1,2,3,4]},{cp:2,weeks:[5,6,7,8,9,10,11,12]},{cp:3,weeks:[13,14,15,16,17,18,19,20]},{cp:4,weeks:[21,22,23,24]}];
+const RESP_OPTIONS = ['CS1','CS2','CS3','Tráfego','Todos'];
+
+async function renderAdminWeeks(){
+  const container = document.getElementById('admin-weeks-container');
+  if(!container) return;
+  if(!adminTasks){ await loadAdminTasks(); }
+  
+  let html = '';
+  CP_RANGES.forEach(({cp,weeks})=>{
+    const cpLabels = {1:'Primeira venda',2:'Consistência de vendas',3:'Metas batendo',4:'Escala e recompra'};
+    html += `<div class="cp-group-label">CP${cp} — ${cpLabels[cp]} · Semanas ${weeks[0]} a ${weeks[weeks.length-1]}</div>`;
+    weeks.forEach(w=>{
+      const tasks = adminTasks[w]||[];
+      html += `<div class="week-editor">
+        <div class="week-editor-hdr" onclick="toggleWeekEditor(${w})">
+          <span class="week-editor-num">S${w}</span>
+          <span class="week-editor-title">Semana ${w}</span>
+          <span class="week-editor-count">${tasks.length} tarefa${tasks.length!==1?'s':''}</span>
+          <span style="color:var(--text-sec);font-size:16px;transition:transform .2s" id="wedge-${w}">⌄</span>
+        </div>
+        <div class="week-editor-body" id="wedge-body-${w}">
+          ${tasks.map((t,i)=>`
+            <div class="task-edit-row">
+              <span style="font-size:10px;color:var(--text-dim);min-width:18px">${i+1}</span>
+              <input class="task-edit-name" id="admin-name-${w}-${i}" value="${(t.name||'').replace(/"/g,'&quot;')}" placeholder="Nome da tarefa">
+              <select class="task-edit-resp" id="admin-resp-${w}-${i}">
+                ${RESP_OPTIONS.map(r=>`<option value="${r}" ${t.resp===r?'selected':''}>${r}</option>`).join('')}
+              </select>
+              <button class="task-edit-del" onclick="removeAdminTask(${w},${i})">✕</button>
+            </div>`).join('')}
+          <button class="btn-add-task" onclick="addAdminTask(${w})">+ Adicionar tarefa</button>
+        </div>
+      </div>`;
+    });
+  });
+  container.innerHTML = html;
+}
+
+function toggleWeekEditor(w){
+  const body = document.getElementById(`wedge-body-${w}`);
+  const chev = document.getElementById(`wedge-${w}`);
+  if(!body) return;
+  const open = body.classList.contains('open');
+  body.classList.toggle('open',!open);
+  if(chev) chev.style.transform = open?'':'rotate(180deg)';
 }
 
 window.addEventListener('fb-ready',()=>{
