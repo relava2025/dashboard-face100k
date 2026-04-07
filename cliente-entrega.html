@@ -586,10 +586,9 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
         <div class="brand-rail"></div>
         <div class="metas-grid">
           <div class="meta-card">
-            <div class="meta-label">Meta base</div>
-            <div class="meta-val" id="m-base">R$—</div>
-            <div class="meta-sub">média últimos 6 meses</div>
-            <div class="meta-edit" onclick="editMeta('base')">Editar ↗</div>
+            <div class="meta-label">Antes do programa</div>
+            <div class="meta-val" id="m-base">R$ —</div>
+            <div class="meta-sub">faturamento anterior</div>
           </div>
           <div class="meta-card">
             <div class="meta-label">Meta alvo</div>
@@ -611,14 +610,14 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
         </div>
         <div class="section-card">
           <div class="sc-header">
-            <div class="sc-title">Faturamento semanal</div>
-            <div class="sc-sub">Registre o faturamento de cada semana</div>
+            <div class="sc-title">Faturamento mensal</div>
+            <div class="sc-sub">Registre o faturamento de cada mês</div>
           </div>
           <div class="sc-body">
             <div class="form-grid-2" style="margin-bottom:14px">
               <div class="form-field">
-                <label class="form-label">Semana</label>
-                <input class="form-input" type="number" id="fat-week" min="1" max="24" placeholder="Ex: 8">
+                <label class="form-label">Mês</label>
+                <input class="form-input" type="month" id="fat-mes">
               </div>
               <div class="form-field">
                 <label class="form-label">Faturamento (R$)</label>
@@ -626,6 +625,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
               </div>
             </div>
             <button class="btn-primary" onclick="saveFaturamento()">Registrar</button>
+            <div id="fat-list" style="margin-top:16px"></div>
             <div class="chart-wrap" style="margin-top:20px"><canvas id="fat-chart"></canvas></div>
           </div>
         </div>
@@ -853,6 +853,7 @@ function getWeekState(w){ return (S.weekStates&&S.weekStates[w])||{}; }
 function getTaskState(w,tid){ return getWeekState(w)[tid]||'pending'; }
 function ini(name){ return (name||'?').split(' ').filter(Boolean).slice(0,2).map(x=>x[0]).join('').toUpperCase(); }
 function fmtCurrency(v){ if(!v) return 'R$ —'; return 'R$'+Number(v).toLocaleString('pt-BR'); }
+function fmtMes(k){const[y,m]=k.split('-');const n=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];return n[Number(m)-1]+'/'+y.slice(2)}
 function getHealthColor(s){ if(s>=80) return {color:'var(--green)',cls:'sp-green',label:'Saudável'}; if(s>=60) return {color:'var(--yellow)',cls:'sp-yellow',label:'Em atenção'}; return {color:'var(--red)',cls:'sp-red',label:'Em risco'}; }
 
 // ── SYNC ──
@@ -1074,8 +1075,9 @@ function renderAllCPs(){
 }
 
 function renderMetas(){
+  const ini=S.faturamentoInicial||0;
   const metas=S.metas||{};
-  document.getElementById('m-base').textContent=fmtCurrency(metas.base);
+  document.getElementById('m-base').textContent=ini?fmtCurrency(ini):'R$ —';
   document.getElementById('m-alvo').textContent=fmtCurrency(metas.alvo);
   document.getElementById('m-60').textContent=fmtCurrency(metas['60']);
   renderFatChart();
@@ -1084,20 +1086,33 @@ function renderMetas(){
 function renderFatChart(){
   const canvas=document.getElementById('fat-chart'); if(!canvas) return;
   const fats=S.faturamento||{};
-  const labels=[], data=[], metaLine=[];
-  const meta=S.metas?.alvo||0;
-  for(let w=1;w<=TOTAL_WEEKS;w++){
-    if(fats[w]!==undefined){ labels.push('S'+w); data.push(Number(fats[w])||0); metaLine.push(meta); }
+  const meses=Object.keys(fats).sort((a,b)=>a.localeCompare(b));
+  // lista de meses registrados
+  const fatList=document.getElementById('fat-list');
+  if(fatList){
+    if(meses.length){
+      fatList.innerHTML=meses.map(k=>`
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(62,66,73,0.5)">
+          <span style="color:var(--text-sec);font-size:12px">${fmtMes(k)}</span>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="color:var(--amber);font-weight:600;font-size:13px">R$ ${Number(fats[k]).toLocaleString('pt-BR')}</span>
+            <button onclick="deletarMesFat('${k}')" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:12px;padding:0 4px">✕</button>
+          </div>
+        </div>`).join('');
+    } else {
+      fatList.innerHTML='';
+    }
   }
   if(fatChart) fatChart.destroy();
-  if(labels.length===0) return;
+  if(!meses.length) return;
+  const meta=S.metas?.alvo||0;
   fatChart=new Chart(canvas,{
     type:'line',
     data:{
-      labels,
+      labels:meses.map(m=>fmtMes(m)),
       datasets:[
-        {label:'Faturamento',data,borderColor:'#F5A623',backgroundColor:'rgba(245,166,35,0.08)',tension:.3,pointBackgroundColor:'#F5A623',pointRadius:4},
-        {label:'Meta alvo',data:metaLine,borderColor:'rgba(34,197,94,0.5)',borderDash:[6,3],pointRadius:0,tension:0}
+        {label:'Faturamento',data:meses.map(m=>Number(fats[m])||0),borderColor:'#F5A623',backgroundColor:'rgba(245,166,35,0.08)',tension:.3,pointBackgroundColor:'#F5A623',pointRadius:4},
+        ...(meta?[{label:'Meta alvo',data:meses.map(()=>meta),borderColor:'rgba(34,197,94,0.5)',borderDash:[6,3],pointRadius:0,tension:0}]:[])
       ]
     },
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#A0A0A8',font:{size:11}}}},scales:{x:{ticks:{color:'#A0A0A8',font:{size:10}},grid:{color:'rgba(62,66,73,0.4)'}},y:{ticks:{color:'#A0A0A8',font:{size:10},callback:v=>'R$'+Number(v).toLocaleString('pt-BR')},grid:{color:'rgba(62,66,73,0.4)'}}}}
@@ -1258,17 +1273,25 @@ async function saveHealthScore(){
 }
 
 async function saveFaturamento(){
-  const w=parseInt(document.getElementById('fat-week').value)||0;
+  const mes=document.getElementById('fat-mes').value;
   const v=document.getElementById('fat-val').value.replace(/\D/g,'');
-  if(!w||!v){ showToast('Preencha semana e valor','error'); return; }
+  if(!mes||!v){ showToast('Preencha mês e valor','error'); return; }
   if(!S.faturamento) S.faturamento={};
-  S.faturamento[w]=parseInt(v);
+  S.faturamento[mes]=parseInt(v);
   await save({faturamento:S.faturamento});
+  document.getElementById('fat-val').value='';
   showToast('Faturamento registrado!','success');
   renderFatChart();
 }
 
-function editMeta(key){ currentMetaKey=key; document.getElementById('meta-modal-title').textContent='Editar meta — '+{base:'Base',alvo:'Alvo','60':'60 dias'}[key]; document.getElementById('meta-input').value=(S.metas&&S.metas[key])||''; document.getElementById('meta-modal').classList.add('open'); setTimeout(()=>document.getElementById('meta-input').focus(),100); }
+async function deletarMesFat(mes){
+  if(!confirm('Remover faturamento de '+fmtMes(mes)+'?'))return;
+  if(S.faturamento) delete S.faturamento[mes];
+  await save({faturamento:S.faturamento||{}});
+  renderFatChart();
+}
+
+function editMeta(key){ currentMetaKey=key; document.getElementById('meta-modal-title').textContent='Editar meta — '+{alvo:'Alvo','60':'60 dias'}[key]; document.getElementById('meta-input').value=(S.metas&&S.metas[key])||''; document.getElementById('meta-modal').classList.add('open'); setTimeout(()=>document.getElementById('meta-input').focus(),100); }
 async function saveMeta(){ if(!currentMetaKey) return; const v=document.getElementById('meta-input').value.replace(/\D/g,''); if(!S.metas) S.metas={}; S.metas[currentMetaKey]=parseInt(v)||0; await save({metas:S.metas}); closeMetaModal(); showToast('Meta salva!','success'); renderMetas(); }
 function closeMetaModal(){ document.getElementById('meta-modal').classList.remove('open'); currentMetaKey=null; }
 function closeMetaModalOutside(e){ if(e.target===document.getElementById('meta-modal')) closeMetaModal(); }
