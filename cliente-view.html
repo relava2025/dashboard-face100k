@@ -439,7 +439,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
       </div>
       <div class="scard-body">
         <div class="metas-grid">
-          <div class="meta-card"><div class="meta-label">Meta base</div><div class="meta-val" id="m-base">R$ —</div><div class="meta-sub">quando entrou</div></div>
+          <div class="meta-card"><div class="meta-label">Antes do programa</div><div class="meta-val" id="m-base">R$ —</div><div class="meta-sub">faturamento anterior</div></div>
           <div class="meta-card"><div class="meta-label">Meta alvo</div><div class="meta-val" id="m-alvo">R$ —</div><div class="meta-sub">objetivo do programa</div></div>
           <div class="meta-card"><div class="meta-label">Super meta</div><div class="meta-val">R$ 100K</div><div class="meta-sub">por semana</div></div>
         </div>
@@ -554,6 +554,7 @@ let fatChart=null;
 function ini(n){return(n||'?').split(' ').filter(Boolean).slice(0,2).map(x=>x[0]).join('').toUpperCase()}
 function fmtCurrency(v){if(!v&&v!==0)return'R$ —';return'R$ '+Number(v).toLocaleString('pt-BR')}
 function fmtShort(v){if(!v&&v!==0)return'—';const n=Number(v);if(n>=1000000)return'R$'+(n/1000000).toFixed(1)+'M';if(n>=1000)return'R$'+(n/1000).toFixed(0)+'k';return'R$'+n}
+function fmtMes(k){const[y,m]=k.split('-');const n=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];return n[Number(m)-1]+'/'+y.slice(2)}
 function getW(){return S.currentWeek||1}
 function getWeekState(w){return(S.weekStates&&S.weekStates[w])||{}}
 function getHealthLabel(s){if(s>=80)return s+' · Saudável';if(s>=60)return s+' · Em atenção';return s+' · Em risco'}
@@ -637,16 +638,16 @@ function renderAll(){
   document.getElementById('st-cp-sub').textContent=cp.title;
   document.getElementById('st-next').textContent=CP_NEXT[cp.id]||'—';
   const fats=S.faturamento||{};
-  const fatWeeks=Object.keys(fats).map(Number).sort((a,b)=>b-a);
-  const lastFat=fatWeeks.length?fats[fatWeeks[0]]:null;
+  const fatMeses=Object.keys(fats).sort((a,b)=>b.localeCompare(a));
+  const lastFat=fatMeses.length?fats[fatMeses[0]]:null;
   document.getElementById('st-fat').textContent=fmtShort(lastFat);
-  document.getElementById('st-fat-sub').textContent=fatWeeks.length?`semana ${fatWeeks[0]}`:'sem registro';
+  document.getElementById('st-fat-sub').textContent=fatMeses.length?fmtMes(fatMeses[0]):'sem registro';
 
   renderMsg();
   renderTeam();
   renderTimeline(cp.id,w,activeCPs);
   renderTasks(w);
-  renderMetas(fats,fatWeeks);
+  renderMetas(fats,fatMeses);
   renderRecursos();
   renderPlaybook();
   renderCalls();
@@ -716,35 +717,36 @@ function renderTasks(w){
   }).join('');
 }
 
-function renderMetas(fats,fatWeeks){
+function renderMetas(fats,fatMeses){
+  const ini=S.faturamentoInicial||0;
   const metas=S.metas||{};
-  document.getElementById('m-base').textContent=fmtCurrency(metas.base);
+  document.getElementById('m-base').textContent=ini?fmtCurrency(ini):'R$ —';
   document.getElementById('m-alvo').textContent=fmtCurrency(metas.alvo);
-  const lastW=fatWeeks&&fatWeeks[0],lastFat=lastW?fats[lastW]:null;
+  const lastMes=fatMeses&&fatMeses[0],lastFat=lastMes?fats[lastMes]:null;
   document.getElementById('fat-atual').textContent=fmtCurrency(lastFat);
-  document.getElementById('fat-sub').textContent=lastW?`semana ${lastW} do programa`:'registrado pela equipe';
-  const meta=metas.base||0,badge=document.getElementById('fat-badge');
-  if(lastFat&&meta){
-    const diff=Math.round((lastFat-meta)/meta*100);
-    badge.textContent=(diff>=0?'+':'')+diff+'% vs meta base';
+  document.getElementById('fat-sub').textContent=lastMes?fmtMes(lastMes):'registrado pela equipe';
+  const badge=document.getElementById('fat-badge');
+  if(lastFat&&ini){
+    const diff=Math.round((lastFat-ini)/ini*100);
+    badge.textContent=(diff>=0?'+':'')+diff+'% vs antes do programa';
     badge.style.cssText=`background:${diff>=0?'var(--green-dim)':'var(--red-dim)'};color:${diff>=0?'var(--green)':'var(--red)'};border-color:${diff>=0?'var(--green-border)':'rgba(239,68,68,0.25)'}`;
   } else {
     badge.textContent='—';badge.style.cssText='';
   }
   // CHART
-  const chartWks=Object.keys(fats||{}).map(Number).sort((a,b)=>a-b);
+  const chartMeses=Object.keys(fats||{}).sort((a,b)=>a.localeCompare(b));
   const chartWrap=document.getElementById('chart-wrap');
-  if(chartWks.length>=1){
+  if(chartMeses.length>=1){
     chartWrap.style.display='block';
     const ctx=document.getElementById('fat-chart').getContext('2d');
     if(fatChart)fatChart.destroy();
     fatChart=new Chart(ctx,{
       type:'bar',
       data:{
-        labels:chartWks.map(w=>`S${w}`),
+        labels:chartMeses.map(m=>fmtMes(m)),
         datasets:[{
           label:'Faturamento',
-          data:chartWks.map(w=>fats[w]),
+          data:chartMeses.map(m=>fats[m]),
           backgroundColor:'rgba(245,166,35,0.22)',
           borderColor:'#F5A623',
           borderWidth:1.5,

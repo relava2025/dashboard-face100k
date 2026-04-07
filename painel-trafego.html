@@ -7,11 +7,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-import{getFirestore,collection,doc,onSnapshot,addDoc,setDoc,updateDoc,deleteDoc}from"https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+import{getFirestore,collection,doc,onSnapshot,addDoc,setDoc,updateDoc,deleteDoc,getDoc}from"https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 const cfg={apiKey:"AIzaSyAyupUdCsEb6pPVmTs2clhayS84-TUovGA",authDomain:"dashboard-e465d.firebaseapp.com",projectId:"dashboard-e465d",storageBucket:"dashboard-e465d.firebasestorage.app",messagingSenderId:"865986158280",appId:"1:865986158280:web:1531d13630f9835a9f0ffd"};
 const db=getFirestore(initializeApp(cfg));
 window._db=db;
-window._fs={collection,doc,onSnapshot,addDoc,setDoc,updateDoc,deleteDoc};
+window._fs={collection,doc,onSnapshot,addDoc,setDoc,updateDoc,deleteDoc,getDoc};
 window.dispatchEvent(new Event('db-ready'));
 </script>
 <style>
@@ -552,6 +552,7 @@ function renderCarteira(){
         <td>
           <div style="display:flex;gap:6px">
             <button class="btn btn-ghost btn-sm" onclick="openMetricasModal('${c._id}')">Métricas</button>
+            <button class="btn btn-ghost btn-sm" onclick="openFaturamentoModal('${c._id}')">Faturamento</button>
             <button class="btn btn-ghost btn-sm" onclick="openEditClienteModal('${c._id}')">Editar</button>
           </div>
         </td>
@@ -580,6 +581,7 @@ function renderCarteira(){
         </div>
         <div class="cc-actions">
           <button class="btn btn-ghost btn-sm" onclick="openMetricasModal('${c._id}')">Métricas</button>
+          <button class="btn btn-ghost btn-sm" onclick="openFaturamentoModal('${c._id}')">Faturamento</button>
           <button class="btn btn-ghost btn-sm" onclick="openEditClienteModal('${c._id}')">Editar</button>
         </div>
       </div>`;
@@ -728,6 +730,80 @@ async function deleteCliente(id){
   if(!confirm('Excluir este cliente? Esta ação não pode ser desfeita.'))return;
   try{await window._fs.deleteDoc(window._fs.doc(window._db,'trafego',id));closeModal();}
   catch(err){alert('Erro: '+err.message);}
+}
+
+function fmtMes(k){const[y,m]=k.split('-');const n=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];return n[Number(m)-1]+'/'+y.slice(2)}
+
+async function openFaturamentoModal(id){
+  const c=S.trafego[id];if(!c)return;
+  let fatInicial=0,faturamento={};
+  try{
+    const snap=await window._fs.getDoc(window._fs.doc(window._db,'entrega',id));
+    if(snap.exists()){const d=snap.data();fatInicial=d.faturamentoInicial||0;faturamento=d.faturamento||{};}
+  }catch(e){}
+  const meses=Object.entries(faturamento).sort(([a],[b])=>a.localeCompare(b));
+  const hoje=new Date().toISOString().slice(0,7);
+  const mesesHtml=meses.length?meses.map(([k,v])=>`
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
+      <span>${fmtMes(k)}</span>
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="color:var(--amber);font-weight:600">R$ ${Number(v).toLocaleString('pt-BR')}</span>
+        <button type="button" class="btn btn-ghost btn-sm" style="padding:2px 8px;color:var(--red)" onclick="deletarMesFat('${id}','${k}')">✕</button>
+      </div>
+    </div>`).join(''):`<div style="color:var(--text-sec);font-size:12px;padding:8px 0">Nenhum mês registrado ainda.</div>`;
+  openModal('Faturamento — '+c.name,`
+    <form onsubmit="submitFaturamentoModal(event,'${id}')">
+      <div class="modal-body">
+        <div class="form-section-label">Faturamento anterior ao programa</div>
+        <div class="form-group">
+          <label class="form-label">Faturamento mensal antes de entrar (R$)</label>
+          <input class="form-input" name="fatInicial" type="number" min="0" step="100" value="${fatInicial||''}" placeholder="Ex: 30000">
+          <div class="form-hint">Linha de base para medir o crescimento no programa</div>
+        </div>
+        <div class="form-section-label">Histórico mensal</div>
+        <div style="margin-bottom:16px">${mesesHtml}</div>
+        <div class="form-section-label">Registrar novo mês</div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Mês</label><input class="form-input" name="mes" type="month" value="${hoje}"></div>
+          <div class="form-group"><label class="form-label">Valor faturado (R$)</label><input class="form-input" name="valor" type="number" min="0" step="100" placeholder="Ex: 45000"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" onclick="closeModal()">Fechar</button>
+        <button type="submit" class="btn btn-primary">Salvar</button>
+      </div>
+    </form>`);
+}
+
+async function submitFaturamentoModal(e,id){
+  e.preventDefault();
+  const f=new FormData(e.target);
+  const fatInicial=Number(f.get('fatInicial')||0);
+  const mes=f.get('mes');
+  const valor=Number(f.get('valor')||0);
+  let faturamento={};
+  try{
+    const snap=await window._fs.getDoc(window._fs.doc(window._db,'entrega',id));
+    if(snap.exists())faturamento={...snap.data().faturamento||{}};
+  }catch(e){}
+  if(mes&&valor>0)faturamento[mes]=valor;
+  const update={faturamentoInicial:fatInicial,faturamento,updatedAt:new Date().toISOString()};
+  try{await window._fs.updateDoc(window._fs.doc(window._db,'entrega',id),update);closeModal();}
+  catch(err){alert('Erro: '+err.message);}
+}
+
+async function deletarMesFat(id,mes){
+  if(!confirm(`Remover faturamento de ${fmtMes(mes)}?`))return;
+  let faturamento={};
+  try{
+    const snap=await window._fs.getDoc(window._fs.doc(window._db,'entrega',id));
+    if(snap.exists())faturamento={...snap.data().faturamento||{}};
+  }catch(e){}
+  delete faturamento[mes];
+  try{
+    await window._fs.updateDoc(window._fs.doc(window._db,'entrega',id),{faturamento,updatedAt:new Date().toISOString()});
+    openFaturamentoModal(id);
+  }catch(err){alert('Erro: '+err.message);}
 }
 
 // ─── BOARD ────────────────────────────────────────
