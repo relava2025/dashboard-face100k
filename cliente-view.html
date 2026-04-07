@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -9,14 +8,15 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-import{getFirestore,doc,onSnapshot,updateDoc}from"https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+import{getFirestore,doc,onSnapshot,updateDoc,collection,query,where}from"https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 const cfg={apiKey:"AIzaSyAyupUdCsEb6pPVmTs2clhayS84-TUovGA",authDomain:"dashboard-e465d.firebaseapp.com",projectId:"dashboard-e465d",storageBucket:"dashboard-e465d.firebasestorage.app",messagingSenderId:"865986158280",appId:"1:865986158280:web:1531d13630f9835a9f0ffd"};
 const db=getFirestore(initializeApp(cfg));
 const cid=new URLSearchParams(location.search).get('cliente')||'';
 window._clientId=cid;
 if(cid)window._fb={
   listen(cb){return onSnapshot(doc(db,'entrega',cid),s=>{s.exists()&&cb(s.data())})},
-  save(d){return updateDoc(doc(db,'entrega',cid),d).catch(console.warn)}
+  save(d){return updateDoc(doc(db,'entrega',cid),d).catch(console.warn)},
+  listenRoteiros(cb){const q=query(collection(db,'roteiros'),where('clienteId','==',cid));return onSnapshot(q,snap=>{const list=[];snap.forEach(d=>list.push(d.data()));list.sort((a,b)=>(b.criadoEm||'').localeCompare(a.criadoEm||''));cb(list);})}
 };
 window.dispatchEvent(new Event("fb-ready"));
 </script>
@@ -197,6 +197,25 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .res-icon{width:32px;height:32px;border-radius:8px;background:var(--amber-dim);border:1px solid var(--amber-border);display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .res-name{font-size:11px;font-weight:600;color:var(--text);line-height:1.3}
 .res-tag{font-size:9px;color:var(--text-sec)}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:8px;font-size:9px;font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:.06em;white-space:nowrap}
+.b-aguardando_gravacao{background:var(--blue-dim);color:var(--blue);border:.5px solid var(--blue-border)}
+.b-gravado{background:var(--amber-dim);color:var(--amber);border:.5px solid var(--amber-border)}
+.b-publicado{background:var(--green-dim);color:var(--green);border:.5px solid var(--green-border)}
+
+/* ROTEIROS */
+.rot-list{display:flex;flex-direction:column;gap:8px}
+.rot-item{background:var(--surface2);border:.5px solid var(--border);border-radius:8px;overflow:hidden;transition:border-color .15s}
+.rot-item:hover{border-color:var(--amber-border)}
+.rot-item-hdr{padding:14px 16px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
+.rot-titulo{font-size:12px;font-weight:600;margin-bottom:3px}
+.rot-gancho-prev{font-size:11px;color:var(--text-sec);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:220px}
+.rot-chev{font-size:14px;color:var(--text-sec);transition:transform .2s;flex-shrink:0;margin-top:2px}
+.rot-body{padding:0 16px 14px;border-top:.5px solid var(--border)}
+.rot-sec-lbl{font-size:9px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.12em;font-family:'Montserrat',sans-serif;font-weight:600;margin:12px 0 5px}
+.rot-sec-content{font-size:12px;color:var(--text);line-height:1.7;white-space:pre-wrap}
+.rot-cta{background:var(--amber-dim);border:1px solid var(--amber-border);border-radius:8px;padding:12px 14px;font-size:12px;color:var(--amber);margin-top:12px;line-height:1.6}
 
 /* VÍDEOS */
 .video-item{margin-bottom:16px}
@@ -436,6 +455,16 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
           <canvas id="fat-chart"></canvas>
         </div>
       </div>
+    </div>
+
+    <!-- ROTEIROS -->
+    <div class="scard" id="roteiros-section" style="display:none">
+      <div class="scard-hdr">
+        <div class="scard-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="10" rx="1.5" stroke="#F5A623" stroke-width="1.3"/><path d="M6 6h4M6 8.5h4M6 11h2" stroke="#F5A623" stroke-width="1.3" stroke-linecap="round"/></svg></div>
+        <div class="scard-title">Meus roteiros</div>
+        <div class="scard-sub" id="roteiros-sub">criados pela equipe</div>
+      </div>
+      <div class="scard-body"><div class="rot-list" id="roteiros-list"></div></div>
     </div>
 
     <!-- AULAS -->
@@ -825,6 +854,45 @@ function renderCalls(){
     </div>`).join('');
 }
 
+function renderRoteiros(roteiros){
+  const section=document.getElementById('roteiros-section');
+  const list=document.getElementById('roteiros-list');
+  const sub=document.getElementById('roteiros-sub');
+  if(!roteiros||!roteiros.length){section.style.display='none';return}
+  section.style.display='block';
+  const pending=roteiros.filter(r=>r.status==='aguardando_gravacao').length;
+  sub.textContent=roteiros.length+' roteiro'+(roteiros.length!==1?'s':'')+(pending?' · '+pending+' aguardando gravação':'');
+  const SLABELS={aguardando_gravacao:'Aguardando gravação',gravado:'Gravado',publicado:'Publicado'};
+  const SCLS={aguardando_gravacao:'b-aguardando_gravacao',gravado:'b-gravado',publicado:'b-publicado'};
+  list.innerHTML=roteiros.map((r,i)=>`
+    <div class="rot-item">
+      <div class="rot-item-hdr" onclick="toggleRoteiro(${i})">
+        <div style="flex:1;min-width:0">
+          <div class="rot-titulo">${r.titulo||'Sem título'}</div>
+          <div class="rot-gancho-prev">${r.gancho||'—'}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+          <span class="badge ${SCLS[r.status]||'b-aguardando_gravacao'}">${SLABELS[r.status]||r.status}</span>
+          <span class="rot-chev" id="rot-chev-${i}">⌄</span>
+        </div>
+      </div>
+      <div class="rot-body" id="rot-body-${i}" style="display:none">
+        ${r.gancho?`<div class="rot-sec-lbl">Gancho</div><div class="rot-sec-content">${r.gancho}</div>`:''}
+        ${r.desenvolvimento?`<div class="rot-sec-lbl">Desenvolvimento</div><div class="rot-sec-content">${r.desenvolvimento}</div>`:''}
+        ${r.cta?`<div class="rot-sec-lbl">CTA</div><div class="rot-sec-content">${r.cta}</div>`:''}
+        ${r.status==='aguardando_gravacao'?'<div class="rot-cta">📱 Grave este roteiro e envie o vídeo para sua equipe via WhatsApp.</div>':''}
+      </div>
+    </div>`).join('');
+}
+
+function toggleRoteiro(i){
+  const body=document.getElementById('rot-body-'+i);
+  const chev=document.getElementById('rot-chev-'+i);
+  const open=body.style.display!=='none';
+  body.style.display=open?'none':'block';
+  if(chev)chev.style.transform=open?'':'rotate(180deg)';
+}
+
 function toggleMyTask(tid,w){
   if(!S.weekStates)S.weekStates={};
   if(!S.weekStates[w])S.weekStates[w]={};
@@ -852,6 +920,7 @@ window.addEventListener('fb-ready',()=>{
     document.getElementById('app').style.display='block';
     renderAll();
   });
+  window._fb.listenRoteiros(roteiros=>renderRoteiros(roteiros));
   setTimeout(()=>{if(!document.getElementById('loading').classList.contains('hidden'))show404()},6000);
 });
 </script>
