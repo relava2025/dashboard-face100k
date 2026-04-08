@@ -546,6 +546,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
                 </div>
               </div>
             </div>
+            <div class="chart-wrap" id="hs-chart-wrap" style="display:none;margin-top:16px;height:160px"><canvas id="hs-chart"></canvas></div>
             <div style="margin-top:14px;border-top:1px solid var(--border);padding-top:14px">
               <div class="form-grid-2">
                 <div class="form-field">
@@ -846,6 +847,7 @@ let obsSaveTimer = null;
 let currentMetaKey = null;
 let currentDecision = null;
 let fatChart = null;
+let hsChart = null;
 
 // ── HELPERS ──
 function getW(){ return S.currentWeek||1; }
@@ -1030,6 +1032,37 @@ function renderHealthScore(){
   document.getElementById('hval-sat').textContent=sat+'pt';
   const fi=document.getElementById('funil-input'); if(fi&&!fi.value) fi.value=funil||'';
   const si=document.getElementById('sat-input'); if(si&&!si.value) si.value=sat||'';
+  renderHsChart();
+}
+
+function renderHsChart(){
+  const canvas=document.getElementById('hs-chart'); if(!canvas) return;
+  const hist=S.healthHistory||{};
+  const semanas=Object.keys(hist).map(Number).sort((a,b)=>a-b);
+  const wrap=document.getElementById('hs-chart-wrap');
+  if(!semanas.length){ if(wrap) wrap.style.display='none'; if(hsChart){hsChart.destroy();hsChart=null;} return; }
+  if(wrap) wrap.style.display='block';
+  if(hsChart) hsChart.destroy();
+  const scores=semanas.map(w=>hist[w]);
+  hsChart=new Chart(canvas,{
+    type:'line',
+    data:{
+      labels:semanas.map(w=>'S'+w),
+      datasets:[
+        {label:'Health Score',data:scores,borderColor:'#F5A623',backgroundColor:'rgba(245,166,35,0.07)',tension:.3,pointBackgroundColor:scores.map(v=>v>=80?'#22C55E':v>=60?'#EAB308':'#EF4444'),pointRadius:4,fill:true,order:1},
+        {label:'Saudável',data:semanas.map(()=>80),borderColor:'rgba(34,197,94,0.3)',borderDash:[4,4],pointRadius:0,tension:0,fill:false,order:2},
+        {label:'Atenção',data:semanas.map(()=>60),borderColor:'rgba(234,179,8,0.3)',borderDash:[4,4],pointRadius:0,tension:0,fill:false,order:3}
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{filter:i=>i.datasetIndex===0,callbacks:{label:c=>'Score: '+c.raw}}},
+      scales:{
+        x:{ticks:{color:'#A0A0A8',font:{size:10}},grid:{color:'rgba(62,66,73,0.4)'},border:{color:'#3E4249'}},
+        y:{min:0,max:100,ticks:{color:'#A0A0A8',font:{size:10},stepSize:20},grid:{color:'rgba(62,66,73,0.4)'},border:{color:'#3E4249'}}
+      }
+    }
+  });
 }
 
 function renderAllCPs(){
@@ -1268,8 +1301,11 @@ function updateHealthScore(){
 
 async function saveHealthScore(){
   updateHealthScore();
-  await save({healthScore:S.healthScore,healthExec:S.healthExec,healthFunil:S.healthFunil,healthSat:S.healthSat});
+  if(!S.healthHistory) S.healthHistory={};
+  S.healthHistory[getW()]=S.healthScore;
+  await save({healthScore:S.healthScore,healthExec:S.healthExec,healthFunil:S.healthFunil,healthSat:S.healthSat,healthHistory:S.healthHistory});
   showToast('Health Score salvo!','success');
+  renderHsChart();
 }
 
 async function saveFaturamento(){
