@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-  import { getFirestore, collection, onSnapshot, doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+  import { getFirestore, collection, onSnapshot, doc, setDoc, deleteDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
   const firebaseConfig = {
     apiKey:"AIzaSyAyupUdCsEb6pPVmTs2clhayS84-TUovGA",
     authDomain:"dashboard-e465d.firebaseapp.com",
@@ -21,7 +21,9 @@
   window._fb = {
     listenClients(cb){ return onSnapshot(collection(db,"entrega"), snap=>{ const l=[]; snap.forEach(d=>l.push({id:d.id,...d.data()})); cb(l); }); },
     async save(id,data){ await setDoc(doc(db,"entrega",id),data,{merge:true}); },
-    async delete(id){ await deleteDoc(doc(db,"entrega",id)); }
+    async delete(id){ await deleteDoc(doc(db,"entrega",id)); },
+    async getDoc(id){ const s=await getDoc(doc(db,"entrega",id)); return s.exists()?s.data():null; },
+    async updateCronograma(id,cronograma){ await updateDoc(doc(db,"entrega",id),{cronograma}); }
   };
   window.dispatchEvent(new Event("fb-ready"));
 </script>
@@ -540,6 +542,7 @@ function renderClients(){
       <div class="c-actions" onclick="event.stopPropagation()">
         <button class="btn-open-dash" onclick="event.stopPropagation();openDashboard('${c.id}')">Abrir dashboard</button>
         <button class="btn-view-client" onclick="event.stopPropagation();openClientView('${c.id}')">Visão cliente</button>
+        <button class="btn-view-client" onclick="event.stopPropagation();openCronogramaModal('${c.id}','${(c.name||'').replace(/'/g,'')}')">Cronograma</button>
         <button class="btn-edit-client" onclick="openModal('${c.id}')">Editar</button>
         <button class="btn-del-client" onclick="confirmDelete('${c.id}','${(c.name||'').replace(/'/g,'')}') " title="Excluir">✕</button>
       </div>
@@ -808,5 +811,121 @@ document.addEventListener('keydown',e=>{
 });
 </script>
 <script>if("serviceWorker" in navigator){window.addEventListener("load",()=>{navigator.serviceWorker.register("/sw.js").then(()=>console.log("SW ok")).catch(e=>console.log("SW err",e));});}</script>
+
+<!-- MODAL CRONOGRAMA -->
+<div id="cron-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:300;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto" onclick="if(event.target===this)closeCronModal()">
+  <div style="background:#1A2025;border:1px solid #3E4249;border-radius:12px;width:780px;max-width:100%;padding:28px;margin:auto;position:relative">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+      <div>
+        <div style="font-family:'Montserrat',sans-serif;font-size:15px;font-weight:700" id="cron-modal-title">Cronograma</div>
+        <div style="font-size:11px;color:#A0A0A8;margin-top:2px">Edite o progresso do cronograma deste cliente</div>
+      </div>
+      <button onclick="closeCronModal()" style="background:none;border:none;color:#A0A0A8;font-size:18px;cursor:pointer;padding:4px 8px">✕</button>
+    </div>
+    <div id="cron-modal-body"></div>
+    <div style="display:flex;justify-content:flex-end;margin-top:20px;padding-top:16px;border-top:1px solid #3E4249">
+      <button onclick="closeCronModal()" style="background:#F5A623;color:#000;border:none;border-radius:6px;padding:10px 24px;font-size:12px;font-weight:700;font-family:'Montserrat',sans-serif;cursor:pointer;letter-spacing:.04em">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const CRON_TEMPLATE=[
+  {title:'Vendas',badge:'01',status:'Fase 1',obj:'Estruturar a base comercial da clínica para começar a vender com método, previsibilidade e maior conversão.',steps:[
+    {text:'Implementar o ecossistema comercial',subs:['Flashboard','CRM','Tráfego','Drive','Playbooks']},
+    {text:'Participar das tutorias de terça-feira, 19h'},
+    {text:'Assistir aos treinamentos',subs:['Treinamento de Vendas','Treinamento de Apresentação de Vendas']},
+    {text:'Estruturar a esteira de produtos'},
+    {text:'Montar a apresentação de vendas'},
+    {text:'Realizar a call de vendas para dúvidas e direcionamentos'},
+    {text:'Assistir aos conteúdos de apoio',subs:['Tutoria de Vendas 6','Consulta gravada da Dra. Deborah']},
+    {text:'Aplicar a metodologia no consultório',subs:['Apresentação de Vendas','SPIN']},
+    {text:'Realizar as primeiras vendas'},
+    {text:'Gravar consulta de venda para análise da equipe'},
+  ]},
+  {title:'Pré-vendas',badge:'02',status:'Fase 2',obj:'Estruturar o processo de atendimento, qualificação e agendamento para gerar mais consultas com consistência.',steps:[
+    {text:'Adicionar a SDR no grupo de acompanhamento'},
+    {text:'Garantir a participação da SDR nas tutorias de segunda, 11h'},
+    {text:'SDR preencher diariamente o Flashboard'},
+    {text:'Garantir o uso do CRM no dia a dia'},
+    {text:'Aplicar o script de pré-vendas nos atendimentos'},
+    {text:'Organizar o processo de atendimento com constância'},
+    {text:'Meta mínima: 1 agendamento por dia'},
+  ]},
+  {title:'Tráfego',badge:'03',status:'Fase 3',obj:'Colocar a captação para rodar de forma estratégica, alinhada ao posicionamento e ao processo comercial.',steps:[
+    {text:'Obter os acessos aos gerenciadores'},
+    {text:'Iniciar a estrutura de tráfego pago'},
+    {text:'Colocar as campanhas para rodar'},
+    {text:'Gravar os criativos com base nos scripts enviados'},
+    {text:'Ajustar o perfil conforme análise já passada'},
+    {text:'Alinhar comunicação, oferta e criativos com o público-alvo'},
+  ]}
+];
+
+let _cronClientId=null, _cronDone={};
+
+async function openCronogramaModal(id,name){
+  _cronClientId=id; _cronDone={};
+  document.getElementById('cron-modal-title').textContent='Cronograma — '+(name||id);
+  document.getElementById('cron-modal-body').innerHTML='<div style="color:#A0A0A8;font-size:12px;padding:12px 0">Carregando...</div>';
+  document.getElementById('cron-modal').style.display='flex';
+  try{
+    const data=await window._fb.getDoc(id);
+    _cronDone=(data&&data.cronograma&&data.cronograma.done)||{};
+  }catch(e){ _cronDone={}; }
+  renderCronModal();
+}
+
+function closeCronModal(){ document.getElementById('cron-modal').style.display='none'; _cronClientId=null; }
+
+function renderCronModal(){
+  const checkSvg=`<svg width="9" height="7" viewBox="0 0 9 7" fill="none"><path d="M1 3.5L3 5.5L8 1" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  const colors=['#F5A623','rgba(245,166,35,0.5)','#3E4249'];
+  let grandDone=0,grandTotal=0;
+  CRON_TEMPLATE.forEach((p,pi)=>p.steps.forEach((_,si)=>{ grandTotal++; if(_cronDone[`${pi}-${si}`])grandDone++; }));
+  const totalPct=grandTotal?Math.round(grandDone/grandTotal*100):0;
+
+  const phasesHtml=CRON_TEMPLATE.map((phase,pi)=>{
+    const phDone=phase.steps.filter((_,si)=>_cronDone[`${pi}-${si}`]).length;
+    const phPct=phase.steps.length?Math.round(phDone/phase.steps.length*100):0;
+    const stepsHtml=phase.steps.map((st,si)=>{
+      const isDone=!!_cronDone[`${pi}-${si}`];
+      const checkBg=isDone?`background:${colors[pi]};border-color:${colors[pi]}`:'border:1.5px solid #3E4249';
+      const txtStyle=isDone?'text-decoration:line-through;color:rgba(255,255,255,0.2)':'color:#A0A0A8';
+      const subsHtml=st.subs?`<div style="margin-top:3px;padding-left:22px">${st.subs.map(s=>`<div style="font-size:10px;color:rgba(160,160,168,0.55);display:flex;align-items:center;gap:5px;margin-bottom:2px"><div style="width:8px;height:1px;background:rgba(245,166,35,0.3);flex-shrink:0"></div>${s}</div>`).join('')}</div>`:'';
+      return`<div style="display:flex;align-items:flex-start;gap:8px;padding:4px 0;cursor:pointer" onclick="toggleCronModalStep(${pi},${si})">
+        <div style="width:16px;height:16px;border-radius:3px;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .2s;${checkBg}">${isDone?checkSvg:''}</div>
+        <div><span style="font-size:12px;${txtStyle}">${st.text}</span>${subsHtml}</div>
+      </div>`;
+    }).join('');
+    return`<div style="background:#212830;border:1px solid #3E4249;border-radius:8px;padding:16px;margin-bottom:12px;border-top:2px solid ${colors[pi]}">
+      <div style="font-family:'Montserrat',sans-serif;font-size:14px;font-weight:700;color:${pi===0?'#F5A623':'#F0F0F0'};margin-bottom:4px">${phase.badge} — ${phase.title}</div>
+      <div style="font-size:11px;color:#A0A0A8;margin-bottom:12px">${phDone} / ${phase.steps.length} concluídos · ${phPct}%</div>
+      <div style="height:3px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;margin-bottom:14px"><div style="height:100%;width:${phPct}%;background:${colors[pi]};border-radius:2px;transition:width .3s"></div></div>
+      ${stepsHtml}
+    </div>`;
+  }).join('');
+
+  document.getElementById('cron-modal-body').innerHTML=`
+    ${phasesHtml}
+    <div style="background:#1A2025;border:1px solid #3E4249;border-radius:8px;padding:16px;display:flex;align-items:center;gap:16px">
+      <div style="font-family:'Montserrat',sans-serif;font-size:32px;font-weight:800;color:#F5A623;line-height:1">${totalPct}%</div>
+      <div style="flex:1">
+        <div style="font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,0.3);font-family:'Montserrat',sans-serif;margin-bottom:6px">Progresso total</div>
+        <div style="height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden"><div style="height:100%;width:${totalPct}%;background:linear-gradient(90deg,#F5A623,rgba(245,166,35,0.5));border-radius:2px;transition:width .4s"></div></div>
+      </div>
+    </div>`;
+}
+
+async function toggleCronModalStep(pi,si){
+  if(!_cronClientId)return;
+  const key=`${pi}-${si}`;
+  _cronDone[key]=!_cronDone[key];
+  if(!_cronDone[key])delete _cronDone[key];
+  renderCronModal();
+  try{ await window._fb.updateCronograma(_cronClientId,{done:_cronDone}); }
+  catch(e){ showToast('Erro ao salvar','error'); }
+}
+</script>
 </body>
 </html>

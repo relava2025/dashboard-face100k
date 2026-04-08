@@ -289,6 +289,69 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .btn-save-decision{margin-top:10px;padding:8px 20px;background:var(--amber);color:#000;border:none;border-radius:5px;font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;cursor:pointer;letter-spacing:.04em}
 .btn-save-decision:hover{opacity:.88}
 
+/* CRONOGRAMA */
+.cron-flow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 18px;margin-bottom:20px}
+.cron-flow-tag{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);font-weight:700;margin-right:10px;white-space:nowrap;font-family:'Montserrat',sans-serif}
+.cron-flow-node{display:flex;align-items:center;gap:7px}
+.cron-flow-num{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;font-family:'Montserrat',sans-serif;flex-shrink:0}
+.cfn1 .cron-flow-num{background:var(--amber);color:#000}
+.cfn2 .cron-flow-num{background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border)}
+.cfn3 .cron-flow-num{background:rgba(255,255,255,0.05);color:var(--text-dim);border:1px solid var(--border)}
+.cron-flow-label{font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;font-family:'Montserrat',sans-serif}
+.cfn1 .cron-flow-label{color:var(--text)}
+.cfn2 .cron-flow-label{color:rgba(255,255,255,0.5)}
+.cfn3 .cron-flow-label{color:var(--text-dim)}
+.cron-chev{color:rgba(245,166,35,0.3);font-size:14px}
+.cron-phases{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-bottom:20px}
+.cron-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:22px 18px 16px;position:relative;overflow:hidden}
+.cron-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.cc1::before{background:linear-gradient(90deg,var(--amber),rgba(245,166,35,0.2))}
+.cc2::before{background:linear-gradient(90deg,rgba(245,166,35,0.5),rgba(245,166,35,0.06))}
+.cc3::before{background:linear-gradient(90deg,var(--border),transparent)}
+.cron-badge{display:inline-flex;align-items:center;gap:7px;margin-bottom:12px}
+.cron-badge-num{font-family:'Montserrat',sans-serif;font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:2px 8px;border-radius:3px}
+.cc1 .cron-badge-num{background:var(--amber);color:#000}
+.cc2 .cron-badge-num{background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border)}
+.cc3 .cron-badge-num{background:rgba(255,255,255,0.05);color:var(--text-sec);border:1px solid var(--border)}
+.cron-badge-lbl{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-sec);font-weight:500}
+.cron-title{font-family:'Montserrat',sans-serif;font-size:20px;font-weight:800;color:var(--text);margin-bottom:5px}
+.cc1 .cron-title{color:var(--amber)}
+.cron-obj{font-size:11.5px;color:var(--text-sec);line-height:1.6;font-weight:300;padding-left:8px;border-left:2px solid rgba(245,166,35,0.25);margin:10px 0 16px}
+.cron-steps-lbl{font-size:8px;letter-spacing:.22em;text-transform:uppercase;font-weight:700;color:var(--text-dim);margin-bottom:10px;font-family:'Montserrat',sans-serif}
+.cron-step-list{list-style:none;display:flex;flex-direction:column;gap:7px}
+.cron-step{display:flex;align-items:flex-start;gap:9px;font-size:12px;line-height:1.4;color:var(--text-sec);cursor:pointer;padding:2px 0;transition:color .15s}
+.cron-step:hover{color:var(--text)}
+.cron-check{width:16px;height:16px;border-radius:3px;border:1.5px solid var(--border);flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .2s;background:transparent}
+.cron-check svg{display:none}
+.cron-step.done .cron-check svg{display:block}
+.cc1 .cron-step.done .cron-check,.cc2 .cron-step.done .cron-check{background:var(--amber);border-color:var(--amber)}
+.cc3 .cron-step.done .cron-check{background:var(--border);border-color:var(--border)}
+.cron-step.done .cron-step-txt{text-decoration:line-through;color:rgba(255,255,255,0.2)}
+.cron-subs{list-style:none;margin-top:4px;padding-left:25px;display:flex;flex-direction:column;gap:3px}
+.cron-sub{display:flex;align-items:center;gap:6px;font-size:10.5px;color:rgba(160,160,168,0.55);font-weight:300}
+.cron-sub-dash{width:8px;height:1px;background:rgba(245,166,35,0.3);flex-shrink:0}
+.cron-prog{margin-top:18px;padding-top:14px;border-top:1px solid var(--border)}
+.cron-prog-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.cron-prog-lbl{font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);font-weight:700;font-family:'Montserrat',sans-serif}
+.cron-prog-count{font-size:10px;font-weight:500;font-family:'JetBrains Mono',monospace}
+.cc1 .cron-prog-count,.cc2 .cron-prog-count{color:var(--amber)}
+.cc3 .cron-prog-count{color:var(--text-sec)}
+.cron-bar-bg{height:3px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden}
+.cron-bar-fill{height:100%;border-radius:2px;transition:width .4s ease}
+.cc1 .cron-bar-fill,.cc2 .cron-bar-fill{background:linear-gradient(90deg,var(--amber),rgba(245,166,35,0.5))}
+.cc3 .cron-bar-fill{background:var(--border)}
+.cron-summary{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:24px;display:flex;align-items:center;gap:24px;flex-wrap:wrap;position:relative;overflow:hidden}
+.cron-summary::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,rgba(245,166,35,0) 0%,var(--amber) 40%,var(--amber) 60%,rgba(245,166,35,0) 100%)}
+.cron-total-num{font-family:'Montserrat',sans-serif;font-size:48px;font-weight:800;color:var(--amber);line-height:1;letter-spacing:-.03em;text-shadow:0 0 30px rgba(245,166,35,0.3)}
+.cron-total-lbl{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);font-family:'Montserrat',sans-serif;margin-top:3px}
+.cron-total-bar-wrap{flex:1;min-width:180px}
+.cron-total-bar-bg{height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;margin-bottom:6px}
+.cron-total-bar-fill{height:100%;background:linear-gradient(90deg,var(--amber),rgba(245,166,35,0.5));border-radius:2px;transition:width .5s ease}
+.cron-phase-labels{display:flex;justify-content:space-between}
+.cron-phase-lbl{font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim);font-weight:600;font-family:'Montserrat',sans-serif}
+.cron-phase-lbl.active{color:var(--amber)}
+@media(max-width:640px){.cron-phases{grid-template-columns:1fr}.cron-flow{flex-direction:column;align-items:flex-start;gap:8px}}
+
 /* FORM UTILS */
 .form-input{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'Inter',sans-serif;font-size:12px;padding:9px 12px;outline:none;transition:border-color .15s}
 .form-input:focus{border-color:var(--amber)}
@@ -419,6 +482,10 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
       <button class="nav-btn" onclick="showPage('engajamento',this,'mnav-eng')">
         <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M8 3l1.5 3 3.5.5-2.5 2.5.5 3.5L8 11l-3 1.5.5-3.5L3 6.5 6.5 6z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
         Engajamento
+      </button>
+      <button class="nav-btn" onclick="showPage('cronograma',this,'mnav-cron')">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M2 8h8M2 12h5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="13" cy="11" r="2.5" stroke="currentColor" stroke-width="1.3"/><path d="M13 10v1.5l1 .5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>
+        Cronograma
       </button>
     </nav>
     <div class="sb-client">
@@ -707,6 +774,10 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
             </div>
           </div>
         </div>
+      <!-- PAGE: CRONOGRAMA -->
+      <div id="page-cronograma" class="page">
+        <div class="brand-rail"></div>
+        <div id="cron-container"></div>
       </div>
 
     </div>
@@ -735,6 +806,10 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
     <button class="mobile-nav-btn" id="mnav-calls" onclick="showPage('calls',this,'mnav-calls')">
       <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.3"/><path d="M8 5v3l2 1.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
       Calls
+    </button>
+    <button class="mobile-nav-btn" id="mnav-cron" onclick="showPage('cronograma',this,'mnav-cron')">
+      <svg viewBox="0 0 16 16" fill="none"><path d="M2 4h12M2 8h8M2 12h5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="13" cy="11" r="2.5" stroke="currentColor" stroke-width="1.3"/><path d="M13 10v1.5l1 .5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>
+      Cronograma
     </button>
   </div>
 </div>
@@ -885,6 +960,7 @@ function renderAll(){
   renderResources();
   renderCalls();
   renderEngajamento();
+  renderCronograma();
   renderAlertPage();
 }
 
@@ -1408,6 +1484,126 @@ setTimeout(()=>{
   }
 },5000);
 </script>
+// ── CRONOGRAMA ─────────────────────────────────────────────────────────
+const CRON_TEMPLATE = [
+  {
+    title:'Vendas', badge:'01', status:'Fase 1', cls:'cc1',
+    obj:'Estruturar a base comercial da clínica para começar a vender com método, previsibilidade e maior conversão.',
+    steps:[
+      {text:'Implementar o ecossistema comercial',subs:['Flashboard','CRM','Tráfego','Drive','Playbooks']},
+      {text:'Participar das tutorias de terça-feira, 19h'},
+      {text:'Assistir aos treinamentos',subs:['Treinamento de Vendas','Treinamento de Apresentação de Vendas']},
+      {text:'Estruturar a esteira de produtos'},
+      {text:'Montar a apresentação de vendas'},
+      {text:'Realizar a call de vendas para dúvidas e direcionamentos'},
+      {text:'Assistir aos conteúdos de apoio',subs:['Tutoria de Vendas 6','Consulta gravada da Dra. Deborah']},
+      {text:'Aplicar a metodologia no consultório',subs:['Apresentação de Vendas','SPIN']},
+      {text:'Realizar as primeiras vendas'},
+      {text:'Gravar consulta de venda para análise da equipe'},
+    ]
+  },
+  {
+    title:'Pré-vendas', badge:'02', status:'Fase 2', cls:'cc2',
+    obj:'Estruturar o processo de atendimento, qualificação e agendamento para gerar mais consultas com consistência.',
+    steps:[
+      {text:'Adicionar a SDR no grupo de acompanhamento'},
+      {text:'Garantir a participação da SDR nas tutorias de segunda, 11h'},
+      {text:'SDR preencher diariamente o Flashboard'},
+      {text:'Garantir o uso do CRM no dia a dia'},
+      {text:'Aplicar o script de pré-vendas nos atendimentos'},
+      {text:'Organizar o processo de atendimento com constância'},
+      {text:'Meta mínima: 1 agendamento por dia'},
+    ]
+  },
+  {
+    title:'Tráfego', badge:'03', status:'Fase 3', cls:'cc3',
+    obj:'Colocar a captação para rodar de forma estratégica, alinhada ao posicionamento e ao processo comercial.',
+    steps:[
+      {text:'Obter os acessos aos gerenciadores'},
+      {text:'Iniciar a estrutura de tráfego pago'},
+      {text:'Colocar as campanhas para rodar'},
+      {text:'Gravar os criativos com base nos scripts enviados'},
+      {text:'Ajustar o perfil conforme análise já passada'},
+      {text:'Alinhar comunicação, oferta e criativos com o público-alvo'},
+    ]
+  }
+];
+
+function renderCronograma(){
+  const container=document.getElementById('cron-container'); if(!container)return;
+  const done=(S.cronograma&&S.cronograma.done)||{};
+  const checkSvg=`<svg width="9" height="7" viewBox="0 0 9 7" fill="none"><path d="M1 3.5L3 5.5L8 1" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+  // totais
+  let grandDone=0,grandTotal=0;
+  CRON_TEMPLATE.forEach((p,pi)=>{ p.steps.forEach((_,si)=>{ grandTotal++; if(done[`${pi}-${si}`])grandDone++; }); });
+  const totalPct=grandTotal?Math.round(grandDone/grandTotal*100):0;
+
+  const phasesHtml=CRON_TEMPLATE.map((phase,pi)=>{
+    const phDone=phase.steps.filter((_,si)=>done[`${pi}-${si}`]).length;
+    const phPct=phase.steps.length?Math.round(phDone/phase.steps.length*100):0;
+    const stepsHtml=phase.steps.map((st,si)=>{
+      const isDone=!!done[`${pi}-${si}`];
+      const subsHtml=st.subs?`<ul class="cron-subs">${st.subs.map(s=>`<li class="cron-sub"><div class="cron-sub-dash"></div>${s}</li>`).join('')}</ul>`:'';
+      return`<li class="cron-step${isDone?' done':''}" onclick="toggleCronStep(${pi},${si})">
+        <div class="cron-check">${checkSvg}</div>
+        <div><span class="cron-step-txt">${st.text}</span>${subsHtml}</div>
+      </li>`;
+    }).join('');
+    return`<div class="cron-card ${phase.cls}">
+      <div class="cron-badge"><span class="cron-badge-num">${phase.badge}</span><span class="cron-badge-lbl">${phase.status}</span></div>
+      <div class="cron-title">${phase.title}</div>
+      <p class="cron-obj">${phase.obj}</p>
+      <div class="cron-steps-lbl">Passos desta fase</div>
+      <ul class="cron-step-list">${stepsHtml}</ul>
+      <div class="cron-prog">
+        <div class="cron-prog-meta">
+          <span class="cron-prog-lbl">Progresso</span>
+          <span class="cron-prog-count">${phDone} / ${phase.steps.length}</span>
+        </div>
+        <div class="cron-bar-bg"><div class="cron-bar-fill" style="width:${phPct}%"></div></div>
+      </div>
+    </div>`;
+  }).join('');
+
+  const phaseLbls=CRON_TEMPLATE.map((p,pi)=>{
+    const phDone=p.steps.filter((_,si)=>done[`${pi}-${si}`]).length;
+    const active=phDone>0?'active':'';
+    return`<span class="cron-phase-lbl ${active}">${p.title}</span>`;
+  }).join('');
+
+  container.innerHTML=`
+    <div class="cron-flow">
+      <span class="cron-flow-tag">Sequência obrigatória</span>
+      <div class="cron-flow-node cfn1"><div class="cron-flow-num">1</div><span class="cron-flow-label">Vendas</span></div>
+      <span class="cron-chev">›</span>
+      <div class="cron-flow-node cfn2"><div class="cron-flow-num">2</div><span class="cron-flow-label">Pré-vendas</span></div>
+      <span class="cron-chev">›</span>
+      <div class="cron-flow-node cfn3"><div class="cron-flow-num">3</div><span class="cron-flow-label">Tráfego</span></div>
+    </div>
+    <div class="cron-phases">${phasesHtml}</div>
+    <div class="cron-summary">
+      <div>
+        <div class="cron-total-num">${totalPct}%</div>
+        <div class="cron-total-lbl">Progresso total</div>
+      </div>
+      <div class="cron-total-bar-wrap">
+        <div class="cron-total-bar-bg"><div class="cron-total-bar-fill" style="width:${totalPct}%"></div></div>
+        <div class="cron-phase-labels">${phaseLbls}</div>
+      </div>
+    </div>`;
+}
+
+async function toggleCronStep(pi,si){
+  if(!S.cronograma)S.cronograma={done:{}};
+  if(!S.cronograma.done)S.cronograma.done={};
+  const key=`${pi}-${si}`;
+  S.cronograma.done[key]=!S.cronograma.done[key];
+  if(!S.cronograma.done[key])delete S.cronograma.done[key];
+  renderCronograma();
+  await save({cronograma:S.cronograma});
+}
+
 <script>if("serviceWorker" in navigator){window.addEventListener("load",()=>{navigator.serviceWorker.register("/sw.js").then(()=>console.log("SW ok")).catch(e=>console.log("SW err",e));});}</script>
 </body>
 </html>
