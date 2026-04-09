@@ -652,6 +652,33 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
             </div>
           </div>
         </div>
+
+        <!-- CRONOGRAMA PREVIEW -->
+        <div class="section-card">
+          <div class="sc-header" style="cursor:pointer" onclick="showPage('cronograma',document.querySelector('[onclick*=mnav-cron]'),'mnav-cron')">
+            <div>
+              <div class="sc-title">Cronograma</div>
+              <div class="sc-sub" id="cron-prev-sub">—</div>
+            </div>
+            <span style="margin-left:auto;font-size:11px;color:var(--amber);font-weight:600">Ver completo →</span>
+          </div>
+          <div class="sc-body" id="cron-preview-body"></div>
+        </div>
+
+        <!-- TUTORIAS PREVIEW -->
+        <div class="section-card">
+          <div class="sc-header" style="cursor:pointer" onclick="showPage('tutorias',document.querySelector('[onclick*=mnav-tut]'),'mnav-tut')">
+            <div>
+              <div class="sc-title">Tutorias do mês</div>
+              <div class="sc-sub" id="tut-prev-mes">—</div>
+            </div>
+            <span style="margin-left:auto;font-size:11px;color:var(--amber);font-weight:600">Ver todas →</span>
+          </div>
+          <div class="sc-body">
+            <div class="tut-grid" id="tut-grid-preview"><p class="tut-empty">Carregando...</p></div>
+          </div>
+        </div>
+
       </div>
 
       <!-- PAGE: ALERTAS -->
@@ -1003,6 +1030,7 @@ function renderAll(){
   renderCalls();
   renderEngajamento();
   renderCronograma();
+  renderCronogramaPreview();
   renderAlertPage();
 }
 
@@ -1512,29 +1540,55 @@ async function loadTutorias(){
     const data=await window._fb.getTutorias();
     renderTutorias(data);
   }catch(e){ renderTutorias({mes:'',sessoes:[]}); }
+  renderCronogramaPreview();
 }
 
 function renderTutorias(data){
-  const sub=document.getElementById('tut-mes-sub');
-  const grid=document.getElementById('tut-grid');
-  if(!grid) return;
-  const sessoes=data.sessoes||[];
   const mes=data.mes||'';
-  if(sub) sub.textContent=mes;
-  if(!sessoes.length){ grid.innerHTML='<p class="tut-empty">Nenhuma tutoria agendada para este mês.</p>'; return; }
-  grid.innerHTML=sessoes.map(s=>`
-    <div class="tut-card">
-      <div class="tut-date-badge">
-        <div class="tut-day">${s.dia}</div>
-        <div class="tut-mon">${mes.slice(0,3)}</div>
+  const sessoes=data.sessoes||[];
+  const html=sessoes.length
+    ? sessoes.map(s=>`
+        <div class="tut-card">
+          <div class="tut-date-badge">
+            <div class="tut-day">${s.dia}</div>
+            <div class="tut-mon">${mes.slice(0,3)}</div>
+          </div>
+          <div class="tut-body">
+            <div class="tut-time">${s.hora} <span class="tut-periodo">${s.periodo}</span></div>
+            <div class="tut-tema">${s.tema}</div>
+            ${s.com?`<div class="tut-com">com: ${s.com}</div>`:''}
+          </div>
+        </div>`).join('')
+    : '<p class="tut-empty">Nenhuma tutoria agendada para este mês.</p>';
+
+  ['tut-mes-sub','tut-prev-mes'].forEach(id=>{ const el=document.getElementById(id); if(el) el.textContent=mes; });
+  ['tut-grid','tut-grid-preview'].forEach(id=>{ const el=document.getElementById(id); if(el) el.innerHTML=html; });
+}
+
+function renderCronogramaPreview(){
+  const body=document.getElementById('cron-preview-body');
+  const sub=document.getElementById('cron-prev-sub');
+  if(!body) return;
+  const phases=getCronPhases();
+  let grandDone=0,grandTotal=0;
+  phases.forEach(p=>p.steps.forEach(s=>{grandTotal++;if(s.done)grandDone++;}));
+  const totalPct=grandTotal?Math.round(grandDone/grandTotal*100):0;
+  if(sub) sub.textContent=`${totalPct}% concluído`;
+  const colors=['var(--amber)','var(--blue)','var(--green)'];
+  body.innerHTML=phases.map((p,pi)=>{
+    const done=p.steps.filter(s=>s.done).length;
+    const pct=p.steps.length?Math.round(done/p.steps.length*100):0;
+    const col=colors[pi]||'var(--amber)';
+    return`<div style="margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+        <span style="font-size:12px;font-weight:600;color:var(--text)">${p.title}</span>
+        <span style="font-size:11px;color:var(--text-sec)">${done}/${p.steps.length} passos · ${pct}%</span>
       </div>
-      <div class="tut-body">
-        <div class="tut-time">${s.hora} <span class="tut-periodo">${s.periodo}</span></div>
-        <div class="tut-tema">${s.tema}</div>
-        ${s.com?`<div class="tut-com">com: ${s.com}</div>`:''}
+      <div style="height:5px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden">
+        <div style="height:100%;width:${pct}%;background:${col};border-radius:3px;transition:width .4s"></div>
       </div>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
 }
 
 window.addEventListener('fb-ready',async()=>{
