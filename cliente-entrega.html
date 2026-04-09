@@ -26,7 +26,8 @@
   window._fb = {
     async load(){ const s=await getDoc(REF); return s.exists()?s.data():null; },
     async save(data){ await setDoc(REF,data,{merge:true}); },
-    listen(cb){ return onSnapshot(REF,s=>{ if(s.exists()) cb(s.data()); }); }
+    listen(cb){ return onSnapshot(REF,s=>{ if(s.exists()) cb(s.data()); }); },
+    async getTutorias(){ const s=await getDoc(doc(db,'config','tutorias')); return s.exists()?s.data():{mes:'',sessoes:[]}; }
   };
   window.dispatchEvent(new Event("fb-ready"));
 </script>
@@ -1500,9 +1501,8 @@ function subscribeFirebase(){
 
 async function loadTutorias(){
   try{
-    const ref=doc(db,'config','tutorias');
-    const snap=await getDoc(ref);
-    renderTutorias(snap.exists()?snap.data():{mes:'',sessoes:[]});
+    const data=await window._fb.getTutorias();
+    renderTutorias(data);
   }catch(e){ renderTutorias({mes:'',sessoes:[]}); }
 }
 
