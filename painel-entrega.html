@@ -279,6 +279,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
     <div class="sync-dot" id="sync-dot"></div>
     <span class="sync-txt" id="sync-txt">Conectando...</span>
     <button class="btn-admin" onclick="toggleAdmin()" id="btn-admin">⚙ Configurações</button>
+    <button class="btn-admin" onclick="openTutoriasModal()" style="margin-right:4px">📅 Tutorias</button>
     <button class="btn-new" onclick="openModal()">+ Novo cliente</button>
   </div>
 </div>
@@ -949,6 +950,112 @@ async function removeCronStep(pi,si){
   renderCronModal();
   await saveCronModal();
 }
+</script>
+
+<!-- MODAL TUTORIAS -->
+<div class="modal-overlay" id="tut-modal" onclick="closeTutModalOutside(event)">
+  <div class="modal-box" style="max-width:560px;width:100%">
+    <div class="modal-title">Cronograma de Tutorias</div>
+    <div class="modal-sub">Edite as tutorias do mês — alterações refletem para todos os clientes</div>
+    <div style="margin:12px 0 16px">
+      <label class="form-label">Mês de referência</label>
+      <input class="form-input" id="tut-mes-input" placeholder="Ex: Abril 2026" style="max-width:220px">
+    </div>
+    <div id="tut-sessoes-list" style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px"></div>
+    <button onclick="addTutSessao()" style="width:100%;padding:9px;background:transparent;border:1px dashed var(--border);border-radius:6px;color:var(--text-sec);font-size:12px;font-weight:600;font-family:'Montserrat',sans-serif;cursor:pointer;transition:all .15s;letter-spacing:.04em" onmouseover="this.style.borderColor='var(--amber)';this.style.color='var(--amber)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-sec)'">+ Adicionar sessão</button>
+    <div style="display:flex;gap:10px;margin-top:18px">
+      <button class="btn-new" onclick="saveTutorias()" style="flex:1">Salvar tutorias</button>
+      <button onclick="closeTutModal()" style="flex:1;padding:9px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text-sec);font-size:12px;font-weight:600;font-family:'Montserrat',sans-serif;cursor:pointer">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let _tutSessoes = [];
+
+async function openTutoriasModal(){
+  const modal = document.getElementById('tut-modal');
+  modal.classList.add('open');
+  const {getFirestore,doc,getDoc} = await import('https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js');
+  const {initializeApp,getApps} = await import('https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js');
+  const app = getApps().length ? getApps()[0] : initializeApp({apiKey:'AIzaSyAyupUdCsEb6pPVmTs2clhayS84-TUovGA',authDomain:'dashboard-e465d.firebaseapp.com',projectId:'dashboard-e465d'});
+  const db = getFirestore(app);
+  try{
+    const snap = await getDoc(doc(db,'config','tutorias'));
+    const data = snap.exists() ? snap.data() : {mes:'',sessoes:[]};
+    document.getElementById('tut-mes-input').value = data.mes || '';
+    _tutSessoes = JSON.parse(JSON.stringify(data.sessoes || []));
+  } catch(e) {
+    _tutSessoes = [];
+  }
+  renderTutSessoes();
+}
+
+function renderTutSessoes(){
+  const list = document.getElementById('tut-sessoes-list');
+  if(!list) return;
+  if(!_tutSessoes.length){ list.innerHTML='<p style="color:var(--text-sec);font-size:12px">Nenhuma sessão. Clique em + Adicionar sessão.</p>'; return; }
+  list.innerHTML = _tutSessoes.map((s,i)=>`
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;display:grid;grid-template-columns:60px 60px 100px 1fr;gap:8px;align-items:start">
+      <div>
+        <label style="display:block;font-size:10px;color:var(--text-sec);font-weight:600;margin-bottom:3px;text-transform:uppercase;letter-spacing:.06em">Dia</label>
+        <input class="form-input" value="${s.dia||''}" oninput="_tutSessoes[${i}].dia=this.value" placeholder="13" style="padding:6px 8px">
+      </div>
+      <div>
+        <label style="display:block;font-size:10px;color:var(--text-sec);font-weight:600;margin-bottom:3px;text-transform:uppercase;letter-spacing:.06em">Hora</label>
+        <input class="form-input" value="${s.hora||''}" oninput="_tutSessoes[${i}].hora=this.value" placeholder="11h" style="padding:6px 8px">
+      </div>
+      <div>
+        <label style="display:block;font-size:10px;color:var(--text-sec);font-weight:600;margin-bottom:3px;text-transform:uppercase;letter-spacing:.06em">Período</label>
+        <select class="form-input" onchange="_tutSessoes[${i}].periodo=this.value" style="padding:6px 8px">
+          <option value="MANHÃ" ${s.periodo==='MANHÃ'?'selected':''}>MANHÃ</option>
+          <option value="NOITE" ${s.periodo==='NOITE'?'selected':''}>NOITE</option>
+          <option value="TARDE" ${s.periodo==='TARDE'?'selected':''}>TARDE</option>
+        </select>
+      </div>
+      <div style="display:flex;align-items:flex-end;gap:4px">
+        <button onclick="removeTutSessao(${i})" style="padding:6px 8px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);border-radius:6px;color:var(--red);font-size:11px;font-weight:700;cursor:pointer;font-family:'Montserrat',sans-serif;white-space:nowrap;margin-top:auto">✕</button>
+      </div>
+      <div style="grid-column:1/-1">
+        <label style="display:block;font-size:10px;color:var(--text-sec);font-weight:600;margin-bottom:3px;text-transform:uppercase;letter-spacing:.06em">Tema</label>
+        <input class="form-input" value="${s.tema||''}" oninput="_tutSessoes[${i}].tema=this.value" placeholder="Título da tutoria" style="padding:6px 8px">
+      </div>
+      <div style="grid-column:1/-1">
+        <label style="display:block;font-size:10px;color:var(--text-sec);font-weight:600;margin-bottom:3px;text-transform:uppercase;letter-spacing:.06em">Com (opcional)</label>
+        <input class="form-input" value="${s.com||''}" oninput="_tutSessoes[${i}].com=this.value" placeholder="Nome do facilitador" style="padding:6px 8px">
+      </div>
+    </div>
+  `).join('');
+}
+
+function addTutSessao(){
+  _tutSessoes.push({dia:'',hora:'',periodo:'MANHÃ',tema:'',com:''});
+  renderTutSessoes();
+}
+
+function removeTutSessao(i){
+  _tutSessoes.splice(i,1);
+  renderTutSessoes();
+}
+
+async function saveTutorias(){
+  const mes = document.getElementById('tut-mes-input').value.trim();
+  const sessoes = _tutSessoes.filter(s=>s.tema);
+  try{
+    const {getFirestore,doc,setDoc} = await import('https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js');
+    const {initializeApp,getApps} = await import('https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js');
+    const app = getApps().length ? getApps()[0] : initializeApp({apiKey:'AIzaSyAyupUdCsEb6pPVmTs2clhayS84-TUovGA',authDomain:'dashboard-e465d.firebaseapp.com',projectId:'dashboard-e465d'});
+    const db = getFirestore(app);
+    await setDoc(doc(db,'config','tutorias'),{mes,sessoes});
+    showToast('Tutorias salvas!','success');
+    closeTutModal();
+  } catch(e){
+    showToast('Erro ao salvar: '+e.message,'');
+  }
+}
+
+function closeTutModal(){ document.getElementById('tut-modal').classList.remove('open'); }
+function closeTutModalOutside(e){ if(e.target===document.getElementById('tut-modal')) closeTutModal(); }
 </script>
 </body>
 </html>
