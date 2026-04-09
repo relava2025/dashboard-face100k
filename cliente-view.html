@@ -1087,22 +1087,11 @@ function renderTutoriasCV(data){
 }
 
 // ─── FLASHBOARD (cliente-view) ────────────────────
-let CV_SB_URL='https://svgaztetrufiqxptqqvs.supabase.co';
-let CV_SB_KEY='';
-async function loadCVSBKey(){
-  if(CV_SB_KEY)return;
-  try{
-    const r=await fetch('https://firestore.googleapis.com/v1/projects/dashboard-e465d/databases/(default)/documents/config/supabase?key=AIzaSyAyupUdCsEb6pPVmTs2clhayS84-TUovGA');
-    const d=await r.json();
-    CV_SB_KEY=d.fields?.key?.stringValue||'';
-    if(d.fields?.url?.stringValue)CV_SB_URL=d.fields.url.stringValue;
-  }catch(e){console.warn('SB key',e);}
-}
+const CV_SB_URL='https://svgaztetrufiqxptqqvs.supabase.co';
+const CV_SB_KEY='sb_publishable_LPTf0Psj_cbLbK3KA9tAwQ_t4ZdqoAD';
 
 async function loadFlashboardCV(contaId){
   if(!contaId)return;
-  await loadCVSBKey();
-  if(!CV_SB_KEY)return;
   const card=document.getElementById('cv-fb-card');
   if(card)card.style.display='block';
   try{
