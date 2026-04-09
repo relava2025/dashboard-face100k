@@ -488,6 +488,28 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
         <div class="scard-sub">evolução do faturamento</div>
       </div>
       <div class="scard-body">
+
+        <!-- ANTES vs AGORA -->
+        <div id="crescimento-card" style="display:none;background:linear-gradient(135deg,rgba(34,197,94,0.07),rgba(245,166,35,0.04));border:1px solid rgba(34,197,94,0.25);border-radius:12px;padding:18px 20px;margin-bottom:16px">
+          <div style="font-size:9px;color:var(--green);text-transform:uppercase;letter-spacing:.14em;font-family:'Montserrat',sans-serif;font-weight:700;margin-bottom:14px">Sua jornada de crescimento</div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="flex:1;background:rgba(255,255,255,0.04);border-radius:10px;padding:12px;text-align:center">
+              <div style="font-size:9px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.1em;font-family:'Montserrat',sans-serif;font-weight:600;margin-bottom:6px">Antes</div>
+              <div id="cresc-antes" style="font-size:17px;font-weight:800;font-family:'Montserrat',sans-serif;color:var(--text-sec)">R$ —</div>
+              <div style="font-size:9px;color:var(--text-dim);margin-top:2px">por mês</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex-shrink:0">
+              <div id="cresc-pct" style="font-size:18px;font-weight:800;font-family:'Montserrat',sans-serif;color:var(--green)">+0%</div>
+              <svg width="36" height="10" viewBox="0 0 36 10" fill="none"><path d="M1 5h30M28 1l6 4-6 4" stroke="#22C55E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div style="flex:1;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:10px;padding:12px;text-align:center">
+              <div style="font-size:9px;color:var(--green);text-transform:uppercase;letter-spacing:.1em;font-family:'Montserrat',sans-serif;font-weight:700;margin-bottom:6px">Hoje</div>
+              <div id="cresc-agora" style="font-size:17px;font-weight:800;font-family:'Montserrat',sans-serif;color:var(--green)">R$ —</div>
+              <div style="font-size:9px;color:var(--text-dim);margin-top:2px">último mês registrado</div>
+            </div>
+          </div>
+        </div>
+
         <div class="metas-grid">
           <div class="meta-card"><div class="meta-label">Antes do programa</div><div class="meta-val" id="m-base">R$ —</div><div class="meta-sub">faturamento anterior</div></div>
           <div class="meta-card"><div class="meta-label">Meta alvo</div><div class="meta-val" id="m-alvo">R$ —</div><div class="meta-sub">objetivo do programa</div></div>
@@ -825,12 +847,24 @@ function renderMetas(fats,fatMeses){
   document.getElementById('fat-atual').textContent=fmtCurrency(lastFat);
   document.getElementById('fat-sub').textContent=lastMes?fmtMes(lastMes):'registrado pela equipe';
   const badge=document.getElementById('fat-badge');
+  const crescCard=document.getElementById('crescimento-card');
   if(lastFat&&ini){
     const diff=Math.round((lastFat-ini)/ini*100);
     badge.textContent=(diff>=0?'+':'')+diff+'% vs antes do programa';
     badge.style.cssText=`background:${diff>=0?'var(--green-dim)':'var(--red-dim)'};color:${diff>=0?'var(--green)':'var(--red)'};border-color:${diff>=0?'var(--green-border)':'rgba(239,68,68,0.25)'}`;
+    // Crescimento visual
+    if(crescCard){
+      crescCard.style.display='block';
+      document.getElementById('cresc-antes').textContent=fmtCurrency(ini);
+      document.getElementById('cresc-agora').textContent=fmtCurrency(lastFat);
+      const pctEl=document.getElementById('cresc-pct');
+      pctEl.textContent=(diff>=0?'+':'')+diff+'%';
+      pctEl.style.color=diff>=0?'var(--green)':'var(--red)';
+      crescCard.style.borderColor=diff>=0?'rgba(34,197,94,0.25)':'rgba(239,68,68,0.25)';
+    }
   } else {
     badge.textContent='—';badge.style.cssText='';
+    if(crescCard)crescCard.style.display='none';
   }
   // CHART
   const chartMeses=Object.keys(fats||{}).sort((a,b)=>a.localeCompare(b));

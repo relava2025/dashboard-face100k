@@ -397,10 +397,36 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 
 <script>
 const DASHBOARD_URL = 'cliente-entrega.html';
+const SB_URL='https://svgaztetrufiqxptqqvs.supabase.co';
+const SB_KEY='sb_publishable_LPTf0Psj_cbLbK3KA9tAwQ_t4ZdqoAD';
 let allClients = [];
 let currentFilter = 'all';
 let editingId = null;
 let alertSectionOpen = false;
+let fbDiasMap = {}; // slug → dias sem preencher (null=nunca, número=dias)
+
+async function loadFlashboardAlerts(){
+  try{
+    const hoje=new Date();
+    const mesInicio=`${hoje.getFullYear()}-${String(hoje.getMonth()+1).padStart(2,'0')}-01`;
+    const url=`${SB_URL}/rest/v1/registros_diarios?data=gte.${mesInicio}&select=conta_id,data&order=data.desc&limit=5000`;
+    const res=await fetch(url,{headers:{'Authorization':'Bearer '+SB_KEY,'apikey':SB_KEY}});
+    if(!res.ok)return;
+    const rows=await res.json();
+    // ultima data por conta_id
+    const ultimaPorConta={};
+    rows.forEach(r=>{if(!ultimaPorConta[r.conta_id]||r.data>ultimaPorConta[r.conta_id])ultimaPorConta[r.conta_id]=r.data;});
+    // mapear para slug
+    fbDiasMap={};
+    allClients.forEach(c=>{
+      const contaId=c.flashboardContaId||'';
+      if(!contaId){fbDiasMap[c.id]=null;return;}
+      const ultima=ultimaPorConta[contaId]||null;
+      fbDiasMap[c.id]=ultima?Math.floor((hoje-new Date(ultima+'T12:00:00'))/86400000):null;
+    });
+    renderClients();
+  }catch(e){console.warn('FB alerts',e);}
+}
 
 function slugify(s){ return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''); }
 
@@ -539,6 +565,14 @@ function renderClients(){
     const alertBanner = hasAlert
       ? `<div class="c-alert-banner cab-red"><div class="cab-dot" style="background:#EF4444"></div><span class="cab-txt" style="color:#EF4444">${alerts.length} tarefa${alerts.length!==1?'s':''} não cumprida${alerts.length!==1?'s':''} — semana ${c.currentWeek||'?'}</span><span class="cab-btn" style="border:0.5px solid rgba(239,68,68,0.3);border-radius:3px;color:#EF4444" onclick="event.stopPropagation();toggleAlertSection()">Ver alertas</span></div>`
       : `<div class="c-alert-banner cab-green"><div class="cab-dot" style="background:#22C55E;animation:none"></div><span class="cab-txt" style="color:#22C55E">Todas as tarefas desta semana em dia</span></div>`;
+    const dias=fbDiasMap[c.id];
+    const fbBanner=c.flashboardContaId
+      ? (dias===null
+          ? `<div style="padding:5px 18px;background:rgba(239,68,68,0.06);border-top:.5px solid rgba(239,68,68,0.15);display:flex;align-items:center;gap:6px"><span style="font-size:8px;padding:1px 6px;border-radius:4px;background:rgba(239,68,68,0.15);color:#EF4444;font-weight:700;font-family:'Montserrat',sans-serif">FLASHBOARD</span><span style="font-size:10px;color:#EF4444">Nunca preencheu este mês</span></div>`
+          : dias>3
+          ? `<div style="padding:5px 18px;background:rgba(239,68,68,0.06);border-top:.5px solid rgba(239,68,68,0.15);display:flex;align-items:center;gap:6px"><span style="font-size:8px;padding:1px 6px;border-radius:4px;background:rgba(239,68,68,0.15);color:#EF4444;font-weight:700;font-family:'Montserrat',sans-serif">FLASHBOARD</span><span style="font-size:10px;color:#EF4444">${dias}d sem preencher</span></div>`
+          : `<div style="padding:5px 18px;background:rgba(34,197,94,0.05);border-top:.5px solid rgba(34,197,94,0.12);display:flex;align-items:center;gap:6px"><span style="font-size:8px;padding:1px 6px;border-radius:4px;background:rgba(34,197,94,0.15);color:#22C55E;font-weight:700;font-family:'Montserrat',sans-serif">FLASHBOARD</span><span style="font-size:10px;color:#22C55E">${dias===0?'Preencheu hoje':'Há '+dias+'d'}</span></div>`)
+      : '';
 
     html += `<div class="c-card${hasAlert?' has-alert':''}">
       <div class="c-accent ${h.accentCls}"></div>
@@ -563,6 +597,7 @@ function renderClients(){
         <div class="health-chip"><div class="h-dot" style="background:${h.dotColor}"></div>Health Score: ${score}</div>
       </div>
       ${alertBanner}
+      ${fbBanner}
       <div class="c-actions" onclick="event.stopPropagation()">
         <button class="btn-open-dash" onclick="event.stopPropagation();openDashboard('${c.id}')">Abrir dashboard</button>
         <button class="btn-view-client" onclick="event.stopPropagation();openClientView('${c.id}')">Visão cliente</button>
@@ -815,11 +850,13 @@ function toggleWeekEditor(w){
 
 window.addEventListener('fb-ready',()=>{
   setSyncStatus('connecting');
+  let fbAlertsLoaded=false;
   window._fb.listenClients(clients=>{
     allClients=clients;
     renderAll();
     setSyncStatus('ok');
     document.getElementById('loading').classList.add('hidden');
+    if(!fbAlertsLoaded){fbAlertsLoaded=true;loadFlashboardAlerts();}
   });
 });
 

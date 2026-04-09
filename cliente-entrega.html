@@ -1714,6 +1714,21 @@ function renderFlashboard(rows, hoje){
     const sub = document.getElementById('fb-sub');
     if(sub) sub.textContent += ' · Health auto-calculado';
   }
+
+  // ─── Auto-sync faturamento mensal ───
+  const fatFlashboard = rows.reduce((s,r)=>s+(r.faturamento_leads_anuncios||0)+(r.faturamento_recorrente||0)+(r.fat_indicacao||0)+(r.fat_acao||0),0);
+  if(fatFlashboard > 0){
+    const mesKey = `${hoje.getFullYear()}-${String(hoje.getMonth()+1).padStart(2,'0')}`;
+    const fatAtual = (S.faturamento||{})[mesKey];
+    if(!fatAtual){
+      if(!S.faturamento) S.faturamento={};
+      S.faturamento[mesKey] = Math.round(fatFlashboard);
+      save({faturamento: S.faturamento});
+      renderMetas();
+      const sub2 = document.getElementById('fb-sub');
+      if(sub2 && !sub2.textContent.includes('Faturamento')) sub2.textContent += ' · Faturamento sincronizado';
+    }
+  }
 }
 
 async function loadTutorias(){
