@@ -814,102 +814,102 @@ document.addEventListener('keydown',e=>{
 
 <!-- MODAL CRONOGRAMA -->
 <div id="cron-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:300;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto" onclick="if(event.target===this)closeCronModal()">
-  <div style="background:#1A2025;border:1px solid #3E4249;border-radius:12px;width:780px;max-width:100%;padding:28px;margin:auto;position:relative">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+  <div style="background:#1A2025;border:1px solid #3E4249;border-radius:12px;width:820px;max-width:100%;padding:28px;margin:auto">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
       <div>
         <div style="font-family:'Montserrat',sans-serif;font-size:15px;font-weight:700" id="cron-modal-title">Cronograma</div>
-        <div style="font-size:11px;color:#A0A0A8;margin-top:2px">Edite o progresso do cronograma deste cliente</div>
+        <div style="font-size:11px;color:#A0A0A8;margin-top:2px">Marque passos como concluídos, adicione ou remova passos por fase</div>
       </div>
-      <button onclick="closeCronModal()" style="background:none;border:none;color:#A0A0A8;font-size:18px;cursor:pointer;padding:4px 8px">✕</button>
+      <button onclick="closeCronModal()" style="background:none;border:none;color:#A0A0A8;font-size:20px;cursor:pointer;padding:4px 8px;line-height:1">✕</button>
     </div>
-    <div id="cron-modal-body"></div>
-    <div style="display:flex;justify-content:flex-end;margin-top:20px;padding-top:16px;border-top:1px solid #3E4249">
-      <button onclick="closeCronModal()" style="background:#F5A623;color:#000;border:none;border-radius:6px;padding:10px 24px;font-size:12px;font-weight:700;font-family:'Montserrat',sans-serif;cursor:pointer;letter-spacing:.04em">Fechar</button>
+    <div id="cron-modal-body" style="margin-top:20px"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:20px;padding-top:16px;border-top:1px solid #3E4249">
+      <button onclick="resetCronograma()" style="background:none;border:1px solid #3E4249;border-radius:6px;padding:8px 16px;font-size:11px;color:#A0A0A8;cursor:pointer;font-family:'Montserrat',sans-serif">Restaurar padrão</button>
+      <button onclick="closeCronModal()" style="background:#F5A623;color:#000;border:none;border-radius:6px;padding:10px 28px;font-size:12px;font-weight:700;font-family:'Montserrat',sans-serif;cursor:pointer;letter-spacing:.04em">Fechar</button>
     </div>
   </div>
 </div>
 
 <script>
-const CRON_TEMPLATE=[
-  {title:'Vendas',badge:'01',status:'Fase 1',obj:'Estruturar a base comercial da clínica para começar a vender com método, previsibilidade e maior conversão.',steps:[
-    {text:'Implementar o ecossistema comercial',subs:['Flashboard','CRM','Tráfego','Drive','Playbooks']},
-    {text:'Participar das tutorias de terça-feira, 19h'},
-    {text:'Assistir aos treinamentos',subs:['Treinamento de Vendas','Treinamento de Apresentação de Vendas']},
-    {text:'Estruturar a esteira de produtos'},
-    {text:'Montar a apresentação de vendas'},
-    {text:'Realizar a call de vendas para dúvidas e direcionamentos'},
-    {text:'Assistir aos conteúdos de apoio',subs:['Tutoria de Vendas 6','Consulta gravada da Dra. Deborah']},
-    {text:'Aplicar a metodologia no consultório',subs:['Apresentação de Vendas','SPIN']},
-    {text:'Realizar as primeiras vendas'},
-    {text:'Gravar consulta de venda para análise da equipe'},
-  ]},
-  {title:'Pré-vendas',badge:'02',status:'Fase 2',obj:'Estruturar o processo de atendimento, qualificação e agendamento para gerar mais consultas com consistência.',steps:[
-    {text:'Adicionar a SDR no grupo de acompanhamento'},
-    {text:'Garantir a participação da SDR nas tutorias de segunda, 11h'},
-    {text:'SDR preencher diariamente o Flashboard'},
-    {text:'Garantir o uso do CRM no dia a dia'},
-    {text:'Aplicar o script de pré-vendas nos atendimentos'},
-    {text:'Organizar o processo de atendimento com constância'},
-    {text:'Meta mínima: 1 agendamento por dia'},
-  ]},
-  {title:'Tráfego',badge:'03',status:'Fase 3',obj:'Colocar a captação para rodar de forma estratégica, alinhada ao posicionamento e ao processo comercial.',steps:[
-    {text:'Obter os acessos aos gerenciadores'},
-    {text:'Iniciar a estrutura de tráfego pago'},
-    {text:'Colocar as campanhas para rodar'},
-    {text:'Gravar os criativos com base nos scripts enviados'},
-    {text:'Ajustar o perfil conforme análise já passada'},
-    {text:'Alinhar comunicação, oferta e criativos com o público-alvo'},
-  ]}
+const CRON_DEFAULT_PE=[
+  {title:'Vendas',badge:'01',status:'Fase 1',obj:'Estruturar a base comercial da clínica para começar a vender com método, previsibilidade e maior conversão.',
+   steps:[{text:'Implementar o ecossistema comercial',done:false},{text:'Participar das tutorias de terça-feira, 19h',done:false},{text:'Assistir aos treinamentos',done:false},{text:'Estruturar a esteira de produtos',done:false},{text:'Montar a apresentação de vendas',done:false},{text:'Realizar a call de vendas para dúvidas e direcionamentos',done:false},{text:'Assistir aos conteúdos de apoio',done:false},{text:'Aplicar a metodologia no consultório',done:false},{text:'Realizar as primeiras vendas',done:false},{text:'Gravar consulta de venda para análise da equipe',done:false}]},
+  {title:'Pré-vendas',badge:'02',status:'Fase 2',obj:'Estruturar o processo de atendimento, qualificação e agendamento para gerar mais consultas com consistência.',
+   steps:[{text:'Adicionar a SDR no grupo de acompanhamento',done:false},{text:'Garantir a participação da SDR nas tutorias de segunda, 11h',done:false},{text:'SDR preencher diariamente o Flashboard',done:false},{text:'Garantir o uso do CRM no dia a dia',done:false},{text:'Aplicar o script de pré-vendas nos atendimentos',done:false},{text:'Organizar o processo de atendimento com constância',done:false},{text:'Meta mínima: 1 agendamento por dia',done:false}]},
+  {title:'Tráfego',badge:'03',status:'Fase 3',obj:'Colocar a captação para rodar de forma estratégica, alinhada ao posicionamento e ao processo comercial.',
+   steps:[{text:'Obter os acessos aos gerenciadores',done:false},{text:'Iniciar a estrutura de tráfego pago',done:false},{text:'Colocar as campanhas para rodar',done:false},{text:'Gravar os criativos com base nos scripts enviados',done:false},{text:'Ajustar o perfil conforme análise já passada',done:false},{text:'Alinhar comunicação, oferta e criativos com o público-alvo',done:false}]}
 ];
 
-let _cronClientId=null, _cronDone={};
+let _cronClientId=null, _cronPhases=[];
 
 async function openCronogramaModal(id,name){
-  _cronClientId=id; _cronDone={};
+  _cronClientId=id;
   document.getElementById('cron-modal-title').textContent='Cronograma — '+(name||id);
-  document.getElementById('cron-modal-body').innerHTML='<div style="color:#A0A0A8;font-size:12px;padding:12px 0">Carregando...</div>';
+  document.getElementById('cron-modal-body').innerHTML='<div style="color:#A0A0A8;font-size:12px;padding:20px 0;text-align:center">Carregando...</div>';
   document.getElementById('cron-modal').style.display='flex';
   try{
     const data=await window._fb.getDoc(id);
-    _cronDone=(data&&data.cronograma&&data.cronograma.done)||{};
-  }catch(e){ _cronDone={}; }
+    _cronPhases=(data&&data.cronograma&&data.cronograma.phases&&data.cronograma.phases.length)
+      ? JSON.parse(JSON.stringify(data.cronograma.phases))
+      : JSON.parse(JSON.stringify(CRON_DEFAULT_PE));
+  }catch(e){ _cronPhases=JSON.parse(JSON.stringify(CRON_DEFAULT_PE)); }
   renderCronModal();
 }
 
 function closeCronModal(){ document.getElementById('cron-modal').style.display='none'; _cronClientId=null; }
 
+async function resetCronograma(){
+  if(!confirm('Restaurar o cronograma padrão? Os passos customizados serão perdidos, mas o progresso marcado será mantido.'))return;
+  const oldPhases=_cronPhases;
+  _cronPhases=CRON_DEFAULT_PE.map((p,pi)=>({
+    ...JSON.parse(JSON.stringify(p)),
+    steps:p.steps.map((s,si)=>({...s,done:(oldPhases[pi]&&oldPhases[pi].steps[si])?oldPhases[pi].steps[si].done:false}))
+  }));
+  renderCronModal();
+  await saveCronModal();
+}
+
 function renderCronModal(){
   const checkSvg=`<svg width="9" height="7" viewBox="0 0 9 7" fill="none"><path d="M1 3.5L3 5.5L8 1" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-  const colors=['#F5A623','rgba(245,166,35,0.5)','#3E4249'];
+  const colors=['#F5A623','rgba(245,166,35,0.6)','#5A6270'];
   let grandDone=0,grandTotal=0;
-  CRON_TEMPLATE.forEach((p,pi)=>p.steps.forEach((_,si)=>{ grandTotal++; if(_cronDone[`${pi}-${si}`])grandDone++; }));
+  _cronPhases.forEach(p=>p.steps.forEach(s=>{ grandTotal++; if(s.done)grandDone++; }));
   const totalPct=grandTotal?Math.round(grandDone/grandTotal*100):0;
 
-  const phasesHtml=CRON_TEMPLATE.map((phase,pi)=>{
-    const phDone=phase.steps.filter((_,si)=>_cronDone[`${pi}-${si}`]).length;
+  const phasesHtml=_cronPhases.map((phase,pi)=>{
+    const phDone=phase.steps.filter(s=>s.done).length;
     const phPct=phase.steps.length?Math.round(phDone/phase.steps.length*100):0;
+    const col=colors[pi]||'#5A6270';
+
     const stepsHtml=phase.steps.map((st,si)=>{
-      const isDone=!!_cronDone[`${pi}-${si}`];
-      const checkBg=isDone?`background:${colors[pi]};border-color:${colors[pi]}`:'border:1.5px solid #3E4249';
-      const txtStyle=isDone?'text-decoration:line-through;color:rgba(255,255,255,0.2)':'color:#A0A0A8';
-      const subsHtml=st.subs?`<div style="margin-top:3px;padding-left:22px">${st.subs.map(s=>`<div style="font-size:10px;color:rgba(160,160,168,0.55);display:flex;align-items:center;gap:5px;margin-bottom:2px"><div style="width:8px;height:1px;background:rgba(245,166,35,0.3);flex-shrink:0"></div>${s}</div>`).join('')}</div>`:'';
-      return`<div style="display:flex;align-items:flex-start;gap:8px;padding:4px 0;cursor:pointer" onclick="toggleCronModalStep(${pi},${si})">
-        <div style="width:16px;height:16px;border-radius:3px;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .2s;${checkBg}">${isDone?checkSvg:''}</div>
-        <div><span style="font-size:12px;${txtStyle}">${st.text}</span>${subsHtml}</div>
+      const isDone=st.done;
+      const checkStyle=isDone?`background:${col};border-color:${col};border:none`:'background:transparent;border:1.5px solid #3E4249';
+      const txtStyle=isDone?'text-decoration:line-through;color:rgba(255,255,255,0.25)':'color:#C0C0C8';
+      return`<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(62,66,73,0.4)">
+        <div onclick="toggleCronStep_pe(${pi},${si})" style="width:16px;height:16px;border-radius:3px;flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;${checkStyle}">${isDone?checkSvg:''}</div>
+        <input value="${st.text.replace(/"/g,'&quot;')}" onchange="editCronStep(${pi},${si},this.value)" style="flex:1;background:transparent;border:none;outline:none;color:#F0F0F0;font-size:12px;font-family:'Inter',sans-serif;${isDone?'text-decoration:line-through;opacity:.4':''}">
+        <button onclick="removeCronStep(${pi},${si})" style="background:none;border:none;color:rgba(239,68,68,0.5);cursor:pointer;font-size:14px;padding:0 4px;line-height:1;flex-shrink:0" title="Remover passo">✕</button>
       </div>`;
     }).join('');
-    return`<div style="background:#212830;border:1px solid #3E4249;border-radius:8px;padding:16px;margin-bottom:12px;border-top:2px solid ${colors[pi]}">
-      <div style="font-family:'Montserrat',sans-serif;font-size:14px;font-weight:700;color:${pi===0?'#F5A623':'#F0F0F0'};margin-bottom:4px">${phase.badge} — ${phase.title}</div>
-      <div style="font-size:11px;color:#A0A0A8;margin-bottom:12px">${phDone} / ${phase.steps.length} concluídos · ${phPct}%</div>
-      <div style="height:3px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;margin-bottom:14px"><div style="height:100%;width:${phPct}%;background:${colors[pi]};border-radius:2px;transition:width .3s"></div></div>
+
+    return`<div style="background:#212830;border:1px solid #3E4249;border-radius:8px;padding:16px 18px;margin-bottom:14px;border-top:2px solid ${col}">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <div style="font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;color:${pi===0?'#F5A623':'#F0F0F0'}">${phase.badge||'0'+(pi+1)} — ${phase.title}</div>
+        <div style="font-size:10px;color:#A0A0A8">${phDone}/${phase.steps.length} · ${phPct}%</div>
+      </div>
+      <div style="height:2px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;margin-bottom:12px"><div style="height:100%;width:${phPct}%;background:${col};border-radius:2px;transition:width .3s"></div></div>
       ${stepsHtml}
+      <div style="margin-top:10px;display:flex;gap:8px">
+        <input id="new-step-${pi}" placeholder="Novo passo..." style="flex:1;background:#1A2025;border:1px solid #3E4249;border-radius:5px;color:#F0F0F0;font-size:11px;padding:6px 10px;outline:none;font-family:'Inter',sans-serif" onkeydown="if(event.key==='Enter')addCronStep(${pi})">
+        <button onclick="addCronStep(${pi})" style="background:#F5A623;color:#000;border:none;border-radius:5px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Montserrat',sans-serif">+ Add</button>
+      </div>
     </div>`;
   }).join('');
 
   document.getElementById('cron-modal-body').innerHTML=`
     ${phasesHtml}
     <div style="background:#1A2025;border:1px solid #3E4249;border-radius:8px;padding:16px;display:flex;align-items:center;gap:16px">
-      <div style="font-family:'Montserrat',sans-serif;font-size:32px;font-weight:800;color:#F5A623;line-height:1">${totalPct}%</div>
+      <div style="font-family:'Montserrat',sans-serif;font-size:36px;font-weight:800;color:#F5A623;line-height:1">${totalPct}%</div>
       <div style="flex:1">
         <div style="font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,0.3);font-family:'Montserrat',sans-serif;margin-bottom:6px">Progresso total</div>
         <div style="height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden"><div style="height:100%;width:${totalPct}%;background:linear-gradient(90deg,#F5A623,rgba(245,166,35,0.5));border-radius:2px;transition:width .4s"></div></div>
@@ -917,14 +917,37 @@ function renderCronModal(){
     </div>`;
 }
 
-async function toggleCronModalStep(pi,si){
+async function saveCronModal(){
   if(!_cronClientId)return;
-  const key=`${pi}-${si}`;
-  _cronDone[key]=!_cronDone[key];
-  if(!_cronDone[key])delete _cronDone[key];
-  renderCronModal();
-  try{ await window._fb.updateCronograma(_cronClientId,{done:_cronDone}); }
+  try{ await window._fb.updateCronograma(_cronClientId,{phases:_cronPhases}); }
   catch(e){ showToast('Erro ao salvar','error'); }
+}
+
+async function toggleCronStep_pe(pi,si){
+  _cronPhases[pi].steps[si].done=!_cronPhases[pi].steps[si].done;
+  renderCronModal();
+  await saveCronModal();
+}
+
+async function editCronStep(pi,si,val){
+  _cronPhases[pi].steps[si].text=val;
+  await saveCronModal();
+}
+
+async function addCronStep(pi){
+  const inp=document.getElementById('new-step-'+pi);
+  const txt=(inp&&inp.value.trim())||'';
+  if(!txt)return;
+  _cronPhases[pi].steps.push({text:txt,done:false});
+  renderCronModal();
+  await saveCronModal();
+}
+
+async function removeCronStep(pi,si){
+  if(!confirm('Remover este passo?'))return;
+  _cronPhases[pi].steps.splice(si,1);
+  renderCronModal();
+  await saveCronModal();
 }
 </script>
 </body>

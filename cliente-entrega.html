@@ -1486,90 +1486,52 @@ setTimeout(()=>{
 </script>
 <script>
 // ── CRONOGRAMA ─────────────────────────────────────────────────────────
-const CRON_TEMPLATE = [
-  {
-    title:'Vendas', badge:'01', status:'Fase 1', cls:'cc1',
-    obj:'Estruturar a base comercial da clínica para começar a vender com método, previsibilidade e maior conversão.',
-    steps:[
-      {text:'Implementar o ecossistema comercial',subs:['Flashboard','CRM','Tráfego','Drive','Playbooks']},
-      {text:'Participar das tutorias de terça-feira, 19h'},
-      {text:'Assistir aos treinamentos',subs:['Treinamento de Vendas','Treinamento de Apresentação de Vendas']},
-      {text:'Estruturar a esteira de produtos'},
-      {text:'Montar a apresentação de vendas'},
-      {text:'Realizar a call de vendas para dúvidas e direcionamentos'},
-      {text:'Assistir aos conteúdos de apoio',subs:['Tutoria de Vendas 6','Consulta gravada da Dra. Deborah']},
-      {text:'Aplicar a metodologia no consultório',subs:['Apresentação de Vendas','SPIN']},
-      {text:'Realizar as primeiras vendas'},
-      {text:'Gravar consulta de venda para análise da equipe'},
-    ]
-  },
-  {
-    title:'Pré-vendas', badge:'02', status:'Fase 2', cls:'cc2',
-    obj:'Estruturar o processo de atendimento, qualificação e agendamento para gerar mais consultas com consistência.',
-    steps:[
-      {text:'Adicionar a SDR no grupo de acompanhamento'},
-      {text:'Garantir a participação da SDR nas tutorias de segunda, 11h'},
-      {text:'SDR preencher diariamente o Flashboard'},
-      {text:'Garantir o uso do CRM no dia a dia'},
-      {text:'Aplicar o script de pré-vendas nos atendimentos'},
-      {text:'Organizar o processo de atendimento com constância'},
-      {text:'Meta mínima: 1 agendamento por dia'},
-    ]
-  },
-  {
-    title:'Tráfego', badge:'03', status:'Fase 3', cls:'cc3',
-    obj:'Colocar a captação para rodar de forma estratégica, alinhada ao posicionamento e ao processo comercial.',
-    steps:[
-      {text:'Obter os acessos aos gerenciadores'},
-      {text:'Iniciar a estrutura de tráfego pago'},
-      {text:'Colocar as campanhas para rodar'},
-      {text:'Gravar os criativos com base nos scripts enviados'},
-      {text:'Ajustar o perfil conforme análise já passada'},
-      {text:'Alinhar comunicação, oferta e criativos com o público-alvo'},
-    ]
-  }
+const CRON_DEFAULT=[
+  {title:'Vendas',badge:'01',status:'Fase 1',cls:'cc1',obj:'Estruturar a base comercial da clínica para começar a vender com método, previsibilidade e maior conversão.',
+   steps:[{text:'Implementar o ecossistema comercial',done:false},{text:'Participar das tutorias de terça-feira, 19h',done:false},{text:'Assistir aos treinamentos',done:false},{text:'Estruturar a esteira de produtos',done:false},{text:'Montar a apresentação de vendas',done:false},{text:'Realizar a call de vendas para dúvidas e direcionamentos',done:false},{text:'Assistir aos conteúdos de apoio',done:false},{text:'Aplicar a metodologia no consultório',done:false},{text:'Realizar as primeiras vendas',done:false},{text:'Gravar consulta de venda para análise da equipe',done:false}]},
+  {title:'Pré-vendas',badge:'02',status:'Fase 2',cls:'cc2',obj:'Estruturar o processo de atendimento, qualificação e agendamento para gerar mais consultas com consistência.',
+   steps:[{text:'Adicionar a SDR no grupo de acompanhamento',done:false},{text:'Garantir a participação da SDR nas tutorias de segunda, 11h',done:false},{text:'SDR preencher diariamente o Flashboard',done:false},{text:'Garantir o uso do CRM no dia a dia',done:false},{text:'Aplicar o script de pré-vendas nos atendimentos',done:false},{text:'Organizar o processo de atendimento com constância',done:false},{text:'Meta mínima: 1 agendamento por dia',done:false}]},
+  {title:'Tráfego',badge:'03',status:'Fase 3',cls:'cc3',obj:'Colocar a captação para rodar de forma estratégica, alinhada ao posicionamento e ao processo comercial.',
+   steps:[{text:'Obter os acessos aos gerenciadores',done:false},{text:'Iniciar a estrutura de tráfego pago',done:false},{text:'Colocar as campanhas para rodar',done:false},{text:'Gravar os criativos com base nos scripts enviados',done:false},{text:'Ajustar o perfil conforme análise já passada',done:false},{text:'Alinhar comunicação, oferta e criativos com o público-alvo',done:false}]}
 ];
+
+function getCronPhases(){
+  if(S.cronograma&&S.cronograma.phases&&S.cronograma.phases.length) return S.cronograma.phases;
+  return JSON.parse(JSON.stringify(CRON_DEFAULT));
+}
 
 function renderCronograma(){
   const container=document.getElementById('cron-container'); if(!container)return;
-  const done=(S.cronograma&&S.cronograma.done)||{};
+  const phases=getCronPhases();
   const checkSvg=`<svg width="9" height="7" viewBox="0 0 9 7" fill="none"><path d="M1 3.5L3 5.5L8 1" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-
-  // totais
   let grandDone=0,grandTotal=0;
-  CRON_TEMPLATE.forEach((p,pi)=>{ p.steps.forEach((_,si)=>{ grandTotal++; if(done[`${pi}-${si}`])grandDone++; }); });
+  phases.forEach(p=>{ p.steps.forEach(s=>{ grandTotal++; if(s.done)grandDone++; }); });
   const totalPct=grandTotal?Math.round(grandDone/grandTotal*100):0;
 
-  const phasesHtml=CRON_TEMPLATE.map((phase,pi)=>{
-    const phDone=phase.steps.filter((_,si)=>done[`${pi}-${si}`]).length;
+  const phasesHtml=phases.map((phase,pi)=>{
+    const phDone=phase.steps.filter(s=>s.done).length;
     const phPct=phase.steps.length?Math.round(phDone/phase.steps.length*100):0;
-    const stepsHtml=phase.steps.map((st,si)=>{
-      const isDone=!!done[`${pi}-${si}`];
-      const subsHtml=st.subs?`<ul class="cron-subs">${st.subs.map(s=>`<li class="cron-sub"><div class="cron-sub-dash"></div>${s}</li>`).join('')}</ul>`:'';
-      return`<li class="cron-step${isDone?' done':''}" onclick="toggleCronStep(${pi},${si})">
+    const cls=CRON_DEFAULT[pi]?CRON_DEFAULT[pi].cls:(pi===0?'cc1':pi===1?'cc2':'cc3');
+    const stepsHtml=phase.steps.map((st,si)=>`
+      <li class="cron-step${st.done?' done':''}" onclick="toggleCronStep(${pi},${si})">
         <div class="cron-check">${checkSvg}</div>
-        <div><span class="cron-step-txt">${st.text}</span>${subsHtml}</div>
-      </li>`;
-    }).join('');
-    return`<div class="cron-card ${phase.cls}">
-      <div class="cron-badge"><span class="cron-badge-num">${phase.badge}</span><span class="cron-badge-lbl">${phase.status}</span></div>
+        <span class="cron-step-txt">${st.text}</span>
+      </li>`).join('');
+    return`<div class="cron-card ${cls}">
+      <div class="cron-badge"><span class="cron-badge-num">${phase.badge||'0'+(pi+1)}</span><span class="cron-badge-lbl">${phase.status||'Fase '+(pi+1)}</span></div>
       <div class="cron-title">${phase.title}</div>
-      <p class="cron-obj">${phase.obj}</p>
+      <p class="cron-obj">${phase.obj||''}</p>
       <div class="cron-steps-lbl">Passos desta fase</div>
       <ul class="cron-step-list">${stepsHtml}</ul>
       <div class="cron-prog">
-        <div class="cron-prog-meta">
-          <span class="cron-prog-lbl">Progresso</span>
-          <span class="cron-prog-count">${phDone} / ${phase.steps.length}</span>
-        </div>
+        <div class="cron-prog-meta"><span class="cron-prog-lbl">Progresso</span><span class="cron-prog-count">${phDone} / ${phase.steps.length}</span></div>
         <div class="cron-bar-bg"><div class="cron-bar-fill" style="width:${phPct}%"></div></div>
       </div>
     </div>`;
   }).join('');
 
-  const phaseLbls=CRON_TEMPLATE.map((p,pi)=>{
-    const phDone=p.steps.filter((_,si)=>done[`${pi}-${si}`]).length;
-    const active=phDone>0?'active':'';
+  const phaseLbls=phases.map((p,pi)=>{
+    const active=p.steps.some(s=>s.done)?'active':'';
     return`<span class="cron-phase-lbl ${active}">${p.title}</span>`;
   }).join('');
 
@@ -1584,10 +1546,7 @@ function renderCronograma(){
     </div>
     <div class="cron-phases">${phasesHtml}</div>
     <div class="cron-summary">
-      <div>
-        <div class="cron-total-num">${totalPct}%</div>
-        <div class="cron-total-lbl">Progresso total</div>
-      </div>
+      <div><div class="cron-total-num">${totalPct}%</div><div class="cron-total-lbl">Progresso total</div></div>
       <div class="cron-total-bar-wrap">
         <div class="cron-total-bar-bg"><div class="cron-total-bar-fill" style="width:${totalPct}%"></div></div>
         <div class="cron-phase-labels">${phaseLbls}</div>
@@ -1596,11 +1555,10 @@ function renderCronograma(){
 }
 
 async function toggleCronStep(pi,si){
-  if(!S.cronograma)S.cronograma={done:{}};
-  if(!S.cronograma.done)S.cronograma.done={};
-  const key=`${pi}-${si}`;
-  S.cronograma.done[key]=!S.cronograma.done[key];
-  if(!S.cronograma.done[key])delete S.cronograma.done[key];
+  const phases=getCronPhases();
+  phases[pi].steps[si].done=!phases[pi].steps[si].done;
+  if(!S.cronograma)S.cronograma={};
+  S.cronograma.phases=phases;
   renderCronograma();
   await save({cronograma:S.cronograma});
 }
