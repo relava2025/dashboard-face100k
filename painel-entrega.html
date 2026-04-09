@@ -238,15 +238,31 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .prog-badge-ativ{font-size:9px;padding:2px 8px;border-radius:4px;font-weight:600;font-family:'Montserrat',sans-serif;background:rgba(168,85,247,0.1);color:#A855F7;border:0.5px solid rgba(168,85,247,0.25)}
 .prog-badge-ment{font-size:9px;padding:2px 8px;border-radius:4px;font-weight:600;font-family:'Montserrat',sans-serif;background:rgba(20,184,166,0.1);color:#14B8A6;border:0.5px solid rgba(20,184,166,0.25)}
 
+/* TUTORIAS MODAL SESSION ROW */
+.tut-sess-row{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;display:grid;grid-template-columns:60px 60px 100px 1fr auto;gap:8px;align-items:end}
+.tut-sess-full{grid-column:1/-1}
+.tut-field-label{display:block;font-size:10px;color:var(--text-sec);font-weight:600;margin-bottom:3px;text-transform:uppercase;letter-spacing:.06em}
+
 @media(max-width:768px){
   .stats-row{grid-template-columns:repeat(2,1fr)}
-  .topbar{padding:0 16px}
+  .topbar{padding:0 12px;gap:8px;height:auto;min-height:56px;flex-wrap:wrap}
   .content{padding:16px 14px 60px}
   .t-sub{display:none}
+  .sync-txt{display:none}
+  .btn-admin{padding:6px 10px;font-size:10px}
+  .btn-new{padding:6px 12px;font-size:11px}
   .filters-row{gap:6px}
   .search-input{width:100%;margin-left:0;margin-top:8px}
   .client-grid{grid-template-columns:1fr}
   .form-grid{grid-template-columns:1fr}
+  .modal{width:100%!important;padding:20px 16px}
+}
+@media(max-width:560px){
+  .stats-row{grid-template-columns:1fr 1fr}
+  .t-logo{font-size:13px}
+  .t-right{gap:6px}
+  .tut-sess-row{grid-template-columns:1fr 1fr;gap:8px}
+  .tut-sess-full{grid-column:1/-1}
 }
 </style>
   <link rel="manifest" href="/manifest.json">
@@ -996,32 +1012,33 @@ function renderTutSessoes(){
   if(!list) return;
   if(!_tutSessoes.length){ list.innerHTML='<p style="color:var(--text-sec);font-size:12px">Nenhuma sessão. Clique em + Adicionar sessão.</p>'; return; }
   list.innerHTML = _tutSessoes.map((s,i)=>`
-    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;display:grid;grid-template-columns:60px 60px 100px 1fr;gap:8px;align-items:start">
+    <div class="tut-sess-row">
       <div>
-        <label style="display:block;font-size:10px;color:var(--text-sec);font-weight:600;margin-bottom:3px;text-transform:uppercase;letter-spacing:.06em">Dia</label>
+        <label class="tut-field-label">Dia</label>
         <input class="form-input" value="${s.dia||''}" oninput="_tutSessoes[${i}].dia=this.value" placeholder="13" style="padding:6px 8px">
       </div>
       <div>
-        <label style="display:block;font-size:10px;color:var(--text-sec);font-weight:600;margin-bottom:3px;text-transform:uppercase;letter-spacing:.06em">Hora</label>
+        <label class="tut-field-label">Hora</label>
         <input class="form-input" value="${s.hora||''}" oninput="_tutSessoes[${i}].hora=this.value" placeholder="11h" style="padding:6px 8px">
       </div>
       <div>
-        <label style="display:block;font-size:10px;color:var(--text-sec);font-weight:600;margin-bottom:3px;text-transform:uppercase;letter-spacing:.06em">Período</label>
+        <label class="tut-field-label">Período</label>
         <select class="form-input" onchange="_tutSessoes[${i}].periodo=this.value" style="padding:6px 8px">
           <option value="MANHÃ" ${s.periodo==='MANHÃ'?'selected':''}>MANHÃ</option>
           <option value="NOITE" ${s.periodo==='NOITE'?'selected':''}>NOITE</option>
           <option value="TARDE" ${s.periodo==='TARDE'?'selected':''}>TARDE</option>
         </select>
       </div>
-      <div style="display:flex;align-items:flex-end;gap:4px">
-        <button onclick="removeTutSessao(${i})" style="padding:6px 8px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);border-radius:6px;color:var(--red);font-size:11px;font-weight:700;cursor:pointer;font-family:'Montserrat',sans-serif;white-space:nowrap;margin-top:auto">✕</button>
+      <div></div>
+      <div style="display:flex;align-items:flex-end">
+        <button onclick="removeTutSessao(${i})" style="padding:6px 10px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);border-radius:6px;color:var(--red);font-size:11px;font-weight:700;cursor:pointer;font-family:'Montserrat',sans-serif">✕</button>
       </div>
-      <div style="grid-column:1/-1">
-        <label style="display:block;font-size:10px;color:var(--text-sec);font-weight:600;margin-bottom:3px;text-transform:uppercase;letter-spacing:.06em">Tema</label>
+      <div class="tut-sess-full">
+        <label class="tut-field-label">Tema</label>
         <input class="form-input" value="${s.tema||''}" oninput="_tutSessoes[${i}].tema=this.value" placeholder="Título da tutoria" style="padding:6px 8px">
       </div>
-      <div style="grid-column:1/-1">
-        <label style="display:block;font-size:10px;color:var(--text-sec);font-weight:600;margin-bottom:3px;text-transform:uppercase;letter-spacing:.06em">Com (opcional)</label>
+      <div class="tut-sess-full">
+        <label class="tut-field-label">Com (opcional)</label>
         <input class="form-input" value="${s.com||''}" oninput="_tutSessoes[${i}].com=this.value" placeholder="Nome do facilitador" style="padding:6px 8px">
       </div>
     </div>

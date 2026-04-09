@@ -382,8 +382,9 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 /* MOBILE */
 .mobile-topbar{display:none;height:52px;background:var(--surface);border-bottom:1px solid var(--border);align-items:center;padding:0 16px;gap:10px;position:sticky;top:0;z-index:50;flex-shrink:0}
 .mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--border);z-index:100}
-.mobile-nav-inner{display:flex}
-.mobile-nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 4px 14px;border:none;background:transparent;color:var(--text-sec);font-size:9px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;font-family:'Montserrat',sans-serif;cursor:pointer;transition:color .15s;position:relative}
+.mobile-nav-inner{display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.mobile-nav-inner::-webkit-scrollbar{display:none}
+.mobile-nav-btn{flex:0 0 auto;min-width:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 6px 14px;border:none;background:transparent;color:var(--text-sec);font-size:9px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;font-family:'Montserrat',sans-serif;cursor:pointer;transition:color .15s;position:relative}
 .mobile-nav-btn.active{color:var(--amber)}
 .mobile-nav-btn svg{width:18px;height:18px}
 .mobile-nav-badge{position:absolute;top:5px;right:calc(50% - 16px);background:var(--red);color:#fff;font-size:8px;font-weight:700;padding:1px 4px;border-radius:8px}
@@ -404,12 +405,17 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
   .weeks-grid{grid-template-columns:repeat(2,1fr)}
   .timeline-steps{flex-wrap:wrap;gap:14px}
   .timeline-line{display:none}
+  .tut-grid{grid-template-columns:1fr}
+  .modal-box{width:100%!important;padding:20px 16px}
+  .cron-phases{grid-template-columns:1fr}
 }
 @media(max-width:480px){
   .metas-grid{grid-template-columns:1fr 1fr}
   .eng-grid{grid-template-columns:1fr}
   .form-grid-2{grid-template-columns:1fr}
   .weeks-grid{grid-template-columns:1fr 1fr}
+  .mobile-nav-btn{padding:6px 2px 12px;font-size:8px}
+  .mobile-nav-btn svg{width:16px;height:16px}
 }
 /* TUTORIAS */
 .tut-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
