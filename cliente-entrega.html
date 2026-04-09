@@ -750,6 +750,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
             <div class="meta-label">Antes do programa</div>
             <div class="meta-val" id="m-base">R$ —</div>
             <div class="meta-sub">faturamento anterior</div>
+            <div class="meta-edit" onclick="editFaturamentoInicial()">Editar ↗</div>
           </div>
           <div class="meta-card">
             <div class="meta-label">Meta alvo</div>
@@ -1518,6 +1519,10 @@ async function deletarMesFat(mes){
 
 function editMeta(key){ currentMetaKey=key; document.getElementById('meta-modal-title').textContent='Editar meta — '+{alvo:'Alvo','60':'60 dias'}[key]; document.getElementById('meta-input').value=(S.metas&&S.metas[key])||''; document.getElementById('meta-modal').classList.add('open'); setTimeout(()=>document.getElementById('meta-input').focus(),100); }
 async function saveMeta(){ if(!currentMetaKey) return; const v=document.getElementById('meta-input').value.replace(/\D/g,''); if(!S.metas) S.metas={}; S.metas[currentMetaKey]=parseInt(v)||0; await save({metas:S.metas}); closeMetaModal(); showToast('Meta salva!','success'); renderMetas(); }
+function editFaturamentoInicial(){ document.getElementById('meta-modal-title').textContent='Faturamento antes do programa'; document.getElementById('meta-input').value=S.faturamentoInicial||''; currentMetaKey='__fat_inicial__'; document.getElementById('meta-modal').classList.add('open'); setTimeout(()=>document.getElementById('meta-input').focus(),100); }
+// Override saveMeta para tratar fat inicial
+const _saveMeta=saveMeta;
+saveMeta=async function(){ if(currentMetaKey==='__fat_inicial__'){ const v=document.getElementById('meta-input').value.replace(/\D/g,''); S.faturamentoInicial=parseInt(v)||0; await save({faturamentoInicial:S.faturamentoInicial}); closeMetaModal(); showToast('Faturamento salvo!','success'); renderMetas(); } else { await _saveMeta(); } };
 function closeMetaModal(){ document.getElementById('meta-modal').classList.remove('open'); currentMetaKey=null; }
 function closeMetaModalOutside(e){ if(e.target===document.getElementById('meta-modal')) closeMetaModal(); }
 
