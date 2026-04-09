@@ -358,6 +358,13 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
       <div class="form-field"><label class="form-label">Nome do cliente *</label><input class="form-input" id="f-name" type="text" placeholder="Ex: Carla Baioni"></div>
       <div class="form-field"><label class="form-label">Especialidade</label><input class="form-input" id="f-spec" type="text" placeholder="Ex: Cirurgia da Face"></div>
       <div class="form-field"><label class="form-label">Instagram</label><input class="form-input" id="f-ig" type="text" placeholder="@perfil"></div>
+      <div class="form-field">
+        <label class="form-label" style="display:flex;align-items:center;gap:6px">
+          ID Flashboard (conta_id)
+          <span style="font-size:9px;color:var(--text-sec);font-weight:400">— Supabase → Table Editor → contas → id</span>
+        </label>
+        <input class="form-input" id="f-contaid" type="text" placeholder="Ex: a1b2c3d4-e5f6-...">
+      </div>
       <div class="form-field"><label class="form-label">Programa *</label>
         <select class="form-select" id="f-program">
           <option value="aceleracao">Aceleração — 42K (6 meses)</option>
@@ -602,6 +609,7 @@ function openModal(id=null){
     document.getElementById('f-name').value=c.name||'';
     document.getElementById('f-spec').value=c.spec||'';
     document.getElementById('f-ig').value=c.ig||'';
+    document.getElementById('f-contaid').value=c.flashboardContaId||'';
     document.getElementById('f-program').value=c.program||'aceleracao';
     document.getElementById('f-cs1').value=c.cs1||'';
     document.getElementById('f-cs2').value=c.cs2||'';
@@ -611,7 +619,7 @@ function openModal(id=null){
     document.getElementById('f-cp').value=c.checkpoint||'1';
     document.getElementById('f-week').value=c.currentWeek||'1';
   } else {
-    ['f-name','f-spec','f-ig','f-cs1','f-cs2','f-cs3','f-traffic'].forEach(i=>document.getElementById(i).value='');
+    ['f-name','f-spec','f-ig','f-cs1','f-cs2','f-cs3','f-traffic','f-contaid'].forEach(i=>document.getElementById(i).value='');
     document.getElementById('f-program').value='aceleracao';
     document.getElementById('f-cp').value='1';
     document.getElementById('f-week').value='1';
@@ -632,6 +640,7 @@ async function saveClient(){
     name,
     spec:document.getElementById('f-spec').value.trim(),
     ig:document.getElementById('f-ig').value.trim(),
+    flashboardContaId:document.getElementById('f-contaid').value.trim(),
     program:document.getElementById('f-program').value,
     cs1:document.getElementById('f-cs1').value.trim(),
     cs2:document.getElementById('f-cs2').value.trim(),
