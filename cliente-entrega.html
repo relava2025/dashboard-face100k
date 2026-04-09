@@ -417,6 +417,15 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
   .mobile-nav-btn{padding:6px 2px 12px;font-size:8px}
   .mobile-nav-btn svg{width:16px;height:16px}
 }
+/* FLASHBOARD */
+.fb-stat{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;text-align:center}
+.fb-stat-val{font-size:20px;font-weight:800;font-family:'Montserrat',sans-serif;color:var(--text);line-height:1}
+.fb-stat-lbl{font-size:9px;font-weight:600;color:var(--text-sec);text-transform:uppercase;letter-spacing:.07em;margin-top:3px}
+.fb-funnel-step{display:flex;flex-direction:column;align-items:center;gap:3px}
+.fb-funnel-num{font-size:16px;font-weight:800;font-family:'Montserrat',sans-serif;color:var(--text)}
+.fb-funnel-lbl{font-size:9px;font-weight:600;color:var(--text-sec);text-transform:uppercase;letter-spacing:.06em}
+.fb-funnel-pct{font-size:10px;font-weight:700;color:var(--amber)}
+.fb-funnel-arr{font-size:16px;color:var(--border);margin:0 2px}
 /* TUTORIAS */
 .tut-list{display:flex;flex-direction:column;gap:10px}
 .tut-event{display:flex;border-radius:12px;overflow:hidden;border:1px solid var(--border);transition:border-color .2s}
@@ -665,6 +674,25 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
               </div>
               <button class="btn-primary" onclick="saveHealthScore()" style="margin-top:4px">Salvar Health Score</button>
             </div>
+          </div>
+        </div>
+
+        <!-- FLASHBOARD -->
+        <div class="section-card" id="fb-card" style="display:none">
+          <div class="sc-header">
+            <div>
+              <div class="sc-title">Flashboard — mês atual</div>
+              <div class="sc-sub" id="fb-sub">—</div>
+            </div>
+            <div id="fb-alert-badge" style="display:none;margin-left:auto;background:rgba(239,68,68,0.12);color:var(--red);border:1px solid rgba(239,68,68,0.25);border-radius:20px;padding:3px 10px;font-size:10px;font-weight:700">Sem preenchimento</div>
+          </div>
+          <div class="sc-body">
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px" id="fb-stats"></div>
+            <div style="margin-bottom:16px">
+              <div style="font-size:10px;font-weight:700;color:var(--text-sec);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">Funil de conversão</div>
+              <div id="fb-funnel" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap"></div>
+            </div>
+            <div id="fb-atividade" style="font-size:11px;color:var(--text-sec)"></div>
           </div>
         </div>
 
@@ -1550,6 +1578,139 @@ function subscribeFirebase(){
   window._fb.listen(data=>{ if(data){ Object.assign(S,data); renderAll(); setSyncStatus('ok'); } });
 }
 
+// ── FLASHBOARD INTEGRATION ──
+const SUPABASE_URL = 'https://svgaztetrufiqxptqqvs.supabase.co';
+const SUPABASE_KEY = 'sb_secret_o5FWp1YBbSThV1q_1XA2xg_YAkoef21';
+
+async function loadFlashboard(){
+  const contaId = S.flashboardContaId;
+  if(!contaId) return;
+  const card = document.getElementById('fb-card');
+  if(card) card.style.display='block';
+  try{
+    const hoje = new Date();
+    const mesInicio = `${hoje.getFullYear()}-${String(hoje.getMonth()+1).padStart(2,'0')}-01`;
+    const url = `${SUPABASE_URL}/rest/v1/registros_diarios?conta_id=eq.${contaId}&data=gte.${mesInicio}&order=data.desc&select=data,leads,agendamentos,comparecimentos,vendas,faturamento_leads_anuncios,faturamento_recorrente,fat_indicacao,fat_acao`;
+    const res = await fetch(url, { headers:{ 'Authorization':'Bearer '+SUPABASE_KEY, 'apikey':SUPABASE_KEY } });
+    if(!res.ok) return;
+    const rows = await res.json();
+    renderFlashboard(rows, hoje);
+  }catch(e){ console.warn('Flashboard error',e); }
+}
+
+function renderFlashboard(rows, hoje){
+  const card = document.getElementById('fb-card');
+  if(!card) return;
+
+  // Agrega totais do mês
+  let leads=0, agend=0, compar=0, vendas=0, fat=0;
+  rows.forEach(r=>{
+    leads  += r.leads||0;
+    agend  += r.agendamentos||0;
+    compar += r.comparecimentos||0;
+    vendas += r.vendas||0;
+    fat    += (r.faturamento_leads_anuncios||0)+(r.faturamento_recorrente||0)+(r.fat_indicacao||0)+(r.fat_acao||0);
+  });
+
+  // Último preenchimento
+  const ultimaData = rows.length ? rows[0].data : null;
+  const diasSemPreencher = ultimaData
+    ? Math.floor((hoje - new Date(ultimaData+'T12:00:00')) / 86400000)
+    : null;
+
+  // Sub e alerta
+  const mes = hoje.toLocaleString('pt-BR',{month:'long',year:'numeric'});
+  const sub = document.getElementById('fb-sub');
+  const badge = document.getElementById('fb-alert-badge');
+  if(sub) sub.textContent = `${rows.length} registros em ${mes}`;
+  if(badge){
+    const semPreencher = diasSemPreencher === null || diasSemPreencher > 3;
+    badge.style.display = semPreencher ? '' : 'none';
+    badge.textContent = diasSemPreencher === null ? 'Nunca preencheu' : `${diasSemPreencher}d sem preencher`;
+  }
+
+  // Mini stats
+  const stats = document.getElementById('fb-stats');
+  if(stats) stats.innerHTML = [
+    { val: leads,  lbl: 'Leads',         col: 'var(--amber)' },
+    { val: agend,  lbl: 'Agendamentos',  col: 'var(--blue)'  },
+    { val: vendas, lbl: 'Vendas',        col: 'var(--green)' },
+    { val: 'R$'+Number(fat).toLocaleString('pt-BR'), lbl: 'Faturamento', col: 'var(--amber)' },
+  ].map(s=>`
+    <div class="fb-stat">
+      <div class="fb-stat-val" style="color:${s.col}">${s.val}</div>
+      <div class="fb-stat-lbl">${s.lbl}</div>
+    </div>`).join('');
+
+  // Funil
+  const funnel = document.getElementById('fb-funnel');
+  if(funnel){
+    const pAgend  = leads  ? Math.round(agend/leads*100)  : 0;
+    const pCompar = agend  ? Math.round(compar/agend*100) : 0;
+    const pVenda  = compar ? Math.round(vendas/compar*100): 0;
+    const steps = [
+      { num: leads,  lbl: 'Leads',    pct: null },
+      { num: agend,  lbl: 'Agend.',   pct: pAgend+'%' },
+      { num: compar, lbl: 'Compar.',  pct: pCompar+'%' },
+      { num: vendas, lbl: 'Vendas',   pct: pVenda+'%' },
+    ];
+    funnel.innerHTML = steps.map((s,i)=>`
+      ${i>0?'<span class="fb-funnel-arr">›</span>':''}
+      <div class="fb-funnel-step">
+        <div class="fb-funnel-num">${s.num}</div>
+        <div class="fb-funnel-lbl">${s.lbl}</div>
+        ${s.pct?`<div class="fb-funnel-pct">${s.pct}</div>`:''}
+      </div>`).join('');
+  }
+
+  // Atividade
+  const atv = document.getElementById('fb-atividade');
+  if(atv){
+    if(ultimaData){
+      const d = new Date(ultimaData+'T12:00:00').toLocaleDateString('pt-BR');
+      atv.textContent = diasSemPreencher===0
+        ? '✓ Preencheu hoje'
+        : diasSemPreencher===1
+        ? `Último preenchimento: ${d} (ontem)`
+        : `Último preenchimento: ${d} (${diasSemPreencher} dias atrás)`;
+      atv.style.color = diasSemPreencher > 3 ? 'var(--red)' : 'var(--text-sec)';
+    } else {
+      atv.textContent = 'Nenhum registro encontrado este mês.';
+    }
+  }
+
+  // ─── Health Score automático via Flashboard ───
+  // Apenas atualiza se tiver dados suficientes (>= 5 registros no mês)
+  if(rows.length >= 5){
+    const diaDoMes = hoje.getDate();
+    const freqPct = diaDoMes > 0 ? rows.length / diaDoMes : 0;
+    const pLead   = leads > 0 ? agend / leads : 0;
+    const pAgend  = agend > 0 ? compar / agend : 0;
+    const pCompar = compar > 0 ? vendas / compar : 0;
+
+    // healthExec (0–40): frequência de preenchimento + leads chegando
+    const execScore = Math.round(
+      Math.min(freqPct, 1) * 20 +           // 20pts frequência
+      Math.min(leads / 30, 1) * 20           // 20pts volume de leads (30+ = máx)
+    );
+    // healthFunil (0–40): taxas de conversão do funil
+    const funilScore = Math.round(
+      Math.min(pLead / 0.4, 1) * 15 +       // 15pts lead→agend (40%+ = máx)
+      Math.min(pAgend / 0.6, 1) * 15 +      // 15pts agend→compar (60%+ = máx)
+      Math.min(pCompar / 0.3, 1) * 10       // 10pts compar→venda (30%+ = máx)
+    );
+    const totalAuto = execScore + funilScore + (S.healthSat||0);
+
+    S.healthExec  = execScore;
+    S.healthFunil = funilScore;
+    S.healthScore = totalAuto;
+    renderHealthScore();
+    // Indicador visual sutil no card do Flashboard
+    const sub = document.getElementById('fb-sub');
+    if(sub) sub.textContent += ' · Health auto-calculado';
+  }
+}
+
 async function loadTutorias(){
   try{
     const data=await window._fb.getTutorias();
@@ -1624,6 +1785,7 @@ window.addEventListener('fb-ready',async()=>{
   document.getElementById('loading-txt').textContent='Sincronizando com Firebase...';
   await loadFromFirebase();
   loadTutorias();
+  loadFlashboard();
   document.getElementById('loading').classList.add('hidden');
   renderAll();
   subscribeFirebase();

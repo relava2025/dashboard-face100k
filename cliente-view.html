@@ -324,6 +324,21 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .tut-event-tema{font-size:14px;font-weight:700;color:var(--text);line-height:1.3}
 .tut-event-com{font-size:11px;color:var(--text-sec)}
 .cv-empty{color:var(--text-sec);font-size:12px;padding:4px 0}
+
+/* FLASHBOARD cliente-view */
+.cv-fb-stat{background:var(--surface2);border:.5px solid var(--border);border-radius:10px;padding:12px 14px;text-align:center}
+.cv-fb-stat-val{font-size:20px;font-weight:800;font-family:'Montserrat',sans-serif;line-height:1;margin-bottom:3px}
+.cv-fb-stat-lbl{font-size:9px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.12em;font-family:'Montserrat',sans-serif;font-weight:600}
+.cv-fb-funnel-step{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:50px}
+.cv-fb-funnel-num{font-size:16px;font-weight:800;font-family:'Montserrat',sans-serif;color:var(--amber)}
+.cv-fb-funnel-lbl{font-size:9px;color:var(--text-sec);text-align:center;text-transform:uppercase;letter-spacing:.08em}
+.cv-fb-funnel-pct{font-size:10px;font-weight:700;color:var(--green);font-family:'Montserrat',sans-serif}
+.cv-fb-funnel-arr{font-size:16px;color:var(--text-dim);align-self:center;flex-shrink:0}
+.cv-fb-day{display:flex;align-items:center;gap:8px;padding:6px 10px;background:var(--surface2);border-radius:7px;font-size:11px}
+.cv-fb-day-date{font-weight:600;min-width:32px;color:var(--text-sec);font-size:10px}
+.cv-fb-day-leads{color:var(--amber);font-weight:700;font-family:'Montserrat',sans-serif;min-width:24px;text-align:center}
+.cv-fb-day-agend{color:var(--blue);font-weight:700;font-family:'Montserrat',sans-serif;min-width:24px;text-align:center}
+.cv-fb-day-sep{color:var(--border);flex-shrink:0}
 </style>
 </head>
 <body>
@@ -560,6 +575,35 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
         <div class="scard-sub" id="tut-cv-mes">—</div>
       </div>
       <div class="scard-body"><div class="tut-list" id="tut-cv-grid"><p class="cv-empty">Carregando...</p></div></div>
+    </div>
+
+    <!-- FLASHBOARD -->
+    <div class="scard" id="cv-fb-card" style="display:none">
+      <div class="scard-hdr">
+        <div class="scard-icon" style="background:rgba(59,130,246,0.1);border-color:rgba(59,130,246,0.3)">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 11L5.5 7.5L8 10L11 6L14 8" stroke="#3B82F6" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 14h12" stroke="#3B82F6" stroke-width="1.3" stroke-linecap="round"/></svg>
+        </div>
+        <div class="scard-title">Meu Flashboard — mês atual</div>
+        <div class="scard-sub" id="cv-fb-sub">—</div>
+      </div>
+      <div class="scard-body">
+        <div id="cv-fb-alert" style="display:none;background:var(--red-dim);border:1px solid var(--red-border);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--red);margin-bottom:14px;display:none;align-items:center;gap:8px">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.3"/><path d="M7 4v3M7 9.5h.01" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          <span id="cv-fb-alert-txt"></span>
+        </div>
+        <!-- Mini stats -->
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px" id="cv-fb-stats"></div>
+        <!-- Funil -->
+        <div style="margin-bottom:12px">
+          <div style="font-size:9px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.12em;font-family:'Montserrat',sans-serif;font-weight:600;margin-bottom:10px">Funil do mês</div>
+          <div id="cv-fb-funnel" style="display:flex;align-items:center;gap:4px;flex-wrap:wrap"></div>
+        </div>
+        <!-- Histórico recente -->
+        <div>
+          <div style="font-size:9px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.12em;font-family:'Montserrat',sans-serif;font-weight:600;margin-bottom:8px">Últimos preenchimentos</div>
+          <div id="cv-fb-history" style="display:flex;flex-direction:column;gap:4px"></div>
+        </div>
+      </div>
     </div>
 
     <!-- CALLS -->
@@ -1042,6 +1086,86 @@ function renderTutoriasCV(data){
   }).join('');
 }
 
+// ─── FLASHBOARD (cliente-view) ────────────────────
+const CV_SB_URL='https://svgaztetrufiqxptqqvs.supabase.co';
+const CV_SB_KEY='sb_secret_o5FWp1YBbSThV1q_1XA2xg_YAkoef21';
+
+async function loadFlashboardCV(contaId){
+  if(!contaId)return;
+  const card=document.getElementById('cv-fb-card');
+  if(card)card.style.display='block';
+  try{
+    const hoje=new Date();
+    const mesInicio=`${hoje.getFullYear()}-${String(hoje.getMonth()+1).padStart(2,'0')}-01`;
+    const url=`${CV_SB_URL}/rest/v1/registros_diarios?conta_id=eq.${contaId}&data=gte.${mesInicio}&order=data.desc&select=data,leads,agendamentos,comparecimentos,vendas&limit=100`;
+    const res=await fetch(url,{headers:{'Authorization':'Bearer '+CV_SB_KEY,'apikey':CV_SB_KEY}});
+    if(!res.ok)return;
+    const rows=await res.json();
+    renderFlashboardCV(rows,hoje);
+  }catch(e){console.warn('CV Flashboard',e);}
+}
+
+function renderFlashboardCV(rows,hoje){
+  // Totais
+  let leads=0,agend=0,compar=0,vendas=0;
+  rows.forEach(r=>{leads+=r.leads||0;agend+=r.agendamentos||0;compar+=r.comparecimentos||0;vendas+=r.vendas||0;});
+  // Sub header
+  const mes=hoje.toLocaleString('pt-BR',{month:'long',year:'numeric'});
+  const sub=document.getElementById('cv-fb-sub');
+  if(sub)sub.textContent=`${rows.length} preenchimentos em ${mes}`;
+  // Alerta
+  const ultima=rows.length?rows[0].data:null;
+  const dias=ultima?Math.floor((hoje-new Date(ultima+'T12:00:00'))/86400000):null;
+  const alertEl=document.getElementById('cv-fb-alert');
+  const alertTxt=document.getElementById('cv-fb-alert-txt');
+  if(alertEl&&alertTxt){
+    const semPreencher=dias===null||dias>3;
+    alertEl.style.display=semPreencher?'flex':'none';
+    alertTxt.textContent=dias===null?'Você ainda não preencheu o Flashboard este mês. Preencha diariamente para ter dados precisos!':`Faz ${dias} dia${dias!==1?'s':''} sem preencher o Flashboard. Preencha hoje!`;
+  }
+  // Stats
+  const stats=document.getElementById('cv-fb-stats');
+  if(stats)stats.innerHTML=[
+    {val:leads,lbl:'Leads',col:'var(--amber)'},
+    {val:agend,lbl:'Agendamentos',col:'var(--blue)'},
+    {val:compar,lbl:'Compareceu',col:'var(--text)'},
+    {val:vendas,lbl:'Vendas',col:'var(--green)'},
+  ].map(s=>`<div class="cv-fb-stat"><div class="cv-fb-stat-val" style="color:${s.col}">${s.val}</div><div class="cv-fb-stat-lbl">${s.lbl}</div></div>`).join('');
+  // Funil
+  const funnel=document.getElementById('cv-fb-funnel');
+  if(funnel){
+    const pA=leads?Math.round(agend/leads*100):0;
+    const pC=agend?Math.round(compar/agend*100):0;
+    const pV=compar?Math.round(vendas/compar*100):0;
+    const steps=[{num:leads,lbl:'Leads',pct:null},{num:agend,lbl:'Agend.',pct:pA+'%'},{num:compar,lbl:'Compar.',pct:pC+'%'},{num:vendas,lbl:'Vendas',pct:pV+'%'}];
+    funnel.innerHTML=steps.map((s,i)=>`
+      ${i>0?'<span class="cv-fb-funnel-arr">›</span>':''}
+      <div class="cv-fb-funnel-step">
+        <div class="cv-fb-funnel-num">${s.num}</div>
+        <div class="cv-fb-funnel-lbl">${s.lbl}</div>
+        ${s.pct?`<div class="cv-fb-funnel-pct">${s.pct}</div>`:''}
+      </div>`).join('');
+  }
+  // Histórico recente (últimos 7)
+  const hist=document.getElementById('cv-fb-history');
+  if(hist){
+    const recentes=rows.slice(0,7);
+    if(!recentes.length){hist.innerHTML='<div style="color:var(--text-dim);font-size:11px">Nenhum preenchimento ainda este mês.</div>';return;}
+    hist.innerHTML=recentes.map(r=>{
+      const [,m,dd]=r.data.split('-');
+      return`<div class="cv-fb-day">
+        <span class="cv-fb-day-date">${dd}/${m}</span>
+        <span class="cv-fb-day-leads">${r.leads||0}</span>
+        <span style="font-size:9px;color:var(--text-dim)">leads</span>
+        <span class="cv-fb-day-sep">·</span>
+        <span class="cv-fb-day-agend">${r.agendamentos||0}</span>
+        <span style="font-size:9px;color:var(--text-dim)">agend.</span>
+        ${r.vendas?`<span class="cv-fb-day-sep">·</span><span style="color:var(--green);font-weight:700;font-family:'Montserrat',sans-serif">${r.vendas} venda${r.vendas!==1?'s':''}</span>`:''}
+      </div>`;
+    }).join('');
+  }
+}
+
 window.addEventListener('fb-ready',()=>{
   const cid=window._clientId;
   const show404=()=>{document.getElementById('loading').classList.add('hidden');document.getElementById('not-found').classList.add('show')};
@@ -1053,6 +1177,7 @@ window.addEventListener('fb-ready',()=>{
     document.getElementById('app').style.display='block';
     renderAll();
     renderCronogramaCV();
+    if(data.flashboardContaId)loadFlashboardCV(data.flashboardContaId);
   });
   window._fb.listenRoteiros(roteiros=>renderRoteiros(roteiros));
   loadTutoriasCV();

@@ -7,11 +7,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-import{getFirestore,collection,doc,onSnapshot,addDoc,setDoc,updateDoc,deleteDoc,getDoc}from"https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+import{getFirestore,collection,doc,onSnapshot,addDoc,setDoc,updateDoc,deleteDoc,getDoc,getDocs}from"https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 const cfg={apiKey:"AIzaSyAyupUdCsEb6pPVmTs2clhayS84-TUovGA",authDomain:"dashboard-e465d.firebaseapp.com",projectId:"dashboard-e465d",storageBucket:"dashboard-e465d.firebasestorage.app",messagingSenderId:"865986158280",appId:"1:865986158280:web:1531d13630f9835a9f0ffd"};
 const db=getFirestore(initializeApp(cfg));
 window._db=db;
-window._fs={collection,doc,onSnapshot,addDoc,setDoc,updateDoc,deleteDoc,getDoc};
+window._fs={collection,doc,onSnapshot,addDoc,setDoc,updateDoc,deleteDoc,getDoc,getDocs};
 window.dispatchEvent(new Event('db-ready'));
 </script>
 <style>
@@ -220,6 +220,13 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .empty-sub{font-size:12px;margin-bottom:16px}
 .loading-row{text-align:center;padding:32px;color:var(--text-dim);font-size:12px}
 
+/* FLASHBOARD */
+.fb-alert-chip{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:8px;font-size:9px;font-weight:700;font-family:'Montserrat',sans-serif;background:var(--red-dim);color:var(--red);border:.5px solid var(--red-border)}
+.fb-ok-chip{background:var(--green-dim);color:var(--green);border:.5px solid var(--green-border)}
+.fb-no-chip{font-size:10px;color:var(--text-dim)}
+.fb-conv{font-size:11px;font-weight:600;font-family:'Montserrat',sans-serif}
+.fb-conv.high{color:var(--green)}.fb-conv.mid{color:var(--yellow)}.fb-conv.low{color:var(--red)}
+
 /* RESPONSIVE */
 @media(max-width:900px){
   .stats-row{grid-template-columns:repeat(3,1fr)}
@@ -283,6 +290,10 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
       <div class="tab" onclick="showTab('agenda')">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="2" width="12" height="11" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M4 1v2M10 1v2M1 6h12" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="4.5" cy="9.5" r="1" fill="currentColor"/><circle cx="7" cy="9.5" r="1" fill="currentColor"/><circle cx="9.5" cy="9.5" r="1" fill="currentColor"/></svg>
         Agenda
+      </div>
+      <div class="tab" onclick="showTab('flashboard')">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 10L4.5 6.5L7 9L10 5L13 7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M1 13h12" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        Flashboard
       </div>
     </div>
   </div>
@@ -404,6 +415,50 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
     <div class="rotina-checklist" id="rotina-checklist"></div>
   </div>
 
+  <!-- FLASHBOARD -->
+  <div class="section" id="sec-flashboard">
+    <div class="page-hdr">
+      <div>
+        <div class="page-title">Flashboard — Leads & MQL</div>
+        <div class="page-sub" id="fb-tab-sub">Dados do mês atual preenchidos diariamente pelos clientes</div>
+      </div>
+      <button class="btn btn-primary btn-sm" onclick="loadFlashboardTab()">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M10.5 6A4.5 4.5 0 112 4M2 1.5V4H4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Atualizar
+      </button>
+    </div>
+    <div class="stats-row" style="grid-template-columns:repeat(4,1fr)">
+      <div class="stat-mini sm-amber"><div class="sm-label">Total Leads/mês</div><div class="sm-val" style="color:var(--amber)" id="fb-st-leads">—</div></div>
+      <div class="stat-mini"><div class="sm-label" style="color:var(--blue)">Total MQL (Agend.)</div><div class="sm-val" style="color:var(--blue)" id="fb-st-mql">—</div></div>
+      <div class="stat-mini sm-green"><div class="sm-label">Total Vendas</div><div class="sm-val" style="color:var(--green)" id="fb-st-vendas">—</div></div>
+      <div class="stat-mini sm-red"><div class="sm-label">Alertas (sem preencher)</div><div class="sm-val" style="color:var(--red)" id="fb-st-alertas">—</div></div>
+    </div>
+    <div class="filters">
+      <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-sec);cursor:pointer;padding:6px 0">
+        <input type="checkbox" id="fb-filter-alerta" onchange="renderFlashboardTab()"> Mostrar apenas alertas
+      </label>
+      <select class="filter-select" id="fb-filter-status" onchange="renderFlashboardTab()">
+        <option value="">Todos os status</option>
+        <option value="rodando">Rodando</option><option value="atencao">Atenção</option>
+        <option value="parado">Parado</option><option value="aguardando">Aguardando</option>
+      </select>
+    </div>
+    <div class="table-wrap">
+      <table class="cart-table">
+        <thead>
+          <tr>
+            <th>Cliente</th><th>Tráfego</th>
+            <th>Leads/mês</th><th>MQL (Agend.)</th><th>Compareceu</th><th>Vendas</th>
+            <th>Lead→MQL</th><th>MQL→Venda</th>
+            <th>Última atualiz.</th><th>Alerta</th>
+          </tr>
+        </thead>
+        <tbody id="fb-tbody"><tr><td colspan="10" class="loading-row">Clique em "Atualizar" para carregar dados do Flashboard</td></tr></tbody>
+      </table>
+    </div>
+    <div class="cart-cards" id="fb-cards"><div class="loading-row">Clique em "Atualizar" para carregar dados</div></div>
+  </div>
+
   <!-- AGENDA -->
   <div class="section" id="sec-agenda">
     <div class="page-hdr">
@@ -474,8 +529,13 @@ const ROTINA_TASKS={
   ],
 };
 
+const SB_URL='https://svgaztetrufiqxptqqvs.supabase.co';
+const SB_KEY='sb_secret_o5FWp1YBbSThV1q_1XA2xg_YAkoef21';
+
 let S={trafego:{},otimizacoes:{},roteiros:{}};
 let rotinaGestor='Pedro',rotinaData={tasks:{}};
+let fbData=[];
+let entregaMap={};
 let rotinaUnsub=null;
 let currentTab='carteira';
 
@@ -488,17 +548,20 @@ function getTrafego(){return Object.values(S.trafego)}
 function getClienteNames(){return getTrafego().map(c=>c.name).sort()}
 
 // NAV
+const TAB_ORDER=['carteira','board','roteiros','rotina','agenda','flashboard'];
 function showTab(tab){
   currentTab=tab;
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('sec-'+tab).classList.add('active');
-  document.querySelectorAll('.tab')[['carteira','board','roteiros','rotina','agenda'].indexOf(tab)].classList.add('active');
+  const idx=TAB_ORDER.indexOf(tab);
+  if(idx>=0)document.querySelectorAll('.tab')[idx].classList.add('active');
   if(tab==='carteira')renderCarteira();
   if(tab==='board')renderBoard();
   if(tab==='roteiros')renderRoteiros();
   if(tab==='rotina'){setupRotinaListener();renderRotina();}
   if(tab==='agenda')renderAgenda();
+  if(tab==='flashboard')loadFlashboardTab();
 }
 
 // MODAL
@@ -1095,6 +1158,120 @@ async function toggleRotinaTask(taskId){
   }catch(err){console.warn(err);}
 }
 
+// ─── FLASHBOARD ───────────────────────────────────
+async function loadFlashboardTab(){
+  const tbody=document.getElementById('fb-tbody');
+  const cards=document.getElementById('fb-cards');
+  if(tbody)tbody.innerHTML='<tr><td colspan="10" class="loading-row">Buscando dados do Flashboard...</td></tr>';
+  if(cards)cards.innerHTML='<div class="loading-row">Carregando...</div>';
+  try{
+    // 1. Carregar mapa entrega (slug → contaId) via Firestore
+    if(!Object.keys(entregaMap).length){
+      const snap=await window._fs.getDocs(window._fs.collection(window._db,'entrega'));
+      snap.forEach(d=>{ entregaMap[d.id]={flashboardContaId:d.data().flashboardContaId||''}; });
+    }
+    // 2. Buscar todos os registros do mês atual no Supabase
+    const hoje=new Date();
+    const mesInicio=`${hoje.getFullYear()}-${String(hoje.getMonth()+1).padStart(2,'0')}-01`;
+    const url=`${SB_URL}/rest/v1/registros_diarios?data=gte.${mesInicio}&select=conta_id,data,leads,agendamentos,comparecimentos,vendas&order=data.desc&limit=5000`;
+    const res=await fetch(url,{headers:{'Authorization':'Bearer '+SB_KEY,'apikey':SB_KEY}});
+    if(!res.ok)throw new Error('Supabase HTTP '+res.status);
+    const rows=await res.json();
+    // 3. Agrupar por conta_id
+    const byConta={};
+    rows.forEach(r=>{
+      if(!byConta[r.conta_id])byConta[r.conta_id]={leads:0,mql:0,compar:0,vendas:0,ultima:null};
+      const g=byConta[r.conta_id];
+      g.leads+=r.leads||0; g.mql+=r.agendamentos||0;
+      g.compar+=r.comparecimentos||0; g.vendas+=r.vendas||0;
+      if(!g.ultima||r.data>g.ultima)g.ultima=r.data;
+    });
+    // 4. Montar fbData cruzando trafego + entrega + supabase
+    fbData=getTrafego().map(c=>{
+      const contaId=entregaMap[c._id]?.flashboardContaId||'';
+      const sb=contaId?byConta[contaId]:null;
+      const dias=sb?.ultima?Math.floor((hoje-new Date(sb.ultima+'T12:00:00'))/86400000):null;
+      return{slug:c._id,name:c.name||c._id,status:c.status||'',contaId,
+        leads:sb?.leads||0,mql:sb?.mql||0,compar:sb?.compar||0,vendas:sb?.vendas||0,
+        ultima:sb?.ultima||null,dias};
+    }).sort((a,b)=>b.leads-a.leads);
+    // 5. Atualizar stats
+    const tLeads=fbData.reduce((s,c)=>s+c.leads,0);
+    const tMql=fbData.reduce((s,c)=>s+c.mql,0);
+    const tVendas=fbData.reduce((s,c)=>s+c.vendas,0);
+    const alertas=fbData.filter(c=>c.contaId&&(c.dias===null||c.dias>3)).length;
+    document.getElementById('fb-st-leads').textContent=tLeads;
+    document.getElementById('fb-st-mql').textContent=tMql;
+    document.getElementById('fb-st-vendas').textContent=tVendas;
+    document.getElementById('fb-st-alertas').textContent=alertas;
+    const mes=hoje.toLocaleString('pt-BR',{month:'long',year:'numeric'});
+    const sub=document.getElementById('fb-tab-sub');
+    if(sub)sub.textContent=`${mes} · ${rows.length} registros carregados`;
+    renderFlashboardTab();
+  }catch(err){
+    if(tbody)tbody.innerHTML=`<tr><td colspan="10" class="loading-row" style="color:var(--red)">Erro ao carregar: ${err.message}</td></tr>`;
+    console.error('Flashboard tab',err);
+  }
+}
+
+function renderFlashboardTab(){
+  const soAlerta=document.getElementById('fb-filter-alerta')?.checked;
+  const statusF=document.getElementById('fb-filter-status')?.value||'';
+  const filtered=fbData.filter(c=>{
+    if(statusF&&c.status!==statusF)return false;
+    if(soAlerta&&!(c.contaId&&(c.dias===null||c.dias>3)))return false;
+    return true;
+  });
+  function alertHtml(c){
+    if(!c.contaId)return'<span class="fb-no-chip">Sem conta vinculada</span>';
+    if(c.dias===null)return'<span class="fb-alert-chip">Nunca preencheu</span>';
+    if(c.dias>3)return`<span class="fb-alert-chip">${c.dias}d sem preencher</span>`;
+    return`<span class="badge fb-ok-chip">OK · ${c.dias === 0?'hoje':c.dias+'d'}</span>`;
+  }
+  function pctHtml(a,b){
+    if(!b)return'<span class="fb-conv">—</span>';
+    const v=Math.round(a/b*100);
+    const cls=v>=50?'high':v>=25?'mid':'low';
+    return`<span class="fb-conv ${cls}">${v}%</span>`;
+  }
+  function fmtD(d){if(!d)return'—';const[,m,dd]=d.split('-');return`${dd}/${m}`;}
+  const st=c=>STATUS_TR[c.status]||{label:c.status||'—',cls:'b-aguardando'};
+  const tbody=document.getElementById('fb-tbody');
+  const cards=document.getElementById('fb-cards');
+  if(!filtered.length){
+    if(tbody)tbody.innerHTML='<tr><td colspan="10"><div class="empty"><div class="empty-title">Nenhum cliente encontrado</div></div></td></tr>';
+    if(cards)cards.innerHTML='<div class="empty"><div class="empty-title">Nenhum cliente encontrado</div></div>';
+    return;
+  }
+  if(tbody)tbody.innerHTML=filtered.map(c=>`<tr>
+    <td><strong>${c.name}</strong></td>
+    <td><span class="badge ${st(c).cls}">${st(c).label}</span></td>
+    <td><span class="metric-val" style="color:var(--amber)">${c.leads||'0'}</span></td>
+    <td><span class="metric-val" style="color:var(--blue)">${c.mql||'0'}</span></td>
+    <td><span class="metric-val">${c.compar||'0'}</span></td>
+    <td><span class="metric-val" style="color:var(--green)">${c.vendas||'0'}</span></td>
+    <td>${pctHtml(c.mql,c.leads)}</td>
+    <td>${pctHtml(c.vendas,c.mql)}</td>
+    <td style="color:var(--text-sec);font-size:11px">${fmtD(c.ultima)}</td>
+    <td>${alertHtml(c)}</td>
+  </tr>`).join('');
+  if(cards)cards.innerHTML=filtered.map(c=>`
+    <div class="cart-card">
+      <div class="cc-hdr">
+        <span class="cc-name">${c.name}</span>
+        <span class="badge ${st(c).cls}">${st(c).label}</span>
+      </div>
+      <div class="cc-metrics">
+        <div class="cc-metric"><div class="cc-metric-label">Leads</div><div class="cc-metric-val">${c.leads||'0'}</div></div>
+        <div class="cc-metric"><div class="cc-metric-label">MQL</div><div class="cc-metric-val" style="color:var(--blue)">${c.mql||'0'}</div></div>
+        <div class="cc-metric"><div class="cc-metric-label">Vendas</div><div class="cc-metric-val" style="color:var(--green)">${c.vendas||'0'}</div></div>
+        <div class="cc-metric"><div class="cc-metric-label">Lead→MQL</div>${pctHtml(c.mql,c.leads)}</div>
+        <div class="cc-metric"><div class="cc-metric-label">Última atualiz.</div><div class="cc-metric-val" style="font-size:11px">${fmtD(c.ultima)}</div></div>
+        <div class="cc-metric"><div class="cc-metric-label">Alerta</div>${alertHtml(c)}</div>
+      </div>
+    </div>`).join('');
+}
+
 // ─── AGENDA ───────────────────────────────────────
 function renderAgenda(){
   const clientes=getTrafego().sort((a,b)=>(a.name||'').localeCompare(b.name||''));
@@ -1176,6 +1353,8 @@ window.updateClienteNome=updateClienteNome;
 window.updateRoteiroCliente=updateRoteiroCliente;
 window.renderCarteira=renderCarteira;
 window.renderRoteiros=renderRoteiros;
+window.loadFlashboardTab=loadFlashboardTab;
+window.renderFlashboardTab=renderFlashboardTab;
 </script>
 </body>
 </html>
