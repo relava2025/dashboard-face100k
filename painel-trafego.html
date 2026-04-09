@@ -529,8 +529,17 @@ const ROTINA_TASKS={
   ],
 };
 
-const SB_URL='https://svgaztetrufiqxptqqvs.supabase.co';
-const SB_KEY='sb_secret_oJWCUWJVwDBnacbhgYJ46Q_AXzhJ4vO';
+let SB_URL='https://svgaztetrufiqxptqqvs.supabase.co';
+let SB_KEY='';
+async function loadSBKey(){
+  if(SB_KEY)return;
+  try{
+    const r=await fetch('https://firestore.googleapis.com/v1/projects/dashboard-e465d/databases/(default)/documents/config/supabase?key=AIzaSyAyupUdCsEb6pPVmTs2clhayS84-TUovGA');
+    const d=await r.json();
+    SB_KEY=d.fields?.key?.stringValue||'';
+    if(d.fields?.url?.stringValue)SB_URL=d.fields.url.stringValue;
+  }catch(e){console.warn('SB key',e);}
+}
 
 let S={trafego:{},otimizacoes:{},roteiros:{}};
 let rotinaGestor='Pedro',rotinaData={tasks:{}};
@@ -1164,6 +1173,8 @@ async function loadFlashboardTab(){
   const cards=document.getElementById('fb-cards');
   if(tbody)tbody.innerHTML='<tr><td colspan="10" class="loading-row">Buscando dados do Flashboard...</td></tr>';
   if(cards)cards.innerHTML='<div class="loading-row">Carregando...</div>';
+  await loadSBKey();
+  if(!SB_KEY){if(tbody)tbody.innerHTML='<tr><td colspan="10" class="loading-row" style="color:var(--red)">Chave Supabase não configurada no Firestore.</td></tr>';return;}
   try{
     // 1. Carregar mapa entrega (slug → contaId) via Firestore
     if(!Object.keys(entregaMap).length){
