@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-  import { getFirestore, collection, onSnapshot, doc, setDoc, deleteDoc, getDoc }
+  import { getFirestore, collection, onSnapshot, doc, setDoc, deleteDoc }
     from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -35,6 +35,19 @@
     },
     async deleteClient(id){
       await deleteDoc(doc(db, "dashboards", id));
+    },
+    listenGestores(cb){
+      return onSnapshot(collection(db, "gestores"), snap => {
+        const list = [];
+        snap.forEach(d => list.push({ id: d.id, ...d.data() }));
+        cb(list);
+      });
+    },
+    async saveGestor(id, data){
+      await setDoc(doc(db, "gestores", id), data, { merge: true });
+    },
+    async deleteGestor(id){
+      await deleteDoc(doc(db, "gestores", id));
     }
   };
   window.dispatchEvent(new Event("fb-ready"));
@@ -50,6 +63,7 @@
   --red:#EF4444;--red-dim:rgba(239,68,68,0.10);--red-border:rgba(239,68,68,0.22);
   --yellow:#EAB308;--yellow-dim:rgba(234,179,8,0.10);--yellow-border:rgba(234,179,8,0.22);
   --blue:#3B82F6;--blue-dim:rgba(59,130,246,0.10);--blue-border:rgba(59,130,246,0.22);
+  --purple:#A855F7;--purple-dim:rgba(168,85,247,0.10);--purple-border:rgba(168,85,247,0.22);
 }
 html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:13px;line-height:1.5}
 body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(0deg,transparent 24%,rgba(245,166,35,0.03) 25%,rgba(245,166,35,0.03) 26%,transparent 27%),linear-gradient(90deg,transparent 24%,rgba(245,166,35,0.03) 25%,rgba(245,166,35,0.03) 26%,transparent 27%);background-size:50px 50px;pointer-events:none;z-index:0}
@@ -68,6 +82,8 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .sync-txt{font-size:11px;color:var(--text-sec)}
 .btn-new{background:var(--amber);color:#000;border:none;border-radius:6px;padding:8px 18px;font-size:12px;font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:.04em;cursor:pointer;transition:opacity .15s}
 .btn-new:hover{opacity:.88}
+.btn-gestores{background:transparent;color:var(--text-sec);border:1px solid var(--border);border-radius:6px;padding:8px 14px;font-size:12px;font-weight:600;font-family:'Montserrat',sans-serif;cursor:pointer;transition:all .15s}
+.btn-gestores:hover{border-color:var(--purple-border);color:var(--purple)}
 
 /* CONTENT */
 .content{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:24px 24px 60px}
@@ -79,16 +95,19 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .sc-total::before{background:var(--amber)}
 .sc-blocked::before{background:var(--red)}
 .sc-progress::before{background:var(--yellow)}
-.sc-ready::before{background:var(--green)}
+.sc-waiting::before{background:var(--purple)}
 .stat-label{font-size:9px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.14em;font-family:'Montserrat',sans-serif;font-weight:600;margin-bottom:8px}
 .stat-val{font-size:32px;font-weight:800;font-family:'Montserrat',sans-serif;line-height:1}
-.sv-amber{color:var(--amber)}.sv-red{color:var(--red)}.sv-yellow{color:var(--yellow)}.sv-green{color:var(--green)}
+.sv-amber{color:var(--amber)}.sv-red{color:var(--red)}.sv-yellow{color:var(--yellow)}.sv-green{color:var(--green)}.sv-purple{color:var(--purple)}
 .stat-sub{font-size:10px;color:var(--text-sec);margin-top:5px}
 
 /* FILTERS */
 .filters-row{display:flex;align-items:center;gap:8px;margin-bottom:18px;flex-wrap:wrap}
 .filter-btn{padding:6px 14px;border-radius:20px;font-size:11px;font-weight:600;font-family:'Montserrat',sans-serif;border:1px solid var(--border);background:transparent;color:var(--text-sec);cursor:pointer;transition:all .15s}
 .filter-btn.active{background:var(--amber-dim);color:var(--amber);border-color:var(--amber-border)}
+.filter-btn.active-waiting{background:var(--purple-dim);color:var(--purple);border-color:var(--purple-border)}
+.filter-btn.active-parcial{background:var(--blue-dim);color:var(--blue);border-color:var(--blue-border)}
+.filter-btn.active-completa{background:var(--green-dim);color:var(--green);border-color:var(--green-border)}
 .search-input{background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'Inter',sans-serif;font-size:12px;padding:7px 12px;outline:none;transition:border-color .15s;width:220px;margin-left:auto}
 .search-input:focus{border-color:var(--amber)}
 .search-input::placeholder{color:var(--text-dim)}
@@ -102,6 +121,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .ca-progress{background:var(--yellow)}
 .ca-almost{background:var(--blue)}
 .ca-ready{background:var(--green)}
+.ca-waiting{background:var(--purple)}
 .card-body{padding:18px 20px 16px}
 .card-top{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px}
 .client-avatar{width:38px;height:38px;border-radius:50%;background:var(--amber-dim);border:1px solid var(--amber-border);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--amber);font-family:'Montserrat',sans-serif;flex-shrink:0}
@@ -113,14 +133,19 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .sp-progress{background:var(--yellow-dim);color:var(--yellow);border:1px solid var(--yellow-border)}
 .sp-almost{background:var(--blue-dim);color:var(--blue);border:1px solid var(--blue-border)}
 .sp-ready{background:var(--green-dim);color:var(--green);border:1px solid var(--green-border)}
+.sp-waiting{background:var(--purple-dim);color:var(--purple);border:1px solid var(--purple-border)}
 .card-prog-row{display:flex;align-items:center;gap:10px;margin-bottom:12px}
 .card-prog-bar{flex:1;height:5px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden}
 .card-prog-fill{height:100%;border-radius:3px;transition:width .5s}
-.cpf-blocked{background:var(--red)}.cpf-progress{background:var(--yellow)}.cpf-almost{background:var(--blue)}.cpf-ready{background:var(--green)}
+.cpf-blocked{background:var(--red)}.cpf-progress{background:var(--yellow)}.cpf-almost{background:var(--blue)}.cpf-ready{background:var(--green)}.cpf-waiting{background:var(--purple)}
 .card-prog-pct{font-size:12px;font-weight:600;font-family:'JetBrains Mono',monospace;color:var(--text-sec);min-width:32px;text-align:right}
-.card-meta{display:flex;gap:16px}
+.card-meta{display:flex;gap:16px;flex-wrap:wrap}
 .card-meta-item{font-size:10px;color:var(--text-sec)}
 .card-meta-item strong{color:var(--text);display:block;font-size:11px;font-weight:600;margin-bottom:1px}
+.card-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.impl-tag{display:inline-flex;align-items:center;padding:2px 8px;border-radius:4px;font-size:9px;font-weight:700;letter-spacing:.06em;font-family:'Montserrat',sans-serif;text-transform:uppercase}
+.impl-parcial{background:var(--blue-dim);color:var(--blue);border:1px solid var(--blue-border)}
+.impl-completa{background:var(--green-dim);color:var(--green);border:1px solid var(--green-border)}
 .card-actions{display:flex;gap:6px;padding:10px 20px 14px;border-top:1px solid var(--border-light);margin-top:4px}
 .btn-open{flex:1;padding:7px 0;border-radius:5px;font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:.04em;background:var(--amber);color:#000;border:none;cursor:pointer;transition:opacity .15s}
 .btn-open:hover{opacity:.85}
@@ -138,18 +163,48 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 /* MODAL */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:200;align-items:center;justify-content:center;padding:16px}
 .modal-overlay.open{display:flex}
-.modal{background:var(--surface);border:1px solid var(--border);border-radius:12px;width:480px;max-width:100%;padding:28px;max-height:90vh;overflow-y:auto}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:12px;width:520px;max-width:100%;padding:28px;max-height:90vh;overflow-y:auto}
 .modal-title{font-size:16px;font-weight:700;font-family:'Montserrat',sans-serif;margin-bottom:4px}
 .modal-sub{font-size:12px;color:var(--text-sec);margin-bottom:22px}
 .form-field{margin-bottom:14px}
 .form-label{font-size:10px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.12em;font-family:'Montserrat',sans-serif;font-weight:600;margin-bottom:6px;display:block}
 .form-input{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'Inter',sans-serif;font-size:12px;padding:9px 12px;outline:none;transition:border-color .15s}
 .form-input:focus{border-color:var(--amber)}
+.form-select{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'Inter',sans-serif;font-size:12px;padding:9px 12px;outline:none;transition:border-color .15s;appearance:none;cursor:pointer}
+.form-select:focus{border-color:var(--amber)}
+.form-select option{background:var(--surface2);color:var(--text)}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.modal-divider{border:none;border-top:1px solid var(--border-light);margin:18px 0}
+.modal-section-title{font-size:10px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.12em;font-family:'Montserrat',sans-serif;font-weight:700;margin-bottom:14px}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:10px 14px}
+.toggle-label{font-size:12px;color:var(--text)}
+.toggle-label small{display:block;font-size:10px;color:var(--text-sec);margin-top:1px}
+.toggle-switch{position:relative;width:36px;height:20px;flex-shrink:0}
+.toggle-switch input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;inset:0;background:var(--border);border-radius:10px;cursor:pointer;transition:.2s}
+.toggle-slider:before{content:'';position:absolute;width:14px;height:14px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s}
+.toggle-switch input:checked+.toggle-slider{background:var(--purple)}
+.toggle-switch input:checked+.toggle-slider:before{transform:translateX(16px)}
 .modal-actions{display:flex;gap:10px;margin-top:20px;justify-content:flex-end}
 .btn-cancel{padding:9px 20px;border-radius:5px;font-size:12px;font-weight:600;background:transparent;color:var(--text-sec);border:1px solid var(--border);cursor:pointer;font-family:'Montserrat',sans-serif}
 .btn-save{padding:9px 22px;border-radius:5px;font-size:12px;font-weight:700;background:var(--amber);color:#000;border:none;cursor:pointer;font-family:'Montserrat',sans-serif;letter-spacing:.04em}
 .btn-save:hover{opacity:.88}
+
+/* MODAL GESTORES */
+.modal-wide{width:600px}
+.gestor-list{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;max-height:300px;overflow-y:auto}
+.gestor-item{display:flex;align-items:center;gap:10px;background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:10px 14px}
+.gestor-avatar{width:32px;height:32px;border-radius:50%;background:var(--purple-dim);border:1px solid var(--purple-border);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--purple);font-family:'Montserrat',sans-serif;flex-shrink:0}
+.gestor-info{flex:1;min-width:0}
+.gestor-name{font-size:13px;font-weight:600;color:var(--text)}
+.gestor-cargo{font-size:11px;color:var(--text-sec)}
+.btn-del-gestor{padding:5px 10px;border-radius:4px;font-size:10px;background:transparent;color:var(--text-dim);border:1px solid var(--border-light);cursor:pointer;transition:all .15s}
+.btn-del-gestor:hover{border-color:var(--red-border);color:var(--red);background:var(--red-dim)}
+.gestor-form{background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:14px;display:flex;gap:10px;align-items:flex-end}
+.gestor-form .form-field{margin-bottom:0;flex:1}
+.btn-add-gestor{padding:9px 18px;border-radius:5px;font-size:12px;font-weight:700;background:var(--purple);color:#fff;border:none;cursor:pointer;font-family:'Montserrat',sans-serif;white-space:nowrap;flex-shrink:0}
+.btn-add-gestor:hover{opacity:.88}
+.gestor-empty{text-align:center;padding:20px;color:var(--text-sec);font-size:12px}
 
 /* TOAST */
 .toast{position:fixed;bottom:24px;right:24px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 18px;font-size:12px;color:var(--text);z-index:999;transform:translateY(80px);opacity:0;transition:all .3s;max-width:300px;border-left:3px solid var(--amber)}
@@ -176,6 +231,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
   .search-input{width:100%;margin-left:0;margin-top:6px}
   .client-grid{grid-template-columns:1fr}
   .form-row{grid-template-columns:1fr}
+  .gestor-form{flex-direction:column}
 }
 </style>
   <link rel="manifest" href="/manifest.json">
@@ -202,6 +258,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
   <div class="t-right">
     <div class="sync-dot" id="sync-dot"></div>
     <span class="sync-txt" id="sync-txt">Conectando...</span>
+    <button class="btn-gestores" onclick="openGestoresModal()">Gestores</button>
     <button class="btn-new" onclick="openModal()">+ Novo cliente</button>
   </div>
 </div>
@@ -213,14 +270,17 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
     <div class="stat-card sc-total"><div class="stat-label">Total de clientes</div><div class="stat-val sv-amber" id="st-total">0</div><div class="stat-sub">cadastrados</div></div>
     <div class="stat-card sc-blocked"><div class="stat-label">Tráfego bloqueado</div><div class="stat-val sv-red" id="st-blocked">0</div><div class="stat-sub">com pendências</div></div>
     <div class="stat-card sc-progress"><div class="stat-label">Em andamento</div><div class="stat-val sv-yellow" id="st-progress">0</div><div class="stat-sub">checklist em progresso</div></div>
-    <div class="stat-card sc-ready"><div class="stat-label">Tráfego liberado</div><div class="stat-val sv-green" id="st-ready">0</div><div class="stat-sub">prontos para rodar</div></div>
+    <div class="stat-card sc-waiting"><div class="stat-label">Aguardando</div><div class="stat-val sv-purple" id="st-waiting">0</div><div class="stat-sub">pendente de início</div></div>
   </div>
 
   <div class="filters-row">
-    <button class="filter-btn active" onclick="setFilter('all',this)">Todos</button>
-    <button class="filter-btn" onclick="setFilter('blocked',this)">Bloqueados</button>
-    <button class="filter-btn" onclick="setFilter('progress',this)">Em andamento</button>
-    <button class="filter-btn" onclick="setFilter('ready',this)">Liberados</button>
+    <button class="filter-btn active" data-filter="all" onclick="setFilter('all',this)">Todos</button>
+    <button class="filter-btn" data-filter="blocked" onclick="setFilter('blocked',this)">Bloqueados</button>
+    <button class="filter-btn" data-filter="progress" onclick="setFilter('progress',this)">Em andamento</button>
+    <button class="filter-btn" data-filter="ready" onclick="setFilter('ready',this)">Liberados</button>
+    <button class="filter-btn" data-filter="waiting" onclick="setFilter('waiting',this)">Aguardando</button>
+    <button class="filter-btn" data-filter="parcial" onclick="setFilter('parcial',this)">Impl. Parcial</button>
+    <button class="filter-btn" data-filter="completa" onclick="setFilter('completa',this)">Impl. Completa</button>
     <input class="search-input" id="search-input" type="text" placeholder="Buscar cliente..." oninput="renderClients()">
   </div>
 
@@ -233,11 +293,13 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
   </div>
 </div>
 
-<!-- MODAL -->
+<!-- MODAL CLIENTE -->
 <div class="modal-overlay" id="modal" onclick="closeModalOutside(event)">
   <div class="modal">
     <div class="modal-title" id="modal-title">Novo cliente</div>
     <div class="modal-sub">Os dados serão salvos automaticamente no Firebase</div>
+
+    <div class="modal-section-title">Dados do cliente</div>
     <div class="form-row">
       <div class="form-field">
         <label class="form-label">Nome do cliente *</label>
@@ -250,8 +312,10 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
     </div>
     <div class="form-row">
       <div class="form-field">
-        <label class="form-label">Responsável interno *</label>
-        <input class="form-input" id="f-resp" placeholder="Ex: Matheus Lopes" type="text">
+        <label class="form-label">Gestor responsável *</label>
+        <select class="form-select" id="f-resp">
+          <option value="">Selecionar gestor...</option>
+        </select>
       </div>
       <div class="form-field">
         <label class="form-label">Data de início</label>
@@ -262,9 +326,61 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
       <label class="form-label">Instagram / Perfil</label>
       <input class="form-input" id="f-ig" placeholder="@perfil" type="text">
     </div>
+
+    <hr class="modal-divider">
+    <div class="modal-section-title">Tipo de implementação</div>
+    <div class="form-field">
+      <select class="form-select" id="f-impl">
+        <option value="">Não definido</option>
+        <option value="parcial">Implementação Parcial</option>
+        <option value="completa">Implementação Completa</option>
+      </select>
+    </div>
+
+    <hr class="modal-divider">
+    <div class="modal-section-title">Status</div>
+    <div class="toggle-row">
+      <div class="toggle-label">
+        Aguardando
+        <small>Cliente está aguardando para iniciar</small>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" id="f-waiting">
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+
     <div class="modal-actions">
       <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
       <button class="btn-save" onclick="saveClient()">Salvar cliente</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL GESTORES -->
+<div class="modal-overlay" id="modal-gestores" onclick="closeGestoresOutside(event)">
+  <div class="modal modal-wide">
+    <div class="modal-title">Gestores</div>
+    <div class="modal-sub">Cadastre os gestores responsáveis pelos clientes</div>
+
+    <div class="gestor-list" id="gestor-list">
+      <div class="gestor-empty">Nenhum gestor cadastrado</div>
+    </div>
+
+    <div class="gestor-form">
+      <div class="form-field">
+        <label class="form-label">Nome do gestor</label>
+        <input class="form-input" id="g-name" placeholder="Ex: Matheus Lopes" type="text">
+      </div>
+      <div class="form-field">
+        <label class="form-label">Cargo</label>
+        <input class="form-input" id="g-cargo" placeholder="Ex: Gestor de Tráfego" type="text">
+      </div>
+      <button class="btn-add-gestor" onclick="saveGestor()">+ Adicionar</button>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeGestoresModal()">Fechar</button>
     </div>
   </div>
 </div>
@@ -276,6 +392,7 @@ const TOTAL_TASKS = 20;
 const DASHBOARD_URL = 'dashboard.html';
 
 let allClients = [];
+let allGestores = [];
 let currentFilter = 'all';
 let editingId = null;
 
@@ -284,27 +401,25 @@ function slugify(str){
 }
 
 function getClientPct(c){
-  // Try tasks field first (standard format)
   if(c.tasks && Object.keys(c.tasks).length>0){
     const done = Object.values(c.tasks).filter(t=>t.status==='done').length;
     return Math.round(done/TOTAL_TASKS*100);
   }
-  // Try checklist field (alternative format from dashboard.html)
   if(c.checklist && Object.keys(c.checklist).length>0){
     const vals = Object.values(c.checklist);
     const done = vals.filter(v=>v===true||v==='done'||v?.status==='done'||v?.done===true).length;
     if(done>0) return Math.round(done/TOTAL_TASKS*100);
   }
-  // Fallback to stored progress field
   if(c.progress && c.progress>0) return c.progress;
   return 0;
 }
 
-function getClientStatus(pct){
-  if(pct===100) return {key:'ready',  label:'Liberado',   pillCls:'sp-ready',   accentCls:'ca-ready',   fillCls:'cpf-ready',   statCls:'gb-ready'};
-  if(pct>=70)   return {key:'almost', label:'Quase pronto',pillCls:'sp-almost',  accentCls:'ca-almost',  fillCls:'cpf-almost',  statCls:'gb-almost'};
-  if(pct>=20)   return {key:'progress',label:'Em andamento',pillCls:'sp-progress',accentCls:'ca-progress',fillCls:'cpf-progress',statCls:'gb-progress'};
-  return              {key:'blocked', label:'Bloqueado',   pillCls:'sp-blocked', accentCls:'ca-blocked', fillCls:'cpf-blocked', statCls:'gb-blocked'};
+function getClientStatus(pct, isWaiting){
+  if(isWaiting) return {key:'waiting', label:'Aguardando', pillCls:'sp-waiting', accentCls:'ca-waiting', fillCls:'cpf-waiting'};
+  if(pct===100) return {key:'ready',   label:'Liberado',    pillCls:'sp-ready',   accentCls:'ca-ready',   fillCls:'cpf-ready'};
+  if(pct>=70)   return {key:'almost',  label:'Quase pronto',pillCls:'sp-almost',  accentCls:'ca-almost',  fillCls:'cpf-almost'};
+  if(pct>=20)   return {key:'progress',label:'Em andamento',pillCls:'sp-progress',accentCls:'ca-progress',fillCls:'cpf-progress'};
+  return               {key:'blocked', label:'Bloqueado',   pillCls:'sp-blocked', accentCls:'ca-blocked', fillCls:'cpf-blocked'};
 }
 
 function getInitials(name){
@@ -317,14 +432,22 @@ function renderClients(){
 
   let filtered = allClients.filter(c=>{
     const pct = getClientPct(c);
-    const s = getClientStatus(pct);
-    const matchFilter = currentFilter==='all' || s.key===currentFilter || (currentFilter==='progress' && (s.key==='progress'||s.key==='almost'));
+    const s = getClientStatus(pct, c.waiting);
+    let matchFilter = false;
+    if(currentFilter === 'all')      matchFilter = true;
+    else if(currentFilter === 'waiting')  matchFilter = !!c.waiting;
+    else if(currentFilter === 'parcial')  matchFilter = c.tipoImpl === 'parcial';
+    else if(currentFilter === 'completa') matchFilter = c.tipoImpl === 'completa';
+    else if(currentFilter === 'progress') matchFilter = s.key==='progress'||s.key==='almost';
+    else matchFilter = s.key === currentFilter;
+
     const matchSearch = !search || c.name?.toLowerCase().includes(search) || c.resp?.toLowerCase().includes(search) || c.spec?.toLowerCase().includes(search);
     return matchFilter && matchSearch;
   });
 
-  // sort: blocked first, then by pct desc
   filtered.sort((a,b)=>{
+    if(a.waiting && !b.waiting) return 1;
+    if(b.waiting && !a.waiting) return -1;
     const pa=getClientPct(a), pb=getClientPct(b);
     if(pa===100&&pb!==100) return 1;
     if(pb===100&&pa!==100) return -1;
@@ -332,12 +455,17 @@ function renderClients(){
   });
 
   // update stats
-  const tots = {blocked:0,progress:0,almost:0,ready:0};
-  allClients.forEach(c=>{ tots[getClientStatus(getClientPct(c)).key]++; });
+  let waiting=0, blocked=0, progress=0;
+  allClients.forEach(c=>{
+    if(c.waiting) { waiting++; return; }
+    const k = getClientStatus(getClientPct(c), false).key;
+    if(k==='blocked') blocked++;
+    else if(k==='progress'||k==='almost') progress++;
+  });
   document.getElementById('st-total').textContent = allClients.length;
-  document.getElementById('st-blocked').textContent = tots.blocked;
-  document.getElementById('st-progress').textContent = tots.progress + tots.almost;
-  document.getElementById('st-ready').textContent = tots.ready;
+  document.getElementById('st-blocked').textContent = blocked;
+  document.getElementById('st-progress').textContent = progress;
+  document.getElementById('st-waiting').textContent = waiting;
 
   if(filtered.length===0){
     grid.innerHTML = `<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-title">${allClients.length===0?'Nenhum cliente ainda':'Nenhum resultado'}</div><div class="empty-sub">${allClients.length===0?'Clique em "+ Novo cliente" para cadastrar':'Tente outro filtro ou busca'}</div></div>`;
@@ -346,11 +474,15 @@ function renderClients(){
 
   grid.innerHTML = filtered.map(c=>{
     const pct = getClientPct(c);
-    const s = getClientStatus(pct);
+    const s = getClientStatus(pct, c.waiting);
     const ini = getInitials(c.name||'?');
     const done = Math.round(pct*TOTAL_TASKS/100);
     const dateStr = c.startDate ? new Date(c.startDate).toLocaleDateString('pt-BR') : '—';
-    const dashLink = `${DASHBOARD_URL}?cliente=${encodeURIComponent(c.id)}`;
+    const implTag = c.tipoImpl === 'parcial'
+      ? `<span class="impl-tag impl-parcial">Impl. Parcial</span>`
+      : c.tipoImpl === 'completa'
+      ? `<span class="impl-tag impl-completa">Impl. Completa</span>`
+      : '';
     return `<div class="client-card">
       <div class="card-accent ${s.accentCls}"></div>
       <div class="card-body">
@@ -372,6 +504,7 @@ function renderClients(){
           <div class="card-meta-item"><strong>${dateStr}</strong>início</div>
           ${c.ig?`<div class="card-meta-item"><strong>${c.ig}</strong>instagram</div>`:''}
         </div>
+        ${implTag ? `<div class="card-tags">${implTag}</div>` : ''}
       </div>
       <div class="card-actions">
         <button class="btn-open" onclick="openDashboard('${c.id}')">Abrir checklist</button>
@@ -388,9 +521,33 @@ function openDashboard(id){
 
 function setFilter(f, btn){
   currentFilter = f;
-  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
+  document.querySelectorAll('.filter-btn').forEach(b=>{
+    b.classList.remove('active','active-waiting','active-parcial','active-completa');
+  });
+  if(f==='waiting') btn.classList.add('active-waiting');
+  else if(f==='parcial') btn.classList.add('active-parcial');
+  else if(f==='completa') btn.classList.add('active-completa');
+  else btn.classList.add('active');
   renderClients();
+}
+
+function populateGestorSelect(selectedVal){
+  const sel = document.getElementById('f-resp');
+  sel.innerHTML = '<option value="">Selecionar gestor...</option>';
+  allGestores.sort((a,b)=>a.name.localeCompare(b.name)).forEach(g=>{
+    const opt = document.createElement('option');
+    opt.value = g.name;
+    opt.textContent = g.name + (g.cargo ? ` — ${g.cargo}` : '');
+    if(g.name === selectedVal) opt.selected = true;
+    sel.appendChild(opt);
+  });
+  if(selectedVal && !allGestores.find(g=>g.name===selectedVal)){
+    const opt = document.createElement('option');
+    opt.value = selectedVal;
+    opt.textContent = selectedVal;
+    opt.selected = true;
+    sel.appendChild(opt);
+  }
 }
 
 function openModal(id=null, e=null){
@@ -401,12 +558,17 @@ function openModal(id=null, e=null){
     const c = allClients.find(x=>x.id===id)||{};
     document.getElementById('f-name').value = c.name||'';
     document.getElementById('f-spec').value = c.spec||'';
-    document.getElementById('f-resp').value = c.resp||'';
     document.getElementById('f-date').value = c.startDate||'';
     document.getElementById('f-ig').value = c.ig||'';
+    document.getElementById('f-impl').value = c.tipoImpl||'';
+    document.getElementById('f-waiting').checked = !!c.waiting;
+    populateGestorSelect(c.resp||'');
   } else {
-    ['f-name','f-spec','f-resp','f-ig'].forEach(id=>document.getElementById(id).value='');
+    ['f-name','f-spec','f-ig'].forEach(id=>document.getElementById(id).value='');
     document.getElementById('f-date').value = new Date().toISOString().split('T')[0];
+    document.getElementById('f-impl').value = '';
+    document.getElementById('f-waiting').checked = false;
+    populateGestorSelect('');
   }
   document.getElementById('modal').classList.add('open');
   setTimeout(()=>document.getElementById('f-name').focus(),100);
@@ -417,14 +579,16 @@ function closeModalOutside(e){ if(e.target===document.getElementById('modal')) c
 
 async function saveClient(){
   const name = document.getElementById('f-name').value.trim();
-  const resp = document.getElementById('f-resp').value.trim();
   if(!name){ showToast('Informe o nome do cliente','error'); return; }
   const id = editingId || slugify(name)+'-'+Date.now().toString(36);
   const data = {
-    name, resp,
+    name,
+    resp: document.getElementById('f-resp').value,
     spec: document.getElementById('f-spec').value.trim(),
     startDate: document.getElementById('f-date').value,
     ig: document.getElementById('f-ig').value.trim(),
+    tipoImpl: document.getElementById('f-impl').value,
+    waiting: document.getElementById('f-waiting').checked,
   };
   setSyncStatus('saving');
   try {
@@ -449,6 +613,69 @@ async function confirmDelete(id, name, e){
   }
 }
 
+// --- GESTORES ---
+function renderGestores(){
+  const list = document.getElementById('gestor-list');
+  if(allGestores.length===0){
+    list.innerHTML = '<div class="gestor-empty">Nenhum gestor cadastrado</div>';
+    return;
+  }
+  list.innerHTML = allGestores.sort((a,b)=>a.name.localeCompare(b.name)).map(g=>{
+    const ini = g.name.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase();
+    return `<div class="gestor-item">
+      <div class="gestor-avatar">${ini}</div>
+      <div class="gestor-info">
+        <div class="gestor-name">${g.name}</div>
+        <div class="gestor-cargo">${g.cargo||'Sem cargo definido'}</div>
+      </div>
+      <button class="btn-del-gestor" onclick="confirmDeleteGestor('${g.id}','${(g.name||'').replace(/'/g,"\\'")}')">Remover</button>
+    </div>`;
+  }).join('');
+}
+
+function openGestoresModal(){
+  renderGestores();
+  document.getElementById('modal-gestores').classList.add('open');
+  setTimeout(()=>document.getElementById('g-name').focus(), 100);
+}
+
+function closeGestoresModal(){
+  document.getElementById('modal-gestores').classList.remove('open');
+  document.getElementById('g-name').value = '';
+  document.getElementById('g-cargo').value = '';
+}
+
+function closeGestoresOutside(e){ if(e.target===document.getElementById('modal-gestores')) closeGestoresModal(); }
+
+async function saveGestor(){
+  const name = document.getElementById('g-name').value.trim();
+  if(!name){ showToast('Informe o nome do gestor','error'); return; }
+  const id = slugify(name)+'-'+Date.now().toString(36);
+  const data = {
+    name,
+    cargo: document.getElementById('g-cargo').value.trim(),
+  };
+  try {
+    await window._fb.saveGestor(id, data);
+    document.getElementById('g-name').value = '';
+    document.getElementById('g-cargo').value = '';
+    showToast('Gestor cadastrado!','success');
+  } catch(err){
+    showToast('Erro ao salvar gestor','error');
+  }
+}
+
+async function confirmDeleteGestor(id, name){
+  if(!confirm(`Remover gestor "${name}"?`)) return;
+  try {
+    await window._fb.deleteGestor(id);
+    showToast('Gestor removido','');
+  } catch(err){
+    showToast('Erro ao remover gestor','error');
+  }
+}
+
+// --- UTILS ---
 function setSyncStatus(state){
   const dot = document.getElementById('sync-dot');
   const txt = document.getElementById('sync-txt');
@@ -464,7 +691,7 @@ function showToast(msg, type=''){
   setTimeout(()=>t.classList.remove('show'), 3000);
 }
 
-// Firebase listener
+// Firebase listeners
 window.addEventListener('fb-ready', ()=>{
   setSyncStatus('connecting');
   window._fb.listenClients(clients=>{
@@ -473,19 +700,37 @@ window.addEventListener('fb-ready', ()=>{
     setSyncStatus('ok');
     document.getElementById('loading-screen').classList.add('hidden');
   });
+  window._fb.listenGestores(gestores=>{
+    allGestores = gestores;
+    renderGestores();
+    // update dropdown if modal is open
+    if(document.getElementById('modal').classList.contains('open')){
+      const cur = document.getElementById('f-resp').value;
+      populateGestorSelect(cur);
+    }
+  });
 });
 
 // Fallback offline
 setTimeout(()=>{
-  if(document.getElementById('loading-screen').style.display!=='none'&&!document.getElementById('loading-screen').classList.contains('hidden')){
+  if(!document.getElementById('loading-screen').classList.contains('hidden')){
     document.getElementById('loading-screen').classList.add('hidden');
     setSyncStatus('error');
     showToast('Firebase não conectado — modo offline','');
   }
 },5000);
 
-// Enter key no modal
-document.addEventListener('keydown', e=>{ if(e.key==='Enter'&&document.getElementById('modal').classList.contains('open')) saveClient(); if(e.key==='Escape') closeModal(); });
+// Enter key
+document.addEventListener('keydown', e=>{
+  if(e.key==='Enter'){
+    if(document.getElementById('modal').classList.contains('open')) saveClient();
+    else if(document.getElementById('modal-gestores').classList.contains('open')) saveGestor();
+  }
+  if(e.key==='Escape'){
+    closeModal();
+    closeGestoresModal();
+  }
+});
 </script>
 <script>if("serviceWorker" in navigator){window.addEventListener("load",()=>{navigator.serviceWorker.register("/sw.js").then(()=>console.log("SW ok")).catch(e=>console.log("SW err",e));});}</script>
 </body>
