@@ -251,12 +251,22 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .sat-pts{font-size:9px;font-family:'JetBrains Mono',monospace;color:var(--text-dim)}
 
 /* ENGAJAMENTO */
-.eng-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.eng-item{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px}
-.eng-label{font-size:10px;color:var(--text-sec);margin-bottom:8px}
-.eng-select{width:100%;background:var(--surface3);border:1px solid var(--border);border-radius:5px;color:var(--text);font-family:'Inter',sans-serif;font-size:12px;padding:6px 10px;outline:none;cursor:pointer}
-.eng-select:focus{border-color:var(--amber)}
-.eng-select option{background:var(--surface3)}
+.eng-score-wrap{display:flex;align-items:center;gap:14px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:13px 16px;margin-bottom:14px}
+.eng-score-num{font-family:'Montserrat',sans-serif;font-size:24px;font-weight:800;min-width:40px;line-height:1}
+.eng-score-right{flex:1;display:flex;flex-direction:column;gap:5px}
+.eng-score-bar-outer{height:5px;background:var(--surface3);border-radius:3px;overflow:hidden}
+.eng-score-bar-inner{height:5px;border-radius:3px;transition:width .4s,background .3s}
+.eng-score-label{font-size:11px;color:var(--text-sec)}
+.eng-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.eng-item{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:13px 14px}
+.eng-label{font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px}
+.eng-hint{font-size:11px;color:var(--text-sec);margin-bottom:10px;line-height:1.4}
+.eng-btns{display:flex;gap:6px}
+.eng-btn{flex:1;padding:8px 4px;border-radius:6px;border:1.5px solid var(--border);background:var(--surface3);cursor:pointer;font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--text-sec);transition:all .15s;text-align:center;line-height:1.2}
+.eng-btn:hover{border-color:var(--amber-border);background:var(--amber-dim);color:var(--amber)}
+.eng-btn.eg{background:var(--green-dim);border-color:var(--green-border);color:var(--green)}
+.eng-btn.ey{background:var(--yellow-dim);border-color:var(--yellow-border);color:var(--yellow)}
+.eng-btn.er{background:var(--red-dim);border-color:var(--red-border);color:var(--red)}
 
 /* RECURSOS */
 .resources-list{display:flex;flex-direction:column;gap:8px}
@@ -958,8 +968,14 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
             <div class="sc-sub" id="eng-week-label">Semana atual</div>
           </div>
           <div class="sc-body">
+            <div id="eng-score-wrap" class="eng-score-wrap" style="display:none">
+              <div class="eng-score-num" id="eng-score-num">—</div>
+              <div class="eng-score-right">
+                <div class="eng-score-bar-outer"><div class="eng-score-bar-inner" id="eng-score-bar" style="width:0%"></div></div>
+                <div class="eng-score-label" id="eng-score-label">Preencha os indicadores abaixo</div>
+              </div>
+            </div>
             <div class="eng-grid" id="eng-grid"></div>
-            <button class="btn-primary" style="margin-top:16px" onclick="saveEngajamento()">Salvar engajamento</button>
           </div>
         </div>
         <div class="section-card" id="cp2-decision-card" style="display:none">
@@ -1217,11 +1233,16 @@ for(let w=9;w<=24;w++){
 }
 
 const ENG_ITEMS = [
-  {id:'tutorias',label:'Participação nas tutorias',options:['Presente','Parcial','Ausente']},
-  {id:'crm',label:'Uso do CRM',options:['Usando','Parcial','Não usando']},
-  {id:'flashboard',label:'Preenchimento Flashboard',options:['Diário','Irregular','Não preenche']},
-  {id:'script',label:'Aplicação do script',options:['Aplicando','Parcial','Não aplicando']},
-  {id:'tarefas',label:'Entrega das tarefas',options:['Entregou tudo','Parcial','Não entregou']},
+  {id:'tutorias', label:'Participação nas tutorias', hint:'Compareceu e participou ativamente da tutoria?',
+   opts:['Presente','Parcial','Ausente'], cls:['eg','ey','er'], scores:[2,1,0]},
+  {id:'crm', label:'Uso do CRM', hint:'Está registrando todos os atendimentos no CRM?',
+   opts:['Usando','Parcial','Não usando'], cls:['eg','ey','er'], scores:[2,1,0]},
+  {id:'flashboard', label:'Preenchimento Flashboard', hint:'Preenche os indicadores com frequência?',
+   opts:['Diário','Irregular','Não preenche'], cls:['eg','ey','er'], scores:[2,1,0]},
+  {id:'script', label:'Aplicação do script', hint:'Seguiu o script de atendimento nas consultas?',
+   opts:['Aplicando','Parcial','Não aplicando'], cls:['eg','ey','er'], scores:[2,1,0]},
+  {id:'tarefas', label:'Entrega das tarefas', hint:'Entregou tudo o que foi combinado na semana?',
+   opts:['Entregou tudo','Parcial','Não entregou'], cls:['eg','ey','er'], scores:[2,1,0]},
 ];
 
 // ── STATE ──
@@ -1654,18 +1675,41 @@ function renderCalls(){
     </div>`).join('');
 }
 
+function engScore(eng){
+  let total=0,filled=0;
+  ENG_ITEMS.forEach(item=>{
+    const v=eng[item.id]; if(!v) return;
+    const idx=item.opts.indexOf(v); if(idx<0) return;
+    total+=item.scores[idx]; filled++;
+  });
+  return {total,filled,max:ENG_ITEMS.length*2};
+}
+
 function renderEngajamento(){
   const grid=document.getElementById('eng-grid'); if(!grid) return;
-  const eng=(S.engajamento&&S.engajamento[getW()])||{};
+  const w=getW();
+  const eng=(S.engajamento&&S.engajamento[w])||{};
   grid.innerHTML=ENG_ITEMS.map(item=>`
     <div class="eng-item">
       <div class="eng-label">${item.label}</div>
-      <select class="eng-select" id="eng-${item.id}">
-        ${item.options.map(o=>`<option value="${o}" ${eng[item.id]===o?'selected':''}>${o}</option>`).join('')}
-      </select>
+      <div class="eng-hint">${item.hint}</div>
+      <div class="eng-btns">
+        ${item.opts.map((o,i)=>`<button class="eng-btn${eng[item.id]===o?' '+item.cls[i]:''}" onclick="selectEng('${item.id}','${o}')">${o}</button>`).join('')}
+      </div>
     </div>`).join('');
-  const w=getW();
   const el=document.getElementById('eng-week-label'); if(el) el.textContent=`Semana ${w} do programa`;
+  // score bar
+  const sc=engScore(eng);
+  const wrap=document.getElementById('eng-score-wrap');
+  if(wrap){ wrap.style.display=sc.filled>0?'flex':'none'; }
+  if(sc.filled>0){
+    const pct=Math.round((sc.total/sc.max)*100);
+    const col=pct>=70?'var(--green)':pct>=40?'var(--yellow)':'var(--red)';
+    const lbl=pct>=70?'Engajamento alto':pct>=40?'Engajamento médio':'Engajamento baixo';
+    const numEl=document.getElementById('eng-score-num'); if(numEl){numEl.textContent=pct+'%';numEl.style.color=col;}
+    const barEl=document.getElementById('eng-score-bar'); if(barEl){barEl.style.width=pct+'%';barEl.style.background=col;}
+    const lblEl=document.getElementById('eng-score-label'); if(lblEl) lblEl.textContent=lbl+' — '+sc.total+'/'+sc.max+' pts';
+  }
   const decCard=document.getElementById('cp2-decision-card');
   if(decCard) decCard.style.display=(S.checkpoint||1)>=2?'block':'none';
   if((S.checkpoint||1)>=2){
@@ -1674,6 +1718,15 @@ function renderEngajamento(){
     ['renova','upgrade','encerra'].forEach(k=>{ const b=document.getElementById('dec-'+k); if(b) b.classList.toggle('selected',dec.choice===(k==='renova'?'renova17k':k==='upgrade'?'upgrade42k':'encerra')); });
     const just=document.getElementById('decision-just'); if(just) just.value=dec.justificativa||'';
   }
+}
+
+async function selectEng(itemId, val){
+  const w=getW();
+  if(!S.engajamento) S.engajamento={};
+  if(!S.engajamento[w]) S.engajamento[w]={};
+  S.engajamento[w][itemId]=val;
+  renderEngajamento();
+  await save({engajamento:S.engajamento});
 }
 
 function renderAlertPage(){
@@ -1794,11 +1847,6 @@ async function saveCall(){
   await save({calls:S.calls}); closeCallModal(); showToast('Call registrada!','success'); renderCalls();
 }
 
-async function saveEngajamento(){
-  const w=getW(); if(!S.engajamento) S.engajamento={};
-  const eng={}; ENG_ITEMS.forEach(item=>{ const el=document.getElementById('eng-'+item.id); if(el) eng[item.id]=el.value; });
-  S.engajamento[w]=eng; await save({engajamento:S.engajamento}); showToast('Engajamento salvo!','success');
-}
 
 function selectDecision(choice){ currentDecision=choice; ['renova','upgrade','encerra'].forEach(k=>{ const b=document.getElementById('dec-'+k); if(b) b.classList.toggle('selected',choice===(k==='renova'?'renova17k':k==='upgrade'?'upgrade42k':'encerra')); }); }
 async function saveDecision(){ if(!currentDecision){ showToast('Selecione uma decisão','error'); return; } const just=document.getElementById('decision-just').value; S.cp2Decision={choice:currentDecision,justificativa:just,date:new Date().toLocaleDateString('pt-BR'),savedAt:new Date().toISOString()}; await save({cp2Decision:S.cp2Decision}); showToast('Decisão registrada!','success'); }
