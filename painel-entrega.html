@@ -67,7 +67,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .content{position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:24px 28px 60px}
 
 /* STATS */
-.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.stats-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px}
 .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 18px;position:relative;overflow:hidden}
 .stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
 .sc-total::before{background:var(--amber)}
@@ -244,7 +244,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .tut-field-label{display:block;font-size:10px;color:var(--text-sec);font-weight:600;margin-bottom:3px;text-transform:uppercase;letter-spacing:.06em}
 
 @media(max-width:768px){
-  .stats-row{grid-template-columns:repeat(2,1fr)}
+  .stats-row{grid-template-columns:repeat(3,1fr)}
   .topbar{padding:0 12px;gap:8px;height:auto;min-height:56px;flex-wrap:wrap}
   .content{padding:16px 14px 60px}
   .t-sub{display:none}
@@ -308,6 +308,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
     <div class="stat-card sc-alert"><div class="stat-label">Com alerta</div><div class="stat-val sv-red" id="st-alerts">0</div><div class="stat-sub">tarefas não cumpridas</div></div>
     <div class="stat-card sc-attention"><div class="stat-label">Em atenção</div><div class="stat-val sv-yellow" id="st-attention">0</div><div class="stat-sub">health score 60–79</div></div>
     <div class="stat-card sc-healthy"><div class="stat-label">Saudáveis</div><div class="stat-val sv-green" id="st-healthy">0</div><div class="stat-sub">sem alertas esta semana</div></div>
+    <div class="stat-card" style="border-color:rgba(34,197,94,0.25)"><div class="stat-card" style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--green)"></div><div class="stat-label">Bônus desbloqueado</div><div class="stat-val sv-green" id="st-bonus">R$ 0</div><div class="stat-sub" id="st-bonus-sub">0 marcos atingidos</div></div>
   </div>
 
   <div class="alert-section" id="alert-section">
@@ -462,6 +463,17 @@ function renderAll(){
   document.getElementById('st-attention').textContent = tots.attention;
   document.getElementById('st-healthy').textContent = tots.healthy;
 
+  const BONUS_MAP = {1:200,2:300,3:400,4:500};
+  let totalBonus = 0, totalMarcos = 0;
+  allClients.forEach(c=>{
+    const ms = c.marcos||{};
+    [1,2,3,4].forEach(n=>{ if(ms[n]?.achieved){ totalBonus+=BONUS_MAP[n]; totalMarcos++; } });
+  });
+  const bonusEl = document.getElementById('st-bonus');
+  const bonusSubEl = document.getElementById('st-bonus-sub');
+  if(bonusEl) bonusEl.textContent = 'R$ '+totalBonus.toLocaleString('pt-BR');
+  if(bonusSubEl) bonusSubEl.textContent = totalMarcos+' marco'+(totalMarcos!==1?'s':'')+' atingido'+(totalMarcos!==1?'s':'');
+
   const totalAlerts = allClients.reduce((a,c)=>a+getClientAlerts(c).length,0);
   const alertBtn = document.getElementById('alert-topbtn');
   const alertCount = document.getElementById('alert-topbtn-count');
@@ -596,13 +608,22 @@ function renderClients(){
           <div class="c-meta-item"><strong>${startDate}</strong>início</div>
         </div>
         <div class="health-chip"><div class="h-dot" style="background:${h.dotColor}"></div>Health Score: ${score}</div>
+        ${(()=>{
+          const ms = c.marcos||{};
+          const BONUS_MAP = {1:200,2:300,3:400,4:500};
+          const totalB = [1,2,3,4].filter(n=>ms[n]?.achieved).reduce((s,n)=>s+BONUS_MAP[n],0);
+          const dots = [1,2,3,4].map(n=>{
+            const ok = ms[n]?.achieved;
+            return `<span style="padding:2px 9px;border-radius:4px;font-size:9px;font-weight:700;font-family:'Montserrat',sans-serif;background:${ok?'var(--amber-dim)':'rgba(255,255,255,0.04)'};color:${ok?'var(--amber)':'var(--text-dim)'};border:0.5px solid ${ok?'var(--amber-border)':'var(--border)'}">M${n}</span>`;
+          }).join('');
+          return `<div style="display:flex;align-items:center;gap:4px;margin-top:8px">${dots}<span style="margin-left:auto;font-size:10px;font-weight:600;color:${totalB?'var(--green)':'var(--text-dim)'};font-family:'JetBrains Mono',monospace">${totalB?'R$ '+totalB:'—'}</span></div>`;
+        })()}
       </div>
       ${alertBanner}
       ${fbBanner}
       <div class="c-actions" onclick="event.stopPropagation()">
         <button class="btn-open-dash" onclick="event.stopPropagation();openDashboard('${c.id}')">Abrir dashboard</button>
         <button class="btn-view-client" onclick="event.stopPropagation();openClientView('${c.id}')">Visão cliente</button>
-        <button class="btn-view-client" onclick="event.stopPropagation();openCronogramaModal('${c.id}','${(c.name||'').replace(/'/g,'')}')">Cronograma</button>
         <button class="btn-edit-client" onclick="openModal('${c.id}')">Editar</button>
         <button class="btn-del-client" onclick="confirmDelete('${c.id}','${(c.name||'').replace(/'/g,'')}') " title="Excluir">✕</button>
       </div>

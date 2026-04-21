@@ -235,10 +235,20 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .health-pill{display:inline-block;padding:3px 12px;border-radius:10px;font-size:10px;font-weight:600;margin-top:8px;font-family:'Montserrat',sans-serif}
 .health-bars{display:flex;flex-direction:column;gap:12px;padding:8px 0}
 .hbar-row{display:flex;align-items:center;gap:10px}
-.hbar-label{font-size:11px;color:var(--text-sec);min-width:140px;flex-shrink:0}
+.hbar-label{font-size:11px;color:var(--text-sec);min-width:110px;flex-shrink:0}
 .hbar-bg{flex:1;height:5px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden}
 .hbar-fill{height:100%;border-radius:3px;transition:width .5s}
 .hbar-val{font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--text-sec);min-width:36px;text-align:right}
+.hbar-auto-tag{font-size:9px;padding:1px 6px;border-radius:3px;background:rgba(255,255,255,0.06);color:var(--text-sec);white-space:nowrap;flex-shrink:0}
+/* SAT BUTTONS */
+.sat-btns{display:flex;gap:6px;margin-bottom:14px}
+.sat-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 4px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface2);cursor:pointer;transition:all .18s;font-family:inherit}
+.sat-btn:hover{border-color:var(--amber-border);background:var(--amber-dim)}
+.sat-btn.selected{border-color:var(--amber);background:var(--amber-dim)}
+.sat-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;font-family:'Montserrat',sans-serif;background:var(--surface3);transition:background .18s}
+.sat-btn.selected .sat-num{background:var(--amber);color:#000}
+.sat-lbl{font-size:9px;color:var(--text-sec);text-align:center;font-family:'Montserrat',sans-serif;font-weight:600;letter-spacing:.03em;line-height:1.3}
+.sat-pts{font-size:9px;font-family:'JetBrains Mono',monospace;color:var(--text-dim)}
 
 /* ENGAJAMENTO */
 .eng-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
@@ -290,6 +300,38 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .btn-save-decision{margin-top:10px;padding:8px 20px;background:var(--amber);color:#000;border:none;border-radius:5px;font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;cursor:pointer;letter-spacing:.04em}
 .btn-save-decision:hover{opacity:.88}
 
+/* MARCOS */
+.marcos-summary{background:var(--surface);border:1px solid var(--amber-border);border-radius:12px;padding:20px 24px;display:flex;align-items:center;gap:24px;margin-bottom:20px;position:relative;overflow:hidden;flex-wrap:wrap}
+.marcos-summary::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,rgba(245,166,35,0),var(--amber),rgba(245,166,35,0))}
+.ms-total-bonus{font-size:36px;font-weight:800;font-family:'Montserrat',sans-serif;color:var(--amber);line-height:1}
+.ms-total-lbl{font-size:9px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.12em;margin-top:3px}
+.ms-progress{flex:1;min-width:180px}
+.ms-prog-text{font-size:12px;color:var(--text-sec);margin-bottom:6px}
+.ms-prog-bar{height:5px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden}
+.ms-prog-fill{height:100%;background:var(--amber);border-radius:3px;transition:width .5s}
+.marco-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 22px;margin-bottom:12px;position:relative;overflow:hidden;transition:border-color .25s}
+.marco-card.achieved{border-color:var(--amber-border)}
+.marco-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--border);transition:background .25s}
+.marco-card.achieved::before{background:linear-gradient(90deg,var(--amber),rgba(245,166,35,0.2))}
+.marco-top{display:flex;align-items:flex-start;gap:14px;margin-bottom:14px}
+.marco-num{width:40px;height:40px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;font-family:'Montserrat',sans-serif;color:var(--text-sec);flex-shrink:0;transition:all .25s}
+.marco-card.achieved .marco-num{border-color:var(--amber);background:var(--amber);color:#000}
+.marco-info{flex:1}
+.marco-title{font-size:15px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--text);margin-bottom:5px;transition:color .25s}
+.marco-card.achieved .marco-title{color:var(--amber)}
+.marco-vendas-tag{display:inline-flex;font-size:10px;font-weight:600;padding:2px 9px;border-radius:4px;background:var(--surface2);color:var(--text-sec);border:0.5px solid var(--border);font-family:'Montserrat',sans-serif}
+.marco-bonus{text-align:right;flex-shrink:0}
+.marco-bonus-val{font-size:24px;font-weight:800;font-family:'Montserrat',sans-serif;color:var(--text-sec);line-height:1;transition:color .25s}
+.marco-card.achieved .marco-bonus-val{color:var(--green)}
+.marco-bonus-lbl{font-size:9px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.1em;margin-top:3px}
+.marco-criterio{font-size:12px;color:var(--text-sec);line-height:1.6;padding:10px 12px;background:var(--surface2);border-radius:6px;margin-bottom:14px;border-left:2px solid var(--border)}
+.marco-card.achieved .marco-criterio{border-left-color:var(--amber-border)}
+.marco-footer{display:flex;align-items:center;gap:10px}
+.btn-atingir{padding:8px 18px;border-radius:6px;font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;cursor:pointer;transition:all .18s;border:1px solid var(--border);background:var(--surface2);color:var(--text-sec)}
+.btn-atingir:hover{border-color:var(--amber);color:var(--amber);background:var(--amber-dim)}
+.btn-atingido{padding:8px 18px;border-radius:6px;font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;background:var(--green-dim);color:var(--green);border:1px solid var(--green-border);display:flex;align-items:center;gap:6px;cursor:default}
+.btn-desfazer{font-size:10px;color:var(--text-dim);background:transparent;border:none;cursor:pointer;padding:4px 8px;border-radius:4px;transition:color .15s}
+.btn-desfazer:hover{color:var(--red)}
 /* CRONOGRAMA */
 .cron-flow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 18px;margin-bottom:20px}
 .cron-flow-tag{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);font-weight:700;margin-right:10px;white-space:nowrap;font-family:'Montserrat',sans-serif}
@@ -426,6 +468,32 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .fb-funnel-lbl{font-size:9px;font-weight:600;color:var(--text-sec);text-transform:uppercase;letter-spacing:.06em}
 .fb-funnel-pct{font-size:10px;font-weight:700;color:var(--amber)}
 .fb-funnel-arr{font-size:16px;color:var(--border);margin:0 2px}
+/* ROTINA DO DIA */
+.rotina-card{background:linear-gradient(135deg,rgba(245,166,35,0.07),rgba(245,166,35,0.02));border:1px solid var(--amber-border);border-radius:10px;padding:16px 18px;margin-bottom:16px}
+.rotina-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:12px}
+.rotina-title{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:var(--amber);font-family:'Montserrat',sans-serif;margin-bottom:2px}
+.rotina-sub{font-size:11px;color:var(--text-sec)}
+.rotina-progress{text-align:right;flex-shrink:0}
+.rotina-prog-text{font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--text-sec);margin-bottom:4px}
+.rotina-prog-bar{width:80px;height:4px;background:rgba(245,166,35,0.12);border-radius:2px;overflow:hidden;margin-left:auto}
+.rotina-prog-fill{height:100%;background:var(--amber);border-radius:2px;transition:width .4s}
+.rotina-items{display:flex;flex-direction:column;gap:5px}
+.rotina-item{display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--surface);border-radius:6px;border:0.5px solid var(--border);transition:border-color .15s}
+.rotina-item:hover{border-color:var(--amber-border)}
+.rotina-item.ri-done-row{opacity:.5}
+.rotina-item.ri-done-row .rotina-item-name{text-decoration:line-through;color:var(--text-dim)}
+.rotina-item-check{width:16px;height:16px;border-radius:3px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .18s}
+.ri-check-done{background:var(--green);border:none}
+.ri-check-pending{background:transparent;border:1.5px solid var(--border)}
+.rotina-item-name{font-size:12px;color:var(--text);flex:1}
+.rotina-item-resp{font-size:9px;padding:2px 8px;border-radius:4px;background:var(--amber-dim);color:var(--amber);border:0.5px solid var(--amber-border);font-family:'Montserrat',sans-serif;font-weight:600;white-space:nowrap}
+/* ONBOARDING */
+.onb-step{display:flex;gap:12px;align-items:flex-start;padding:10px 12px;background:var(--surface2);border-radius:8px;border:0.5px solid var(--border)}
+.onb-num{width:22px;height:22px;border-radius:50%;background:var(--amber);color:#000;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;font-family:'Montserrat',sans-serif;flex-shrink:0;margin-top:1px}
+.onb-title{font-size:12px;font-weight:600;color:var(--text);margin-bottom:3px}
+.onb-desc{font-size:11px;color:var(--text-sec);line-height:1.5}
+.btn-help{display:flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:var(--surface2);border:1px solid var(--border);color:var(--text-sec);font-size:12px;font-weight:700;cursor:pointer;font-family:'Montserrat',sans-serif;transition:all .15s;flex-shrink:0}
+.btn-help:hover{border-color:var(--amber);color:var(--amber)}
 /* TUTORIAS */
 .tut-list{display:flex;flex-direction:column;gap:10px}
 .tut-event{display:flex;border-radius:12px;overflow:hidden;border:1px solid var(--border);transition:border-color .2s}
@@ -495,8 +563,8 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
       </div>
       <div class="logo-tag">System Digital</div>
     </div>
-    <div class="sb-section">Dashboard</div>
     <nav class="nav">
+      <div class="sb-section" style="padding-top:10px">Essencial</div>
       <button class="nav-btn active" onclick="showPage('visao',this,'mnav-visao')">
         <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="2" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/></svg>
         Visão geral
@@ -510,6 +578,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
         <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="11" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M5 1v3M11 1v3M2 7h12" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
         Semanas
       </button>
+      <div class="sb-section" style="margin-top:8px">Complementar</div>
       <button class="nav-btn" onclick="showPage('metas',this,'mnav-metas')">
         <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M3 13V9M6 13V6M9 13V4M12 13V8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
         Metas e faturamento
@@ -527,8 +596,8 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
         Engajamento
       </button>
       <button class="nav-btn" onclick="showPage('cronograma',this,'mnav-cron')">
-        <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M2 8h8M2 12h5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="13" cy="11" r="2.5" stroke="currentColor" stroke-width="1.3"/><path d="M13 10v1.5l1 .5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>
-        Cronograma
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M8 2L9.5 5.5L13 6l-2.5 2.5.5 3.5L8 10.5 5 12l.5-3.5L3 6l3.5-.5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+        Marcos
       </button>
       <button class="nav-btn" onclick="showPage('tutorias',this,'mnav-tut')">
         <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="11" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M5 1v3M11 1v3M2 7h12" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><path d="M5 10.5l1.5 1.5L11 9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -560,7 +629,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
       <div class="tb-sep"></div>
       <div class="tb-title" id="tb-title">Carregando...</div>
       <div class="tb-sub" id="tb-sub">Liberação de Tráfego</div>
-      <div class="tb-right"><a id="view-client-btn" class="btn-view-client-tb" href="#" target="_blank"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="4.5" r="2" stroke="currentColor" stroke-width="1.3"/><path d="M1 10.5c0-2.8 2.2-5 5-5s5 2.2 5 5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>Visão do cliente</a>
+      <div class="tb-right"><button class="btn-help" onclick="openOnboarding()" title="Como usar">?</button><a id="view-client-btn" class="btn-view-client-tb" href="#" target="_blank"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="4.5" r="2" stroke="currentColor" stroke-width="1.3"/><path d="M1 10.5c0-2.8 2.2-5 5-5s5 2.2 5 5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>Visão do cliente</a>
         <div class="tb-badge tbb-amber" id="tb-week">S— / 24</div>
         <div class="tb-badge tbb-red" id="tb-alerts" style="display:none">0 alertas</div>
       </div>
@@ -571,6 +640,24 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
       <!-- PAGE: VISÃO GERAL -->
       <div id="page-visao" class="page active">
         <div class="brand-rail"></div>
+
+        <!-- ROTINA DO DIA -->
+        <div class="rotina-card" id="rotina-card">
+          <div class="rotina-header">
+            <div>
+              <div class="rotina-title">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="var(--amber)" stroke-width="1.3"/><path d="M7 4v3.5l2 1" stroke="var(--amber)" stroke-width="1.3" stroke-linecap="round"/></svg>
+                O que fazer hoje
+              </div>
+              <div class="rotina-sub" id="rotina-sub">Carregando...</div>
+            </div>
+            <div class="rotina-progress">
+              <div class="rotina-prog-text" id="rotina-prog-text">0/0 concluídas</div>
+              <div class="rotina-prog-bar"><div class="rotina-prog-fill" id="rotina-prog-fill" style="width:0%"></div></div>
+            </div>
+          </div>
+          <div class="rotina-items" id="rotina-items"></div>
+        </div>
 
         <div id="alert-banner" class="alert-banner">
           <div class="ab-hdr">
@@ -632,47 +719,73 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 
         <div class="section-card">
           <div class="sc-header">
-            <div class="sc-title">Customer Health Score</div>
+            <div class="sc-title">Health Score semanal</div>
             <div class="sc-sub" id="health-score-week">semana atual</div>
           </div>
           <div class="sc-body">
             <div class="health-section">
               <div class="health-num-wrap">
                 <div class="health-num" id="health-num">—</div>
-                <div class="health-label">Health Score</div>
+                <div class="health-label">de 100</div>
                 <div class="health-pill" id="health-pill">—</div>
               </div>
               <div class="health-bars">
                 <div class="hbar-row">
-                  <div class="hbar-label">Execução (40%)</div>
+                  <div class="hbar-label">Execução</div>
+                  <span class="hbar-auto-tag">Auto</span>
                   <div class="hbar-bg"><div class="hbar-fill" id="hbar-exec" style="width:0%;background:var(--amber)"></div></div>
                   <div class="hbar-val" id="hval-exec">0pt</div>
                 </div>
                 <div class="hbar-row">
-                  <div class="hbar-label">Funil (40%)</div>
+                  <div class="hbar-label">Funil</div>
+                  <span class="hbar-auto-tag">Auto</span>
                   <div class="hbar-bg"><div class="hbar-fill" id="hbar-funil" style="width:0%;background:var(--blue)"></div></div>
                   <div class="hbar-val" id="hval-funil">0pt</div>
                 </div>
                 <div class="hbar-row">
-                  <div class="hbar-label">Satisfação (20%)</div>
+                  <div class="hbar-label" style="color:var(--amber)">Satisfação</div>
+                  <span class="hbar-auto-tag" style="background:var(--amber-dim);color:var(--amber);border:0.5px solid var(--amber-border)">CS preenche</span>
                   <div class="hbar-bg"><div class="hbar-fill" id="hbar-sat" style="width:0%;background:var(--green)"></div></div>
                   <div class="hbar-val" id="hval-sat">0pt</div>
                 </div>
               </div>
             </div>
+
             <div class="chart-wrap" id="hs-chart-wrap" style="display:none;margin-top:16px;height:160px"><canvas id="hs-chart"></canvas></div>
-            <div style="margin-top:14px;border-top:1px solid var(--border);padding-top:14px">
-              <div class="form-grid-2">
-                <div class="form-field">
-                  <label class="form-label">Pontos do funil (0–40)</label>
-                  <input class="form-input" type="number" min="0" max="40" id="funil-input" placeholder="Ex: 28" oninput="updateHealthScore()">
-                </div>
-                <div class="form-field">
-                  <label class="form-label">Pontos de satisfação (0–20)</label>
-                  <input class="form-input" type="number" min="0" max="20" id="sat-input" placeholder="Ex: 16" oninput="updateHealthScore()">
-                </div>
+
+            <div style="margin-top:16px;border-top:1px solid var(--border);padding-top:16px">
+              <div style="font-size:11px;color:var(--text-sec);line-height:1.6;margin-bottom:12px;padding:10px 12px;background:var(--surface2);border-radius:6px;border-left:2px solid var(--amber)">
+                <strong style="color:var(--text)">Pergunta para o cliente esta semana:</strong><br>
+                "Em uma escala de 1 a 5, como você está se sentindo com os resultados do programa?"
               </div>
-              <button class="btn-primary" onclick="saveHealthScore()" style="margin-top:4px">Salvar Health Score</button>
+              <div class="sat-btns" id="sat-buttons">
+                <button class="sat-btn" data-val="4" onclick="selectSat(4)">
+                  <div class="sat-num">1</div>
+                  <div class="sat-lbl">Muito ruim</div>
+                  <div class="sat-pts">4pt</div>
+                </button>
+                <button class="sat-btn" data-val="8" onclick="selectSat(8)">
+                  <div class="sat-num">2</div>
+                  <div class="sat-lbl">Ruim</div>
+                  <div class="sat-pts">8pt</div>
+                </button>
+                <button class="sat-btn" data-val="12" onclick="selectSat(12)">
+                  <div class="sat-num">3</div>
+                  <div class="sat-lbl">Regular</div>
+                  <div class="sat-pts">12pt</div>
+                </button>
+                <button class="sat-btn" data-val="16" onclick="selectSat(16)">
+                  <div class="sat-num">4</div>
+                  <div class="sat-lbl">Bom</div>
+                  <div class="sat-pts">16pt</div>
+                </button>
+                <button class="sat-btn" data-val="20" onclick="selectSat(20)">
+                  <div class="sat-num">5</div>
+                  <div class="sat-lbl">Otimo</div>
+                  <div class="sat-pts">20pt</div>
+                </button>
+              </div>
+              <button class="btn-primary" onclick="saveHealthScore()">Salvar Health Score desta semana</button>
             </div>
           </div>
         </div>
@@ -700,10 +813,10 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
         <div class="section-card">
           <div class="sc-header" style="cursor:pointer" onclick="showPage('cronograma',document.querySelector('[onclick*=mnav-cron]'),'mnav-cron')">
             <div>
-              <div class="sc-title">Cronograma</div>
+              <div class="sc-title">Marcos de resultado</div>
               <div class="sc-sub" id="cron-prev-sub">—</div>
             </div>
-            <span style="margin-left:auto;font-size:11px;color:var(--amber);font-weight:600">Ver completo →</span>
+            <span style="margin-left:auto;font-size:11px;color:var(--amber);font-weight:600">Ver todos →</span>
           </div>
           <div class="sc-body" id="cron-preview-body"></div>
         </div>
@@ -917,8 +1030,8 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
       Calls
     </button>
     <button class="mobile-nav-btn" id="mnav-cron" onclick="showPage('cronograma',this,'mnav-cron')">
-      <svg viewBox="0 0 16 16" fill="none"><path d="M2 4h12M2 8h8M2 12h5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="13" cy="11" r="2.5" stroke="currentColor" stroke-width="1.3"/><path d="M13 10v1.5l1 .5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>
-      Cronograma
+      <svg viewBox="0 0 16 16" fill="none"><path d="M8 2L9.5 5.5L13 6l-2.5 2.5.5 3.5L8 10.5 5 12l.5-3.5L3 6l3.5-.5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+      Marcos
     </button>
     <button class="mobile-nav-btn" id="mnav-tut" onclick="showPage('tutorias',this,'mnav-tut')">
       <svg viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="11" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M5 1v3M11 1v3M2 7h12" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><path d="M5 10.5l1.5 1.5L11 9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -981,6 +1094,89 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
     <div class="modal-actions">
       <button class="btn-cancel" onclick="closeMetaModal()">Cancelar</button>
       <button class="btn-primary" onclick="saveMeta()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL MARCO -->
+<div class="modal-overlay" id="marco-modal" onclick="closeMarcoModalOutside(event)">
+  <div class="modal-box" style="max-width:440px">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+      <div style="width:32px;height:32px;border-radius:8px;background:var(--amber-dim);border:1px solid var(--amber-border);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M7.5 1.5L9 5.5L13.5 6l-3.5 3 1 4.5L7.5 11 4 13.5l1-4.5L1.5 6 6 5.5z" stroke="var(--amber)" stroke-width="1.3" stroke-linejoin="round"/></svg>
+      </div>
+      <div>
+        <div class="modal-title" id="marco-modal-title">Registrar marco</div>
+        <div style="font-size:10px;color:var(--text-sec)" id="marco-modal-bonus"></div>
+      </div>
+    </div>
+    <div style="font-size:11px;color:var(--text-sec);background:var(--surface2);border-radius:6px;padding:10px 12px;margin:12px 0;border-left:2px solid var(--amber-border)" id="marco-modal-criterio"></div>
+    <div class="form-field">
+      <label class="form-label">Vendas comprovadas</label>
+      <input class="form-input" type="number" min="0" id="marco-vendas-input" placeholder="Quantas vendas o cliente realizou?">
+    </div>
+    <div class="form-field">
+      <label class="form-label">Responsável pelo registro</label>
+      <input class="form-input" type="text" id="marco-resp-input" placeholder="Seu nome">
+    </div>
+    <div class="form-field">
+      <label class="form-label">Observação / evidência <span style="color:var(--text-dim);font-weight:400;text-transform:none;letter-spacing:0">(opcional)</span></label>
+      <textarea class="obs-field" id="marco-obs-input" placeholder="Descreva a evidência, contexto ou link de comprovação..."></textarea>
+    </div>
+    <div style="padding:10px 12px;background:rgba(245,166,35,0.06);border:0.5px solid var(--amber-border);border-radius:6px;margin-bottom:4px">
+      <div style="font-size:10px;color:var(--amber);font-weight:600;font-family:'Montserrat',sans-serif;margin-bottom:4px">Confirmo que:</div>
+      <div style="font-size:11px;color:var(--text-sec);line-height:1.6">O cliente utilizou a metodologia e a esteira de produtos, e está adimplente no momento do registro.</div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeMarcoModal()">Cancelar</button>
+      <button class="btn-primary" onclick="confirmarMarco()">Confirmar marco</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ONBOARDING -->
+<div class="modal-overlay" id="onboarding-modal">
+  <div class="modal-box" style="max-width:480px">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+      <div style="width:32px;height:32px;border-radius:8px;background:var(--amber-dim);border:1px solid var(--amber-border);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="var(--amber)" stroke-width="1.3"/><path d="M8 5v4M8 11v.5" stroke="var(--amber)" stroke-width="1.3" stroke-linecap="round"/></svg>
+      </div>
+      <div class="modal-title">Como usar o Dashboard de Entrega</div>
+    </div>
+    <div class="modal-sub">Siga estes 4 passos toda semana para usar o sistema corretamente.</div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px">
+      <div class="onb-step">
+        <div class="onb-num">1</div>
+        <div>
+          <div class="onb-title">Acesse sempre pelo Painel de Entrega</div>
+          <div class="onb-desc">Nunca salve o link direto de um cliente. Entre pelo painel principal e clique no cliente para abrir o dashboard correto.</div>
+        </div>
+      </div>
+      <div class="onb-step">
+        <div class="onb-num">2</div>
+        <div>
+          <div class="onb-title">Veja "O que fazer hoje" na tela inicial</div>
+          <div class="onb-desc">O card no topo da Visão Geral mostra as tarefas pendentes da semana atual. Comece por ele toda vez que abrir o sistema.</div>
+        </div>
+      </div>
+      <div class="onb-step">
+        <div class="onb-num">3</div>
+        <div>
+          <div class="onb-title">Marque as tarefas conforme concluir</div>
+          <div class="onb-desc">Clique no checkbox ao lado de cada tarefa para marcá-la como feita. O sistema salva automaticamente.</div>
+        </div>
+      </div>
+      <div class="onb-step">
+        <div class="onb-num">4</div>
+        <div>
+          <div class="onb-title">Verifique os Alertas quando aparecerem</div>
+          <div class="onb-desc">Se o botão "Alertas" aparecer em vermelho na barra lateral, há tarefas atrasadas — resolva antes de avançar para a próxima semana.</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-actions" style="justify-content:space-between;align-items:center">
+      <div style="font-size:10px;color:var(--text-sec)">Clique no <strong style="color:var(--text)">?</strong> na barra superior para rever este guia</div>
+      <button class="btn-primary" onclick="closeOnboarding()">Entendi, vamos lá!</button>
     </div>
   </div>
 </div>
@@ -1060,6 +1256,59 @@ async function save(data){
   finally{ isSaving=false; }
 }
 
+// ── ONBOARDING ──
+function openOnboarding(){
+  document.getElementById('onboarding-modal').classList.add('open');
+}
+function closeOnboarding(){
+  try{ localStorage.setItem('face100k_onboarding_v1','1'); }catch(e){}
+  document.getElementById('onboarding-modal').classList.remove('open');
+}
+function checkOnboarding(){
+  try{
+    if(!localStorage.getItem('face100k_onboarding_v1')) openOnboarding();
+  }catch(e){}
+}
+
+// ── ROTINA DO DIA ──
+function renderRotinaHoje(){
+  const w = getW();
+  const tasks = WEEK_TASKS[w] || [];
+  const ws = getWeekState(w);
+  const cp = S.checkpoint || 1;
+  const totalW = S.program === 'ativacao' ? 12 : 24;
+
+  const sub = document.getElementById('rotina-sub');
+  if(sub) sub.textContent = `Semana ${w} de ${totalW} · Checkpoint ${cp}`;
+
+  const done = tasks.filter(t => ws[t.id] === 'done').length;
+  const total = tasks.length;
+  const pct = total ? Math.round(done / total * 100) : 0;
+
+  const progText = document.getElementById('rotina-prog-text');
+  const progFill = document.getElementById('rotina-prog-fill');
+  if(progText) progText.textContent = `${done}/${total} concluídas`;
+  if(progFill) progFill.style.width = pct + '%';
+
+  const container = document.getElementById('rotina-items');
+  if(!container) return;
+
+  if(!tasks.length){
+    container.innerHTML = '<div style="font-size:12px;color:var(--text-sec);padding:4px 0">Sem tarefas definidas para esta semana.</div>';
+    return;
+  }
+
+  const chkSvg = `<svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#000" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  container.innerHTML = tasks.map(t => {
+    const isDone = ws[t.id] === 'done';
+    return `<div class="rotina-item${isDone ? ' ri-done-row' : ''}">
+      <div class="rotina-item-check ${isDone ? 'ri-check-done' : 'ri-check-pending'}" onclick="cycleTask(${w},'${t.id}')">${isDone ? chkSvg : ''}</div>
+      <div class="rotina-item-name">${t.name}</div>
+      <div class="rotina-item-resp">${t.resp || '—'}</div>
+    </div>`;
+  }).join('');
+}
+
 // ── RENDER ──
 function renderAll(){
   renderTopbar();
@@ -1073,9 +1322,10 @@ function renderAll(){
   renderResources();
   renderCalls();
   renderEngajamento();
-  renderCronograma();
-  renderCronogramaPreview();
+  renderMarcos();
+  renderMarcosPreview();
   renderAlertPage();
+  renderRotinaHoje();
 }
 
 function renderTopbar(){
@@ -1212,16 +1462,17 @@ function renderHealthScore(){
   const funil=S.healthFunil||0;
   const sat=S.healthSat||0;
   const h=getHealthColor(score);
-  const el=document.getElementById('health-num'); if(el){ el.textContent=score; el.style.color=h.color; }
-  const pill=document.getElementById('health-pill'); if(pill){ pill.textContent=h.label; pill.style.background=score>=80?'var(--green-dim)':score>=60?'var(--yellow-dim)':'var(--red-dim)'; pill.style.color=h.color; }
+  const el=document.getElementById('health-num'); if(el){ el.textContent=score||'—'; el.style.color=score?h.color:'var(--text-sec)'; }
+  const pill=document.getElementById('health-pill'); if(pill){ pill.textContent=score?h.label:'Sem dados'; pill.style.background=score>=80?'var(--green-dim)':score>=60?'var(--yellow-dim)':score>0?'var(--red-dim)':'transparent'; pill.style.color=score?h.color:'var(--text-sec)'; }
   const hbE=document.getElementById('hbar-exec'); if(hbE) hbE.style.width=(exec/40*100)+'%';
   const hbF=document.getElementById('hbar-funil'); if(hbF) hbF.style.width=(funil/40*100)+'%';
   const hbS=document.getElementById('hbar-sat'); if(hbS) hbS.style.width=(sat/20*100)+'%';
-  document.getElementById('hval-exec').textContent=exec+'pt';
-  document.getElementById('hval-funil').textContent=funil+'pt';
-  document.getElementById('hval-sat').textContent=sat+'pt';
-  const fi=document.getElementById('funil-input'); if(fi&&!fi.value) fi.value=funil||'';
-  const si=document.getElementById('sat-input'); if(si&&!si.value) si.value=sat||'';
+  const ve=document.getElementById('hval-exec'); if(ve) ve.textContent=exec+'pt';
+  const vf=document.getElementById('hval-funil'); if(vf) vf.textContent=funil+'pt';
+  const vs=document.getElementById('hval-sat'); if(vs) vs.textContent=sat+'pt';
+  document.querySelectorAll('.sat-btn').forEach(btn=>{
+    btn.classList.toggle('selected', parseInt(btn.dataset.val)===sat);
+  });
   renderHsChart();
 }
 
@@ -1478,14 +1729,16 @@ function scheduleObsSave(){
   },1200);
 }
 
+function selectSat(pts){
+  S.healthSat=pts;
+  S.healthScore=(S.healthExec||0)+(S.healthFunil||0)+pts;
+  renderHealthScore();
+}
+
 function updateHealthScore(){
-  const f=parseInt(document.getElementById('funil-input').value)||0;
-  const s=parseInt(document.getElementById('sat-input').value)||0;
   const exec=Math.round(((S.weekStates&&S.weekStates[getW()])?Object.values(S.weekStates[getW()]).filter(v=>v==='done').length/Math.max(1,(WEEK_TASKS[getW()]||[]).length)*40:0));
   S.healthExec=Math.min(40,Math.max(0,exec));
-  S.healthFunil=Math.min(40,Math.max(0,f));
-  S.healthSat=Math.min(20,Math.max(0,s));
-  S.healthScore=S.healthExec+S.healthFunil+S.healthSat;
+  S.healthScore=S.healthExec+(S.healthFunil||0)+(S.healthSat||0);
   renderHealthScore();
 }
 
@@ -1774,30 +2027,30 @@ function renderTutorias(data){
   ['tut-grid','tut-grid-preview'].forEach(id=>{ const el=document.getElementById(id); if(el) el.innerHTML=html; });
 }
 
-function renderCronogramaPreview(){
+function renderMarcosPreview(){
   const body=document.getElementById('cron-preview-body');
   const sub=document.getElementById('cron-prev-sub');
   if(!body) return;
-  const phases=getCronPhases();
-  let grandDone=0,grandTotal=0;
-  phases.forEach(p=>p.steps.forEach(s=>{grandTotal++;if(s.done)grandDone++;}));
-  const totalPct=grandTotal?Math.round(grandDone/grandTotal*100):0;
-  if(sub) sub.textContent=`${totalPct}% concluído`;
-  const colors=['var(--amber)','var(--blue)','var(--green)'];
-  body.innerHTML=phases.map((p,pi)=>{
-    const done=p.steps.filter(s=>s.done).length;
-    const pct=p.steps.length?Math.round(done/p.steps.length*100):0;
-    const col=colors[pi]||'var(--amber)';
-    return`<div style="margin-bottom:12px">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
-        <span style="font-size:12px;font-weight:600;color:var(--text)">${p.title}</span>
-        <span style="font-size:11px;color:var(--text-sec)">${done}/${p.steps.length} passos · ${pct}%</span>
-      </div>
-      <div style="height:5px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden">
-        <div style="height:100%;width:${pct}%;background:${col};border-radius:3px;transition:width .4s"></div>
-      </div>
+  const ms=S.marcos||{};
+  const MARCOS_DEF=[{id:1,title:'Primeira venda',bonus:200},{id:2,title:'Validação da metodologia',bonus:300},{id:3,title:'Previsibilidade',bonus:400},{id:4,title:'Escala',bonus:500}];
+  const achieved=MARCOS_DEF.filter(m=>ms[m.id]?.achieved);
+  const totalBonus=achieved.reduce((s,m)=>s+m.bonus,0);
+  if(sub) sub.textContent=`${achieved.length} de 4 marcos atingidos`;
+  const checkSvg=`<svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  body.innerHTML=`
+    <div style="display:flex;gap:6px;margin-bottom:12px">
+      ${MARCOS_DEF.map(m=>{
+        const ok=ms[m.id]?.achieved;
+        return`<div style="flex:1;padding:8px 6px;border-radius:7px;border:1px solid ${ok?'var(--amber-border)':'var(--border)'};background:${ok?'var(--amber-dim)':'var(--surface2)'};text-align:center">
+          <div style="font-size:11px;font-weight:700;color:${ok?'var(--amber)':'var(--text-sec)'};font-family:'Montserrat',sans-serif">M${m.id}</div>
+          <div style="font-size:9px;color:${ok?'var(--amber)':'var(--text-dim)'};margin-top:2px">${ok?checkSvg:'—'}</div>
+        </div>`;
+      }).join('')}
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <span style="font-size:11px;color:var(--text-sec)">${achieved.length} de 4 atingidos</span>
+      <span style="font-size:13px;font-weight:700;color:${totalBonus?'var(--green)':'var(--text-sec)'};font-family:'Montserrat',sans-serif">R$ ${totalBonus.toLocaleString('pt-BR')} desbloqueados</span>
     </div>`;
-  }).join('');
 }
 
 window.addEventListener('fb-ready',async()=>{
@@ -1810,6 +2063,7 @@ window.addEventListener('fb-ready',async()=>{
   renderAll();
   subscribeFirebase();
   setSyncStatus('ok');
+  checkOnboarding();
 });
 
 setTimeout(()=>{
@@ -1822,82 +2076,130 @@ setTimeout(()=>{
 },5000);
 </script>
 <script>
-// ── CRONOGRAMA ─────────────────────────────────────────────────────────
-const CRON_DEFAULT=[
-  {title:'Vendas',badge:'01',status:'Fase 1',cls:'cc1',obj:'Estruturar a base comercial da clínica para começar a vender com método, previsibilidade e maior conversão.',
-   steps:[{text:'Implementar o ecossistema comercial',done:false},{text:'Participar das tutorias de terça-feira, 19h',done:false},{text:'Assistir aos treinamentos',done:false},{text:'Estruturar a esteira de produtos',done:false},{text:'Montar a apresentação de vendas',done:false},{text:'Realizar a call de vendas para dúvidas e direcionamentos',done:false},{text:'Assistir aos conteúdos de apoio',done:false},{text:'Aplicar a metodologia no consultório',done:false},{text:'Realizar as primeiras vendas',done:false},{text:'Gravar consulta de venda para análise da equipe',done:false}]},
-  {title:'Pré-vendas',badge:'02',status:'Fase 2',cls:'cc2',obj:'Estruturar o processo de atendimento, qualificação e agendamento para gerar mais consultas com consistência.',
-   steps:[{text:'Adicionar a SDR no grupo de acompanhamento',done:false},{text:'Garantir a participação da SDR nas tutorias de segunda, 11h',done:false},{text:'SDR preencher diariamente o Flashboard',done:false},{text:'Garantir o uso do CRM no dia a dia',done:false},{text:'Aplicar o script de pré-vendas nos atendimentos',done:false},{text:'Organizar o processo de atendimento com constância',done:false},{text:'Meta mínima: 1 agendamento por dia',done:false}]},
-  {title:'Tráfego',badge:'03',status:'Fase 3',cls:'cc3',obj:'Colocar a captação para rodar de forma estratégica, alinhada ao posicionamento e ao processo comercial.',
-   steps:[{text:'Obter os acessos aos gerenciadores',done:false},{text:'Iniciar a estrutura de tráfego pago',done:false},{text:'Colocar as campanhas para rodar',done:false},{text:'Gravar os criativos com base nos scripts enviados',done:false},{text:'Ajustar o perfil conforme análise já passada',done:false},{text:'Alinhar comunicação, oferta e criativos com o público-alvo',done:false}]}
+// ── MARCOS DE RESULTADO ────────────────────────────────────────────────
+const MARCOS = [
+  {id:1, title:'Primeira venda',         vendas:'1 venda',    criterio:'Cliente realizou a primeira venda utilizando a metodologia e a esteira de produtos.', bonus:200},
+  {id:2, title:'Validação da metodologia',vendas:'3–5 vendas', criterio:'Cliente realizou de 3 a 5 vendas, com resultado comprovado e utilizando a metodologia e a esteira de produtos.', bonus:300},
+  {id:3, title:'Previsibilidade',         vendas:'6–9 vendas', criterio:'Cliente realizou de 6 a 9 vendas, com faturamento crescente, processo comercial funcionando com constância e utilização da metodologia e da esteira de produtos.', bonus:400},
+  {id:4, title:'Escala',                  vendas:'10–15 vendas',criterio:'Cliente realizou de 10 a 15 vendas, com faturamento consolidado, operação rodando com previsibilidade e uso da metodologia e da esteira de produtos.', bonus:500},
 ];
 
-function getCronPhases(){
-  if(S.cronograma&&S.cronograma.phases&&S.cronograma.phases.length) return S.cronograma.phases;
-  return JSON.parse(JSON.stringify(CRON_DEFAULT));
-}
+function renderMarcos(){
+  const container=document.getElementById('cron-container'); if(!container) return;
+  const ms=S.marcos||{};
+  const achieved=MARCOS.filter(m=>ms[m.id]?.achieved);
+  const totalBonus=achieved.reduce((s,m)=>s+m.bonus,0);
+  const totalPossivel=MARCOS.reduce((s,m)=>s+m.bonus,0);
+  const pct=Math.round(achieved.length/MARCOS.length*100);
 
-function renderCronograma(){
-  const container=document.getElementById('cron-container'); if(!container)return;
-  const phases=getCronPhases();
-  const checkSvg=`<svg width="9" height="7" viewBox="0 0 9 7" fill="none"><path d="M1 3.5L3 5.5L8 1" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-  let grandDone=0,grandTotal=0;
-  phases.forEach(p=>{ p.steps.forEach(s=>{ grandTotal++; if(s.done)grandDone++; }); });
-  const totalPct=grandTotal?Math.round(grandDone/grandTotal*100):0;
+  const checkSvg=`<svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="#000" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  const checkSvgGreen=`<svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="var(--green)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 
-  const phasesHtml=phases.map((phase,pi)=>{
-    const phDone=phase.steps.filter(s=>s.done).length;
-    const phPct=phase.steps.length?Math.round(phDone/phase.steps.length*100):0;
-    const cls=CRON_DEFAULT[pi]?CRON_DEFAULT[pi].cls:(pi===0?'cc1':pi===1?'cc2':'cc3');
-    const stepsHtml=phase.steps.map((st,si)=>`
-      <li class="cron-step${st.done?' done':''}" onclick="toggleCronStep(${pi},${si})">
-        <div class="cron-check">${checkSvg}</div>
-        <span class="cron-step-txt">${st.text}</span>
-      </li>`).join('');
-    return`<div class="cron-card ${cls}">
-      <div class="cron-badge"><span class="cron-badge-num">${phase.badge||'0'+(pi+1)}</span><span class="cron-badge-lbl">${phase.status||'Fase '+(pi+1)}</span></div>
-      <div class="cron-title">${phase.title}</div>
-      <p class="cron-obj">${phase.obj||''}</p>
-      <div class="cron-steps-lbl">Passos desta fase</div>
-      <ul class="cron-step-list">${stepsHtml}</ul>
-      <div class="cron-prog">
-        <div class="cron-prog-meta"><span class="cron-prog-lbl">Progresso</span><span class="cron-prog-count">${phDone} / ${phase.steps.length}</span></div>
-        <div class="cron-bar-bg"><div class="cron-bar-fill" style="width:${phPct}%"></div></div>
+  const summaryHtml=`
+    <div class="marcos-summary">
+      <div>
+        <div class="ms-total-bonus">R$ ${totalBonus.toLocaleString('pt-BR')}</div>
+        <div class="ms-total-lbl">Bônus desbloqueado</div>
+      </div>
+      <div class="ms-progress">
+        <div class="ms-prog-text">${achieved.length} de ${MARCOS.length} marcos atingidos</div>
+        <div class="ms-prog-bar"><div class="ms-prog-fill" style="width:${pct}%"></div></div>
+        <div style="display:flex;justify-content:space-between;margin-top:5px">
+          <span style="font-size:9px;color:var(--text-dim)">Início</span>
+          <span style="font-size:9px;color:var(--amber);font-weight:600;font-family:'Montserrat',sans-serif">Total possível: R$ ${totalPossivel.toLocaleString('pt-BR')}</span>
+        </div>
+      </div>
+    </div>`;
+
+  const marcosHtml=MARCOS.map(m=>{
+    const state=ms[m.id]||{};
+    const isAchieved=!!state.achieved;
+    const dateStr=state.date?new Date(state.date).toLocaleDateString('pt-BR'):'';
+    return`<div class="marco-card${isAchieved?' achieved':''}">
+      <div class="marco-top">
+        <div class="marco-num">${isAchieved?checkSvg:m.id}</div>
+        <div class="marco-info">
+          <div class="marco-title">Marco ${m.id} — ${m.title}</div>
+          <span class="marco-vendas-tag">${m.vendas}</span>
+        </div>
+        <div class="marco-bonus">
+          <div class="marco-bonus-val">R$ ${m.bonus}</div>
+          <div class="marco-bonus-lbl">bônus equipe</div>
+        </div>
+      </div>
+      <div class="marco-criterio">${m.criterio}</div>
+      ${isAchieved && (state.vendas||state.resp||state.obs) ? `
+      <div style="display:flex;gap:16px;font-size:11px;color:var(--text-sec);margin-bottom:12px;flex-wrap:wrap">
+        ${state.vendas?`<span><strong style="color:var(--text)">${state.vendas}</strong> vendas comprovadas</span>`:''}
+        ${state.resp?`<span>Registrado por <strong style="color:var(--text)">${state.resp}</strong></span>`:''}
+        ${state.obs?`<span style="font-style:italic">"${state.obs}"</span>`:''}
+      </div>` : ''}
+      <div class="marco-footer">
+        ${isAchieved
+          ?`<div class="btn-atingido">${checkSvgGreen} Atingido em ${dateStr}</div>
+            <button class="btn-desfazer" onclick="desfazerMarco(${m.id})">Desfazer</button>`
+          :`<button class="btn-atingir" onclick="atingirMarco(${m.id})">Marcar como atingido</button>`
+        }
       </div>
     </div>`;
   }).join('');
 
-  const phaseLbls=phases.map((p,pi)=>{
-    const active=p.steps.some(s=>s.done)?'active':'';
-    return`<span class="cron-phase-lbl ${active}">${p.title}</span>`;
-  }).join('');
-
-  container.innerHTML=`
-    <div class="cron-flow">
-      <span class="cron-flow-tag">Sequência obrigatória</span>
-      <div class="cron-flow-node cfn1"><div class="cron-flow-num">1</div><span class="cron-flow-label">Vendas</span></div>
-      <span class="cron-chev">›</span>
-      <div class="cron-flow-node cfn2"><div class="cron-flow-num">2</div><span class="cron-flow-label">Pré-vendas</span></div>
-      <span class="cron-chev">›</span>
-      <div class="cron-flow-node cfn3"><div class="cron-flow-num">3</div><span class="cron-flow-label">Tráfego</span></div>
-    </div>
-    <div class="cron-phases">${phasesHtml}</div>
-    <div class="cron-summary">
-      <div><div class="cron-total-num">${totalPct}%</div><div class="cron-total-lbl">Progresso total</div></div>
-      <div class="cron-total-bar-wrap">
-        <div class="cron-total-bar-bg"><div class="cron-total-bar-fill" style="width:${totalPct}%"></div></div>
-        <div class="cron-phase-labels">${phaseLbls}</div>
-      </div>
-    </div>`;
+  container.innerHTML=summaryHtml+marcosHtml;
 }
 
-async function toggleCronStep(pi,si){
-  const phases=getCronPhases();
-  phases[pi].steps[si].done=!phases[pi].steps[si].done;
-  if(!S.cronograma)S.cronograma={};
-  S.cronograma.phases=phases;
-  renderCronograma();
-  await save({cronograma:S.cronograma});
+let _marcoModalId = null;
+
+function atingirMarco(id){
+  const m = MARCOS.find(x=>x.id===id);
+  if(!m) return;
+  _marcoModalId = id;
+  document.getElementById('marco-modal-title').textContent = `Marco ${id} — ${m.title}`;
+  document.getElementById('marco-modal-bonus').textContent = `Bônus da equipe: R$ ${m.bonus}`;
+  document.getElementById('marco-modal-criterio').textContent = m.criterio;
+  document.getElementById('marco-vendas-input').value = '';
+  document.getElementById('marco-resp-input').value = '';
+  document.getElementById('marco-obs-input').value = '';
+  document.getElementById('marco-modal').classList.add('open');
+}
+
+function closeMarcoModal(){
+  document.getElementById('marco-modal').classList.remove('open');
+  _marcoModalId = null;
+}
+
+function closeMarcoModalOutside(e){
+  if(e.target.id==='marco-modal') closeMarcoModal();
+}
+
+async function confirmarMarco(){
+  const vendas = document.getElementById('marco-vendas-input').value;
+  const resp   = document.getElementById('marco-resp-input').value.trim();
+  if(!vendas){ showToast('Informe o número de vendas comprovadas','error'); return; }
+  if(!resp){ showToast('Informe o responsável pelo registro','error'); return; }
+  const obs = document.getElementById('marco-obs-input').value.trim();
+  if(!S.marcos) S.marcos={};
+  S.marcos[_marcoModalId]={
+    achieved: true,
+    date: new Date().toISOString(),
+    vendas: parseInt(vendas),
+    resp,
+    obs
+  };
+  closeMarcoModal();
+  await save({marcos:S.marcos});
+  renderMarcos();
+  renderMarcosPreview();
+  const m = MARCOS.find(x=>x.id===_marcoModalId);
+  showToast(`Marco ${_marcoModalId} registrado! Bônus R$ ${m?.bonus} desbloqueado.`,'success');
+}
+
+async function desfazerMarco(id){
+  if(!S.marcos) return;
+  delete S.marcos[id];
+  await save({marcos:S.marcos});
+  renderMarcos();
+  renderMarcosPreview();
+  showToast('Marco desfeito.','');
 }
 </script>
 <script>if("serviceWorker" in navigator){window.addEventListener("load",()=>{navigator.serviceWorker.register("/sw.js").then(()=>console.log("SW ok")).catch(e=>console.log("SW err",e));});}</script>
