@@ -33,13 +33,13 @@
   --bg:#0D1117;--surface:#1A2025;--surface2:#212830;--surface3:#272F38;
   --amber:#F5A623;--amber-dim:rgba(245,166,35,0.10);--amber-border:rgba(245,166,35,0.20);
   --border:#3E4249;--border-light:rgba(62,66,73,0.5);
-  --text:#F0F0F0;--text-sec:#A0A0A8;--text-dim:rgba(255,255,255,0.25);
+  --text:#F0F0F0;--text-sec:#B8B8C0;--text-dim:rgba(255,255,255,0.25);
   --green:#22C55E;--green-dim:rgba(34,197,94,0.10);--green-border:rgba(34,197,94,0.22);
   --red:#EF4444;--red-dim:rgba(239,68,68,0.10);--red-border:rgba(239,68,68,0.22);
   --yellow:#EAB308;--yellow-dim:rgba(234,179,8,0.10);--yellow-border:rgba(234,179,8,0.22);
   --blue:#3B82F6;--blue-dim:rgba(59,130,246,0.10);--blue-border:rgba(59,130,246,0.22);
 }
-html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:13px;line-height:1.5}
+html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:14px;line-height:1.5}
 body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(0deg,transparent 24%,rgba(245,166,35,0.03) 25%,rgba(245,166,35,0.03) 26%,transparent 27%),linear-gradient(90deg,transparent 24%,rgba(245,166,35,0.03) 25%,rgba(245,166,35,0.03) 26%,transparent 27%);background-size:50px 50px;pointer-events:none;z-index:0}
 
 /* TOPBAR */
@@ -47,19 +47,19 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .t-logo{font-family:'Montserrat',sans-serif;font-size:15px;font-weight:800;color:var(--text)}
 .t-logo span{color:var(--amber);font-style:italic}
 .t-sep{width:1px;height:18px;background:var(--border)}
-.t-sub{font-size:11px;color:var(--text-sec)}
+.t-sub{font-size:12px;color:var(--text-sec)}
 .t-right{margin-left:auto;display:flex;align-items:center;gap:10px}
 .sync-dot{width:8px;height:8px;border-radius:50%;background:var(--green);transition:background .3s;flex-shrink:0}
 .sync-dot.saving{background:var(--yellow);animation:pulse .6s infinite alternate}
 .sync-dot.error{background:var(--red)}
 @keyframes pulse{from{opacity:.4}to{opacity:1}}
-.sync-txt{font-size:11px;color:var(--text-sec)}
-.btn-admin{background:var(--surface2);color:var(--text-sec);border:1px solid var(--border);border-radius:6px;padding:8px 14px;font-size:11px;font-weight:600;font-family:'Montserrat',sans-serif;cursor:pointer;transition:all .15s}
+.sync-txt{font-size:12px;color:var(--text-sec)}
+.btn-admin{background:var(--surface2);color:var(--text-sec);border:1px solid var(--border);border-radius:6px;padding:8px 14px;font-size:12px;font-weight:600;font-family:'Montserrat',sans-serif;cursor:pointer;transition:all .15s}
 .btn-admin:hover{border-color:var(--amber);color:var(--amber)}
 .btn-admin.active{background:var(--amber-dim);color:var(--amber);border-color:var(--amber-border)}
-.btn-new{background:var(--amber);color:#000;border:none;border-radius:6px;padding:8px 18px;font-size:12px;font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:.04em;cursor:pointer;transition:opacity .15s}
+.btn-new{background:var(--amber);color:#000;border:none;border-radius:6px;padding:8px 18px;font-size:13px;font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:.04em;cursor:pointer;transition:opacity .15s}
 .btn-new:hover{opacity:.88}
-.alert-topbtn{background:var(--red-dim);color:var(--red);border:1px solid var(--red-border);border-radius:6px;padding:6px 14px;font-size:11px;font-weight:600;font-family:'Montserrat',sans-serif;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .15s}
+.alert-topbtn{background:var(--red-dim);color:var(--red);border:1px solid var(--red-border);border-radius:6px;padding:6px 14px;font-size:12px;font-weight:600;font-family:'Montserrat',sans-serif;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .15s}
 .alert-topbtn:hover{background:rgba(239,68,68,0.18)}
 .alert-topbtn-count{background:var(--red);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:8px}
 
@@ -87,9 +87,9 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .alert-section.visible{display:block}
 .alert-section-hdr{display:flex;align-items:center;gap:10px;margin-bottom:14px}
 .alert-hdr-icon{width:18px;height:18px;flex-shrink:0}
-.alert-hdr-title{font-size:13px;font-weight:700;color:var(--red);font-family:'Montserrat',sans-serif;flex:1}
+.alert-hdr-title{font-size:14px;font-weight:700;color:var(--red);font-family:'Montserrat',sans-serif;flex:1}
 .alert-hdr-count{font-size:10px;background:rgba(239,68,68,0.2);color:var(--red);padding:2px 9px;border-radius:8px;border:0.5px solid rgba(239,68,68,0.3);font-family:'Montserrat',sans-serif;font-weight:600}
-.alert-hdr-close{font-size:11px;color:var(--text-sec);padding:4px 10px;border:0.5px solid var(--border);border-radius:4px;cursor:pointer;background:transparent;transition:all .15s}
+.alert-hdr-close{font-size:12px;color:var(--text-sec);padding:4px 10px;border:0.5px solid var(--border);border-radius:4px;cursor:pointer;background:transparent;transition:all .15s}
 .alert-hdr-close:hover{border-color:var(--text-sec);color:var(--text)}
 .alert-list{display:flex;flex-direction:column;gap:8px}
 .alert-item{background:var(--surface);border-radius:6px;padding:10px 14px;display:flex;align-items:flex-start;gap:10px}
@@ -98,8 +98,8 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .alert-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:4px}
 .ad-red{background:var(--red)}.ad-yellow{background:var(--yellow)}
 .alert-info{flex:1;min-width:0}
-.alert-client-name{font-size:12px;font-weight:600;color:var(--text);margin-bottom:2px}
-.alert-desc{font-size:11px;color:var(--text-sec);margin-bottom:4px}
+.alert-client-name{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px}
+.alert-desc{font-size:12px;color:var(--text-sec);margin-bottom:4px}
 .alert-meta{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
 .alert-week-txt{font-size:10px;font-weight:600}
 .aw-red{color:var(--red)}.aw-yellow{color:var(--yellow)}
@@ -111,18 +111,18 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 
 /* FILTERS */
 .filters-row{display:flex;align-items:center;gap:8px;margin-bottom:18px;flex-wrap:wrap}
-.filter-btn{padding:6px 14px;border-radius:20px;font-size:11px;font-weight:600;font-family:'Montserrat',sans-serif;border:1px solid var(--border);background:transparent;color:var(--text-sec);cursor:pointer;transition:all .15s}
+.filter-btn{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;font-family:'Montserrat',sans-serif;border:1px solid var(--border);background:transparent;color:var(--text-sec);cursor:pointer;transition:all .15s}
 .filter-btn:hover{border-color:var(--text-sec);color:var(--text)}
 .filter-btn.active{background:var(--amber-dim);color:var(--amber);border-color:var(--amber-border)}
 .filter-btn.alert-filter{background:rgba(239,68,68,0.08);color:var(--red);border-color:rgba(239,68,68,0.25)}
-.search-input{background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'Inter',sans-serif;font-size:12px;padding:7px 12px;outline:none;transition:border-color .15s;width:220px;margin-left:auto}
+.search-input{background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'Inter',sans-serif;font-size:13px;padding:7px 12px;outline:none;transition:border-color .15s;width:220px;margin-left:auto}
 .search-input:focus{border-color:var(--amber)}
 .search-input::placeholder{color:var(--text-dim)}
 
 /* CLIENT GRID */
 .client-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
 .section-divider{grid-column:1/-1;display:flex;align-items:center;gap:12px;padding:4px 0}
-.sd-label{font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;text-transform:uppercase;letter-spacing:.1em;white-space:nowrap}
+.sd-label{font-size:12px;font-weight:700;font-family:'Montserrat',sans-serif;text-transform:uppercase;letter-spacing:.1em;white-space:nowrap}
 .sd-line{flex:1;height:1px;background:var(--border)}
 .c-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color .2s,transform .2s;cursor:pointer;display:flex;flex-direction:column}
 .c-card:hover{border-color:var(--amber-border);transform:translateY(-2px)}
@@ -132,10 +132,10 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .ca-red{background:var(--red)}.ca-yellow{background:var(--yellow)}.ca-green{background:var(--green)}.ca-amber{background:var(--amber)}
 .c-body{padding:16px 18px;flex:1}
 .c-top{display:flex;align-items:flex-start;gap:10px;margin-bottom:12px}
-.c-avatar{width:38px;height:38px;border-radius:50%;background:var(--amber-dim);border:1px solid var(--amber-border);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--amber);font-family:'Montserrat',sans-serif;flex-shrink:0}
+.c-avatar{width:38px;height:38px;border-radius:50%;background:var(--amber-dim);border:1px solid var(--amber-border);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--amber);font-family:'Montserrat',sans-serif;flex-shrink:0}
 .c-info{flex:1;min-width:0}
 .c-name{font-size:14px;font-weight:600;color:var(--text);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.c-sub{font-size:11px;color:var(--text-sec)}
+.c-sub{font-size:12px;color:var(--text-sec)}
 .c-status-pill{padding:3px 10px;border-radius:10px;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-family:'Montserrat',sans-serif;white-space:nowrap;flex-shrink:0}
 .sp-red{background:var(--red-dim);color:var(--red);border:1px solid var(--red-border)}
 .sp-yellow{background:var(--yellow-dim);color:var(--yellow);border:1px solid var(--yellow-border)}
@@ -145,10 +145,10 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .c-prog-bar{flex:1;height:5px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden}
 .c-prog-fill{height:100%;border-radius:3px;transition:width .5s}
 .cpf-red{background:var(--red)}.cpf-yellow{background:var(--yellow)}.cpf-green{background:var(--green)}.cpf-amber{background:var(--amber)}
-.c-prog-pct{font-size:11px;font-weight:600;font-family:'JetBrains Mono',monospace;color:var(--text-sec);min-width:32px;text-align:right}
+.c-prog-pct{font-size:12px;font-weight:600;font-family:'JetBrains Mono',monospace;color:var(--text-sec);min-width:32px;text-align:right}
 .c-meta{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:8px}
 .c-meta-item{font-size:10px;color:var(--text-sec)}
-.c-meta-item strong{color:var(--text);display:block;font-size:11px;font-weight:600;margin-bottom:1px}
+.c-meta-item strong{color:var(--text);display:block;font-size:12px;font-weight:600;margin-bottom:1px}
 .health-chip{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--text-sec)}
 .h-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
 /* ALERT BANNER ON CARD */
@@ -162,34 +162,34 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .cab-btn{font-size:9px;padding:2px 8px;background:transparent;border-radius:3px;cursor:pointer;white-space:nowrap}
 /* ACTIONS */
 .c-actions{display:flex;gap:7px;padding:10px 18px 14px}
-.btn-open-dash{flex:1;padding:8px;border-radius:5px;font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:.04em;background:var(--amber);color:#000;border:none;cursor:pointer;transition:opacity .15s;text-align:center}
+.btn-open-dash{flex:1;padding:8px;border-radius:5px;font-size:12px;font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:.04em;background:var(--amber);color:#000;border:none;cursor:pointer;transition:opacity .15s;text-align:center}
 .btn-open-dash:hover{opacity:.88}
-.btn-view-client{padding:8px 12px;border-radius:5px;font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border);cursor:pointer;transition:all .15s;white-space:nowrap}.btn-view-client:hover{background:var(--amber);color:#000}.btn-edit-client{padding:8px 14px;border-radius:5px;font-size:11px;font-weight:600;font-family:'Montserrat',sans-serif;background:var(--surface2);color:var(--text-sec);border:1px solid var(--border);cursor:pointer;transition:all .15s}
+.btn-view-client{padding:8px 12px;border-radius:5px;font-size:12px;font-weight:700;font-family:'Montserrat',sans-serif;background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border);cursor:pointer;transition:all .15s;white-space:nowrap}.btn-view-client:hover{background:var(--amber);color:#000}.btn-edit-client{padding:8px 14px;border-radius:5px;font-size:12px;font-weight:600;font-family:'Montserrat',sans-serif;background:var(--surface2);color:var(--text-sec);border:1px solid var(--border);cursor:pointer;transition:all .15s}
 .btn-edit-client:hover{border-color:var(--amber);color:var(--amber)}
-.btn-del-client{padding:8px 12px;border-radius:5px;background:var(--surface2);color:var(--text-dim);border:1px solid var(--border);cursor:pointer;transition:all .15s;font-size:12px}
+.btn-del-client{padding:8px 12px;border-radius:5px;background:var(--surface2);color:var(--text-dim);border:1px solid var(--border);cursor:pointer;transition:all .15s;font-size:13px}
 .btn-del-client:hover{border-color:var(--red-border);color:var(--red);background:var(--red-dim)}
 /* EMPTY */
 .empty-state{text-align:center;padding:64px 24px;color:var(--text-sec);grid-column:1/-1}
 .empty-icon{width:48px;height:48px;border-radius:12px;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
 .empty-title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px;font-family:'Montserrat',sans-serif}
-.empty-sub{font-size:12px;line-height:1.6}
+.empty-sub{font-size:13px;line-height:1.6}
 
 /* MODAL */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:200;align-items:center;justify-content:center;padding:16px}
 .modal-overlay.open{display:flex}
 .modal{background:var(--surface);border:1px solid var(--border);border-radius:12px;width:560px;max-width:100%;padding:28px;max-height:90vh;overflow-y:auto}
 .modal-title{font-size:16px;font-weight:700;font-family:'Montserrat',sans-serif;margin-bottom:4px}
-.modal-sub{font-size:12px;color:var(--text-sec);margin-bottom:22px}
+.modal-sub{font-size:13px;color:var(--text-sec);margin-bottom:22px}
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .form-field{margin-bottom:14px}
 .form-label{font-size:10px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.12em;font-family:'Montserrat',sans-serif;font-weight:600;margin-bottom:6px;display:block}
-.form-input,.form-select{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'Inter',sans-serif;font-size:12px;padding:9px 12px;outline:none;transition:border-color .15s}
+.form-input,.form-select{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'Inter',sans-serif;font-size:13px;padding:9px 12px;outline:none;transition:border-color .15s}
 .form-input:focus,.form-select:focus{border-color:var(--amber)}
 .form-select option{background:var(--surface2)}
 .modal-actions{display:flex;gap:10px;margin-top:22px;justify-content:flex-end}
-.btn-cancel{padding:9px 20px;border-radius:5px;font-size:12px;font-weight:600;background:transparent;color:var(--text-sec);border:1px solid var(--border);cursor:pointer;font-family:'Montserrat',sans-serif}
+.btn-cancel{padding:9px 20px;border-radius:5px;font-size:13px;font-weight:600;background:transparent;color:var(--text-sec);border:1px solid var(--border);cursor:pointer;font-family:'Montserrat',sans-serif}
 .btn-cancel:hover{border-color:var(--text-sec);color:var(--text)}
-.btn-save{padding:9px 22px;border-radius:5px;font-size:12px;font-weight:700;background:var(--amber);color:#000;border:none;cursor:pointer;font-family:'Montserrat',sans-serif;letter-spacing:.04em}
+.btn-save{padding:9px 22px;border-radius:5px;font-size:13px;font-weight:700;background:var(--amber);color:#000;border:none;cursor:pointer;font-family:'Montserrat',sans-serif;letter-spacing:.04em}
 .btn-save:hover{opacity:.88}
 
 /* TOAST */
@@ -200,25 +200,25 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .week-editor-hdr{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border);cursor:pointer;user-select:none;background:var(--surface2)}
 .week-editor-hdr:hover{background:var(--surface3)}
 .week-editor-num{font-size:10px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--amber);background:var(--amber-dim);border:1px solid var(--amber-border);border-radius:4px;padding:2px 8px}
-.week-editor-title{font-size:12px;font-weight:600;color:var(--text);flex:1}
+.week-editor-title{font-size:13px;font-weight:600;color:var(--text);flex:1}
 .week-editor-count{font-size:10px;color:var(--text-sec)}
 .week-editor-body{padding:14px 16px;display:none}
 .week-editor-body.open{display:block}
 .task-edit-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:0.5px solid var(--border-light)}
 .task-edit-row:last-child{border-bottom:none}
-.task-edit-name{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:5px;color:var(--text);font-family:'Inter',sans-serif;font-size:12px;padding:7px 10px;outline:none;transition:border-color .15s}
+.task-edit-name{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:5px;color:var(--text);font-family:'Inter',sans-serif;font-size:13px;padding:7px 10px;outline:none;transition:border-color .15s}
 .task-edit-name:focus{border-color:var(--amber)}
-.task-edit-resp{width:110px;background:var(--surface2);border:1px solid var(--border);border-radius:5px;color:var(--text);font-family:'Inter',sans-serif;font-size:12px;padding:7px 10px;outline:none;transition:border-color .15s}
+.task-edit-resp{width:110px;background:var(--surface2);border:1px solid var(--border);border-radius:5px;color:var(--text);font-family:'Inter',sans-serif;font-size:13px;padding:7px 10px;outline:none;transition:border-color .15s}
 .task-edit-resp:focus{border-color:var(--amber)}
-.task-edit-del{padding:6px 10px;background:transparent;border:0.5px solid var(--border);border-radius:4px;color:var(--text-dim);cursor:pointer;font-size:11px;flex-shrink:0}
+.task-edit-del{padding:6px 10px;background:transparent;border:0.5px solid var(--border);border-radius:4px;color:var(--text-dim);cursor:pointer;font-size:12px;flex-shrink:0}
 .task-edit-del:hover{border-color:var(--red-border);color:var(--red);background:var(--red-dim)}
-.btn-add-task{width:100%;padding:8px;background:transparent;border:1px dashed var(--border);border-radius:6px;color:var(--text-sec);font-size:11px;cursor:pointer;transition:all .15s;font-family:'Montserrat',sans-serif;font-weight:600;letter-spacing:.04em;margin-top:10px}
+.btn-add-task{width:100%;padding:8px;background:transparent;border:1px dashed var(--border);border-radius:6px;color:var(--text-sec);font-size:12px;cursor:pointer;transition:all .15s;font-family:'Montserrat',sans-serif;font-weight:600;letter-spacing:.04em;margin-top:10px}
 .btn-add-task:hover{border-color:var(--amber);color:var(--amber)}
-.btn-save-week{padding:7px 16px;background:var(--amber);color:#000;border:none;border-radius:5px;font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;cursor:pointer;margin-top:10px}
+.btn-save-week{padding:7px 16px;background:var(--amber);color:#000;border:none;border-radius:5px;font-size:12px;font-weight:700;font-family:'Montserrat',sans-serif;cursor:pointer;margin-top:10px}
 .btn-save-week:hover{opacity:.88}
 .cp-group-label{font-size:10px;font-weight:700;font-family:'Montserrat',sans-serif;text-transform:uppercase;letter-spacing:.12em;color:var(--amber);margin:20px 0 10px;display:flex;align-items:center;gap:8px}
 .cp-group-label::after{content:'';flex:1;height:1px;background:var(--amber-border)}
-.toast{position:fixed;bottom:24px;right:24px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 18px;font-size:12px;color:var(--text);z-index:999;transform:translateY(80px);opacity:0;transition:all .3s;max-width:320px;border-left:3px solid var(--amber)}
+.toast{position:fixed;bottom:24px;right:24px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 18px;font-size:13px;color:var(--text);z-index:999;transform:translateY(80px);opacity:0;transition:all .3s;max-width:320px;border-left:3px solid var(--amber)}
 .toast.show{transform:translateY(0);opacity:1}
 .toast.success{border-left-color:var(--green)}
 .toast.error{border-left-color:var(--red)}
@@ -230,7 +230,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .loading-logo span{color:var(--amber);font-style:italic}
 .spinner{width:36px;height:36px;border:3px solid rgba(245,166,35,0.15);border-top-color:var(--amber);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.loading-txt{font-size:12px;color:var(--text-sec)}
+.loading-txt{font-size:13px;color:var(--text-sec)}
 
 /* CHECKPOINT BADGES */
 .cp-badge{font-size:9px;padding:2px 8px;border-radius:4px;font-weight:600;font-family:'Montserrat',sans-serif;background:var(--amber-dim);color:var(--amber);border:0.5px solid var(--amber-border)}
@@ -250,7 +250,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
   .t-sub{display:none}
   .sync-txt{display:none}
   .btn-admin{padding:6px 10px;font-size:10px}
-  .btn-new{padding:6px 12px;font-size:11px}
+  .btn-new{padding:6px 12px;font-size:12px}
   .filters-row{gap:6px}
   .search-input{width:100%;margin-left:0;margin-top:8px}
   .client-grid{grid-template-columns:1fr}
@@ -259,7 +259,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 }
 @media(max-width:560px){
   .stats-row{grid-template-columns:1fr 1fr}
-  .t-logo{font-size:13px}
+  .t-logo{font-size:14px}
   .t-right{gap:6px}
   .tut-sess-row{grid-template-columns:1fr 1fr;gap:8px}
   .tut-sess-full{grid-column:1/-1}
@@ -343,7 +343,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
     <div>
       <div style="font-size:18px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--text)">Central de Administração</div>
-      <div style="font-size:12px;color:var(--text-sec);margin-top:3px">Edite as tarefas de cada semana do programa</div>
+      <div style="font-size:13px;color:var(--text-sec);margin-top:3px">Edite as tarefas de cada semana do programa</div>
     </div>
     <button class="btn-new" onclick="saveAllTasks()" style="background:var(--green)">Salvar tudo</button>
   </div>
@@ -903,14 +903,14 @@ document.addEventListener('keydown',e=>{
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
       <div>
         <div style="font-family:'Montserrat',sans-serif;font-size:15px;font-weight:700" id="cron-modal-title">Cronograma</div>
-        <div style="font-size:11px;color:#A0A0A8;margin-top:2px">Marque passos como concluídos, adicione ou remova passos por fase</div>
+        <div style="font-size:12px;color:#A0A0A8;margin-top:2px">Marque passos como concluídos, adicione ou remova passos por fase</div>
       </div>
       <button onclick="closeCronModal()" style="background:none;border:none;color:#A0A0A8;font-size:20px;cursor:pointer;padding:4px 8px;line-height:1">✕</button>
     </div>
     <div id="cron-modal-body" style="margin-top:20px"></div>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-top:20px;padding-top:16px;border-top:1px solid #3E4249">
-      <button onclick="resetCronograma()" style="background:none;border:1px solid #3E4249;border-radius:6px;padding:8px 16px;font-size:11px;color:#A0A0A8;cursor:pointer;font-family:'Montserrat',sans-serif">Restaurar padrão</button>
-      <button onclick="closeCronModal()" style="background:#F5A623;color:#000;border:none;border-radius:6px;padding:10px 28px;font-size:12px;font-weight:700;font-family:'Montserrat',sans-serif;cursor:pointer;letter-spacing:.04em">Fechar</button>
+      <button onclick="resetCronograma()" style="background:none;border:1px solid #3E4249;border-radius:6px;padding:8px 16px;font-size:12px;color:#A0A0A8;cursor:pointer;font-family:'Montserrat',sans-serif">Restaurar padrão</button>
+      <button onclick="closeCronModal()" style="background:#F5A623;color:#000;border:none;border-radius:6px;padding:10px 28px;font-size:13px;font-weight:700;font-family:'Montserrat',sans-serif;cursor:pointer;letter-spacing:.04em">Fechar</button>
     </div>
   </div>
 </div>
@@ -930,7 +930,7 @@ let _cronClientId=null, _cronPhases=[];
 async function openCronogramaModal(id,name){
   _cronClientId=id;
   document.getElementById('cron-modal-title').textContent='Cronograma — '+(name||id);
-  document.getElementById('cron-modal-body').innerHTML='<div style="color:#A0A0A8;font-size:12px;padding:20px 0;text-align:center">Carregando...</div>';
+  document.getElementById('cron-modal-body').innerHTML='<div style="color:#A0A0A8;font-size:13px;padding:20px 0;text-align:center">Carregando...</div>';
   document.getElementById('cron-modal').style.display='flex';
   try{
     const data=await window._fb.getDoc(id);
@@ -972,21 +972,21 @@ function renderCronModal(){
       const txtStyle=isDone?'text-decoration:line-through;color:rgba(255,255,255,0.25)':'color:#C0C0C8';
       return`<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(62,66,73,0.4)">
         <div onclick="toggleCronStep_pe(${pi},${si})" style="width:16px;height:16px;border-radius:3px;flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;${checkStyle}">${isDone?checkSvg:''}</div>
-        <input value="${st.text.replace(/"/g,'&quot;')}" onchange="editCronStep(${pi},${si},this.value)" style="flex:1;background:transparent;border:none;outline:none;color:#F0F0F0;font-size:12px;font-family:'Inter',sans-serif;${isDone?'text-decoration:line-through;opacity:.4':''}">
+        <input value="${st.text.replace(/"/g,'&quot;')}" onchange="editCronStep(${pi},${si},this.value)" style="flex:1;background:transparent;border:none;outline:none;color:#F0F0F0;font-size:13px;font-family:'Inter',sans-serif;${isDone?'text-decoration:line-through;opacity:.4':''}">
         <button onclick="removeCronStep(${pi},${si})" style="background:none;border:none;color:rgba(239,68,68,0.5);cursor:pointer;font-size:14px;padding:0 4px;line-height:1;flex-shrink:0" title="Remover passo">✕</button>
       </div>`;
     }).join('');
 
     return`<div style="background:#212830;border:1px solid #3E4249;border-radius:8px;padding:16px 18px;margin-bottom:14px;border-top:2px solid ${col}">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-        <div style="font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;color:${pi===0?'#F5A623':'#F0F0F0'}">${phase.badge||'0'+(pi+1)} — ${phase.title}</div>
+        <div style="font-family:'Montserrat',sans-serif;font-size:14px;font-weight:700;color:${pi===0?'#F5A623':'#F0F0F0'}">${phase.badge||'0'+(pi+1)} — ${phase.title}</div>
         <div style="font-size:10px;color:#A0A0A8">${phDone}/${phase.steps.length} · ${phPct}%</div>
       </div>
       <div style="height:2px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;margin-bottom:12px"><div style="height:100%;width:${phPct}%;background:${col};border-radius:2px;transition:width .3s"></div></div>
       ${stepsHtml}
       <div style="margin-top:10px;display:flex;gap:8px">
-        <input id="new-step-${pi}" placeholder="Novo passo..." style="flex:1;background:#1A2025;border:1px solid #3E4249;border-radius:5px;color:#F0F0F0;font-size:11px;padding:6px 10px;outline:none;font-family:'Inter',sans-serif" onkeydown="if(event.key==='Enter')addCronStep(${pi})">
-        <button onclick="addCronStep(${pi})" style="background:#F5A623;color:#000;border:none;border-radius:5px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Montserrat',sans-serif">+ Add</button>
+        <input id="new-step-${pi}" placeholder="Novo passo..." style="flex:1;background:#1A2025;border:1px solid #3E4249;border-radius:5px;color:#F0F0F0;font-size:12px;padding:6px 10px;outline:none;font-family:'Inter',sans-serif" onkeydown="if(event.key==='Enter')addCronStep(${pi})">
+        <button onclick="addCronStep(${pi})" style="background:#F5A623;color:#000;border:none;border-radius:5px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Montserrat',sans-serif">+ Add</button>
       </div>
     </div>`;
   }).join('');
@@ -1046,10 +1046,10 @@ async function removeCronStep(pi,si){
       <input class="form-input" id="tut-mes-input" placeholder="Ex: Abril 2026" style="max-width:220px">
     </div>
     <div id="tut-sessoes-list" style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px"></div>
-    <button onclick="addTutSessao()" style="width:100%;padding:9px;background:transparent;border:1px dashed var(--border);border-radius:6px;color:var(--text-sec);font-size:12px;font-weight:600;font-family:'Montserrat',sans-serif;cursor:pointer;transition:all .15s;letter-spacing:.04em" onmouseover="this.style.borderColor='var(--amber)';this.style.color='var(--amber)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-sec)'">+ Adicionar sessão</button>
+    <button onclick="addTutSessao()" style="width:100%;padding:9px;background:transparent;border:1px dashed var(--border);border-radius:6px;color:var(--text-sec);font-size:13px;font-weight:600;font-family:'Montserrat',sans-serif;cursor:pointer;transition:all .15s;letter-spacing:.04em" onmouseover="this.style.borderColor='var(--amber)';this.style.color='var(--amber)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-sec)'">+ Adicionar sessão</button>
     <div style="display:flex;gap:10px;margin-top:18px">
       <button class="btn-new" onclick="saveTutorias()" style="flex:1">Salvar tutorias</button>
-      <button onclick="closeTutModal()" style="flex:1;padding:9px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text-sec);font-size:12px;font-weight:600;font-family:'Montserrat',sans-serif;cursor:pointer">Cancelar</button>
+      <button onclick="closeTutModal()" style="flex:1;padding:9px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text-sec);font-size:13px;font-weight:600;font-family:'Montserrat',sans-serif;cursor:pointer">Cancelar</button>
     </div>
   </div>
 </div>
@@ -1078,7 +1078,7 @@ async function openTutoriasModal(){
 function renderTutSessoes(){
   const list = document.getElementById('tut-sessoes-list');
   if(!list) return;
-  if(!_tutSessoes.length){ list.innerHTML='<p style="color:var(--text-sec);font-size:12px">Nenhuma sessão. Clique em + Adicionar sessão.</p>'; return; }
+  if(!_tutSessoes.length){ list.innerHTML='<p style="color:var(--text-sec);font-size:13px">Nenhuma sessão. Clique em + Adicionar sessão.</p>'; return; }
   list.innerHTML = _tutSessoes.map((s,i)=>`
     <div class="tut-sess-row">
       <div>
@@ -1099,7 +1099,7 @@ function renderTutSessoes(){
       </div>
       <div></div>
       <div style="display:flex;align-items:flex-end">
-        <button onclick="removeTutSessao(${i})" style="padding:6px 10px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);border-radius:6px;color:var(--red);font-size:11px;font-weight:700;cursor:pointer;font-family:'Montserrat',sans-serif">✕</button>
+        <button onclick="removeTutSessao(${i})" style="padding:6px 10px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);border-radius:6px;color:var(--red);font-size:12px;font-weight:700;cursor:pointer;font-family:'Montserrat',sans-serif">✕</button>
       </div>
       <div class="tut-sess-full">
         <label class="tut-field-label">Tema</label>
