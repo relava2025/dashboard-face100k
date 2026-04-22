@@ -366,6 +366,9 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
         </label>
         <input class="form-input" id="f-contaid" type="text" placeholder="Ex: a1b2c3d4-e5f6-...">
       </div>
+      <div class="form-field"><label class="form-label">Meta Base (R$)</label><input class="form-input" id="f-meta-base" type="number" min="0" placeholder="Ex: 30000"></div>
+      <div class="form-field"><label class="form-label">Meta Alvo (R$)</label><input class="form-input" id="f-meta-alvo" type="number" min="0" placeholder="Ex: 50000"></div>
+      <div class="form-field"><label class="form-label">Super Meta (R$)</label><input class="form-input" id="f-meta-super" type="number" min="0" placeholder="Ex: 80000"></div>
       <div class="form-field"><label class="form-label">Programa *</label>
         <select class="form-select" id="f-program">
           <option value="aceleracao">Aceleração — 42K (6 meses)</option>
@@ -387,9 +390,6 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
         </select>
       </div>
     </div>
-    <div class="form-field"><label class="form-label">Meta Base (R$)</label><input class="form-input" id="f-meta-base" type="number" min="0" placeholder="Ex: 30000"></div>
-    <div class="form-field"><label class="form-label">Meta Alvo (R$)</label><input class="form-input" id="f-meta-alvo" type="number" min="0" placeholder="Ex: 50000"></div>
-    <div class="form-field"><label class="form-label">Super Meta (R$)</label><input class="form-input" id="f-meta-super" type="number" min="0" placeholder="Ex: 80000"></div>
     <div class="form-field"><label class="form-label">Semana atual no programa</label><input class="form-input" id="f-week" type="number" min="1" max="24" placeholder="Ex: 3"></div>
     <div class="modal-actions">
       <button class="btn-cancel" onclick="closeModal()">Cancelar</button>

@@ -876,21 +876,22 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
             <div class="meta-edit" onclick="editFaturamentoInicial()">Editar ↗</div>
           </div>
           <div class="meta-card">
-            <div class="meta-label">Meta alvo</div>
+            <div class="meta-label">Meta Base</div>
+            <div class="meta-val" id="m-meta-base">R$—</div>
+            <div class="meta-sub">meta inicial do programa</div>
+            <div class="meta-edit" onclick="editMeta('metaBase')">Editar ↗</div>
+          </div>
+          <div class="meta-card">
+            <div class="meta-label">Meta Alvo</div>
             <div class="meta-val" id="m-alvo">R$—</div>
             <div class="meta-sub">objetivo do programa</div>
-            <div class="meta-edit" onclick="editMeta('alvo')">Editar ↗</div>
+            <div class="meta-edit" onclick="editMeta('metaAlvo')">Editar ↗</div>
           </div>
           <div class="meta-card">
-            <div class="meta-label">Meta 60 dias</div>
-            <div class="meta-val" id="m-60">R$—</div>
-            <div class="meta-sub">máx já alcançado</div>
-            <div class="meta-edit" onclick="editMeta('60')">Editar ↗</div>
-          </div>
-          <div class="meta-card">
-            <div class="meta-label" style="color:var(--amber)">Super meta</div>
-            <div class="meta-val" id="m-super">R$100K/sem</div>
+            <div class="meta-label" style="color:var(--amber)">Super Meta</div>
+            <div class="meta-val" id="m-super">R$—</div>
             <div class="meta-sub">objetivo final</div>
+            <div class="meta-edit" onclick="editMeta('metaSuper')">Editar ↗</div>
           </div>
         </div>
         <div class="section-card">
@@ -1571,10 +1572,10 @@ function renderAllCPs(){
 
 function renderMetas(){
   const ini=S.faturamentoInicial||0;
-  const metas=S.metas||{};
   document.getElementById('m-base').textContent=ini?fmtCurrency(ini):'R$ —';
-  document.getElementById('m-alvo').textContent=fmtCurrency(metas.alvo);
-  document.getElementById('m-60').textContent=fmtCurrency(metas['60']);
+  document.getElementById('m-meta-base').textContent=S.metaBase?fmtCurrency(S.metaBase):'R$—';
+  document.getElementById('m-alvo').textContent=S.metaAlvo?fmtCurrency(S.metaAlvo):'R$—';
+  document.getElementById('m-super').textContent=S.metaSuper?fmtCurrency(S.metaSuper):'R$—';
   renderFatChart();
 }
 
@@ -1823,8 +1824,8 @@ async function deletarMesFat(mes){
   renderFatChart();
 }
 
-function editMeta(key){ currentMetaKey=key; document.getElementById('meta-modal-title').textContent='Editar meta — '+{alvo:'Alvo','60':'60 dias'}[key]; document.getElementById('meta-input').value=(S.metas&&S.metas[key])||''; document.getElementById('meta-modal').classList.add('open'); setTimeout(()=>document.getElementById('meta-input').focus(),100); }
-async function saveMeta(){ if(!currentMetaKey) return; const v=document.getElementById('meta-input').value.replace(/\D/g,''); if(!S.metas) S.metas={}; S.metas[currentMetaKey]=parseInt(v)||0; await save({metas:S.metas}); closeMetaModal(); showToast('Meta salva!','success'); renderMetas(); }
+function editMeta(key){ currentMetaKey=key; const labels={metaBase:'Meta Base',metaAlvo:'Meta Alvo',metaSuper:'Super Meta'}; document.getElementById('meta-modal-title').textContent='Editar — '+(labels[key]||key); document.getElementById('meta-input').value=S[key]||''; document.getElementById('meta-modal').classList.add('open'); setTimeout(()=>document.getElementById('meta-input').focus(),100); }
+async function saveMeta(){ if(!currentMetaKey) return; const v=document.getElementById('meta-input').value.replace(/\D/g,''); S[currentMetaKey]=parseInt(v)||0; await save({[currentMetaKey]:S[currentMetaKey]}); closeMetaModal(); showToast('Meta salva!','success'); renderMetas(); }
 function editFaturamentoInicial(){ document.getElementById('meta-modal-title').textContent='Faturamento antes do programa'; document.getElementById('meta-input').value=S.faturamentoInicial||''; currentMetaKey='__fat_inicial__'; document.getElementById('meta-modal').classList.add('open'); setTimeout(()=>document.getElementById('meta-input').focus(),100); }
 // Override saveMeta para tratar fat inicial
 const _saveMeta=saveMeta;
