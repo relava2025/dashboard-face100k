@@ -387,6 +387,9 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
         </select>
       </div>
     </div>
+    <div class="form-field"><label class="form-label">Meta Base (R$)</label><input class="form-input" id="f-meta-base" type="number" min="0" placeholder="Ex: 30000"></div>
+    <div class="form-field"><label class="form-label">Meta Alvo (R$)</label><input class="form-input" id="f-meta-alvo" type="number" min="0" placeholder="Ex: 50000"></div>
+    <div class="form-field"><label class="form-label">Super Meta (R$)</label><input class="form-input" id="f-meta-super" type="number" min="0" placeholder="Ex: 80000"></div>
     <div class="form-field"><label class="form-label">Semana atual no programa</label><input class="form-input" id="f-week" type="number" min="1" max="24" placeholder="Ex: 3"></div>
     <div class="modal-actions">
       <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
@@ -608,6 +611,7 @@ function renderClients(){
           <div class="c-meta-item"><strong>${startDate}</strong>início</div>
         </div>
         <div class="health-chip"><div class="h-dot" style="background:${h.dotColor}"></div>Health Score: ${score}</div>
+        ${(c.metaBase||c.metaAlvo||c.metaSuper)?`<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">${c.metaBase?`<div style="font-size:10px;color:var(--text-sec)">Meta Base <strong style="color:var(--text);font-family:'JetBrains Mono',monospace">R$ ${Number(c.metaBase).toLocaleString('pt-BR')}</strong></div>`:''}${c.metaAlvo?`<div style="font-size:10px;color:var(--text-sec)">Meta Alvo <strong style="color:var(--amber);font-family:'JetBrains Mono',monospace">R$ ${Number(c.metaAlvo).toLocaleString('pt-BR')}</strong></div>`:''}${c.metaSuper?`<div style="font-size:10px;color:var(--text-sec)">Super Meta <strong style="color:var(--green);font-family:'JetBrains Mono',monospace">R$ ${Number(c.metaSuper).toLocaleString('pt-BR')}</strong></div>`:''}</div>`: ''}
         ${(()=>{
           const ms = c.marcos||{};
           const BONUS_MAP = {1:200,2:300,3:400,4:500};
@@ -675,8 +679,11 @@ function openModal(id=null){
     document.getElementById('f-start').value=c.startDate||'';
     document.getElementById('f-cp').value=c.checkpoint||'1';
     document.getElementById('f-week').value=c.currentWeek||'1';
+    document.getElementById('f-meta-base').value=c.metaBase||'';
+    document.getElementById('f-meta-alvo').value=c.metaAlvo||'';
+    document.getElementById('f-meta-super').value=c.metaSuper||'';
   } else {
-    ['f-name','f-spec','f-ig','f-cs1','f-cs2','f-cs3','f-traffic','f-contaid'].forEach(i=>document.getElementById(i).value='');
+    ['f-name','f-spec','f-ig','f-cs1','f-cs2','f-cs3','f-traffic','f-contaid','f-meta-base','f-meta-alvo','f-meta-super'].forEach(i=>document.getElementById(i).value='');
     document.getElementById('f-program').value='aceleracao';
     document.getElementById('f-cp').value='1';
     document.getElementById('f-week').value='1';
@@ -706,6 +713,9 @@ async function saveClient(){
     startDate:document.getElementById('f-start').value,
     checkpoint:parseInt(document.getElementById('f-cp').value)||1,
     currentWeek:parseInt(document.getElementById('f-week').value)||1,
+    metaBase:parseFloat(document.getElementById('f-meta-base').value)||0,
+    metaAlvo:parseFloat(document.getElementById('f-meta-alvo').value)||0,
+    metaSuper:parseFloat(document.getElementById('f-meta-super').value)||0,
   };
   setSyncStatus('saving');
   try{
