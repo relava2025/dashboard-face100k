@@ -320,10 +320,10 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 
     <div class="bant-grid">
       <div class="bant-card">
-        <div class="bant-letter" style="color:var(--green)">N</div>
-        <div class="bant-name">Need — Necessidade / Dor</div>
-        <div class="bant-how">O paciente tem um problema real que o doutor resolve? Identifique a dor específica — não deixe ele dar uma resposta genérica.</div>
-        <div class="bant-script">"Fulana, vi que você buscou sobre o procedimento X. Hoje, o que mais te incomoda quando você se olha no espelho?"</div>
+        <div class="bant-letter" style="color:var(--amber)">B</div>
+        <div class="bant-name">Budget — Orçamento / Momento Financeiro</div>
+        <div class="bant-how">Ela entende que o trabalho da clínica é premium e tem como pagar? Use o gatilho do bônus/PLR para revelar a real capacidade financeira.</div>
+        <div class="bant-script">"Estamos falando de uma mudança de vida e autoestima. Você tem algum planejamento financeiro para resolver isso neste semestre?"</div>
       </div>
       <div class="bant-card">
         <div class="bant-letter" style="color:var(--blue)">A</div>
@@ -332,10 +332,10 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
         <div class="bant-script">"Para ganharmos tempo: se você amar o plano do doutor, essa decisão depende só de você ou seu marido precisa estar junto?"</div>
       </div>
       <div class="bant-card">
-        <div class="bant-letter" style="color:var(--amber)">B</div>
-        <div class="bant-name">Budget — Orçamento / Momento Financeiro</div>
-        <div class="bant-how">Ela entende que o trabalho da clínica é premium e tem como pagar? Use o gatilho do bônus/PLR para revelar a real capacidade financeira.</div>
-        <div class="bant-script">"Estamos falando de uma mudança de vida e autoestima. Você tem algum planejamento financeiro para resolver isso neste semestre?"</div>
+        <div class="bant-letter" style="color:var(--green)">N</div>
+        <div class="bant-name">Need — Necessidade / Dor</div>
+        <div class="bant-how">O paciente tem um problema real que o doutor resolve? Identifique a dor específica — não deixe ele dar uma resposta genérica.</div>
+        <div class="bant-script">"Fulana, vi que você buscou sobre o procedimento X. Hoje, o que mais te incomoda quando você se olha no espelho?"</div>
       </div>
       <div class="bant-card">
         <div class="bant-letter" style="color:var(--purple)">T</div>
@@ -1205,6 +1205,21 @@ function copyScript(id,btn){
     setTimeout(()=>{btn.textContent='Copiar';btn.classList.remove('copied')},2000);
   });
 }
+document.querySelectorAll('.fu-msg,.bant-script,.obj-answer').forEach(el=>{
+  const txt=el.textContent.trim();
+  el.style.position='relative';
+  el.style.paddingRight='72px';
+  const btn=document.createElement('button');
+  btn.className='copy-btn';
+  btn.textContent='Copiar';
+  btn.onclick=function(){
+    navigator.clipboard.writeText(txt).then(()=>{
+      btn.textContent='Copiado!';btn.classList.add('copied');
+      setTimeout(()=>{btn.textContent='Copiar';btn.classList.remove('copied')},2000);
+    });
+  };
+  el.appendChild(btn);
+});
 </script>
 </body>
 </html>
