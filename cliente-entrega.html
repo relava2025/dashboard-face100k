@@ -403,6 +403,10 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .cron-phase-labels{display:flex;justify-content:space-between}
 .cron-phase-lbl{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim);font-weight:600;font-family:'Montserrat',sans-serif}
 .cron-phase-lbl.active{color:var(--amber)}
+/* task table scroll on mobile */
+#current-week-tasks{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.task-table{min-width:520px}
+
 @media(max-width:640px){.cron-phases{grid-template-columns:1fr}.cron-flow{flex-direction:column;align-items:flex-start;gap:8px}}
 
 /* FORM UTILS */
@@ -460,6 +464,24 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
   .tut-grid{grid-template-columns:1fr}
   .modal-box{width:100%!important;padding:20px 16px}
   .cron-phases{grid-template-columns:1fr}
+  .onb-overall-row{gap:12px}
+  .onb-stage-resp{display:none}
+}
+@media(max-width:600px){
+  .content{padding:12px 12px 88px}
+  .section-card{margin-bottom:12px}
+  .sc-header{padding:12px 14px;gap:8px}
+  .sc-body{padding:14px}
+  .metas-grid{grid-template-columns:1fr 1fr;gap:8px}
+  .meta-card{padding:12px 14px}
+  .meta-val{font-size:19px}
+  .sat-btns{gap:4px}
+  .sat-btn{padding:8px 2px}
+  .sat-num{width:25px;height:25px;font-size:13px}
+  .fb-stats-grid{grid-template-columns:repeat(2,1fr)!important}
+  .rotina-card{padding:14px 14px}
+  .onb-overall{padding:14px 16px}
+  .onb-overall-pct{font-size:34px}
 }
 @media(max-width:480px){
   .metas-grid{grid-template-columns:1fr 1fr}
@@ -468,6 +490,18 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
   .weeks-grid{grid-template-columns:1fr 1fr}
   .mobile-nav-btn{padding:6px 2px 12px;font-size:8px}
   .mobile-nav-btn svg{width:16px;height:16px}
+  .onb-stage-prog{display:none}
+  .onb-stage-title{font-size:13px}
+  .onb-stage-num{width:28px;height:28px;font-size:12px}
+}
+@media(max-width:360px){
+  .content{padding:10px 10px 88px}
+  .metas-grid{grid-template-columns:1fr}
+  .mobile-nav-btn{font-size:7px;padding:5px 1px 10px}
+  .mobile-nav-btn svg{width:15px;height:15px}
+  .modal-box{padding:16px 12px}
+  .weeks-grid{grid-template-columns:1fr}
+  .eng-grid{grid-template-columns:1fr}
 }
 /* FLASHBOARD */
 .fb-stat{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;text-align:center}

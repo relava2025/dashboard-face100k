@@ -246,23 +246,38 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 @media(max-width:768px){
   .stats-row{grid-template-columns:repeat(3,1fr)}
   .topbar{padding:0 12px;gap:8px;height:auto;min-height:56px;flex-wrap:wrap}
-  .content{padding:16px 14px 60px}
+  .content{padding:16px 14px 50px}
   .t-sub{display:none}
   .sync-txt{display:none}
   .btn-admin{padding:6px 10px;font-size:11px}
   .btn-new{padding:6px 12px;font-size:13px}
-  .filters-row{gap:6px}
+  .filters-row{gap:6px;flex-wrap:wrap}
   .search-input{width:100%;margin-left:0;margin-top:8px}
   .client-grid{grid-template-columns:1fr}
   .form-grid{grid-template-columns:1fr}
   .modal{width:100%!important;padding:20px 16px}
+  .stat-val{font-size:27px}
 }
 @media(max-width:560px){
-  .stats-row{grid-template-columns:1fr 1fr}
+  .stats-row{grid-template-columns:1fr 1fr;gap:8px}
   .t-logo{font-size:15px}
-  .t-right{gap:6px}
+  .t-right{gap:5px;flex-wrap:wrap;justify-content:flex-end}
   .tut-sess-row{grid-template-columns:1fr 1fr;gap:8px}
   .tut-sess-full{grid-column:1/-1}
+  .content{padding:12px 12px 40px}
+  .stat-val{font-size:23px}
+  .stat-sub{font-size:10px}
+}
+@media(max-width:420px){
+  .topbar{padding:8px 10px}
+  .btn-admin{font-size:10px;padding:5px 8px}
+  .btn-new{font-size:12px;padding:6px 10px}
+  .stats-row{grid-template-columns:1fr 1fr;gap:6px}
+  .stat-card{padding:12px 14px}
+  .stat-val{font-size:21px}
+  .c-card-body{padding:14px 14px 10px}
+  .modal{padding:16px 12px}
+  .client-grid{gap:10px}
 }
 </style>
   <link rel="manifest" href="/manifest.json">

@@ -222,16 +222,39 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 
 .brand-rail{height:2px;background:linear-gradient(90deg,rgba(245,166,35,0) 0%,var(--amber) 40%,var(--amber) 60%,rgba(245,166,35,0) 100%);margin-bottom:24px}
 
+@media(max-width:900px){
+  .stats-row{grid-template-columns:repeat(2,1fr);gap:10px}
+  .t-sub{display:none}
+  .content{padding:18px 18px 50px}
+}
 @media(max-width:700px){
   .stats-row{grid-template-columns:repeat(2,1fr);gap:8px}
-  .topbar{padding:0 16px}
-  .content{padding:16px 14px 60px}
+  .topbar{padding:0 12px;gap:8px;height:auto;min-height:52px;flex-wrap:wrap}
+  .t-right{gap:6px}
+  .sync-txt{display:none}
+  .content{padding:14px 12px 40px}
   .t-sub{display:none}
-  .filters-row{gap:6px}
+  .filters-row{gap:6px;flex-wrap:wrap}
   .search-input{width:100%;margin-left:0;margin-top:6px}
-  .client-grid{grid-template-columns:1fr}
+  .client-grid{grid-template-columns:1fr;gap:10px}
   .form-row{grid-template-columns:1fr}
   .gestor-form{flex-direction:column}
+  .stat-val{font-size:27px}
+  .modal{padding:20px 14px}
+  .btn-new{font-size:13px;padding:7px 14px}
+  .btn-gestores{font-size:13px;padding:7px 12px}
+}
+@media(max-width:400px){
+  .topbar{padding:8px 12px}
+  .btn-new,.btn-gestores{font-size:12px;padding:7px 10px}
+  .stat-val{font-size:23px}
+  .filter-btn{font-size:11px;padding:5px 9px}
+  .card-body{padding:14px 14px 10px}
+  .card-actions{padding:8px 14px 10px}
+  .card-meta{gap:10px}
+  .modal{padding:16px 12px}
+  .client-grid{gap:8px}
+  .modal-wide{width:100%}
 }
 </style>
   <link rel="manifest" href="/manifest.json">
