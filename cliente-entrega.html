@@ -1963,7 +1963,7 @@ async function loadFlashboard(){
   try{
     const hoje = new Date();
     const mesInicio = `${hoje.getFullYear()}-${String(hoje.getMonth()+1).padStart(2,'0')}-01`;
-    const url = `${SUPABASE_URL}/rest/v1/registros_diarios?conta_id=eq.${contaId}&data=gte.${mesInicio}&order=data.desc&select=data,leads,agendamentos,comparecimentos,vendas,faturamento_leads_anuncios,faturamento_recorrente,fat_indicacao,fat_acao`;
+    const url = `${SUPABASE_URL}/rest/v1/registros_diarios?conta_id=eq.${contaId}&data=gte.${mesInicio}&order=data.desc&select=data,leads,agendamentos,comparecimentos,vendas,faturamento_leads_anuncios,faturamento_recorrente,faturamento_recorrente_novo,fat_indicacao,fat_instagram,fat_anuncios,fat_parcerias,fat_influenciadores,fat_acao`;
     const res = await fetch(url, { headers:{ 'Authorization':'Bearer '+SUPABASE_KEY, 'apikey':SUPABASE_KEY } });
     if(!res.ok) return;
     const rows = await res.json();
@@ -1982,7 +1982,8 @@ function renderFlashboard(rows, hoje){
     agend  += r.agendamentos||0;
     compar += r.comparecimentos||0;
     vendas += r.vendas||0;
-    fat    += (r.faturamento_leads_anuncios||0)+(r.faturamento_recorrente||0)+(r.fat_indicacao||0)+(r.fat_acao||0);
+    fat    += (r.faturamento_leads_anuncios||0)+(r.faturamento_recorrente||0)+(r.faturamento_recorrente_novo||0)
+           +(r.fat_indicacao||0)+(r.fat_instagram||0)+(r.fat_anuncios||0)+(r.fat_parcerias||0)+(r.fat_influenciadores||0)+(r.fat_acao||0);
   });
 
   // Último preenchimento
@@ -2084,18 +2085,17 @@ function renderFlashboard(rows, hoje){
   }
 
   // ─── Auto-sync faturamento mensal ───
-  const fatFlashboard = rows.reduce((s,r)=>s+(r.faturamento_leads_anuncios||0)+(r.faturamento_recorrente||0)+(r.fat_indicacao||0)+(r.fat_acao||0),0);
+  const fatFlashboard = rows.reduce((s,r)=>s
+    +(r.faturamento_leads_anuncios||0)+(r.faturamento_recorrente||0)+(r.faturamento_recorrente_novo||0)
+    +(r.fat_indicacao||0)+(r.fat_instagram||0)+(r.fat_anuncios||0)+(r.fat_parcerias||0)+(r.fat_influenciadores||0)+(r.fat_acao||0),0);
   if(fatFlashboard > 0){
     const mesKey = `${hoje.getFullYear()}-${String(hoje.getMonth()+1).padStart(2,'0')}`;
-    const fatAtual = (S.faturamento||{})[mesKey];
-    if(!fatAtual){
-      if(!S.faturamento) S.faturamento={};
-      S.faturamento[mesKey] = Math.round(fatFlashboard);
-      save({faturamento: S.faturamento});
-      renderMetas();
-      const sub2 = document.getElementById('fb-sub');
-      if(sub2 && !sub2.textContent.includes('Faturamento')) sub2.textContent += ' · Faturamento sincronizado';
-    }
+    if(!S.faturamento) S.faturamento={};
+    S.faturamento[mesKey] = Math.round(fatFlashboard);
+    save({faturamento: S.faturamento});
+    renderMetas();
+    const sub2 = document.getElementById('fb-sub');
+    if(sub2 && !sub2.textContent.includes('Faturamento')) sub2.textContent += ' · Faturamento sincronizado';
   }
 }
 
