@@ -82,15 +82,15 @@
   --blue-border:rgba(59,130,246,0.22);
 }
 html,body{height:100%;overflow:hidden}
-body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:13px;line-height:1.5;display:flex;width:100%;max-width:100%}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:14px;line-height:1.5;display:flex;width:100%;max-width:100%}
 
 /* ── LOADING SCREEN ── */
 #loading-screen{position:fixed;inset:0;background:var(--bg);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
 #loading-screen.hidden{display:none}
-.loading-logo{font-family:'Montserrat',sans-serif;font-size:22px;font-weight:800;color:var(--text)}
+.loading-logo{font-family:'Montserrat',sans-serif;font-size:23px;font-weight:800;color:var(--text)}
 .loading-logo span{color:var(--amber);font-style:italic}
 .loading-spinner{width:36px;height:36px;border:3px solid rgba(245,166,35,0.15);border-top-color:var(--amber);border-radius:50%;animation:spin .8s linear infinite}
-.loading-txt{font-size:12px;color:var(--text-sec)}
+.loading-txt{font-size:13px;color:var(--text-sec)}
 @keyframes spin{to{transform:rotate(360deg)}}
 
 /* ── SYNC INDICATOR ── */
@@ -98,39 +98,39 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 .sync-dot.saving{background:var(--yellow);box-shadow:0 0 6px var(--yellow);animation:pulse .6s infinite alternate}
 .sync-dot.error{background:var(--red);box-shadow:0 0 6px var(--red)}
 @keyframes pulse{from{opacity:.5}to{opacity:1}}
-.sync-label{font-size:10px;color:var(--text-sec)}
+.sync-label{font-size:11px;color:var(--text-sec)}
 
 /* ── SIDEBAR ── */
 .sidebar{width:220px;min-width:220px;height:100vh;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
 .sidebar-logo{padding:22px 18px 18px;border-bottom:1px solid var(--border)}
 .logo-mark{display:flex;align-items:center;gap:10px;margin-bottom:4px}
 .logo-icon{width:30px;height:30px;border-radius:6px;background:var(--surface2);border:1px solid var(--amber-border);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.logo-wordmark{font-family:'Montserrat',sans-serif;font-size:15px;font-weight:800;letter-spacing:.04em;color:var(--text)}
+.logo-wordmark{font-family:'Montserrat',sans-serif;font-size:16px;font-weight:800;letter-spacing:.04em;color:var(--text)}
 .logo-wordmark span{color:var(--amber);font-style:italic}
-.logo-tagline{font-size:10px;color:var(--text-sec);letter-spacing:.12em;text-transform:uppercase;padding-left:40px}
-.sidebar-section{padding:16px 10px 8px;font-size:9px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.16em;font-weight:700;font-family:'Montserrat',sans-serif}
+.logo-tagline{font-size:11px;color:var(--text-sec);letter-spacing:.12em;text-transform:uppercase;padding-left:40px}
+.sidebar-section{padding:16px 10px 8px;font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.16em;font-weight:700;font-family:'Montserrat',sans-serif}
 .nav{padding:0 8px;flex:1;overflow-y:auto}
-.nav-item{display:flex;align-items:center;gap:10px;width:100%;padding:9px 10px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:500;color:var(--text-sec);transition:all .15s;border:none;background:none;text-align:left;margin-bottom:1px;position:relative}
+.nav-item{display:flex;align-items:center;gap:10px;width:100%;padding:9px 10px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:500;color:var(--text-sec);transition:all .15s;border:none;background:none;text-align:left;margin-bottom:1px;position:relative}
 .nav-item:hover{background:var(--surface2);color:var(--text)}
 .nav-item.active{background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border)}
 .nav-icon{width:16px;height:16px;flex-shrink:0;opacity:.6}
 .nav-item.active .nav-icon{opacity:1}
-.nav-badge{margin-left:auto;background:var(--red);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:10px;font-family:'Montserrat',sans-serif}
+.nav-badge{margin-left:auto;background:var(--red);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px;font-family:'Montserrat',sans-serif}
 .sidebar-client{padding:14px 18px;border-top:1px solid var(--border)}
-.client-avatar{width:32px;height:32px;border-radius:50%;background:var(--amber-dim);border:1px solid var(--amber-border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--amber);font-family:'Montserrat',sans-serif;flex-shrink:0}
+.client-avatar{width:32px;height:32px;border-radius:50%;background:var(--amber-dim);border:1px solid var(--amber-border);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--amber);font-family:'Montserrat',sans-serif;flex-shrink:0}
 .client-info{display:flex;align-items:center;gap:10px}
-.client-name{font-size:12px;font-weight:600;color:var(--text)}
-.client-role{font-size:10px;color:var(--text-sec)}
+.client-name{font-size:13px;font-weight:600;color:var(--text)}
+.client-role{font-size:11px;color:var(--text-sec)}
 
 /* ── MAIN ── */
 .main{flex:1;min-width:0;height:100vh;overflow-y:auto;background:var(--bg)}
 .topbar{height:52px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 28px;gap:16px;position:sticky;top:0;z-index:50}
-.topbar-title{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;letter-spacing:.04em;color:var(--text)}
+.topbar-title{font-family:'Montserrat',sans-serif;font-size:14px;font-weight:700;letter-spacing:.04em;color:var(--text)}
 .topbar-sep{width:1px;height:16px;background:var(--border)}
-.topbar-sub{font-size:11px;color:var(--text-sec)}
+.topbar-sub{font-size:12px;color:var(--text-sec)}
 .topbar-right{margin-left:auto;display:flex;align-items:center;gap:12px}
-.topbar-date{font-size:11px;color:var(--text-sec);font-family:'JetBrains Mono',monospace}
-.global-badge{padding:5px 14px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-family:'Montserrat',sans-serif}
+.topbar-date{font-size:12px;color:var(--text-sec);font-family:'JetBrains Mono',monospace}
+.global-badge{padding:5px 14px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-family:'Montserrat',sans-serif}
 .gb-blocked{background:var(--red-dim);color:var(--red);border:1px solid var(--red-border)}
 .gb-progress{background:var(--yellow-dim);color:var(--yellow);border:1px solid var(--yellow-border)}
 .gb-almost{background:var(--blue-dim);color:var(--blue);border:1px solid var(--blue-border)}
@@ -149,28 +149,28 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 .scard-red::before{background:var(--red)}
 .scard-blue::before{background:var(--blue)}
 .scard-yellow::before{background:var(--yellow)}
-.scard-label{font-size:9px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.12em;margin-bottom:8px;font-family:'Montserrat',sans-serif;font-weight:600}
-.scard-val{font-size:26px;font-weight:700;line-height:1;font-family:'Montserrat',sans-serif}
+.scard-label{font-size:10px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.12em;margin-bottom:8px;font-family:'Montserrat',sans-serif;font-weight:600}
+.scard-val{font-size:27px;font-weight:700;line-height:1;font-family:'Montserrat',sans-serif}
 .sv-amber{color:var(--amber)}.sv-green{color:var(--green)}.sv-red{color:var(--red)}.sv-blue{color:var(--blue)}.sv-yellow{color:var(--yellow)}.sv-white{color:var(--text)}
-.scard-sub{font-size:10px;color:var(--text-sec);margin-top:5px}
+.scard-sub{font-size:11px;color:var(--text-sec);margin-top:5px}
 
 /* ── PROGRESS ── */
 .prog-section{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px 22px;margin-bottom:22px}
 .prog-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-.prog-title{font-size:11px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.12em;font-family:'Montserrat',sans-serif;font-weight:600}
-.prog-pct{font-size:13px;font-weight:600;color:var(--amber);font-family:'JetBrains Mono',monospace}
+.prog-title{font-size:12px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.12em;font-family:'Montserrat',sans-serif;font-weight:600}
+.prog-pct{font-size:14px;font-weight:600;color:var(--amber);font-family:'JetBrains Mono',monospace}
 .prog-bar{height:10px;background:rgba(255,255,255,0.05);border-radius:5px;overflow:hidden}
 .prog-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--amber),rgba(245,166,35,0.55));transition:width .6s cubic-bezier(.4,0,.2,1)}
 .etapa-bars{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-top:14px}
 .ebar{background:var(--surface2);border-radius:6px;padding:8px 10px}
-.ebar-label{font-size:9px;color:var(--text-sec);margin-bottom:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ebar-label{font-size:10px;color:var(--text-sec);margin-bottom:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ebar-bar{height:4px;background:rgba(255,255,255,0.07);border-radius:2px;overflow:hidden;margin-bottom:4px}
 .ebar-fill{height:100%;border-radius:2px;transition:width .5s}
 .ef-done{background:var(--green)}.ef-active{background:var(--amber)}.ef-locked{background:var(--border)}
-.ebar-pct{font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--text-sec)}
+.ebar-pct{font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--text-sec)}
 
 /* ── MESSAGE ── */
-.msg-box{display:flex;align-items:flex-start;gap:12px;padding:14px 18px;border-radius:8px;margin-bottom:22px;font-size:12px;line-height:1.6}
+.msg-box{display:flex;align-items:flex-start;gap:12px;padding:14px 18px;border-radius:8px;margin-bottom:22px;font-size:13px;line-height:1.6}
 .msg-blocked{background:var(--red-dim);border:1px solid var(--red-border);color:var(--red)}
 .msg-ready{background:var(--green-dim);border:1px solid var(--green-border);color:var(--green)}
 .msg-icon{flex-shrink:0;margin-top:1px}
@@ -180,59 +180,59 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 .etapa-block{background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:14px;overflow:hidden}
 .etapa-head{display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;user-select:none;transition:background .15s}
 .etapa-head:hover{background:var(--surface2)}
-.etapa-num-badge{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;flex-shrink:0}
+.etapa-num-badge{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;font-family:'Montserrat',sans-serif;flex-shrink:0}
 .enb-done{background:var(--green);color:#000}
 .enb-active{background:var(--amber);color:#000}
 .enb-pending{background:rgba(255,255,255,0.07);color:var(--text-sec);border:1px solid var(--border)}
 .etapa-info{flex:1}
-.etapa-name{font-size:13px;font-weight:600;margin-bottom:2px}
-.etapa-meta{font-size:11px;color:var(--text-sec)}
+.etapa-name{font-size:14px;font-weight:600;margin-bottom:2px}
+.etapa-meta{font-size:12px;color:var(--text-sec)}
 .etapa-right{display:flex;align-items:center;gap:12px}
 .etapa-prog-wrap{display:flex;align-items:center;gap:8px;min-width:110px}
 .etapa-prog-bar{flex:1;height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden}
 .etapa-prog-fill{height:100%;border-radius:2px;transition:width .4s}
-.etapa-pct-txt{font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--text-sec);min-width:28px;text-align:right}
-.etapa-chevron{color:var(--text-sec);font-size:18px;transition:transform .2s;flex-shrink:0;width:20px;text-align:center}
+.etapa-pct-txt{font-size:12px;font-family:'JetBrains Mono',monospace;color:var(--text-sec);min-width:28px;text-align:right}
+.etapa-chevron{color:var(--text-sec);font-size:19px;transition:transform .2s;flex-shrink:0;width:20px;text-align:center}
 
 /* ── TASKS TABLE ── */
 .tasks-table{width:100%;border-collapse:collapse}
 .tasks-table-wrap{border-top:1px solid var(--border)}
 .tasks-table thead tr{background:var(--surface2)}
-.tasks-table th{padding:8px 14px;text-align:left;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--text-sec);font-family:'Montserrat',sans-serif;border-bottom:1px solid var(--border)}
+.tasks-table th{padding:8px 14px;text-align:left;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--text-sec);font-family:'Montserrat',sans-serif;border-bottom:1px solid var(--border)}
 .tasks-table td{padding:11px 14px;border-bottom:1px solid var(--border-light);vertical-align:top}
 .tasks-table tbody tr:last-child td{border-bottom:none}
 .tasks-table tbody tr:hover{background:rgba(255,255,255,0.015)}
 .task-check-btn{width:18px;height:18px;border-radius:3px;border:1.5px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .18s;background:transparent;flex-shrink:0}
 .tcb-done{background:var(--green);border-color:var(--green)}
 .tcb-progress{background:var(--yellow-dim);border-color:var(--yellow)}
-.task-name-col{font-size:12px;font-weight:500;color:var(--text)}
+.task-name-col{font-size:13px;font-weight:500;color:var(--text)}
 .task-name-done{text-decoration:line-through;color:var(--text-dim)}
-.task-desc-col{font-size:11px;color:var(--text-sec);margin-top:2px}
-.task-status-pill{display:inline-flex;padding:2px 9px;border-radius:10px;font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;font-family:'Montserrat',sans-serif}
+.task-desc-col{font-size:12px;color:var(--text-sec);margin-top:2px}
+.task-status-pill{display:inline-flex;padding:2px 9px;border-radius:10px;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;font-family:'Montserrat',sans-serif}
 .tsp-done{background:var(--green-dim);color:var(--green);border:1px solid var(--green-border)}
 .tsp-progress{background:var(--yellow-dim);color:var(--yellow);border:1px solid var(--yellow-border)}
 .tsp-pending{background:rgba(255,255,255,0.05);color:var(--text-sec);border:1px solid var(--border)}
-.field-cell{font-size:11px;color:var(--text-sec);max-width:120px;word-break:break-word}
+.field-cell{font-size:12px;color:var(--text-sec);max-width:120px;word-break:break-word}
 .field-cell.has-val{color:var(--text)}
 
 /* ── CTA ── */
 .cta-section{margin-top:28px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px 24px}
-.cta-btn{padding:13px 32px;border-radius:6px;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-family:'Montserrat',sans-serif;cursor:pointer;transition:all .2s;border:none}
+.cta-btn{padding:13px 32px;border-radius:6px;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-family:'Montserrat',sans-serif;cursor:pointer;transition:all .2s;border:none}
 .cta-disabled{background:rgba(255,255,255,0.05);color:var(--text-dim);cursor:not-allowed}
 .cta-enabled{background:var(--amber);color:#000;box-shadow:0 4px 20px rgba(245,166,35,0.25)}
 .cta-enabled:hover{transform:translateY(-1px);box-shadow:0 6px 24px rgba(245,166,35,0.35)}
-.cta-hint-text{font-size:11px;color:var(--text-sec);line-height:1.6}
-.cta-hint-text strong{color:var(--text);display:block;font-size:12px;margin-bottom:2px}
+.cta-hint-text{font-size:12px;color:var(--text-sec);line-height:1.6}
+.cta-hint-text strong{color:var(--text);display:block;font-size:13px;margin-bottom:2px}
 
 /* ── PENDÊNCIAS ── */
 .pend-count-row{display:flex;align-items:center;gap:14px;margin-bottom:20px}
-.pend-title{font-size:18px;font-weight:700;font-family:'Montserrat',sans-serif}
+.pend-title{font-size:19px;font-weight:700;font-family:'Montserrat',sans-serif}
 .pend-title span{color:var(--amber)}
 .pend-item{background:var(--surface);border-radius:8px;padding:16px 18px;margin-bottom:10px;border:1px solid var(--border);border-left:3px solid var(--red)}
-.pend-etapa-tag{font-size:10px;color:var(--red);text-transform:uppercase;letter-spacing:.1em;font-weight:600;font-family:'Montserrat',sans-serif;margin-bottom:5px}
-.pend-task-name{font-size:13px;font-weight:600;margin-bottom:4px}
-.pend-task-desc{font-size:11px;color:var(--text-sec);margin-bottom:10px}
-.pend-quick-btn{padding:5px 14px;border-radius:4px;font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border);cursor:pointer;font-family:'Montserrat',sans-serif;transition:all .15s}
+.pend-etapa-tag{font-size:11px;color:var(--red);text-transform:uppercase;letter-spacing:.1em;font-weight:600;font-family:'Montserrat',sans-serif;margin-bottom:5px}
+.pend-task-name{font-size:14px;font-weight:600;margin-bottom:4px}
+.pend-task-desc{font-size:12px;color:var(--text-sec);margin-bottom:10px}
+.pend-quick-btn{padding:5px 14px;border-radius:4px;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border);cursor:pointer;font-family:'Montserrat',sans-serif;transition:all .15s}
 .pend-quick-btn:hover{background:var(--amber);color:#000}
 
 /* ── RESUMO ── */
@@ -242,68 +242,68 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 .rbc-amber::before{background:linear-gradient(90deg,var(--amber),transparent)}
 .rbc-red::before{background:linear-gradient(90deg,var(--red),transparent)}
 .rbc-green::before{background:linear-gradient(90deg,var(--green),transparent)}
-.r-big-label{font-size:10px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.12em;font-family:'Montserrat',sans-serif;font-weight:600;margin-bottom:8px}
+.r-big-label{font-size:11px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.12em;font-family:'Montserrat',sans-serif;font-weight:600;margin-bottom:8px}
 .r-big-val{font-size:36px;font-weight:800;font-family:'Montserrat',sans-serif;line-height:1}
-.r-big-sub{font-size:11px;color:var(--text-sec);margin-top:6px}
+.r-big-sub{font-size:12px;color:var(--text-sec);margin-top:6px}
 .resumo-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:22px}
 .r-info-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px 20px}
-.r-info-label{font-size:10px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.12em;font-family:'Montserrat',sans-serif;font-weight:600;margin-bottom:8px}
-.r-info-val{font-size:14px;font-weight:500;color:var(--text)}
+.r-info-label{font-size:11px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.12em;font-family:'Montserrat',sans-serif;font-weight:600;margin-bottom:8px}
+.r-info-val{font-size:15px;font-weight:500;color:var(--text)}
 .timeline-section{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px 22px;margin-bottom:22px}
-.timeline-title{font-size:11px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.12em;font-family:'Montserrat',sans-serif;font-weight:600;margin-bottom:16px}
+.timeline-title{font-size:12px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.12em;font-family:'Montserrat',sans-serif;font-weight:600;margin-bottom:16px}
 .timeline{display:flex;align-items:flex-start;gap:0;position:relative}
 .timeline::before{content:'';position:absolute;top:14px;left:14px;right:14px;height:1px;background:var(--border)}
 .tl-step{display:flex;flex-direction:column;align-items:center;gap:8px;flex:1;position:relative;z-index:1}
-.tl-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;font-family:'Montserrat',sans-serif}
+.tl-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif}
 .tld-done{background:var(--green);color:#000}.tld-active{background:var(--amber);color:#000}.tld-future{background:var(--surface2);color:var(--text-sec);border:1px solid var(--border)}
-.tl-name{font-size:10px;color:var(--text-sec);text-align:center;max-width:80px;line-height:1.3}
-.tl-pct{font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--text-dim);text-align:center}
+.tl-name{font-size:11px;color:var(--text-sec);text-align:center;max-width:80px;line-height:1.3}
+.tl-pct{font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--text-dim);text-align:center}
 .obs-section{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px 22px}
-.obs-title{font-size:11px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.12em;font-family:'Montserrat',sans-serif;font-weight:600;margin-bottom:14px}
+.obs-title{font-size:12px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.12em;font-family:'Montserrat',sans-serif;font-weight:600;margin-bottom:14px}
 .obs-item{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--border-light)}
 .obs-item:last-child{border-bottom:none}
 .obs-dot{width:6px;height:6px;border-radius:50%;background:var(--amber);flex-shrink:0;margin-top:5px}
-.obs-text{font-size:12px;color:var(--text-sec);line-height:1.6}
+.obs-text{font-size:13px;color:var(--text-sec);line-height:1.6}
 
 /* ── MODAL ── */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:200;align-items:center;justify-content:center}
 .modal-overlay.open{display:flex}
 .modal{background:var(--surface);border:1px solid var(--border);border-radius:12px;width:520px;max-width:95vw;max-height:85vh;overflow-y:auto;padding:28px}
-.modal-title{font-size:16px;font-weight:700;font-family:'Montserrat',sans-serif;margin-bottom:4px}
-.modal-sub{font-size:12px;color:var(--text-sec);margin-bottom:22px}
+.modal-title{font-size:17px;font-weight:700;font-family:'Montserrat',sans-serif;margin-bottom:4px}
+.modal-sub{font-size:13px;color:var(--text-sec);margin-bottom:22px}
 .modal-field{margin-bottom:14px}
-.modal-label{font-size:10px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.12em;font-family:'Montserrat',sans-serif;font-weight:600;margin-bottom:6px}
-.modal-input,.modal-textarea,.modal-select{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'Inter',sans-serif;font-size:12px;padding:9px 12px;outline:none;transition:border-color .15s}
+.modal-label{font-size:11px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.12em;font-family:'Montserrat',sans-serif;font-weight:600;margin-bottom:6px}
+.modal-input,.modal-textarea,.modal-select{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'Inter',sans-serif;font-size:13px;padding:9px 12px;outline:none;transition:border-color .15s}
 .modal-input:focus,.modal-textarea:focus,.modal-select:focus{border-color:var(--amber)}
 .modal-textarea{resize:vertical;min-height:72px}
 .modal-select option{background:var(--surface2)}
 .modal-actions{display:flex;gap:10px;margin-top:20px;justify-content:flex-end}
-.btn-secondary{padding:9px 20px;border-radius:5px;font-size:12px;font-weight:600;background:transparent;color:var(--text-sec);border:1px solid var(--border);cursor:pointer;font-family:'Montserrat',sans-serif;transition:all .15s}
+.btn-secondary{padding:9px 20px;border-radius:5px;font-size:13px;font-weight:600;background:transparent;color:var(--text-sec);border:1px solid var(--border);cursor:pointer;font-family:'Montserrat',sans-serif;transition:all .15s}
 .btn-secondary:hover{border-color:var(--text-sec);color:var(--text)}
-.btn-primary{padding:9px 22px;border-radius:5px;font-size:12px;font-weight:700;background:var(--amber);color:#000;border:none;cursor:pointer;font-family:'Montserrat',sans-serif;letter-spacing:.04em}
+.btn-primary{padding:9px 22px;border-radius:5px;font-size:13px;font-weight:700;background:var(--amber);color:#000;border:none;cursor:pointer;font-family:'Montserrat',sans-serif;letter-spacing:.04em}
 .btn-primary:hover{opacity:.9}
 
 /* ── TOAST ── */
-.toast{position:fixed;bottom:24px;right:24px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 18px;font-size:12px;color:var(--text);z-index:999;transform:translateY(80px);opacity:0;transition:all .3s;box-shadow:0 8px 32px rgba(0,0,0,0.4);max-width:320px;border-left:3px solid var(--amber)}
+.toast{position:fixed;bottom:24px;right:24px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 18px;font-size:13px;color:var(--text);z-index:999;transform:translateY(80px);opacity:0;transition:all .3s;box-shadow:0 8px 32px rgba(0,0,0,0.4);max-width:320px;border-left:3px solid var(--amber)}
 .toast.show{transform:translateY(0);opacity:1}
 .toast.success{border-left-color:var(--green)}
 .toast.error{border-left-color:var(--red)}
 
 .brand-rail{height:2px;background:linear-gradient(90deg,rgba(245,166,35,0) 0%,var(--amber) 40%,var(--amber) 60%,rgba(245,166,35,0) 100%);margin-bottom:22px}
 .section-title-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
-.section-title{font-size:13px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--text)}
-.section-sub{font-size:11px;color:var(--text-sec)}
+.section-title{font-size:14px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--text)}
+.section-sub{font-size:12px;color:var(--text-sec)}
 
 .mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--border);z-index:100}
 .mobile-nav-inner{display:flex;align-items:stretch}
-.mobile-nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 4px 16px;border:none;background:transparent;color:var(--text-sec);font-size:9px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;font-family:"Montserrat",sans-serif;cursor:pointer;position:relative;transition:color .15s}
+.mobile-nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 4px 16px;border:none;background:transparent;color:var(--text-sec);font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;font-family:"Montserrat",sans-serif;cursor:pointer;position:relative;transition:color .15s}
 .mobile-nav-btn.active{color:var(--amber)}
 .mobile-nav-btn svg{width:20px;height:20px;flex-shrink:0}
 .mobile-nav-badge{position:absolute;top:5px;right:calc(50% - 18px);background:var(--red);color:#fff;font-size:8px;font-weight:700;padding:1px 5px;border-radius:10px}
 .mobile-topbar{display:none;height:52px;background:var(--surface);border-bottom:1px solid var(--border);align-items:center;padding:0 16px;gap:10px;position:sticky;top:0;z-index:50;flex-shrink:0}
-.mobile-logo{font-family:"Montserrat",sans-serif;font-size:14px;font-weight:800;color:var(--text)}
+.mobile-logo{font-family:"Montserrat",sans-serif;font-size:15px;font-weight:800;color:var(--text)}
 .mobile-logo span{color:var(--amber);font-style:italic}
-.mobile-sync{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--text-sec);margin-left:auto}
+.mobile-sync{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text-sec);margin-left:auto}
 @media(max-width:900px){
   html,body{height:auto;overflow:auto}
   body{display:block}
@@ -328,14 +328,14 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 @media(max-width:480px){
   .content{padding:12px 12px 88px}
   .scard{padding:10px 12px}
-  .scard-val{font-size:20px}
+  .scard-val{font-size:21px}
   .scard-label{font-size:8px}
-  .r-big-val{font-size:26px}
+  .r-big-val{font-size:27px}
   .modal{padding:18px 14px;margin:12px}
   .prog-section{padding:12px 14px}
   .pend-item{padding:12px 14px}
   .etapa-head{padding:12px 14px;gap:10px}
-  .etapa-name{font-size:12px}
+  .etapa-name{font-size:13px}
   .obs-section,.r-info-card,.resumo-header-cards .r-big-card{padding:14px 16px}
 }
 </style>
@@ -355,7 +355,7 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
     <div class="sync-dot" id="sync-dot-mobile"></div>
     <span id="sync-text-mobile">Sync</span>
   </div>
-  <div class="global-badge gb-blocked" id="global-badge-mobile" style="font-size:9px;padding:4px 10px">...</div>
+  <div class="global-badge gb-blocked" id="global-badge-mobile" style="font-size:10px;padding:4px 10px">...</div>
 </div>
 
 <!-- LOADING -->
@@ -413,13 +413,13 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 <!-- MAIN -->
 <div class="main">
   <div class="topbar">
-    <a href="painel.html" style="display:flex;align-items:center;gap:6px;color:var(--text-sec);font-size:11px;text-decoration:none;padding:5px 10px;border-radius:5px;border:1px solid var(--border);transition:all .15s" onmouseover="this.style.borderColor='var(--amber)'" onmouseout="this.style.borderColor='var(--border)'"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Painel</a>
+    <a href="painel.html" style="display:flex;align-items:center;gap:6px;color:var(--text-sec);font-size:12px;text-decoration:none;padding:5px 10px;border-radius:5px;border:1px solid var(--border);transition:all .15s" onmouseover="this.style.borderColor='var(--amber)'" onmouseout="this.style.borderColor='var(--border)'"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Painel</a>
     <div class="topbar-title" id="topbar-client-name">Checklist de Posicionamento</div>
     <div class="topbar-sep"></div>
     <div class="topbar-sub" id="topbar-sub-name">Liberação de Tráfego</div>
     <div class="topbar-right">
       <div class="topbar-date" id="top-date"></div>
-      <div id="sync-status" style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-sec)">
+      <div id="sync-status" style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-sec)">
         <div class="sync-dot" id="sync-dot-top"></div>
         <span id="sync-text-top">Conectando...</span>
       </div>
@@ -438,8 +438,8 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
         <div class="scard scard-red"><div class="scard-label">Pendentes</div><div class="scard-val sv-red" id="sc-pend">23</div><div class="scard-sub">em aberto</div></div>
         <div class="scard" style="border-top:2px solid var(--yellow)"><div class="scard-label">Em andamento</div><div class="scard-val sv-yellow" id="sc-prog">0</div><div class="scard-sub">iniciadas</div></div>
         <div class="scard" style="border-top:2px solid var(--blue)"><div class="scard-label">Total</div><div class="scard-val sv-white" id="sc-total">23</div><div class="scard-sub">tarefas</div></div>
-        <div class="scard scard-amber"><div class="scard-label">Etapa atual</div><div class="scard-val sv-white" style="font-size:12px;font-weight:600;margin-top:4px" id="sc-etapa">—</div><div class="scard-sub" id="sc-next-task">—</div></div>
-        <div class="scard scard-red"><div class="scard-label">Status Tráfego</div><div class="scard-val sv-red" style="font-size:13px;font-weight:700;margin-top:6px" id="sc-traffic">Bloqueado</div><div class="scard-sub" id="sc-traffic-sub">—</div></div>
+        <div class="scard scard-amber"><div class="scard-label">Etapa atual</div><div class="scard-val sv-white" style="font-size:13px;font-weight:600;margin-top:4px" id="sc-etapa">—</div><div class="scard-sub" id="sc-next-task">—</div></div>
+        <div class="scard scard-red"><div class="scard-label">Status Tráfego</div><div class="scard-val sv-red" style="font-size:14px;font-weight:700;margin-top:6px" id="sc-traffic">Bloqueado</div><div class="scard-sub" id="sc-traffic-sub">—</div></div>
       </div>
 
       <div class="prog-section">
@@ -493,7 +493,7 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
       <div class="resumo-header-cards">
         <div class="r-big-card rbc-amber"><div class="r-big-label">Progresso total</div><div class="r-big-val" id="r-pct" style="color:var(--amber)">0%</div><div class="r-big-sub" id="r-pct-sub">0 de 23 tarefas</div></div>
         <div class="r-big-card rbc-red"><div class="r-big-label">Tarefas pendentes</div><div class="r-big-val" id="r-pend-big" style="color:var(--red)">23</div><div class="r-big-sub">bloqueando tráfego</div></div>
-        <div class="r-big-card rbc-green"><div class="r-big-label">Previsão de liberação</div><div class="r-big-val" id="r-status-big" style="font-size:18px;font-weight:700;color:var(--red);margin-top:4px">Bloqueado</div><div class="r-big-sub" id="r-days-big">—</div></div>
+        <div class="r-big-card rbc-green"><div class="r-big-label">Previsão de liberação</div><div class="r-big-val" id="r-status-big" style="font-size:19px;font-weight:700;color:var(--red);margin-top:4px">Bloqueado</div><div class="r-big-sub" id="r-days-big">—</div></div>
       </div>
       <div class="resumo-info-grid">
         <div class="r-info-card"><div class="r-info-label">Etapa atual</div><div class="r-info-val" id="r-etapa-atual">—</div></div>
@@ -845,8 +845,8 @@ function renderTaskRow(t,e){
     <td><div class="field-cell ${obs!=='—'?'has-val':''}">${obs}</div></td>
     <td><div class="field-cell ${ev!=='—'?'has-val':''}">${ev}</div></td>
     <td><div class="field-cell ${resp!=='—'?'has-val':''}">${resp}</div></td>
-    <td><div class="field-cell ${date!=='—'?'has-val':''}" style="font-family:'JetBrains Mono',monospace;font-size:10px">${date}</div></td>
-    <td><button style="padding:4px 10px;border-radius:4px;font-size:10px;font-weight:600;background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border);cursor:pointer;font-family:'Montserrat',sans-serif" onclick="openModal('${t.id}')">Editar</button></td>
+    <td><div class="field-cell ${date!=='—'?'has-val':''}" style="font-family:'JetBrains Mono',monospace;font-size:11px">${date}</div></td>
+    <td><button style="padding:4px 10px;border-radius:4px;font-size:11px;font-weight:600;background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border);cursor:pointer;font-family:'Montserrat',sans-serif" onclick="openModal('${t.id}')">Editar</button></td>
   </tr>`;
 }
 
