@@ -346,51 +346,13 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
     </div>
 
     <div class="card">
-      <div class="card-title" style="color:var(--red)">🚨 Gatilhos de Atenção — Falsos Qualificados</div>
+      <div class="card-title">💡 Pilar 4 — Pergunta de Gatilho (O "Pulo do Gato")</div>
       <div class="card-body">
-        <p style="margin-bottom:14px">São o "detector de mentiras" da operação. Quando o paciente abre a boca com esses sinais, o SDR trava a conversa e confronta na hora.</p>
-        <div class="grid2">
-          <div>
-            <p style="font-size:12px;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">Gatilhos de Falta de Caixa</p>
-            <div style="display:flex;flex-wrap:wrap;gap:4px">
-              <span class="tag tag-red">Fatura menos de 20k/mês</span>
-              <span class="tag tag-red">Em reforma</span>
-              <span class="tag tag-red">Começando agora</span>
-              <span class="tag tag-red">Faturou nada no mês passado</span>
-            </div>
-            <div class="bant-script" style="margin-top:10px;font-size:12px">"Sendo transparente: nossos programas variam de 5k a 42k. Considerando que você [está em reforma / fatura menos de 20k], esse valor se encaixa hoje na sua realidade?"</div>
-          </div>
-          <div>
-            <p style="font-size:12px;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">Gatilhos de Falta de Autoridade</p>
-            <div style="display:flex;flex-wrap:wrap;gap:4px">
-              <span class="tag tag-amber">Trabalha na clínica do pai</span>
-              <span class="tag tag-amber">A esposa administra</span>
-              <span class="tag tag-amber">Tenho sócio</span>
-            </div>
-            <div class="bant-script" style="margin-top:10px;font-size:12px">"Se o especialista apresentar o plano e fizer sentido, você tem a caneta para aprovar um investimento sozinho ou precisa do sócio? Se precisar, a reunião só acontece com os dois."</div>
-          </div>
-        </div>
+        <p style="margin-bottom:12px">Às vezes a paciente parece não ter dinheiro (falha no <strong>B</strong> do BANT), mas tem potencial escondido. Use este gatilho antes de desqualificar:</p>
+        <div class="bant-script">"[Nome], compreendo totalmente. Muitas pacientes nossas também se organizam dessa forma. Mas me tira uma dúvida: se a Doutora montar um plano perfeito para você, você prefere se organizar usando um limite de cartão de crédito parcelado, ou tem a expectativa de usar alguma bonificação ou PLR agora no semestre para realizar esse sonho?"</div>
+        <div class="script-obs2" style="margin-top:10px">✅ Se ela revelar de onde tiraria o dinheiro, ela está qualificada. Desqualifique só após essa pergunta.</div>
       </div>
     </div>
-
-    <div class="tier-grid">
-      <div class="tier-card" style="border-color:rgba(245,166,35,0.4)">
-        <div class="tier-badge" style="background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border)">Nível A — Ouro</div>
-        <div class="tier-name">A Baleia (Whale)</div>
-        <div class="tier-criteria">Faturamento +50k/mês · Autoridade na região · Posicionamento excelente · Decisor · +3 anos de mercado</div>
-      </div>
-      <div class="tier-card" style="border-color:rgba(148,163,184,0.4)">
-        <div class="tier-badge" style="background:rgba(148,163,184,0.1);color:#94A3B8;border:1px solid rgba(148,163,184,0.3)">Nível B — Prata</div>
-        <div class="tier-name">O Ideal (Target)</div>
-        <div class="tier-criteria">Faturamento 30k–50k · Dor latente · Decisor · Posicionamento baixo ou bom · +2 anos de mercado</div>
-      </div>
-      <div class="tier-card" style="border-color:rgba(180,83,9,0.3)">
-        <div class="tier-badge" style="background:rgba(180,83,9,0.1);color:#D97706;border:1px solid rgba(180,83,9,0.25)">Nível C — Bronze</div>
-        <div class="tier-name">O Ninja (Mínimo)</div>
-        <div class="tier-criteria">Faturamento 20k- · Tem uma dor · Decisor · Posicionamento baixo · Menos de 1 ano de mercado</div>
-      </div>
-    </div>
-    <p style="font-size:12px;color:var(--text-sec);margin-bottom:14px">⚠️ <strong style="color:var(--red)">Regra de Ouro:</strong> Lead Ouro NUNCA cai na mão de Closer Tier 3. É proibido.</p>
   </div>
 
   <!-- SCRIPTS -->
@@ -684,58 +646,190 @@ Se você quiser, posso verificar se conseguimos algum benefício extra pra te aj
 
   <!-- FOLLOW-UP -->
   <div class="section" id="sec-followup">
-    <div class="sec-title">Cadência de Follow-up</div>
-    <p class="sec-desc">A maioria das vendas acontece entre o 2º e o 5º contato. Siga a cadência — não pressione, mas não desapareça.</p>
+    <div class="sec-title">Automação de Follow-up — 4 Níveis</div>
+    <p class="sec-desc">O lead NUNCA morre na tentativa 3. A maioria das clínicas manda a mesma mensagem genérica para todos. O sistema correto divide a base em 4 níveis de consciência — cada um com cadência própria de 15 dias.</p>
 
-    <div class="fu-step">
-      <div class="fu-dot" style="background:var(--blue-dim);border-color:var(--blue-border);color:var(--blue)">30m</div>
-      <div class="fu-content">
-        <div class="fu-title">30 minutos sem resposta</div>
-        <div class="fu-desc">Verificar se visualizou. Tom leve — sem cobrar.</div>
-        <div class="fu-msg">👀 Oi! Tudo certo por aí? Vi que você visualizou e quis garantir que não perdeu a mensagem. 😄</div>
-      </div>
+    <div class="alert alert-amber">
+      <div class="alert-icon">⚙️</div>
+      <div><strong>Como usar no CRM:</strong> Crie 4 pipelines (N1, N2, N3, N4). Programe os disparos nos dias indicados. Quando a paciente responder, a automação pausa e a secretária entra ao vivo para aplicar o B.A.N.T. O PIX só é enviado ao vivo — nunca por automação.</div>
     </div>
-    <div class="fu-step">
-      <div class="fu-dot" style="background:var(--amber-dim);border-color:var(--amber-border);color:var(--amber)">24h</div>
-      <div class="fu-content">
-        <div class="fu-title">24 horas — Follow-up 1</div>
-        <div class="fu-desc">Retomar a conversa com abertura para a dúvida.</div>
-        <div class="fu-msg">Oi, tudo bem? 😊 Vi que você entrou em contato sobre o procedimento e não sei se ficou alguma dúvida pendente. Quero muito te ajudar a entender melhor como funciona. Posso te explicar rapidinho?</div>
-      </div>
-    </div>
-    <div class="fu-step">
-      <div class="fu-dot" style="background:var(--amber-dim);border-color:var(--amber-border);color:var(--amber)">48h</div>
-      <div class="fu-content">
-        <div class="fu-title">48 horas — Follow-up 2</div>
-        <div class="fu-desc">Despertar a dor e manter o interesse vivo.</div>
-        <div class="fu-msg">Oi! Você tem um minutinho agora? Queria te mostrar como podemos te ajudar a atingir seu objetivo. 😉
 
-Oi, tudo bem? Notei que você entrou em contato. Geralmente quem procura esse procedimento está incomodado com [problema]. Você sente que isso tem te incomodado mais?</div>
+    <!-- N1 -->
+    <div class="script-card">
+      <div class="script-hdr" onclick="toggleScript(this)">
+        <div class="script-num" style="background:var(--blue-dim);border-color:var(--blue-border);color:var(--blue)">N1</div>
+        <div class="script-info">
+          <div class="script-title">👻 O Fantasma Precoce — Levantou a mão e sumiu</div>
+          <div class="script-meta">Perfil: viu anúncio, mandou "quero saber mais" e nunca mais respondeu</div>
+        </div>
+        <div class="script-chev">⌄</div>
+      </div>
+      <div class="script-body">
+        <div class="script-context"><strong>Objetivo:</strong> Gerar curiosidade extrema ou usar o gatilho da retirada (Takeaway) para forçar uma resposta.</div>
+        <div class="fu-step">
+          <div class="fu-dot" style="background:var(--blue-dim);border-color:var(--blue-border);color:var(--blue)">D1</div>
+          <div class="fu-content">
+            <div class="fu-title">Dia 1 — Curiosidade</div>
+            <div class="fu-msg">Oi [Nome], tudo bem? Vi que você nos chamou aqui ontem sobre os procedimentos da Doutora, mas acabou não dando sequência. Aconteceu algum imprevisto ou você não recebeu minha última mensagem?</div>
+          </div>
+        </div>
+        <div class="fu-step">
+          <div class="fu-dot" style="background:var(--amber-dim);border-color:var(--amber-border);color:var(--amber)">D4</div>
+          <div class="fu-content">
+            <div class="fu-title">Dia 4 — Gatilho da Oportunidade</div>
+            <div class="fu-msg">[Nome], a Doutora liberou uma condição super exclusiva agora para este mês, focada exatamente no que você tinha perguntado. Como você já tinha chamado a gente antes, seu contato está na lista VIP. Posso te mandar como vai funcionar?</div>
+          </div>
+        </div>
+        <div class="fu-step">
+          <div class="fu-dot" style="background:var(--purple-dim);border-color:var(--purple-border);color:var(--purple)">D9</div>
+          <div class="fu-content">
+            <div class="fu-title">Dia 9 — Prova Social</div>
+            <div class="fu-msg">[Nome], olha só esse resultado que acabou de sair do consultório da Doutora! (Enviar foto Antes/Depois impactante). Lembrei de você na hora. Me diz uma coisa — resolver isso hoje é uma prioridade pra você?</div>
+          </div>
+        </div>
+        <div class="fu-step" style="margin-bottom:0">
+          <div class="fu-dot" style="background:var(--red-dim);border-color:rgba(239,68,68,0.3);color:var(--red)">D15</div>
+          <div class="fu-content">
+            <div class="fu-title">Dia 15 — Retirada (Takeaway)</div>
+            <div class="fu-msg">[Nome], sendo bem sincera, como não tive mais seu retorno, acredito que não seja o seu momento de passar pelo planejamento com a Doutora agora. Vou encerrar o seu atendimento aqui para liberar espaço no sistema para outras pacientes da fila de espera, tudo bem? Se no futuro quiser retomar, é só me chamar. Um abraço!</div>
+            <div class="script-obs2" style="margin-top:8px">✅ 90% das pacientes respondem essa mensagem dizendo "Não, espera!"</div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="fu-step">
-      <div class="fu-dot" style="background:var(--purple-dim);border-color:var(--purple-border);color:var(--purple)">72h</div>
-      <div class="fu-content">
-        <div class="fu-title">72 horas — Follow-up 3</div>
-        <div class="fu-desc">Gatilho de cuidado — mostrar que está presente sem pressionar.</div>
-        <div class="fu-msg">Oi, tudo bem? Vi que ficou sem me responder — será que te peguei em um momento corrido?
-Quero te passar todas as informações para que você entenda como o Dr. [Nome] pode te ajudar a tratar isso de forma definitiva.</div>
-      </div>
-    </div>
-    <div class="fu-step">
-      <div class="fu-dot" style="background:var(--red-dim);border-color:rgba(239,68,68,0.3);color:var(--red)">96h</div>
-      <div class="fu-content">
-        <div class="fu-title">96 horas — Follow-up 4 (último)</div>
-        <div class="fu-desc">Quebra de padrão — muitos respondem por esse gatilho de perda.</div>
-        <div class="fu-msg">Olá! 😊 Tentamos contato e, como não tivemos retorno, vamos retirar seu nome da nossa lista de atendimentos por enquanto. Esperamos que esteja tudo bem!
 
-Se quiser voltar a falar com a gente ou receber condições especiais, é só nos chamar. 🌸</div>
+    <!-- N2 -->
+    <div class="script-card">
+      <div class="script-hdr" onclick="toggleScript(this)">
+        <div class="script-num" style="background:var(--purple-dim);border-color:var(--purple-border);color:var(--purple)">N2</div>
+        <div class="script-info">
+          <div class="script-title">🧠 A Desperta Incompleta — Falta consciência de valor</div>
+          <div class="script-meta">Perfil: respondeu o básico, mas não sente urgência — acha que é "só estética"</div>
+        </div>
+        <div class="script-chev">⌄</div>
+      </div>
+      <div class="script-body">
+        <div class="script-context"><strong>Objetivo:</strong> Nutrição agressiva. Aumentar o nível de consciência com depoimentos e consequências de não agir.</div>
+        <div class="fu-step">
+          <div class="fu-dot" style="background:var(--blue-dim);border-color:var(--blue-border);color:var(--blue)">D2</div>
+          <div class="fu-content">
+            <div class="fu-title">Dia 2 — Quebra de Mito + Prova Social</div>
+            <div class="fu-msg">Oi [Nome]! Sabe de uma coisa que muitas pacientes comentam aqui? Elas acham que o procedimento X dói ou demora muito para recuperar. Olha esse vídeo da [Nome da Paciente] contando como foi voltar a trabalhar em poucos dias. (Enviar vídeo de depoimento). Você tem algum medo ou dúvida que está te travando hoje?</div>
+          </div>
+        </div>
+        <div class="fu-step">
+          <div class="fu-dot" style="background:var(--amber-dim);border-color:var(--amber-border);color:var(--amber)">D6</div>
+          <div class="fu-content">
+            <div class="fu-title">Dia 6 — A Dor da Procrastinação</div>
+            <div class="fu-msg">[Nome], uma coisa que a Doutora sempre fala nas avaliações: a pele não espera. Deixar para resolver [citar a dor, ex: a flacidez facial] ano que vem só faz o tratamento ser mais longo e mais caro depois. De 0 a 10, o quanto isso que conversamos te incomoda quando você se olha no espelho hoje?</div>
+          </div>
+        </div>
+        <div class="fu-step">
+          <div class="fu-dot" style="background:var(--purple-dim);border-color:var(--purple-border);color:var(--purple)">D10</div>
+          <div class="fu-content">
+            <div class="fu-title">Dia 10 — Campanha + Autoridade</div>
+            <div class="fu-msg">Oi [Nome]! Acabamos de rodar uma campanha interna onde a Doutora explicou exatamente como funciona a técnica que usamos aqui. (Enviar link de vídeo da Doutora explicando). O que separa um resultado artificial de um resultado premium é justamente esse detalhe. Faz sentido para você?</div>
+          </div>
+        </div>
+        <div class="fu-step" style="margin-bottom:0">
+          <div class="fu-dot" style="background:var(--red-dim);border-color:rgba(239,68,68,0.3);color:var(--red)">D14</div>
+          <div class="fu-content">
+            <div class="fu-title">Dia 14 — Chamada para o Diagnóstico</div>
+            <div class="fu-msg">[Nome], já te mandei alguns resultados e materiais. Mas ver o resultado dos outros não muda o seu, né? A Doutora tem 2 horários vagos essa semana para fazer um mapeamento focado no SEU caso. Vamos dar esse primeiro passo?</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- N3 -->
+    <div class="script-card">
+      <div class="script-hdr" onclick="toggleScript(this)">
+        <div class="script-num" style="background:var(--amber-dim);border-color:var(--amber-border);color:var(--amber)">N3</div>
+        <div class="script-info">
+          <div class="script-title">⏱️ A "Quase Lá" — Travou na hora do PIX</div>
+          <div class="script-meta">Perfil: sabe que precisa, amou a Doutora, mas sumiu na hora do pagamento</div>
+        </div>
+        <div class="script-chev">⌄</div>
+      </div>
+      <div class="script-body">
+        <div class="script-context"><strong>Objetivo:</strong> Confronto educado, redução de atrito e urgência real.</div>
+        <div class="fu-step">
+          <div class="fu-dot" style="background:var(--blue-dim);border-color:var(--blue-border);color:var(--blue)">D1</div>
+          <div class="fu-content">
+            <div class="fu-title">Dia 1 — Direto ao Ponto</div>
+            <div class="fu-msg">Oi [Nome], estávamos quase finalizando a reserva do seu horário e você sumiu! Aconteceu alguma coisa? Hoje, o que mais te impede de darmos esse passo: é o horário da agenda ou a questão do investimento da consulta?</div>
+          </div>
+        </div>
+        <div class="fu-step">
+          <div class="fu-dot" style="background:var(--amber-dim);border-color:var(--amber-border);color:var(--amber)">D5</div>
+          <div class="fu-content">
+            <div class="fu-title">Dia 5 — Urgência de Agenda</div>
+            <div class="fu-msg">[Nome], passando para avisar que a Doutora vai fechar a agenda de planejamentos da primeira quinzena na sexta-feira. Como você já tinha deixado o processo pela metade, consegui segurar sua vaga até agora. Consigo confirmar o seu PIX de agendamento hoje para não perdermos sua reserva?</div>
+          </div>
+        </div>
+        <div class="fu-step">
+          <div class="fu-dot" style="background:var(--purple-dim);border-color:var(--purple-border);color:var(--purple)">D8</div>
+          <div class="fu-content">
+            <div class="fu-title">Dia 8 — Ajuste + Flexibilidade</div>
+            <div class="fu-msg">[Nome], sei que a rotina é corrida. Se o problema para agendarmos a sua avaliação for a flexibilidade de horários, me avise. A Doutora pediu para dar uma atenção especial para o seu caso. Posso tentar um encaixe no seu horário de almoço ou no fim do dia. Como fica melhor para você?</div>
+          </div>
+        </div>
+        <div class="fu-step" style="margin-bottom:0">
+          <div class="fu-dot" style="background:var(--red-dim);border-color:rgba(239,68,68,0.3);color:var(--red)">D12</div>
+          <div class="fu-content">
+            <div class="fu-title">Dia 12 — O Desafio</div>
+            <div class="fu-msg">[Nome], se continuarmos adiando esse agendamento, você vai passar mais um mês inteira insatisfeita com [dor]. A gente tá propondo um caminho diferente. Vamos travar sua agenda nessa semana para você entender como resolver isso de uma vez?</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- N4 -->
+    <div class="script-card">
+      <div class="script-hdr" onclick="toggleScript(this)">
+        <div class="script-num" style="background:var(--green-dim);border-color:var(--green-border);color:var(--green)">N4</div>
+        <div class="script-info">
+          <div class="script-title">🔨 O Martelo Batedor — "Eu quero, só preciso ver um dia"</div>
+          <div class="script-meta">Perfil: confirma que quer, mas nunca define data — fica sempre "vendo"</div>
+        </div>
+        <div class="script-chev">⌄</div>
+      </div>
+      <div class="script-body">
+        <div class="script-context"><strong>Objetivo:</strong> Técnica "Ou-Ou" (Dupla Opção). Nunca pergunte "Você pode?" — sempre "Qual dos dois?". Bata na mesma tecla até ela ceder.</div>
+        <div class="fu-step">
+          <div class="fu-dot" style="background:var(--blue-dim);border-color:var(--blue-border);color:var(--blue)">D2</div>
+          <div class="fu-content">
+            <div class="fu-title">Dia 2 — Dupla Opção</div>
+            <div class="fu-msg">Oi [Nome]! Para a sua avaliação com a Doutora, tenho uma vaga na quinta às 10h ou na sexta às 16h. Qual encaixa melhor na tua rotina?</div>
+          </div>
+        </div>
+        <div class="fu-step">
+          <div class="fu-dot" style="background:var(--amber-dim);border-color:var(--amber-border);color:var(--amber)">D6</div>
+          <div class="fu-content">
+            <div class="fu-title">Dia 6 — Gatilho de Desistência</div>
+            <div class="fu-msg">[Nome], uma paciente acabou de desmarcar por imprevisto e liberou um horário Ouro amanhã às 15h. Lembrei de você na hora que pediu para avisar. Posso colocar seu nome nessa vaga?</div>
+          </div>
+        </div>
+        <div class="fu-step">
+          <div class="fu-dot" style="background:var(--purple-dim);border-color:var(--purple-border);color:var(--purple)">D10</div>
+          <div class="fu-content">
+            <div class="fu-title">Dia 10 — Nova Rodada Dupla Opção</div>
+            <div class="fu-msg">Fala [Nome]! A Doutora pediu para darmos prioridade nos agendamentos pendentes desta semana. Tenho terça às 09h ou quarta às 11h. Qual fica melhor para você?</div>
+          </div>
+        </div>
+        <div class="fu-step" style="margin-bottom:0">
+          <div class="fu-dot" style="background:var(--red-dim);border-color:rgba(239,68,68,0.3);color:var(--red)">D15</div>
+          <div class="fu-content">
+            <div class="fu-title">Dia 15 — Última Chamada do Mês</div>
+            <div class="fu-msg">[Nome], fechando a agenda do mês agora. Últimos dois horários da Doutora: segunda às 14h ou quinta às 17h. Qual dos dois eu posso confirmar pra você não ficar de fora desse ciclo?</div>
+          </div>
+        </div>
       </div>
     </div>
 
     <div class="alert alert-red">
       <div class="alert-icon">🚫</div>
-      <div><strong>O que NÃO fazer:</strong> Mandar "oi" e "oi sumido(a)" em seguida. Não enviar áudio para leads frios. Não usar letras maiúsculas em excesso — parece desespero. Nunca pressione ou cobre de forma agressiva.</div>
+      <div><strong>O que NÃO fazer:</strong> Mandar "oi" e "oi sumido(a)" em sequência. Não usar letras maiúsculas em excesso. Nunca enviar o link de PIX por automação — sempre ao vivo. Não misturar os níveis: cada paciente fica em um nível só.</div>
     </div>
   </div>
 
