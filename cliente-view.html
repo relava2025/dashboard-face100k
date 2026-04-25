@@ -269,6 +269,17 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .pb-section-body.open{display:block}
 .pb-content{font-size:14px;color:var(--text-sec);line-height:1.8;white-space:pre-wrap}
 
+/* NOTION CARDS */
+.notion-grid{display:flex;flex-direction:column;gap:8px}
+.notion-card{background:var(--surface2);border:.5px solid var(--border);border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:14px;text-decoration:none;transition:border-color .15s,background .15s;-webkit-tap-highlight-color:transparent}
+.notion-card:hover{border-color:rgba(34,197,94,0.3);background:rgba(34,197,94,0.04)}
+.notion-card-icon{width:38px;height:38px;border-radius:9px;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.notion-card-info{flex:1;min-width:0}
+.notion-card-title{font-size:14px;font-weight:600;color:var(--text);line-height:1.3}
+.notion-card-sub{font-size:12px;color:var(--text-sec);margin-top:2px}
+.notion-card-arrow{font-size:17px;color:var(--green);opacity:.7;flex-shrink:0;transition:transform .15s,opacity .15s}
+.notion-card:hover .notion-card-arrow{transform:translateX(3px);opacity:1}
+
 /* RESPONSIVE — 768px */
 @media(max-width:768px){
   .topbar{padding:12px 16px;gap:10px}
@@ -681,6 +692,110 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
         <div class="scard-sub" id="calls-sub">—</div>
       </div>
       <div class="scard-body"><div class="call-list" id="call-list"></div></div>
+    </div>
+
+    <!-- NOTION WORKSPACE -->
+    <div class="scard">
+      <div class="scard-hdr">
+        <div class="scard-icon" style="background:rgba(34,197,94,0.08);border-color:rgba(34,197,94,0.2)">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2.5" y="1.5" width="11" height="13" rx="1.5" stroke="#22C55E" stroke-width="1.3"/><path d="M5 5h6M5 8h6M5 11h4" stroke="#22C55E" stroke-width="1.3" stroke-linecap="round"/></svg>
+        </div>
+        <div class="scard-title">Workspace — System Digital</div>
+        <div class="scard-sub">módulos do seu programa</div>
+      </div>
+      <div class="scard-body">
+        <div class="notion-grid">
+
+          <a class="notion-card" href="notion/PRÉ VENDAS 3073a7ed24c080b89e82cc873067d21a.html" target="_blank" rel="noopener">
+            <div class="notion-card-icon">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3L17 7v6l-7 4-7-4V7l7-4z" stroke="#22C55E" stroke-width="1.4" stroke-linejoin="round"/><path d="M10 3v14M17 7l-7 4M3 7l7 4" stroke="#22C55E" stroke-width="1.2" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="notion-card-info">
+              <div class="notion-card-title">Pré Vendas</div>
+              <div class="notion-card-sub">prospecção e qualificação</div>
+            </div>
+            <div class="notion-card-arrow">→</div>
+          </a>
+
+          <a class="notion-card" href="notion/VENDAS 3073a7ed24c080b68fc9ee8bdace0c65.html" target="_blank" rel="noopener">
+            <div class="notion-card-icon">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="#22C55E" stroke-width="1.4"/><path d="M7 10l2 2 4-4" stroke="#22C55E" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="notion-card-info">
+              <div class="notion-card-title">Vendas</div>
+              <div class="notion-card-sub">scripts e processo comercial</div>
+            </div>
+            <div class="notion-card-arrow">→</div>
+          </a>
+
+          <a class="notion-card" href="notion/SUCESSO DO CLIENTE 3073a7ed24c080daaa2bdb3c5cb1166b.html" target="_blank" rel="noopener">
+            <div class="notion-card-icon">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3l1.8 3.6L16 7.6l-3 2.9.7 4.1L10 12.4l-3.7 2.2.7-4.1-3-2.9 4.2-.6L10 3z" stroke="#22C55E" stroke-width="1.3" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="notion-card-info">
+              <div class="notion-card-title">Sucesso do Cliente</div>
+              <div class="notion-card-sub">onboarding e retenção</div>
+            </div>
+            <div class="notion-card-arrow">→</div>
+          </a>
+
+          <a class="notion-card" href="notion/RH 3073a7ed24c080128a61c9b865ad5e6b.html" target="_blank" rel="noopener">
+            <div class="notion-card-icon">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="8" cy="7" r="3" stroke="#22C55E" stroke-width="1.4"/><path d="M3 17c0-3.3 2.2-6 5-6" stroke="#22C55E" stroke-width="1.4" stroke-linecap="round"/><circle cx="14" cy="9" r="2.5" stroke="#22C55E" stroke-width="1.3"/><path d="M11 17c0-2.8 1.3-5 3-5" stroke="#22C55E" stroke-width="1.3" stroke-linecap="round"/></svg>
+            </div>
+            <div class="notion-card-info">
+              <div class="notion-card-title">RH</div>
+              <div class="notion-card-sub">recrutamento e equipe</div>
+            </div>
+            <div class="notion-card-arrow">→</div>
+          </a>
+
+          <a class="notion-card" href="notion/INDICAÇÃO E EMBAIXADOR 3073a7ed24c0807cb4abf91755846a48.html" target="_blank" rel="noopener">
+            <div class="notion-card-icon">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 4a3 3 0 110 6 3 3 0 010-6z" stroke="#22C55E" stroke-width="1.3"/><path d="M4 16a6 6 0 0112 0" stroke="#22C55E" stroke-width="1.3" stroke-linecap="round"/><path d="M16 8l2-2M4 8L2 6" stroke="#22C55E" stroke-width="1.3" stroke-linecap="round"/></svg>
+            </div>
+            <div class="notion-card-info">
+              <div class="notion-card-title">Indicação e Embaixador</div>
+              <div class="notion-card-sub">programa de referência</div>
+            </div>
+            <div class="notion-card-arrow">→</div>
+          </a>
+
+          <a class="notion-card" href="notion/GESTÃO COMERCIAL 3073a7ed24c0808cb9dfe28cd9f4b345.html" target="_blank" rel="noopener">
+            <div class="notion-card-icon">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="3" y="5" width="14" height="10" rx="1.5" stroke="#22C55E" stroke-width="1.4"/><path d="M7 5V4a1 1 0 011-1h4a1 1 0 011 1v1" stroke="#22C55E" stroke-width="1.3"/><path d="M10 9v4M8 11h4" stroke="#22C55E" stroke-width="1.3" stroke-linecap="round"/></svg>
+            </div>
+            <div class="notion-card-info">
+              <div class="notion-card-title">Gestão Comercial</div>
+              <div class="notion-card-sub">métricas e gestão de equipe</div>
+            </div>
+            <div class="notion-card-arrow">→</div>
+          </a>
+
+          <a class="notion-card" href="notion/SOCIAL SELLING 3083a7ed24c080908038cfb71bf8b1e3.html" target="_blank" rel="noopener">
+            <div class="notion-card-icon">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="5" cy="10" r="2.5" stroke="#22C55E" stroke-width="1.3"/><circle cx="15" cy="5" r="2.5" stroke="#22C55E" stroke-width="1.3"/><circle cx="15" cy="15" r="2.5" stroke="#22C55E" stroke-width="1.3"/><path d="M7.4 9l5.2-3M7.4 11l5.2 3" stroke="#22C55E" stroke-width="1.3" stroke-linecap="round"/></svg>
+            </div>
+            <div class="notion-card-info">
+              <div class="notion-card-title">Social Selling</div>
+              <div class="notion-card-sub">estratégia de redes sociais</div>
+            </div>
+            <div class="notion-card-arrow">→</div>
+          </a>
+
+          <a class="notion-card" href="notion/Passagem de Bastão (1) 3143a7ed24c080d7a495e0ac6fa5f199.html" target="_blank" rel="noopener">
+            <div class="notion-card-icon" style="background:rgba(234,179,8,0.08);border-color:rgba(234,179,8,0.25)">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 16l12-12M13 4h3v3" stroke="#EAB308" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6" cy="14" r="2" stroke="#EAB308" stroke-width="1.3"/></svg>
+            </div>
+            <div class="notion-card-info">
+              <div class="notion-card-title">Passagem de Bastão</div>
+              <div class="notion-card-sub">transição e handoff</div>
+            </div>
+            <div class="notion-card-arrow" style="color:var(--yellow)">→</div>
+          </a>
+
+        </div>
+      </div>
     </div>
 
   </div>

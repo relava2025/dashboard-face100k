@@ -1,0 +1,744 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Fórmula da Manhã</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+
+	table.collection-content {
+		width: 100%;
+		table-layout: fixed;
+	}
+
+	table.collection-content th,
+	table.collection-content td {
+		overflow-wrap: anywhere;
+	}
+
+	table.collection-content td > .user,
+	table.collection-content td > time {
+		white-space: pre-wrap;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content-wrapper {
+	overflow-x: auto;
+}
+
+@media only print {
+	.collection-content-wrapper {
+		overflow-x: visible;
+	}
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	gap: 46px;
+}
+
+.column {
+	min-width: 0;
+	overflow: hidden;
+}
+
+.column > *:first-child {
+	margin-top: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+table {
+	border-collapse: collapse;
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol.numbered-list.numbered-list-digits-2 {
+	padding-inline-start: 2em;
+}
+
+ol.numbered-list.numbered-list-digits-3plus {
+	padding-inline-start: 2.4em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="3073a7ed-24c0-8084-993e-e6eb3fd18234" class="page sans"><header><div class="page-header-icon undefined"><img class="icon notion-static-icon" src="https://www.notion.so/icons/map-pin_green.svg"/></div><h1 class="page-title" dir="auto"><strong>Fórmula da Manhã</strong></h1><p class="page-description" dir="auto"></p></header><div class="page-body"><div style="display:contents" dir="auto"><h1 id="3073a7ed-24c0-8126-af7d-dd5d27ae8b29" class=""><strong>MAPA DE VISÃO [SEU NOME]</strong></h1></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81e6-b17c-e9c7a729788c" class=""><a href="https://www.evernote.com/l/AAYC29bGrrNNz4hdSRD4NPI-WHQaBniQSQ8">Crenças</a> - Credo</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8174-af2d-ea69d48426cc" class="">[Seu nome] &#x27; é um bem sucedido e muito respeitado [líder de vendas] na área comercial que construiu um império de prosperidade e sucesso, reconhecido por muitos.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81f0-b627-e5403af2ceff" class="">Ele se especializou em vendas, marketing, liderança, e gestão e ajuda milhares de pessoas</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-810e-8aee-f8915ca60067" class="">[Seu nome] e [esposa/esposo] vivem em uma casa de XX milhões na  XXXXXX</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81ea-bc65-d026de82d5e5" class="">[Seu nome] faz XX milhões de reais por ano e<strong> possuem investimentos no ramo imobiliário para aluguel, o que gera uma receita de xxxxx anualmente.</strong></p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-813b-9b38-e2a3884f5401" class=""><strong>Data: xx/xx/xx</strong></p></div><div style="display:contents" dir="auto"><h1 id="3073a7ed-24c0-8198-9fcd-ced80412e9a7" class=""><strong>Identidade</strong></h1></div><div style="display:contents" dir="ltr"><figure id="3073a7ed-24c0-810d-8cf0-dc0265b3817b" class="image"><a href="https://lh7-rt.googleusercontent.com/docsz/AD_4nXexOC44iaQafWN-T5vIRQRKYqL7iVkJ1mOubmZhRucVCXVZ2KX9M84YOswN-HT2Ek9HJGntmlMR26R11XCy1OkeA8GxY4sSafyZyYiu4hFNkiMJPT5u6yzzlcaSnBWlUvbmF5gNpTkwDl8QS1JLJMvJE-Claq2acUvLnPYhoNqlJ8m84cU?key=d6L2sh1T4ak4D8K5Ma_weQ"><img style="width:427.98614501953125px" src="https://lh7-rt.googleusercontent.com/docsz/AD_4nXexOC44iaQafWN-T5vIRQRKYqL7iVkJ1mOubmZhRucVCXVZ2KX9M84YOswN-HT2Ek9HJGntmlMR26R11XCy1OkeA8GxY4sSafyZyYiu4hFNkiMJPT5u6yzzlcaSnBWlUvbmF5gNpTkwDl8QS1JLJMvJE-Claq2acUvLnPYhoNqlJ8m84cU?key=d6L2sh1T4ak4D8K5Ma_weQ"/></a></figure></div><div style="display:contents" dir="ltr"><figure id="3073a7ed-24c0-819d-b7d3-e31c2a12f8ba" class="image"><a href="https://lh7-rt.googleusercontent.com/docsz/AD_4nXdV7cm1t_Uc8sCKlMcT8OJh34Z4StD8oZAJA5Ug2Y27aEQRm_RirCgYbiwV0S5wnkdq7MOa3GQg9bfE1Z4JbDTcL0t2JMYrcY9563dzyABa16Hklw3SGqSBNtP9Fgjj-ZxyCu2LADxhh05n7nR543KzBuIUwUaqZLHqhbRs-Yylc97-i4OC?key=d6L2sh1T4ak4D8K5Ma_weQ"><img style="width:483px" src="https://lh7-rt.googleusercontent.com/docsz/AD_4nXdV7cm1t_Uc8sCKlMcT8OJh34Z4StD8oZAJA5Ug2Y27aEQRm_RirCgYbiwV0S5wnkdq7MOa3GQg9bfE1Z4JbDTcL0t2JMYrcY9563dzyABa16Hklw3SGqSBNtP9Fgjj-ZxyCu2LADxhh05n7nR543KzBuIUwUaqZLHqhbRs-Yylc97-i4OC?key=d6L2sh1T4ak4D8K5Ma_weQ"/></a></figure></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-814b-8103-dccc3c9b2f2d" class="">&lt;&lt;&lt; Eu quero ter o físico desse cara e por isso está na minha Fórmula da Manhã</p></div><div style="display:contents" dir="ltr"><figure id="3073a7ed-24c0-81ed-8ac3-cdfc1fdff398" class="image"><a href="https://lh7-rt.googleusercontent.com/docsz/AD_4nXcffNSow-_dwSGlNdDygRDawVZjY1IkAzA1z_gRtywFoEYoi5lI6qLqz7ipjx3m0lTRTLC7TuDDIBPzbNFtF2-uTgyuCwXUDcafi0RjJ-U7xzr6L-JwfPkUBBV1d-cyifBWwexF1OVjBhln6hss2zU6nwD4vHLNSVDChXoOY0mheceUBTs?key=d6L2sh1T4ak4D8K5Ma_weQ"><img style="width:376px" src="https://lh7-rt.googleusercontent.com/docsz/AD_4nXcffNSow-_dwSGlNdDygRDawVZjY1IkAzA1z_gRtywFoEYoi5lI6qLqz7ipjx3m0lTRTLC7TuDDIBPzbNFtF2-uTgyuCwXUDcafi0RjJ-U7xzr6L-JwfPkUBBV1d-cyifBWwexF1OVjBhln6hss2zU6nwD4vHLNSVDChXoOY0mheceUBTs?key=d6L2sh1T4ak4D8K5Ma_weQ"/></a></figure></div><div style="display:contents" dir="ltr"><figure id="3073a7ed-24c0-8126-91c3-d8d887569c5c" class="image"><a href="https://lh7-rt.googleusercontent.com/docsz/AD_4nXdjgGkEZ8VGJoHr6zIfgUbx9DxyT-v7K3AsYJFu8zCF-GsytIwwQ8kr7kyG4y8s_UqCYE-9gk51a7HS0M5Op8GZUaMDaMifhMe7mxuI8YlHw6OroOEmT5HxjfekyLo7LqP008SgUSz4rQ5hJn0QdJPaCeFFWD88lGkXByuRQqnlTLANT8Y?key=d6L2sh1T4ak4D8K5Ma_weQ"><img style="width:524px" src="https://lh7-rt.googleusercontent.com/docsz/AD_4nXdjgGkEZ8VGJoHr6zIfgUbx9DxyT-v7K3AsYJFu8zCF-GsytIwwQ8kr7kyG4y8s_UqCYE-9gk51a7HS0M5Op8GZUaMDaMifhMe7mxuI8YlHw6OroOEmT5HxjfekyLo7LqP008SgUSz4rQ5hJn0QdJPaCeFFWD88lGkXByuRQqnlTLANT8Y?key=d6L2sh1T4ak4D8K5Ma_weQ"/></a></figure></div><div style="display:contents" dir="ltr"><figure id="3073a7ed-24c0-8159-bd69-fb4e91066d13" class="image"><a href="https://lh7-rt.googleusercontent.com/docsz/AD_4nXdLkY60_TOUeSTIVwub6JzSaEhnX7FHH40d8MgPv3NEbROBlcOlYt35FaK1jimPSdn_sJNV90nnIBIUuf2ZmO_Id96NeP1ueenSRWnOG48Nu8X_NHwvPn_akEQQoKveRefDizGbjB1HnhZNo1MaYZ90oEh4UbcXAUCJLR_q-GXg67zKuW0?key=d6L2sh1T4ak4D8K5Ma_weQ"><img style="width:391.9965515136719px" src="https://lh7-rt.googleusercontent.com/docsz/AD_4nXdLkY60_TOUeSTIVwub6JzSaEhnX7FHH40d8MgPv3NEbROBlcOlYt35FaK1jimPSdn_sJNV90nnIBIUuf2ZmO_Id96NeP1ueenSRWnOG48Nu8X_NHwvPn_akEQQoKveRefDizGbjB1HnhZNo1MaYZ90oEh4UbcXAUCJLR_q-GXg67zKuW0?key=d6L2sh1T4ak4D8K5Ma_weQ"/></a></figure></div><div style="display:contents" dir="ltr"><figure id="3073a7ed-24c0-811d-b864-c12b77da2b93" class="image"><a href="https://lh7-rt.googleusercontent.com/docsz/AD_4nXdDn2Zu_Mb-ZkE8BmaEueyI9ZihuqPT39ojdFaExHJapuoGiVwDyd2-gS7zxNnAwCv78KQtFdvx8Yx6rTSRnW-RNMM3Zmwologm270ChSUGfpgRIrKjZAk2TrkaD5p5aQG6HrZ3x1PNqRfVu4VVy-1QOl07sw7mzmZiVIf4gdzmatpfQkYw?key=d6L2sh1T4ak4D8K5Ma_weQ"><img style="width:403px" src="https://lh7-rt.googleusercontent.com/docsz/AD_4nXdDn2Zu_Mb-ZkE8BmaEueyI9ZihuqPT39ojdFaExHJapuoGiVwDyd2-gS7zxNnAwCv78KQtFdvx8Yx6rTSRnW-RNMM3Zmwologm270ChSUGfpgRIrKjZAk2TrkaD5p5aQG6HrZ3x1PNqRfVu4VVy-1QOl07sw7mzmZiVIf4gdzmatpfQkYw?key=d6L2sh1T4ak4D8K5Ma_weQ"/></a></figure></div><div style="display:contents" dir="ltr"><figure id="3073a7ed-24c0-817c-9543-e837d936e0f7" class="image"><a href="https://lh7-rt.googleusercontent.com/docsz/AD_4nXcoY9uB4n7qnB9XyPT6s_i2jj5q8NzqtMj5kLXbEaF8CEqr8goqB9BRQ7CGshNS21ddYliwengmGvJXiSLkRRDr3qAaDfxyqzKxLmUHZCSjin6NE5IxNuHqU1e4p5OHN1QLPVnb_4baERy6i3yaLwHNCQocJ3-18cTxgz7Bmp3UkurLKrDs?key=d6L2sh1T4ak4D8K5Ma_weQ"><img style="width:132px" src="https://lh7-rt.googleusercontent.com/docsz/AD_4nXcoY9uB4n7qnB9XyPT6s_i2jj5q8NzqtMj5kLXbEaF8CEqr8goqB9BRQ7CGshNS21ddYliwengmGvJXiSLkRRDr3qAaDfxyqzKxLmUHZCSjin6NE5IxNuHqU1e4p5OHN1QLPVnb_4baERy6i3yaLwHNCQocJ3-18cTxgz7Bmp3UkurLKrDs?key=d6L2sh1T4ak4D8K5Ma_weQ"/></a></figure></div><div style="display:contents" dir="auto"><h1 id="3073a7ed-24c0-8158-9467-d2676e66b166" class="">Regras</h1></div><div style="display:contents" dir="auto"><ol type="1" id="3073a7ed-24c0-81df-b73a-f32d66b3fb22" class="numbered-list" start="1"><li><strong>Passo pelo menos uma hora investindo em MIM, (Lendo um livro, trabalhando nas minhas metas, meditando, etc)</strong><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-812e-9713-f999c3ddf58f" class="">Esse tempo é agendado e bloqueado, tudo é fechado para eu não ser interrompido.</p></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="3073a7ed-24c0-813d-a564-e881c18a2b20" class="numbered-list" start="2"><li><strong>Eu gasto, 4 a 5 dias na semana fazendo exercícios.</strong></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="3073a7ed-24c0-8181-aca4-f336faf4814f" class="numbered-list" start="3"><li><strong>Eu trabalho para uma lista do que fazer e todo dia antes de sair do trabalho, eu mapeio a lista do meu dia seguinte.</strong></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="3073a7ed-24c0-8117-b05e-cb8a32609869" class="numbered-list" start="4"><li><strong>Eu acordo em todo dia de trabalho às 6:00 da manhã. Isso me deixa mais consistente no que faço e como faço.</strong></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="3073a7ed-24c0-81b7-bdb0-ef3ae8272ad9" class="numbered-list" start="5"><li><strong>Eu começo todo dia com:</strong><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-81e1-9794-d1ae91e3a21b" class="bulleted-list"><li style="list-style-type:disc">Exercícios</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-81be-952f-f860504cd02f" class="bulleted-list"><li style="list-style-type:disc">Leitura (30 minutos)</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8130-b729-e12bac22ee17" class="bulleted-list"><li style="list-style-type:disc">Ler minha Fórmula da Manhã (10 minutos)</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-81ca-b06f-f9b77ae66add" class="bulleted-list"><li style="list-style-type:disc">Cuidar da Aparência</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-81c1-8ca6-ebc92d08c6f8" class="bulleted-list"><li style="list-style-type:disc">Revisitando e mentalizando os objetivos para o dia</li></ul></div><div style="display:contents" dir="auto"><ol type="1" id="3073a7ed-24c0-81f4-8509-f7006bd29e7a" class="numbered-list" start="1"><li><strong>Toda semana eu listo o que quero concluir:Top 3-5 </strong><em><strong>atividades mais valiosas da semana</strong></em><strong>Lista de estudo (o que eu quero aperfeiçoar na semana que vem)Gratidão</strong></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="3073a7ed-24c0-8144-b21d-f2584d80fb26" class="numbered-list" start="2"><li><strong>Todo mês eu listo o que quero concluir:Top 7-10 </strong><em><strong>atividades mais valiosas do mês</strong></em><strong>Planejamento e Reflexão para os próximos 40 diasGratidão (A quem eu devo dizer que sou grato a ele/ela?)</strong></li></ol></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81f0-ac21-e7b3173289f2" class=""><strong>PRINCÍPIOS</strong></p></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8160-9210-c39568b1f87f" class="bulleted-list"><li style="list-style-type:disc">Deixe tudo que você faz e possui uma imagem de importância.<div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81d6-b8c5-f2176d5c6f39" class="">Possua uma mala de viagem de primeira classe, vá em restaurantes de primeira classe, faça compras em lojas de primeira classe, possua objetos pessoais de primeira classe (celular, material, óculos, relógio).</p></div></li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8169-ab8d-c9c3d0852b61" class="bulleted-list"><li style="list-style-type:disc"><strong>Fazer dinheiro não é fácil.</strong><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81a9-ad05-cfe89ce7a88d" class="">Porque quando você acha que não pode falhar, <strong>você vai para casa mais cedo.</strong></p></div></li></ul></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8128-a25e-fad13d9d27f5" class="">Você acredita que você não deve trabalhar duro.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81d6-8868-f0a3ef1f06ff" class="">Minha regra é, nunca acredite no que alguém diz sobre você, seja bom ou ruim. Não acredite nas coisas ruins e certamente não acredite nas coisas boas. Desenha sua própria conclusão sobre você. Ouça o seu próprio conselho administrativo. Ninguém sabe melhor do que você mesmo.</p></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8179-a150-d3e068c8f312" class="bulleted-list"><li style="list-style-type:disc">Veja a realidade: Ninguém, eu digo ninguém, nem o papa, nem o presidente, e possivelmente, mas não provavelmente Elon Musk, é melhor que você. Eles simplesmente sabem algo que você não sabe, acreditam em algo melhor do que você acredita e estão fazendo algo que você não está fazendo. Essas são coisas que <strong>você pode mudar muito facilmente.</strong></li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8112-9691-d303b46957de" class="bulleted-list"><li style="list-style-type:disc"><strong>Esteja sempre bem vestido, não importa o dia, situação ou local.</strong></li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8181-9030-dec897a95457" class="bulleted-list"><li style="list-style-type:disc">Fique imune à distrações. Fique atento a nada, exceto a verdade” Marco Aurélio – Imperador romano.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8198-b8ce-d545c6ff0d80" class="bulleted-list"><li style="list-style-type:disc">“Não faça nenhuma ação aleatória, nenhuma não baseada em princípios subjacentes.” – Marco Aurélio</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8151-9dd5-fada2c276c82" class="bulleted-list"><li style="list-style-type:disc">&quot;As coisas não têm controle sobre a alma. Eles ficam ali imóveis, fora dela. A perturbação vem apenas de dentro - de nossas próprias percepções” - Marco Aurélio</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-81ac-b27c-df5f2f9eb5f2" class="bulleted-list"><li style="list-style-type:disc"><strong>Se desapegue do resultado</strong>. Os resultados não importam porque eles são indicadores liderados. Você deve focar <strong>nos indicadores líderes</strong> e os resultados vão se adequar.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8179-b1f9-c8cc2fbf775b" class="bulleted-list"><li style="list-style-type:disc">Nada que passe na cabeça de ninguém pode prejudicar você.<div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8166-b475-de4586cb1a48" class="">“Nem tão pouco as alterações e mudanças no mundo ao redor de você.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-812d-b402-c20fc25d1502" class="">Então, onde o dano pode ser encontrado? Na sua capacidade de vê-lo. Você precisa entender o que acontece com todo mundo, ruim ou bom, não é necessariamente ruim ou bom” – Marco Aurélio – Imperador Romano</p></div></li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8195-ae03-e99542d887d3" class="bulleted-list"><li style="list-style-type:disc"><strong>Sempre olhe para o maior e melhor uso do seu tempo e oportunidades.</strong> Não desperdice energia ou esforço ou capital em algo menos recompensador ou menos satisfatório.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-81d4-8f46-e8bb9c401cc1" class="bulleted-list"><li style="list-style-type:disc">Seres humanos agem, sentem e performam de acordo com o que eles imaginam ser verdade sobre o mundo e sobre eles mesmos. Por isso cuidado com suas crenças, pois elas determinam a sua performance.<div style="display:contents" dir="auto"><p id="3073a7ed-24c0-815b-8796-ca549cc7cd8f" class="">“Para de medir  você com o padrão “deles” . Você não é “eles” e nunca pode ser medido. Nem eles podem ser medidos por você – ou não deveriam”</p></div></li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-813e-b391-dda2fc081510" class="bulleted-list"><li style="list-style-type:disc">Coloque na cabeça como as coisas passam rápido e vão embora – aqueles que estão e aqueles que vem. “<em>A existência passa por nós como um rio: o “o que” é um constante fluxo, o “porque” tem constantes variações. Nada é estável, nem o que é certo aqui.</em><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8167-afeb-c386ccdf28f4" class=""><em>O infinito do passado e do futuro se abre diante de nós - um abismo cujas profundezas não podemos ver</em> “- Marco Aurélio</p></div></li></ul></div><div style="display:contents" dir="auto"><h1 id="3073a7ed-24c0-8150-a4e6-efe4f659eb16" class=""><strong>O Teatro da Mente</strong></h1></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-816e-abed-d9fa46f21047" class=""><strong>Adaptação atualizada da mesa de Vincius de Sá</strong></p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-817e-9cf6-d961373d2375" class=""><strong>16.09.2021</strong></p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81af-b8e7-fd17f0cbec8b" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="3073a7ed-24c0-81c5-a839-f1ca8b131885" class="">Afirmações</h1></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8127-85f1-e8803948d5da" class=""><strong>Imaginação construtiva</strong></p></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-81e9-90e2-fb4f3c06ccb7" class="bulleted-list"><li style="list-style-type:disc">Eu sempre penso e ajo hoje.<div style="display:contents" dir="auto"><p id="3073a7ed-24c0-819c-899d-dabe56842520" class="">Eu me sinto heróico, confiante e empolgado sabendo que minhas ações de hoje criaram um momentum amanhã e no próximo dia. Eu me sinto imparável.</p></div></li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8101-9558-d73ebc9fad48" class="bulleted-list"><li style="list-style-type:disc">Eu sou livre do medo da rejeição. Rejeição é algo necessário para conquistar o sucesso. Eu ajo sem medo da rejeição e me sinto confiante, mentalmente forte e energizado.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-816f-876d-c4f7d3580a6e" class="bulleted-list"><li style="list-style-type:disc">Eu sou bom o bastante. Eu sou inteligente, útil e valioso para pegar o tempo de qualquer pessoa.<div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81bc-aab7-eeea9db190fc" class="">Sabendo que sou bom o bastante, me sinto confortável, confiante e empolgado.</p></div></li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8116-93e6-fdb4d39da8f1" class="bulleted-list"><li style="list-style-type:disc">Eu sou livre do medo de cometer falhas e erros! Erros e falhas são bons e necessários para atingir o sucesso.<div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81d2-ac25-fcb0d7618a13" class="">Eu ajo sem medo de falhar ou errar e eu me sinto excitado, heróico e imparável.</p></div></li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8161-92a9-e9975f031fe6" class="bulleted-list"><li style="list-style-type:disc">Eu sou muito orgulhoso de ser livre do julgamento de outras pessoas e a comparação deles comigo mesmo. Eu me sinto feliz e forte mentalmente.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-81b0-9871-d1ab8ad154cd" class="bulleted-list"><li style="list-style-type:disc">Eu me sinto orgulhoso de ser livre imaginando o que outros estão pensando ou falando sobre mim. Isso não é verdade e sendo livre de pensar nisso me deixa feliz, sem preocupações, bem sucedido e eu me sinto animado.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-815b-8602-ee544d9fd939" class="bulleted-list"><li style="list-style-type:disc">Eu amo ligar para meus prospectos e clientes pelo telefone.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-81f6-8e88-ed67197a8114" class="bulleted-list"><li style="list-style-type:disc">Cada ligação é uma nova oportunidade para construir uma relação e ajudar alguém.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-810b-bea6-d24540929dfb" class="bulleted-list"><li style="list-style-type:disc">Toda a vez que eu ligo para meus prospectos e clientes eu me sinto animado e confiante.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-815e-8862-ebf9af027369" class="bulleted-list"><li style="list-style-type:disc">Cada e todas as ligações que eu faço eu começo com um alto nível de expectativa positiva e prosperidade.<div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8156-8a27-c85adf30bf60" class="">Eu sei que agora mesmo, em algum lugar na vida de alguém é e será melhor por causa do meu produto ou serviço.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-814d-adea-c9dce74fc223" class="">Eu me sinto confiante e extraordinário.</p></div></li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8152-b0b4-feb0a6548cee" class="bulleted-list"><li style="list-style-type:disc">Eu amo fechar um negócio! Quando um negócio é fechado de uma forma ou de outra, fico feliz em saber que meu tempo foi bem gasto e me sinto confiante e animado para entrar em uma nova oportunidade sem perder tempo.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-812c-b52c-dbf6fe451444" class="bulleted-list"><li style="list-style-type:disc">Eu amo tomar ação! Eu me sinto corajoso e animado por tomar ação e eu construo um potente extremo momentum e prosperidade tomando ação.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-810a-a57c-fcb47414acf3" class="bulleted-list"><li style="list-style-type:disc">Eu acho mais e mais fácil de me aprimorar pessoalmente e profissionalmente todo dia. Minhas afirmações positivas, minhas metas colocadas e minha constante ação me tornam um profissional/ homem de negócios muito bem sucedido. Eu me sinto incrivelmente positivo e fortalecido mentalmente.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-81cc-bcc1-f3d2c2c1abec" class="bulleted-list"><li style="list-style-type:disc">Eu amo me exercitar todo dia! Eu sou perfeitamente saudável e tenho um corpo incrível! Ir para academia, me exercitar e comer saudável me faz sentir bem equilibrado e realizado e os benefícios que eu recebo por me exercitar são incríveis e eu me sinto fenomenal todo dia.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-81a8-910f-d9f92c214b78" class="bulleted-list"><li style="list-style-type:disc">Eu atraio o sucesso! Sucesso e bons pensamentos são naturalmente atraídos a mim e eu me sinto próspero e incrível todos os dias.Sucesso vem a mim facilmente. Abundância e prosperidade fluem a mim em cada direção e eu me sinto extremamente energizado. Eu não vejo a hora de acordar todo dia sabendo que sucesso estará garantido a mim.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8106-87ef-fb12fe35f829" class="bulleted-list"><li style="list-style-type:disc">Eu vejo oportunidades em cada lugar que vejo. Oportunidade está em cada lugar e está lá para mim todos os dias.<div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8139-8b5c-df4ad5c4b582" class="">Eu me sinto extremamente confiante e positivo todos os dias com a abundância de oportunidade.</p></div></li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-816c-acdc-f67bbb3622a6" class="bulleted-list"><li style="list-style-type:disc">É fácil ser bem sucedido. Alegro-me por ter sucesso e ser cada vez mais bem-sucedido a cada dia - um grande sucesso é inevitável para mim. Eu me sinto próspero e abundante.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-81d7-a651-c402905fbd83" class="bulleted-list"><li style="list-style-type:disc">Eu me sinto fenomenal toda manhã que eu acordo. Eu pulo da cama logo, sabendo que o dia possui uma grande oportunidade reservada para mim. Eu me sinto animado, confiante e energizado todas as manhãs assim que abro os olhos.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8168-96c8-c9cdf6fd8f14" class="bulleted-list"><li style="list-style-type:disc">Eu crio a vida dos meus sonhos. Meus planejamentos, minhas metas e minhas ações constroem meu destino e isso me faz sentir poderoso e no controle.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8192-a230-c0fcb491d556" class="bulleted-list"><li style="list-style-type:disc">Eu jogo a vida nos meus termos, não no termo dos outros.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-81ec-8d59-dee054117191" class="bulleted-list"><li style="list-style-type:disc">Eu me sinto uma pessoa imparável e eu consigo conquistar qualquer coisa. Eu me sinto poderoso, inteligente e determinado.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-815c-9846-c3210187d815" class="bulleted-list"><li style="list-style-type:disc">Eu sou me sinto um auto-ativador que não precisa de nenhuma força externa para me motivar, toda minha motivação vem de dentro e eu posso convidá-la de forma subordinada à minha vontade. Isso me faz sentir imparável e poderoso.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8182-adea-cd3bf03e150a" class="bulleted-list"><li style="list-style-type:disc">Eu sou uma pessoa entusiasmada , motivada e energética, eu me sinto bem todo santo dia. Isso me faz sentir saudável, feliz e energético.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-81ae-a7fe-f703bef07a5d" class="bulleted-list"><li style="list-style-type:disc">Eu possuo um corpo potente, mente potente e alma potente. Isso me faz sentir inteligente e merecedor do mais alto nível de sucesso existente.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8114-8d19-ffa56c65b20b" class="bulleted-list"><li style="list-style-type:disc">Eu sou uma pessoa feliz que é intoxicada com bom viver, eu aprecio a vida e a vida é boa para mim. Isso me deixa feliz e animado.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-81e3-8f04-f320b204f9c8" class="bulleted-list"><li style="list-style-type:disc">Todo santo dia traz novas e frescas oportunidades para mim e eu não posso esperar para começar o dia. Isso me faz ficar animado e em êxtase.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-81e9-a432-d8c93f3abe30" class="bulleted-list"><li style="list-style-type:disc">Sou excelente no que faço, tenho uma expectativa positiva e sou conhecido por vencer. Eu me sinto poderoso e merecedor.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-816c-b141-dfcd3ca6af23" class="bulleted-list"><li style="list-style-type:disc">Estou em paz com o mundo ao meu redor, entendo como funciona e onde me encaixo nele. Eu sou merecedor de grande riqueza financeira e respeito, me sinto poderoso e inteligente.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-81b5-b333-ee26ae779536" class="bulleted-list"><li style="list-style-type:disc"></li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-81da-bdec-eb6ee312c1eb" class="bulleted-list"><li style="list-style-type:disc">Tenho força interior, coragem e confiança para vencer em tudo o que escolher fazer. Isso me faz sentir poderoso e à vontade sabendo que posso conquistar qualquer tarefa.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-81a3-a4fd-f22ecb616ff5" class="bulleted-list"><li style="list-style-type:disc">Estou otimista e cheio de entusiasmo, o mundo continua a me recompensar em um ritmo acelerado e sei com convicção que o futuro à minha frente traz felicidade e prosperidade incomensuráveis.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-814f-9157-db3f0bcff4ac" class="bulleted-list"><li style="list-style-type:disc">Eu realizo mais em menos tempo do que nunca. Tenho ética de trabalho mundialmente conhecida e trabalho para realizar as coisas em tempo recorde. Eu me sinto imparável, poderoso e inteligente.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8132-895b-fe28b98189a4" class="bulleted-list"><li style="list-style-type:disc">Eu alcanço meus objetivos sem esforço, todas as vezes. Eu defino objetivos elevados, os alcanço em tempo recorde. Eu me sinto poderoso, inteligente e corajoso.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-81ad-91aa-f029e105bd73" class="bulleted-list"><li style="list-style-type:disc">Sou criativo em ajudar outras pessoas a resolver seus desafios, ajudei outras pessoas a melhorar suas vidas e me sinto orgulhoso e especial.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-81bd-9d2f-cd09899e1d15" class="bulleted-list"><li style="list-style-type:disc">Eu sempre dou mais do que recebo, todos os meus clientes estão felizes e espalham boas palavras sobre mim todos os dias. Eu me sinto poderoso e inteligente.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8173-8154-c3047f8447ef" class="bulleted-list"><li style="list-style-type:disc">Minha vida está repleta de harmonia e felicidade. A vida continua gerando boa fortuna e riqueza à minha maneira e me sinto enérgico e animado.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8182-95cd-ef72211217d7" class="bulleted-list"><li style="list-style-type:disc">Tenho uma mentalidade de riqueza e abundância, posso alcançar tudo o que quero e me sinto tão poderoso e imparável.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8172-b5e2-f215b01afb3b" class="bulleted-list"><li style="list-style-type:disc">Abundância é meu estado natural, eu vejo abundância em todo lugar que eu olho e eu sei que essa vida sempre trará o caminho para viver em abundância. Eu me sinto orgulhoso e em harmonia.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-81df-8377-fff82a8b122f" class="bulleted-list"><li style="list-style-type:disc">Eu sou um imã de pessoas e de dinheiro, boas pessoas e grande fortuna são atraídas a mim todo santo dia e eu me sinto poderoso e inteligente.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-81a1-bf00-f06e08d2ce09" class="bulleted-list"><li style="list-style-type:disc">Dinheiro escorre facilmente, frequentemente e abundantemente a mim, eu me sinto abençoado e imparável.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-813d-85f0-c5f9d8340fb3" class="bulleted-list"><li style="list-style-type:disc">A prosperidade é minha e eu a mereço e eu espero por ela. Eu me sinto abençoado e merecedor de boa fortuna e prosperidade.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-817c-85c1-de56848074af" class="bulleted-list"><li style="list-style-type:disc">Eu sei meu valor, eu honro minha palavra, eu sou merecedor de receber abundância e eu me sinto em êxtase ao saber que o mundo continua me enviando a cada minuto.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-815f-ad7c-f911dae0e5de" class="bulleted-list"><li style="list-style-type:disc">Eu estou aberto a receber dinheiro e sucesso, eu mereço-o e eu serei um bom guardião e administrador dele. Eu me sinto no controle e em abundância.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8181-a78f-f9d609ff54af" class="bulleted-list"><li style="list-style-type:disc">Dinheiro é uma energia positiva e cuida dos meus desejos e minhas necessidades e da minha família. Eu me sinto completamente grato por receber e administrar quantias elevadas de dinheiro todos os dias.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-81ba-a75b-d352710f8a39" class="bulleted-list"><li style="list-style-type:disc">Meu ganho está constantemente aumentando e eu mereço isso. Eu me sinto abençoado e poderoso.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-811a-8c18-c0876939cbca" class="bulleted-list"><li style="list-style-type:disc">Eu sou um recurso positivo e as pessoas amam o que eu tenho a propor.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-815e-a3c4-ff019a22068d" class="bulleted-list"><li style="list-style-type:disc">Eu crio valor com honestidade e integridade, e eu me sinto honrado com tudo que faço .</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-81c8-9bd5-fa54f9fb0507" class="bulleted-list"><li style="list-style-type:disc">Eu sempre tenho dinheiro suficiente para qualquer coisa que queira na minha vida, eu me sinto grato e abençoado.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-818e-9a51-cae39e6153d9" class="bulleted-list"><li style="list-style-type:disc">Quanto mais dinheiro eu tenho mais dinheiro eu posso usar para ajudar aos outros, eu sou um excelente administrador do dinheiro e eu me sinto honrado e grato.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-81dd-a2f9-c945e1b0492c" class="bulleted-list"><li style="list-style-type:disc">Abundância é meu estado natural de ser, eu me sinto confortável e em êxtase com cada momento que eu experiencio minha vida.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-81ce-a063-e893e2fec288" class="bulleted-list"><li style="list-style-type:disc">Eu sou um profissional de vendas genial, eu sou criativo e faço decisões de negócios eficazes. Eu me sinto inteligente e imparável.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8190-bef9-fdcab728be31" class="bulleted-list"><li style="list-style-type:disc">Dinheiro vem até mim de forma esperada e inesperada, ele é atraído para mim pelo meu trabalho e pelo universo conspirando ao meu favor. Eu me sinto abençoado e poderoso.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-81f4-a4be-f3a5de5a4850" class="bulleted-list"><li style="list-style-type:disc">Eu me dou a permissão de ter uma vida abundante, eu mereço e eu vou viver o resto da minha vida em posição de abundância e poder.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8168-a8d0-c5214f1224b9" class="bulleted-list"><li style="list-style-type:disc">Eu amo dinheiro e o dinheiro me ama, ele é sagrado e eu posso fazer grandes coisas com ele. O mundo é um lugar melhor porque eu sei usá-lo para gerar valor na minha vida e de outras pessoas.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-81ee-bbd7-e9a2b10be7af" class="bulleted-list"><li style="list-style-type:disc">Eu me sinto confiante e abençoado. Eu tenho a habilidade de administrar minhas finanças e sempre com dinheiro e abundância. Eu me sinto feliz e em êxtase.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-81ec-859c-c62a32b06466" class="bulleted-list"><li style="list-style-type:disc">Eu estou muito confortável em ter grandes quantias de dinheiro, eu sou excelente administrador de dinheiro e eu consigo fazer coisas incríveis com ele. Eu me sinto confiante e feliz</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8120-a3cc-cb4b036cac4e" class="bulleted-list"><li style="list-style-type:disc">Eu libero qualquer dúvida, medos e crenças negativas sobre dinheiro. Dinheiro é uma boa coisa e eu mereço grandes quantias de dinheiro. Eu me sinto poderoso e em êxtase.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8179-97cf-d1759d0f5352" class="bulleted-list"><li style="list-style-type:disc">Tenho certeza absoluta de minha capacidade de gerar qualquer quantia de renda que eu escolher. Sou uma das pessoas mais inteligentes do mundo e sou recompensado por isso todos os dias. Sinto-me talentoso e honrado.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-812d-a9ae-da0f0adcf856" class="bulleted-list"><li style="list-style-type:disc">Estou disposta a deixar o medo ir e viver em harmonia com toda a vida, mereço o melhor de tudo e não tenho nenhum problema em recebê-lo. Eu me sinto talentoso e especial.@</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8152-898d-dad012e58e8c" class="bulleted-list"><li style="list-style-type:disc">Eu liberto todas as minhas crenças anteriores que me impediram de ficar rico, agora penso em uma posição de poder e abundância, sou rico e bem-sucedido e mereço o que tenho e muito mais. Eu me sinto no direito e honrado.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-81ef-bfc5-f6bff976267b" class="bulleted-list"><li style="list-style-type:disc">Eu escolho ter sucesso em todas as áreas da minha vida. Os negócios são apenas uma área da minha vida e me destaquei em cada uma delas. Sinto-me talentoso e honrado.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-81d9-bd35-f64696333c9b" class="bulleted-list"><li style="list-style-type:disc">Tenho sucesso em tudo o que faço, me surpreendo com minha capacidade e realizações e me sinto inspirado e dotado.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8129-b0fd-e08bbc048d7a" class="bulleted-list"><li style="list-style-type:disc">Eu escolho ter sucesso em cada área da minha vida, me sinto feliz e realizado.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-81af-b10a-f71547727431" class="bulleted-list"><li style="list-style-type:disc">Tenho sucesso em tudo o que faço, sou imparável e me sinto dotado e reconhecido.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8151-9676-de2077c6abd1" class="bulleted-list"><li style="list-style-type:disc">Estou confiante em minha capacidade de ter sucesso em qualquer coisa que quero fazer, me sinto inteligente e poderoso.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8147-871f-d700bed1b4c3" class="bulleted-list"><li style="list-style-type:disc">Tenho poder ilimitado para ter sucesso no meu negócio, sinto-me corajoso e talentoso.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8113-b686-f6f4fbaac821" class="bulleted-list"><li style="list-style-type:disc">Eu sempre atraio os clientes certos na hora certa, grandes clientes são atraídos para mim e nunca há falta deles. Sinto-me à vontade e poderoso.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-819f-80a3-eb694c5b5da0" class="bulleted-list"><li style="list-style-type:disc">Aprendo fácil e rapidamente as lições que a vida me apresenta, um revés, luta ou fracasso para mim ainda é uma vitória e um passo em frente, sinto-me à vontade, feliz e confiante.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-81f4-bcea-cae28a938af2" class="bulleted-list"><li style="list-style-type:disc">Aceito a liberdade em minha mente, não sou restrito a nada e posso fazer o que quiser. Eu me sinto livre e com poder.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8186-8e5a-f124324b3c9a" class="bulleted-list"><li style="list-style-type:disc">Estou aberto a todas as possibilidades e mantenho a mente aberta o tempo todo, me sinto à vontade em situações estranhas e acredito na minha capacidade de descobrir coisas e vencer. Sinto-me confiante e bem-sucedido.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-818f-bdd3-d844c488aa72" class="bulleted-list"><li style="list-style-type:disc">Tenho uma grande capacidade de aprender novas habilidades que apóiam meu sucesso, aprendo rapidamente e chego ao topo em qualquer campo que decido jogar. Eu me sinto dotado e com direito de atingir o que quero.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8191-a4c8-feda4da831d6" class="bulleted-list"><li style="list-style-type:disc">Eu abraço todas as mudanças e as uso para o meu bem maior, eu sou um alquimista que pode trazer sucesso em qualquer situação na vida e sou recompensado por isso. Eu me sinto especial e inteligente.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-815c-ae45-c14d8879face" class="bulleted-list"><li style="list-style-type:disc">Eu me amo e me respeito e isso me permite ter relacionamentos enriquecedores, os outros me amam e me respeitam e eu me amo e me respeito. Eu sou uma pessoa incrível e tenho orgulho de quem eu sou. Sinto-me à vontade e poderoso.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8102-8ea8-dce21cfcf0e5" class="bulleted-list"><li style="list-style-type:disc">Agradeço continuamente ao longo de cada dia, entendo que sou talentoso e por isso sou humilde e grato.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-812f-9708-e86b5bd93a4a" class="bulleted-list"><li style="list-style-type:disc">Reconheço as bênçãos que recebi em minha vida com gratidão, sinto-me honrado e humilde.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8175-90f3-de02c82583c8" class="bulleted-list"><li style="list-style-type:disc">Possuo a sabedoria, o poder, a motivação, a inspiração e a paixão para realizar tudo e qualquer coisa que eu escolher. Eu me sinto no direito e imparável.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-81e3-a693-d28be35ae513" class="bulleted-list"><li style="list-style-type:disc">Eu prospero na saúde, eu prospero nas finanças, eu próspero no amor, eu prospero na paz e eu sou um ser humano imparável. Sinto-me corajoso e poderoso em tudo o que faço.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-814f-a1db-dedf640fca43" class="bulleted-list"><li style="list-style-type:disc">Sempre atraímos certos clientes no momento certo, grandes clientes são atraídos por mim e nunca há necessidade deles. Sinto-me à vontade e poderoso.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8160-9723-f173b7342b3f" class="bulleted-list"><li style="list-style-type:disc">Eu sou senhor do meu tempo e das minhas regras, eu faço dele um veículo para ações concretizarem em matéria e abundância. Eu tenho uma mente imparável.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8149-ae39-f013374a2678" class="bulleted-list"><li style="list-style-type:disc">O que eu tenho para oferecer é tão incrível que as pessoas não têm direito de recusá-lo.Eu me sinto no controle em paz.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-81cb-a610-f6a9579c6eb9" class="bulleted-list"><li style="list-style-type:disc">Cada adversidade possui uma semente de benefício equivalente, e a adversidade é a chave para o crescimento. Eu cresço na adversidade e colho benefícios proveniente delas. Eu me sinto confiante e imparável.</li></ul></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

@@ -1,0 +1,749 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>RECRUTAMENTO</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+
+	table.collection-content {
+		width: 100%;
+		table-layout: fixed;
+	}
+
+	table.collection-content th,
+	table.collection-content td {
+		overflow-wrap: anywhere;
+	}
+
+	table.collection-content td > .user,
+	table.collection-content td > time {
+		white-space: pre-wrap;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content-wrapper {
+	overflow-x: auto;
+}
+
+@media only print {
+	.collection-content-wrapper {
+		overflow-x: visible;
+	}
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	gap: 46px;
+}
+
+.column {
+	min-width: 0;
+	overflow: hidden;
+}
+
+.column > *:first-child {
+	margin-top: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+table {
+	border-collapse: collapse;
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol.numbered-list.numbered-list-digits-2 {
+	padding-inline-start: 2em;
+}
+
+ol.numbered-list.numbered-list-digits-3plus {
+	padding-inline-start: 2.4em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="3403a7ed-24c0-800a-ba92-d2c0ee9a83d7" class="page sans"><header><img class="page-cover-image" src="RECRUTAMENTO/ChatGPT_Image_14_de_fev._de_2026_20_59_59.png" style="object-position:center 69.87%"/><h1 class="page-title" dir="auto">RECRUTAMENTO</h1><p class="page-description" dir="auto"></p></header><div class="page-body"><div style="display:contents" dir="auto"><div style="display:contents" dir="auto"><div><div style="display:contents" dir="auto"><p id="2663a7ed-24c0-81d0-aa06-f5befcbff025" class="">Bem-vindo ao canal de Processos de RH Comercial! Aqui você encontrará informações detalhadas sobre diferentes posições disponíveis.</p></div><div style="display:contents" dir="auto"><p id="2663a7ed-24c0-8105-9354-d1d47fcc6fd4" class="">Sinta-se à vontade para explorar os documentos e obter mais informações sobre cada posição. Se tiver alguma dúvida ou precisar de mais detalhes, não hesite em entrar em contato.</p></div><div style="display:contents" dir="auto"><p id="2663a7ed-24c0-81a9-ad82-d06cc1c3650c" class="">Antes de iniciar, é importante você verificar todo o organograma do departamento e funil de RH da Full Sales System: </p></div><div style="display:contents" dir="auto"><p id="2663a7ed-24c0-8171-a9b1-f2286b33641c" class="">
+</p></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-8143-83d9-f7b08da739c4" class="link-to-page"><a href="https://www.notion.so/Estrutura-do-Departamento-de-RH-FSS-2663a7ed24c0814383d9f7b08da739c4?pvs=21"><img class="icon notion-static-icon" src="https://www.notion.so/icons/checklist_red.svg"/>Estrutura do Departamento de RH FSS</a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-81da-817b-d3b07bff7cbc" class="link-to-page"><a href="https://www.notion.so/Guia-Pr-tico-de-Recrutamento-e-Sele-o-2663a7ed24c081da817bd3b07bff7cbc?pvs=21"><img class="icon notion-static-icon" src="https://www.notion.so/icons/book-closed_red.svg"/>Guia Prático de Recrutamento e Seleção</a></figure></div><div style="display:contents" dir="auto"><p id="2663a7ed-24c0-8124-bc52-d91013c43273" class="">
+</p></div><div style="display:contents" dir="auto"><p id="2663a7ed-24c0-81aa-b086-f104c9110d2d" class="">A partir disso, navegue pelos links abaixo para acessar os descritivos de cada cargo:</p></div><div style="display:contents" dir="auto"><h2 id="2663a7ed-24c0-81d7-8a42-e09f79ab95d9" class="">Descritivo de Vagas:</h2></div><div style="display:contents" dir="auto"><h3 id="2663a7ed-24c0-81a9-962b-c228a7bc031d" class=""><mark class="highlight-red">Pré-Vendas</mark></h3></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-81c9-9c8d-c9e2fb1f8273" class="link-to-page"><a href="https://www.notion.so/Coordenador-de-Pr-Vendas-2663a7ed24c081c99c8dc9e2fb1f8273?pvs=21"><span class="icon">📎</span>Coordenador de Pré-Vendas</a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-812d-8c9b-cf4f65937d46" class="link-to-page"><a href="https://www.notion.so/SDR1-Pr-vendas-2663a7ed24c0812d8c9bcf4f65937d46?pvs=21"><span class="icon">📎</span>SDR1 - Pré-vendas</a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-81a8-94f0-e27ab23a99f9" class="link-to-page"><a href="https://www.notion.so/SDR2-Social-Seller-2663a7ed24c081a894f0e27ab23a99f9?pvs=21"><span class="icon">📎</span>SDR2 - Social Seller</a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-815c-be23-e9c443a525ef" class="link-to-page"><a href="https://www.notion.so/SDR3-Hunter-2663a7ed24c0815cbe23e9c443a525ef?pvs=21"><span class="icon">📎</span>SDR3 - Hunter</a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-81fd-933c-f5ea85e278c3" class="link-to-page"><a href="https://www.notion.so/SDR-4-Sales-Farmer-2663a7ed24c081fd933cf5ea85e278c3?pvs=21"><span class="icon">📎</span>SDR 4 - Sales Farmer</a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-81e7-bafb-d40ab0f3c1f3" class="link-to-page"><a href="https://www.notion.so/Hunter-B2B-Embaixadores-2663a7ed24c081e7bafbd40ab0f3c1f3?pvs=21"><span class="icon">📎</span>Hunter - B2B - Embaixadores</a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-8145-8de3-cf14fb6dce5a" class="link-to-page"><a href="https://www.notion.so/SDR-S-nior-2663a7ed24c081458de3cf14fb6dce5a?pvs=21"><span class="icon">📎</span>SDR Sênior </a></figure></div><div style="display:contents" dir="auto"><h3 id="2663a7ed-24c0-8172-bc3d-d8d31b7256d5" class=""><mark class="highlight-red">Vendas</mark></h3></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-81de-b5a2-c9b1a62bf5f3" class="link-to-page"><a href="https://www.notion.so/Gerente-Comercial-2663a7ed24c081deb5a2c9b1a62bf5f3?pvs=21"><span class="icon">📎</span>Gerente Comercial</a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-81ff-8c9e-fd4ff0b0b51f" class="link-to-page"><a href="https://www.notion.so/Closer-2663a7ed24c081ff8c9efd4ff0b0b51f?pvs=21"><span class="icon">📎</span>Closer</a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-811a-84ef-d0b67feb9bd8" class="link-to-page"><a href="https://www.notion.so/Assistente-Comercial-2663a7ed24c0811a84efd0b67feb9bd8?pvs=21"><span class="icon">📎</span>Assistente Comercial</a></figure></div><div style="display:contents" dir="auto"><h3 id="2663a7ed-24c0-81e9-bccf-f3d8e942f26f" class=""><mark class="highlight-red">Sucesso do Cliente</mark></h3></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-8128-a5e0-de9af1e444cf" class="link-to-page"><a href="https://www.notion.so/CS1-Supervisor-2663a7ed24c08128a5e0de9af1e444cf?pvs=21"><span class="icon">📎</span>(CS1) Supervisor</a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-81c7-92a0-da316dc86565" class="link-to-page"><a href="https://www.notion.so/CS1-Sucesso-do-Cliente-2663a7ed24c081c792a0da316dc86565?pvs=21"><span class="icon">📎</span>(CS1) Sucesso do Cliente</a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-81e9-af03-cdb6c1e6b5d2" class="link-to-page"><a href="https://www.notion.so/CS2-Sucesso-do-Cliente-Farmer-2663a7ed24c081e9af03cdb6c1e6b5d2?pvs=21"><span class="icon">📎</span> (CS2) Sucesso do Cliente - Farmer</a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-81ae-8bf4-cc4894d6fa4b" class="link-to-page"><a href="https://www.notion.so/CS3-Atendimento-ao-Cliente-Senior-Sucesso-do-Cliente-Tutor-2663a7ed24c081ae8bf4cc4894d6fa4b?pvs=21"><span class="icon">📎</span> (CS3) Atendimento ao Cliente Senior - Sucesso do Cliente  - Tutor</a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-81dc-af1a-c78df287a517" class="link-to-page"><a href="https://www.notion.so/CS-Tutor-Tech-2663a7ed24c081dcaf1ac78df287a517?pvs=21"><span class="icon">📎</span>(CS) Tutor Tech</a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-81c7-a96e-e947ff254b5b" class="link-to-page"><a href="https://www.notion.so/ENTREGA-Gerente-de-Projetos-2663a7ed24c081c7a96ee947ff254b5b?pvs=21">[ENTREGA] Gerente de Projetos</a></figure></div><div style="display:contents" dir="auto"><h3 id="2663a7ed-24c0-8135-864a-fe0f1210422d" class=""><mark class="highlight-red"><strong>TI</strong></mark></h3></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-810d-a8e3-dffd67acc926" class="link-to-page"><a href="https://www.notion.so/Gestor-de-Infraestrutura-2663a7ed24c0810da8e3dffd67acc926?pvs=21"><span class="icon">📎</span>Gestor de Infraestrutura</a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-814a-8776-e7dcc5af50a9" class="link-to-page"><a href="https://www.notion.so/Assistente-de-Marketing-2663a7ed24c0814a8776e7dcc5af50a9?pvs=21"><span class="icon">📎</span>Assistente de Marketing </a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-810a-971e-f5b2039f00ca" class="link-to-page"><a href="https://www.notion.so/Analista-de-Infra-e-Tecnologia-Jr-2663a7ed24c0810a971ef5b2039f00ca?pvs=21"><span class="icon">📎</span>Analista de Infra e Tecnologia Jr.</a></figure></div><div style="display:contents" dir="auto"><h3 id="2663a7ed-24c0-81bd-82c3-f3e9386c21ce" class=""><mark class="highlight-red">Marketing</mark></h3></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-812a-b324-e65633cb9886" class="link-to-page"><a href="https://www.notion.so/Gerente-de-Marketing-2663a7ed24c0812ab324e65633cb9886?pvs=21"><span class="icon">📎</span>Gerente de Marketing</a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-81ff-abb3-e49b6647696d" class="link-to-page"><a href="https://www.notion.so/Analista-de-Tr-fego-e-Automa-o-2663a7ed24c081ffabb3e49b6647696d?pvs=21"><span class="icon">📎</span>Analista de Tráfego e Automação</a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-8176-b417-e940d9fb9a90" class="link-to-page"><a href="https://www.notion.so/Assistente-de-Conte-do-e-Distribui-o-2663a7ed24c08176b417e940d9fb9a90?pvs=21"><span class="icon">📎</span>Assistente de Conteúdo e Distribuição</a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-81a6-a5c4-e69047591ff9" class="link-to-page"><a href="https://www.notion.so/Social-Media-S-nior-2663a7ed24c081a6a5c4e69047591ff9?pvs=21"><span class="icon">📎</span>Social Media Sênior </a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-81da-a489-f3ba1a922181" class="link-to-page"><a href="https://www.notion.so/Editor-de-V-deo-2663a7ed24c081daa489f3ba1a922181?pvs=21"><span class="icon">📎</span>Editor de Vídeo</a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-819a-b08e-dfe9fdd8e89d" class="link-to-page"><a href="https://www.notion.so/Designer-2663a7ed24c0819ab08edfe9fdd8e89d?pvs=21"><span class="icon">📎</span>Designer </a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-8103-8490-c2308abe6bef" class="link-to-page"><a href="https://www.notion.so/Webdesigner-2663a7ed24c081038490c2308abe6bef?pvs=21"><span class="icon">📎</span>Webdesigner</a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-818a-a452-e902bba3d71c" class="link-to-page"><a href="https://www.notion.so/Conteudista-Roteirista-de-M-dias-Sociais-2663a7ed24c0818aa452e902bba3d71c?pvs=21"><span class="icon">📎</span>Conteudista (Roteirista de Mídias Sociais)</a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-8185-89d3-d174be92b79d" class="link-to-page"><a href="https://www.notion.so/Redator-Publicit-rio-2663a7ed24c0818589d3d174be92b79d?pvs=21"><span class="icon">📎</span>Redator Publicitário</a></figure></div><div style="display:contents" dir="auto"><h3 id="2663a7ed-24c0-8192-9f4f-c61f08d10965" class=""><mark class="highlight-red">Financeiro</mark></h3></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-8182-8ea5-ebc55eda881c" class="link-to-page"><a href="https://www.notion.so/Analista-financeiro-S-nior-2663a7ed24c081828ea5ebc55eda881c?pvs=21"><span class="icon">📎</span>Analista financeiro Sênior</a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-81f8-9b3e-cf279b85364f" class="link-to-page"><a href="https://www.notion.so/Agente-de-Cobran-a-2663a7ed24c081f89b3ecf279b85364f?pvs=21"><span class="icon">📎</span>Agente de Cobrança</a></figure></div><div style="display:contents" dir="auto"><h3 id="2663a7ed-24c0-8138-a02c-c81859feff32" class=""><mark class="highlight-red">RH</mark></h3></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-81f3-a875-c9c02af38359" class="link-to-page"><a href="https://www.notion.so/Gestora-de-Recursos-Humanos-2663a7ed24c081f3a875c9c02af38359?pvs=21"><span class="icon">📎</span>Gestora de Recursos Humanos </a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-81d3-8774-d30642b72ed5" class="link-to-page"><a href="https://www.notion.so/Playbook-do-RH-2663a7ed24c081d38774d30642b72ed5?pvs=21">Playbook do RH</a></figure></div><div style="display:contents" dir="auto"><h2 id="2663a7ed-24c0-81d3-ba9a-f416cee14d04" class=""><mark class="highlight-default">Planos de Carreira</mark></h2></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-813a-bf24-e5b1fcdbd58d" class="link-to-page"><a href="https://www.notion.so/Plano-de-Carreira-Tutor-2663a7ed24c0813abf24e5b1fcdbd58d?pvs=21"><img class="icon notion-static-icon" src="https://www.notion.so/icons/departures_red.svg"/>Plano de Carreira - Tutor</a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-8180-86ab-c45fa572b74b" class="link-to-page"><a href="https://www.notion.so/Plano-de-Carreira-Closer-2663a7ed24c0818086abc45fa572b74b?pvs=21"><img class="icon notion-static-icon" src="https://www.notion.so/icons/departures_red.svg"/>Plano de Carreira - Closer</a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-8146-9631-eaeca6206859" class="link-to-page"><a href="https://www.notion.so/Plano-de-Carreira-Gerente-2663a7ed24c081469631eaeca6206859?pvs=21"><img class="icon notion-static-icon" src="https://www.notion.so/icons/departures_red.svg"/>Plano de Carreira - Gerente</a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-812e-8ff2-ff899c0a15cc" class="link-to-page"><a href="https://www.notion.so/Plano-de-Carreira-SDR-2663a7ed24c0812e8ff2ff899c0a15cc?pvs=21"><img class="icon notion-static-icon" src="https://www.notion.so/icons/departures_red.svg"/>Plano de Carreira - SDR</a></figure></div><div style="display:contents" dir="auto"><h2 id="2663a7ed-24c0-81e1-9253-c91dc37da8d6" class=""><br/><mark class="highlight-default"><strong>RH</strong></mark></h2></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-81f5-a1cb-da65c276fe6d" class="link-to-page"><a href="https://www.notion.so/RH-Onboarding-Colaboradores-FSS-2663a7ed24c081f5a1cbda65c276fe6d?pvs=21"><span class="icon">📎</span>[RH] Onboarding Colaboradores FSS</a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-8181-a4ff-cc2fbb6f711f" class="link-to-page"><a href="https://www.notion.so/RH-Onboarding-Gerentes-2663a7ed24c08181a4ffcc2fbb6f711f?pvs=21"><span class="icon">📎</span>[RH] Onboarding Gerentes </a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-8164-832d-f6036ca12601" class="link-to-page"><a href="https://www.notion.so/RH-KPI-s-e-Solu-es-2663a7ed24c08164832df6036ca12601?pvs=21"><span class="icon">📎</span>[RH] KPI´s e Soluções</a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-8165-94e3-c523c32a8ecb" class="link-to-page"><a href="https://www.notion.so/Role-play-2663a7ed24c0816594e3c523c32a8ecb?pvs=21">Role play</a></figure></div><div style="display:contents" dir="auto"><p id="2663a7ed-24c0-8109-8a5e-dc8f2df4b197" class="">
+</p></div><div style="display:contents" dir="auto"><p id="2663a7ed-24c0-81dd-b035-c8e8b83b1e4e" class="">
+</p></div><div style="display:contents" dir="auto"><h2 id="2663a7ed-24c0-816b-bf6c-fd969b8e23fd" class=""><mark class="highlight-default"><strong>Roteiro de Entrevistas</strong></mark></h2></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-810a-8e7d-f4de2016d19b" class="link-to-page"><a href="https://www.notion.so/Mapa-Mental-do-Sistema-de-Contrata-o-FSS-2663a7ed24c0810a8e7df4de2016d19b?pvs=21"><span class="icon">📢</span>Mapa Mental do Sistema de Contratação FSS</a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-813b-b5df-e7d962610e68" class="link-to-page"><a href="https://www.notion.so/Checklist-Onboarding-SDR-2663a7ed24c0813bb5dfe7d962610e68?pvs=21"><img class="icon notion-static-icon" src="https://www.notion.so/icons/checklist_red.svg"/>Checklist Onboarding SDR </a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-812b-8db6-e99d31fb6434" class="link-to-page"><a href="https://www.notion.so/Manual-de-Contrata-o-Closer-2663a7ed24c0812b8db6e99d31fb6434?pvs=21"><img class="icon notion-static-icon" src="https://www.notion.so/icons/book_red.svg"/>Manual de Contratação Closer </a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-81a1-be6d-f0b28f5078f2" class="link-to-page"><a href="https://www.notion.so/Roteiro-de-Entrevista-SDR-2663a7ed24c081a1be6df0b28f5078f2?pvs=21"><img class="icon notion-static-icon" src="https://www.notion.so/icons/signature-document_red.svg"/>Roteiro de Entrevista SDR </a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-81c0-85f3-c52c03f9aff4" class="link-to-page"><a href="https://www.notion.so/Roteiro-de-Entrevista-Hunter-2663a7ed24c081c085f3c52c03f9aff4?pvs=21"><img class="icon notion-static-icon" src="https://www.notion.so/icons/signature-document_red.svg"/>Roteiro de Entrevista Hunter</a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-8116-b5b9-fe094ff5ecb7" class="link-to-page"><a href="https://www.notion.so/Roteiro-de-Entrevista-Closer-2663a7ed24c08116b5b9fe094ff5ecb7?pvs=21"><img class="icon notion-static-icon" src="https://www.notion.so/icons/signature-document_red.svg"/>Roteiro de Entrevista Closer </a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-8105-b02e-f34c65d2aa87" class="link-to-page"><a href="https://www.notion.so/Roteiro-de-Entrevista-Customer-Success-2663a7ed24c08105b02ef34c65d2aa87?pvs=21"><img class="icon notion-static-icon" src="https://www.notion.so/icons/signature-document_red.svg"/>Roteiro de Entrevista Customer Success </a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-8181-8d2c-f3812c203043" class="link-to-page"><a href="https://www.notion.so/Roteiro-de-Entrevista-Head-Comercial-2663a7ed24c081818d2cf3812c203043?pvs=21"><img class="icon notion-static-icon" src="https://www.notion.so/icons/signature-document_red.svg"/>Roteiro de Entrevista Head Comercial </a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-8192-8989-de6b48925ea8" class="link-to-page"><a href="https://www.notion.so/Roteiro-de-Entrevista-de-Social-Midia-2663a7ed24c081928989de6b48925ea8?pvs=21"><img class="icon notion-static-icon" src="https://www.notion.so/icons/signature-document_red.svg"/>Roteiro de Entrevista de Social Midia </a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-81f2-bcdd-ec1ca4571cad" class="link-to-page"><a href="https://www.notion.so/Processo-de-Entrevista-Gerencial-Geral-FSS-2663a7ed24c081f2bcddec1ca4571cad?pvs=21"><img class="icon notion-static-icon" src="https://www.notion.so/icons/signature-document_red.svg"/>Processo de Entrevista Gerencial Geral FSS</a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-81c9-8218-d827fd01e46c" class="link-to-page"><a href="https://www.notion.so/Roteiro-de-Entrevista-Social-Seller-2663a7ed24c081c98218d827fd01e46c?pvs=21"><img class="icon notion-static-icon" src="https://www.notion.so/icons/signature-document_red.svg"/>Roteiro de Entrevista Social Seller</a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-81f1-9ee7-c68359b2eaf1" class="link-to-page"><a href="https://www.notion.so/Roteiro-de-Entrevista-Sales-Farmer-2663a7ed24c081f19ee7c68359b2eaf1?pvs=21"><img class="icon notion-static-icon" src="https://www.notion.so/icons/signature-document_red.svg"/>Roteiro de Entrevista Sales Farmer</a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-81c4-968a-ddbc23a81cf1" class="link-to-page"><a href="https://www.notion.so/Roteiro-de-Entrevista-Gerente-Financeiro-2663a7ed24c081c4968addbc23a81cf1?pvs=21"><img class="icon notion-static-icon" src="https://www.notion.so/icons/signature-document_red.svg"/>Roteiro de Entrevista Gerente Financeiro</a></figure></div><div style="display:contents" dir="auto"><h2 id="2663a7ed-24c0-8157-819b-df51612e36ba" class=""><mark class="highlight-default"><strong>Link de grupos do FACEBOOK de RH</strong></mark></h2></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-818c-a8e0-c911aa261653" class="link-to-page"><a href="https://www.notion.so/RH-Links-de-Publica-o-2663a7ed24c0818ca8e0c911aa261653?pvs=21"><img class="icon notion-static-icon" src="https://www.notion.so/icons/attachment_red.svg"/>[RH] Links de Publicação </a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-81fb-8766-de7038893672" class="link-to-page"><a href="https://www.notion.so/RH-PUBLICA-ES-EM-GRUPOS-HUNTER-2663a7ed24c081fb8766de7038893672?pvs=21"><img class="icon notion-static-icon" src="https://www.notion.so/icons/meeting_red.svg"/>[RH] PUBLICAÇÕES EM GRUPOS - HUNTER</a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-8160-aa6c-cc06eb036a7c" class="link-to-page"><a href="https://www.notion.so/Link-de-grupos-do-FACEBOOK-de-RH-2663a7ed24c08160aa6ccc06eb036a7c?pvs=21"><img class="icon notion-static-icon" src="https://www.notion.so/icons/groups_red.svg"/>Link de grupos do FACEBOOK de RH</a></figure></div><div style="display:contents" dir="auto"><p id="2663a7ed-24c0-815a-8edb-e3585a136a93" class="">
+</p></div><div style="display:contents" dir="auto"><h2 id="2663a7ed-24c0-8135-8769-de5e14c7f7a8" class="">Modelos de Contratos</h2></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-81b7-9a0b-faecd9d55a8c" class="link-to-page"><a href="https://www.notion.so/CONTRATO-DE-PRESTA-O-DE-SERVI-OS-DE-CONSULTORIA-2663a7ed24c081b79a0bfaecd9d55a8c?pvs=21"><img class="icon notion-static-icon" src="https://www.notion.so/icons/signature-document_red.svg"/>CONTRATO DE PRESTAÇÃO DE SERVIÇOS DE CONSULTORIA</a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-81a8-a348-d21f1b1b006a" class="link-to-page"><a href="https://www.notion.so/Modelo-de-Contrato-SDR-2-PJ-2663a7ed24c081a8a348d21f1b1b006a?pvs=21"><img class="icon notion-static-icon" src="https://www.notion.so/icons/move-document_red.svg"/>Modelo de Contrato SDR 2 PJ</a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-8129-a715-f3b399c3c419" class="link-to-page"><a href="https://www.notion.so/Modelo-de-Contrato-Closer-PJ-2663a7ed24c08129a715f3b399c3c419?pvs=21"><img class="icon notion-static-icon" src="https://www.notion.so/icons/signature-document_red.svg"/>Modelo de Contrato - Closer PJ</a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-816e-9c59-e4e5871fbf24" class="link-to-page"><a href="https://www.notion.so/Modelo-de-Contrato-Gestor-de-Tr-fego-2663a7ed24c0816e9c59e4e5871fbf24?pvs=21"><img class="icon notion-static-icon" src="https://www.notion.so/icons/signature-document_red.svg"/>Modelo de Contrato - Gestor de Tráfego</a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-81ab-b87e-cac887b91c18" class="link-to-page"><a href="https://www.notion.so/Modelo-de-Contrato-Gest-o-de-Vendas-em-Eventos-2663a7ed24c081abb87ecac887b91c18?pvs=21"><img class="icon notion-static-icon" src="https://www.notion.so/icons/signature-document_red.svg"/>Modelo de Contrato - Gestão de Vendas em Eventos</a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-8107-a76c-f3ad5630ecd9" class="link-to-page"><a href="https://www.notion.so/Modelo-de-Contrato-CS-2663a7ed24c08107a76cf3ad5630ecd9?pvs=21"><img class="icon notion-static-icon" src="https://www.notion.so/icons/move-document_red.svg"/>Modelo de Contrato CS</a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-811c-a472-f720fe42346a" class="link-to-page"><a href="https://www.notion.so/Modelo-de-Contrato-Gestor-de-Vendas-2663a7ed24c0811ca472f720fe42346a?pvs=21">Modelo de Contrato Gestor de Vendas</a></figure></div><div style="display:contents" dir="ltr"><figure id="2663a7ed-24c0-814d-b8df-d07e1065105e" class="link-to-page"><a href="https://www.notion.so/CONTRATO-DE-PRESTA-O-DE-SERVI-OS-DE-CONSULTORIA-2663a7ed24c0814db8dfd07e1065105e?pvs=21"><img class="icon notion-static-icon" src="https://www.notion.so/icons/signature-document_red.svg"/>CONTRATO DE PRESTAÇÃO DE SERVIÇOS DE CONSULTORIA</a></figure></div><div style="display:contents" dir="auto"><p id="2663a7ed-24c0-815a-a449-c0c73e6509cb" class="">
+</p></div></div></div></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

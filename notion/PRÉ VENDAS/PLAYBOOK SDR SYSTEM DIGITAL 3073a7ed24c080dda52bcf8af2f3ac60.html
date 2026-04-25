@@ -1,0 +1,743 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>PLAYBOOK SDR: SYSTEM DIGITAL</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+
+	table.collection-content {
+		width: 100%;
+		table-layout: fixed;
+	}
+
+	table.collection-content th,
+	table.collection-content td {
+		overflow-wrap: anywhere;
+	}
+
+	table.collection-content td > .user,
+	table.collection-content td > time {
+		white-space: pre-wrap;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content-wrapper {
+	overflow-x: auto;
+}
+
+@media only print {
+	.collection-content-wrapper {
+		overflow-x: visible;
+	}
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	gap: 46px;
+}
+
+.column {
+	min-width: 0;
+	overflow: hidden;
+}
+
+.column > *:first-child {
+	margin-top: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+table {
+	border-collapse: collapse;
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol.numbered-list.numbered-list-digits-2 {
+	padding-inline-start: 2em;
+}
+
+ol.numbered-list.numbered-list-digits-3plus {
+	padding-inline-start: 2.4em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="3073a7ed-24c0-80dd-a52b-cf8af2f3ac60" class="page sans"><header><h1 class="page-title" dir="auto"><strong>PLAYBOOK SDR: SYSTEM DIGITAL</strong></h1><p class="page-description" dir="auto"></p></header><div class="page-body"><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-80d7-8fe3-fc560bb83010" class=""><strong>Mindset:</strong>Não pedimos licença, pedimos decisão. <strong>Meta:</strong> Qualificar em menos de 1 minuto e Agendar. <strong>Regra de Ouro:</strong> O lead <strong>NUNCA</strong> morre na tentativa 3. Se não atendeu, vai para a esteira de Follow-up (N2, N3). &quot;Perdido&quot; é só se o cara morrer ou mandar parar.</p></div><div style="display:contents" dir="auto"><hr id="3073a7ed-24c0-80df-adfc-df2782e3fa7e"/></div><div style="display:contents" dir="auto"><h2 id="3073a7ed-24c0-804b-8bd3-d5ac1bfda0ae" class=""><strong>1. O Fluxo de Cadência</strong></h2></div><div style="display:contents" dir="auto"><h2 id="3073a7ed-24c0-8079-b890-eae1a4bd12fb" class=""><strong>Lead Novo:</strong> Ligação imediata.</h2></div><div style="display:contents" dir="auto"><ol type="1" id="3073a7ed-24c0-809c-a49c-fe1011899b45" class="numbered-list" start="1"><li><strong>Não atendeu (Tentativas 1, 2, 3):</strong><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-80e4-b6e6-c309f14374b0" class="bulleted-list"><li style="list-style-type:disc">Não descarta. Move para <strong>Follow-up (N2, N3)</strong>.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8062-8ec6-f377483d0e76" class="bulleted-list"><li style="list-style-type:disc">Automação nutre o lead. O SDR volta a ligar periodicamente.</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="3073a7ed-24c0-800a-835c-c6dcf0d4b45d" class="numbered-list" start="2"><li><strong>Conversa em Andamento:</strong><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8000-a0f1-c79a4faaf902" class="bulleted-list"><li style="list-style-type:disc"><strong>SLA de Estagnação:</strong> 12 horas.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8087-905f-df00640e658d" class="bulleted-list"><li style="list-style-type:disc">Se o lead parou de responder no WhatsApp há mais de 12h -&gt; <strong>LIGAÇÃO</strong>.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-80bc-9685-ca863a778b15" class="bulleted-list"><li style="list-style-type:disc">Se atendeu: agenda. Se não atendeu: Move para Follow-up.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-80db-a70c-f57e3efe2232" class="bulleted-list"><li style="list-style-type:disc"><em>Não deixe card apodrecer nessa coluna.</em></li></ul></div></li></ol></div><div style="display:contents" dir="auto"><hr id="3073a7ed-24c0-8021-b52e-de48548fdd58"/></div><div style="display:contents" dir="auto"><h2 id="3073a7ed-24c0-804f-86d8-da84ffc99f71" class=""><strong>2. O Script de Abordagem</strong></h2></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-80e8-8a52-e82098ec94c8" class=""><strong>Abertura:</strong></p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8048-8dfc-d0e7f4d5b509" class="">&quot;Alô, Doutor(a) [Nome]? Aqui é o [Seu Nome] da System Digital.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8055-9f2c-db5ef9590d3d" class="">Estou entrando em contato <strong>exclusivamente</strong> por conta da aplicação que você preencheu sobre <strong>escalar o faturamento da Clínica</strong>.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-80b1-8768-fb4713391478" class="">Te liguei justamente para alinhar esses pontos com você. <strong>[Não pausa, já emenda a pergunta do BANT].&quot;</strong></p></div><div style="display:contents" dir="auto"><hr id="3073a7ed-24c0-80d9-a69c-f4d681dd1259"/></div><div style="display:contents" dir="auto"><h2 id="3073a7ed-24c0-80b5-9f2d-ccb3e65f8fa7" class=""><strong>3. Qualificação: Método B.A.N.T.</strong></h2></div><div style="display:contents" dir="auto"><h2 id="3073a7ed-24c0-80ea-a981-d52bd7888b09" class="">O SDR deve preencher mentalmente ou no CRM essas 4 letras. Se passar no filtro, agenda.</h2></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8002-86cf-c6c4cf6885b9" class=""><strong>N - Need (Necessidade/Dor):</strong></p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-805f-8752-edc3825bf949" class="">&quot;Doutor, na aplicação vi que você quer crescer. Hoje, o que mais te impede de bater a meta? É falta de paciente ou falta de processo?&quot;</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-80e5-9534-e7a415959010" class=""><strong>A - Authority (Autoridade/Decisor)</strong></p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8070-a5a4-c65a51cebfb7" class="">&quot;Para a gente ganhar tempo: Se você gostar do nosso plano e decidir implementar na clínica, <strong>a aprovação desse investimento depende só de você ou tem algum sócio/cônjuge que precisa estar junto?</strong>&quot;</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-80a2-b266-f31b82288996" class="">Doutor e hoje para ter esse faturamento você tem algum sócio ou pessoa chave que te ajudar nas decisões estratégicas da clínica?</p></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8084-9a6d-ee8485eaeae8" class="bulleted-list"><li style="list-style-type:disc"><em>(Se tiver sócio, ele TEM que estar na reunião. Se não estiver, remarque).</em></li></ul></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8073-8aae-c3fc795c73a4" class=""><strong>B - Budget (Orçamento/Momento Financeiro):</strong></p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8083-88f9-c6ea73c1dce0" class="">&quot;Estamos falando de uma estratégia de escala. Hoje o seu faturamento está em uma média de quanto por mês?&quot;</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8027-82e9-de3149dc13e3" class=""><strong>T - Timing (Tempo/Urgência):</strong></p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-80c1-a63c-dbeca7f9e6fb" class="">&quot;Doutor, resolver esse problema de xyz que você falou é uma prioridade pra você?&quot; De 0 a 10 qual o nível de prioridade em resolver isso hoje?</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8034-9217-d7b236ff6821" class="">passou na qualificação dê 2 opções de horário para agendamento</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-805f-aef8-cd17a97e4bf4" class="">se não passou por qualquer motivo não agenda call e busca qualificar ele em um outro momento com o BANT</p></div><div style="display:contents" dir="auto"><h2 id="3073a7ed-24c0-8097-ba9d-cab2ff9d89db" class=""><strong>Gatilhos de atenção na qualificação</strong></h2></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8020-97af-c8968366e19f" class="">fase de migração</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8094-8bf3-f54a2db3e03a" class="">em reforma</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-808c-8e96-dd854947cfeb" class="">faturou nada no mes passado</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-809e-b22d-f9c37a8f469e" class="">começando agora</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-80ac-9c66-e375319d5cbe" class="">trabalha em clinica parceira/pai ou mãe</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8010-9c49-f361922a4d7c" class="">Fulano entendi, e hoje vocês estaria disposto a investir quanto pra resolver esse problema?</p></div><div style="display:contents" dir="auto"><hr id="3073a7ed-24c0-8065-9a2e-e2af3e23eb77"/></div><div style="display:contents" dir="auto"><h1 id="3073a7ed-24c0-8099-9c57-d3e620cb3ff6" class="">Protocolo de agendamentos</h1></div><div style="display:contents" dir="auto"><h3 id="3073a7ed-24c0-8085-9b05-f7ecd88f35b6" class=""><strong>🏛️ MÓDULO 1: O &quot;Ranking de MQL&quot; (A Classificação)</strong></h3></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-80f0-8e98-d473f5f8ab1c" class="">Para o SDR saber para quem agendar, ele precisa saber <strong>classificar o lead na hora</strong>.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-80ce-a448-e6a2f3a86c67" class="">O sistema de <strong>3 Níveis (Tier System)</strong>:</p></div><div style="display:contents" dir="ltr"><table id="3073a7ed-24c0-80ea-8162-c67518761d9d" class="simple-table"><tbody><div style="display:contents" dir="ltr"><tr id="3073a7ed-24c0-80d8-bd24-df9ea61c8454"><td id="?[ss" class=""><strong>Nível</strong></td><td id="hf}@" class=""><strong>Nome Interno</strong></td><td id="eTq\" class=""><strong>Critérios (BANT)</strong></td><td id="}xH_" class=""><strong>Destino (Quem atende)</strong></td></tr></div><div style="display:contents" dir="ltr"><tr id="3073a7ed-24c0-80f6-b38d-ec2086b71835"><td id="?[ss" class=""><strong>A (OURO)</strong></td><td id="hf}@" class=""><strong>A Baleia (Whale)</strong></td><td id="eTq\" class="">Faturamento Alto (+50k/mês), Autoridade na região, Posicionamento Excelente , Decisor.</td><td id="}xH_" class=""><strong>Closer tier 1 prioridade  </strong><br/><strong>ou ….</strong></td></tr></div><div style="display:contents" dir="ltr"><tr id="3073a7ed-24c0-8024-a6e4-fe35e7d2f7f5"><td id="?[ss" class=""><strong>B (PRATA)</strong></td><td id="hf}@" class=""><strong>O Ideal (Target)</strong></td><td id="eTq\" class="">Faturamento 30k a 50k,, tem a dor latente,é decisor, tem posicionamento baixo ou bom.</td><td id="}xH_" class=""><strong>Closer Tier 2 Prioridade</strong><br/><strong>ou ….</strong></td></tr></div><div style="display:contents" dir="ltr"><tr id="3073a7ed-24c0-8065-877f-d83f3f4e7cc9"><td id="?[ss" class=""><strong>C (BRONZE)</strong></td><td id="hf}@" class=""><strong>O &quot;Ninja&quot; (Mínimo)</strong></td><td id="eTq\" class="">Faturamento 30k-, tem uma dor pra resolver, é decisor, tem posicionamento baixo ou ruim.</td><td id="}xH_" class=""><strong>Closer tier 3</strong><br/><strong>treinamento</strong></td></tr></div></tbody></table></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8027-8b4f-cdabef26c139" class=""><strong>A Regra de Ouro:</strong></p></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8011-b27f-edd995fbf19d" class="bulleted-list"><li style="list-style-type:disc"><strong>Lead Ouro</strong> NUNCA cai na mão de <strong>Closer Tier 3</strong>. É proibido.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8054-9aa3-f6a5417bf02a" class="bulleted-list"><li style="list-style-type:disc">Se o Closer Tier 1 ou 2 não tiver horário: <strong>Agenda com o Nicolas.</strong></li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-80f3-914a-c315df268bfe" class="bulleted-list"><li style="list-style-type:disc">Se o Nicolas não tiver horário: <strong>Remarca para outro dia com Closer Tier 1.</strong></li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8055-ac15-c0adbcbdeae5" class="bulleted-list"><li style="list-style-type:disc"><em>Motivo:</em> &quot;Não vamos queimar cartucho de ouro com atirador em treinamento.&quot;</li></ul></div><div style="display:contents" dir="auto"><h3 id="3073a7ed-24c0-80c7-9dc6-cb623321c445" class=""><strong>🏛️ PROTOCOLO DE TIERS: SYSTEM ELITE (Versão Caixa Real)</strong></h3></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-803f-a83a-ec7ad36403b6" class=""><strong>A Regra do Jogo:</strong></p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8072-924b-eb7b6c377071" class="">Não importa quanto você vendeu no contrato (VGV). Importa quanto <strong>entrou na conta (Cash In)</strong>.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-80e2-8a33-faced7962c7b" class="">A hierarquia é definida pela capacidade de trazer dinheiro novo.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8058-ba4b-cbeb4de5146e" class="">segue abaixo a lista de tiers</p></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8019-8714-db5e205b2fe4" class="bulleted-list"><li style="list-style-type:disc"></li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-803c-9e33-f934264adde6" class="bulleted-list"><li style="list-style-type:disc"></li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8083-bead-fe2536d76a8a" class="bulleted-list"><li style="list-style-type:disc"></li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8052-b4d9-f9a025bc66bb" class="bulleted-list"><li style="list-style-type:disc"></li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8092-9793-dff9ab978abc" class="bulleted-list"><li style="list-style-type:disc"></li></ul></div><div style="display:contents" dir="auto"><h3 id="3073a7ed-24c0-8084-b6da-fbbcd66d824a" class=""><strong>MATRIZ DE METAS (Semanal &amp; Mensal) Tiers</strong></h3></div><div style="display:contents" dir="ltr"><table id="3073a7ed-24c0-80f9-9e23-f58a9d1e3781" class="simple-table"><tbody><div style="display:contents" dir="ltr"><tr id="3073a7ed-24c0-807f-90e3-fd9285dab926"><td id="asuE" class=""><strong>Nível (Tier)</strong></td><td id="WzvN" class=""><strong>Perfil do Lead (Privilégio)</strong></td><td id="PC\[" class=""><strong>🎯 Meta SEMANAL (Obrigatória)</strong></td><td id="bnr=" class=""><strong>💰 Meta de CAIXA (Cash In)</strong></td><td id="QCX{" class=""><strong>VGV Mensal Projetado</strong></td></tr></div><div style="display:contents" dir="ltr"><tr id="3073a7ed-24c0-80ac-8ac3-ee1e208140a2"><td id="asuE" class=""><strong>TIER 1 (Sniper)</strong></td><td id="WzvN" class=""><strong>Leads Ouro (Whales):</strong> Faturamento &gt;50k, Decisores, Prontos.</td><td id="PC\[" class=""><strong>2 Vendas de 42k</strong> <em>(R$ 84k/sem)</em></td><td id="bnr=" class=""><strong>Mínimo 75%</strong> do valor vendido deve entrar no mês.</td><td id="QCX{" class=""><strong>R$ 336.000,00</strong></td></tr></div><div style="display:contents" dir="ltr"><tr id="3073a7ed-24c0-80e9-a9e3-c0ab34e64f24"><td id="asuE" class=""><strong>TIER 2 (Hunter)</strong></td><td id="WzvN" class=""><strong>Leads Prata (Target):</strong> Faturamento 30-50k.</td><td id="PC\[" class=""><strong>1 Venda de 42k + 1 Venda de 16k</strong> <em>(R$ 58k/sem)</em></td><td id="bnr=" class=""><strong>Mínimo 70%</strong> do valor vendido deve entrar no mês.</td><td id="QCX{" class=""><strong>R$ 232.000,00</strong></td></tr></div><div style="display:contents" dir="ltr"><tr id="3073a7ed-24c0-809d-b934-fb6beb77c842"><td id="asuE" class=""><strong>TIER 3 (Farmer)</strong></td><td id="WzvN" class=""><strong>Leads Bronze (Volume):</strong> Faturamento &lt;20k ou Recuperação.</td><td id="PC\[" class=""><strong>2 Vendas (Mix 16k/5k)</strong> <em>(Aprox. R$ 21k/sem)</em></td><td id="bnr=" class=""><strong>Mínimo 60%</strong> do valor vendido deve entrar no mês.</td><td id="QCX{" class=""><strong>R$ 84.000,00</strong></td></tr></div></tbody></table></div><div style="display:contents" dir="auto"><hr id="3073a7ed-24c0-8063-889d-c756acfa33cd"/></div><div style="display:contents" dir="auto"><h3 id="3073a7ed-24c0-80d3-948a-c4148ef87c4c" class=""><strong>📱 MÓDULO 2: O Protocolo de Show-Up (Grupo WhatsApp)</strong></h3></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-80cf-be6a-eaf8ec00a55f" class="">Isso vai reduzir o No-Show drasticamente. O SDR precisa vender a ideia do grupo como uma &quot;Consultoria VIP&quot;.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8068-abe8-d12db76cb4ce" class=""><strong>O Processo (Passo a Passo para o SDR):</strong></p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8060-8ed4-d6d591d42163" class=""><strong>Agendou a Reunião?</strong></p></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8021-b48c-e5c8479b5908" class="bulleted-list"><li style="list-style-type:disc">SDR cria um grupo no WhatsApp imediatamente.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-80f8-8ff7-f5706d909ed4" class="bulleted-list"><li style="list-style-type:disc"><strong>Nome do Grupo:</strong> &quot;Auditoria Comercial | Dr. [Nome] + System&quot;.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-802e-a9ce-e318cb7ef475" class="bulleted-list"><li style="list-style-type:disc"><strong>Participantes:</strong> SDR, Lead (e sócios), Closer Escolhido, Nicolas ( para supervisionar).</li></ul></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8079-88ef-de5553b52a6c" class=""><strong>O Acolhimento (SDR manda no grupo):</strong></p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-80f4-b128-cb069c146114" class=""><em>Fulano criei este grupo para facilitar nossa comunicação e também para te apresentar a (closer) nossa especialista em estratégias comerciais e braço direto da System .</em></p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-803d-b2a8-f6cba556f759" class=""><em>Ela vai realizar essa consultoria contigo. Qualquer dúvida me avise, beleza? Confirmado 12/02/2026 ás 16h de Brasília</em></p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-80b9-a4bf-e9b168dd70d9" class=""><em>Vou aproveitar para te enviar alguns materiais que é importante conseguir dar uma olhada antes dessa conversa</em></p></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8032-861e-d65d62e051b9" class="bulleted-list"><li style="list-style-type:disc"><em>Segue um post do Renan contando um pouco da sua história para você conhecer melhor:</em></li></ul></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-80f7-adc3-f9d16a997ff0" class=""><em>(link do insta do Renan ou Mateus)</em></p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-80ce-a211-e1e709a6cc88" class=""><em>(se tiver sócio)</em></p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-805f-aa30-e06fa338a953" class=""><em>fulano conforme falamos, te coloquei como administrador para inclusão dos sócios aqui no grupo ☺️</em></p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-80e4-a998-fa51b1856a50" class=""><strong>O Aquecimento (Closer manda no grupo):</strong></p></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-800c-ae1a-c93784885bdc" class="bulleted-list"><li style="list-style-type:disc">O Closer manda um áudio de 30s: <em>&quot;Oi Doutor, vi seu perfil aqui. Amanhã às 10h vamos desenhar um plano para sua clínica. O material que o SDR mandou é crucial, dê uma olhada.&quot;</em></li></ul></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8032-a74e-d75485a77e6d" class=""><strong>Aumento de nível de consciência</strong></p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8076-82a6-e8121337b14f" class="">Enviar depoimentos que mais faz sentido para o caso dele</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-80c9-b16e-e0097cf39696" class=""><strong>A Confirmação (1 hora antes):</strong></p></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8090-8433-deabd689bba6" class="bulleted-list"><li style="list-style-type:disc"><em>Fala @Fulano Nosso especialista está pronto para te atender hoje as xxx horas conto com sua presença lá — e seu sócio também</em></li></ul></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-80de-ba7d-f1f399a29df6" class=""><strong>A Confirmação (5 minutos antes):</strong></p></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-808b-932b-d80d93d0b3e2" class="bulleted-list"><li style="list-style-type:disc">SDR manda o link do Meet no grupo. <em>&quot;Doutor, sala aberta. Estamos te esperando.&quot;</em></li></ul></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-800f-ba9a-feab89f5677d" class=""><strong>Por que funciona?</strong> O médico sente vergonha de dar bolo num grupo com 3 pessoas esperando ele.</p></div><div style="display:contents" dir="auto"><h2 id="3073a7ed-24c0-80a8-9ce7-f3127892ba65" class=""><strong>4. Matriz de Objeções</strong></h2></div><div style="display:contents" dir="auto"><h2 id="3073a7ed-24c0-8096-b7ef-ef0dcfeafc52" class="">O SDR não gagueja. Ele devolve a pergunta ou impõe o ritmo.</h2></div><div style="display:contents" dir="auto"><h3 id="3073a7ed-24c0-80b1-8bd3-d1e7b82e41d1" class="">🛑<strong>&quot;Não quero falar o meu faturamento”</strong></h3></div><div style="display:contents" dir="auto"><h3 id="3073a7ed-24c0-8069-9974-edbc3d392fff" class=""><strong>🛑 &quot;Tô ocupado / Não posso falar agora&quot;</strong></h3></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8000-a14d-f075aebe4b82" class=""><strong>Resposta (Não desliga):</strong></p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8084-8279-d2a2b98819d4" class="">&quot;Doutor, preciso de <strong>um único minuto cronometrado</strong> pra confirmar suas respostas e garantir tua vaga com o especialista. É jogo rápido. <strong>[Já emenda a próxima pergunta do BANT imediatamente]&quot;</strong></p></div><div style="display:contents" dir="auto"><h3 id="3073a7ed-24c0-80b9-b4b6-e0b56401863c" class=""><strong>🛑 &quot;Qual o preço? / Manda por WhatsApp&quot;</strong></h3></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-80f6-a62a-fa61520ed58f" class=""><strong>Resposta:</strong></p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8000-8f60-d756a03b846a" class="">&quot;Doutor, impossível passar preço sem diagnóstico. Seria amadorismo da minha parte. O especialista precisa auditar teus números primeiro. Tenho horário às 16h ou 18h. Qual você prefere?&quot;</p></div><div style="display:contents" dir="auto"><h3 id="3073a7ed-24c0-8034-823c-e52cdfd430fa" class=""><strong>🛑 &quot;Ah, vou dar uma pausa / Quero qualidade de vida agora&quot;</strong></h3></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8032-b341-cbeba5a2b2d5" class=""><strong>Resposta:</strong></p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8089-a966-e357207b2d28" class="">&quot;Doutor, nossos parceiros procuram a gente <strong>exatamente por isso</strong>. Sem um método de vendas e processos, você vira escravo da clínica e nunca vai ter qualidade de vida. A gente resolve justamente esse gargalo. Vamos travar sua agenda às 14h para você entender como sair do operacional?&quot;</p></div><div style="display:contents" dir="auto"><h3 id="3073a7ed-24c0-8011-a985-ef42ffd4af8b" class=""><strong>🛑 &quot;É golpe? / É curso?&quot;</strong></h3></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-80af-8aff-db422abeaa0f" class=""><strong>Resposta:</strong></p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-80e0-9ad6-f50db30e797c" class="">&quot;Doutor, somos uma assessoria de aceleração de clínicas. Se você preencheu a aplicação, é porque sabe que precisa mudar o resultado. Eu estou aqui pra ver se o teu perfil se encaixa no que a gente atende. Se encaixar, a gente conversa.<strong> [Pergunta do BANT]</strong>.&quot;</p></div><div style="display:contents" dir="auto"><h3 id="3073a7ed-24c0-8002-97a1-e3714c18f450" class=""><strong>🛑 &quot;Me liga semana que vem / Me manda mensagem depois&quot;</strong></h3></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-80f5-89c8-d757209ccf2b" class=""><strong>Resposta (Pré-agendamento forçado):</strong></p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-80fe-a5cd-d05e9289e0eb" class="">&quot;Faço o seguinte: Vou deixar pré-bloqueado aqui na agenda para não perdermos a oportunidade. Amanhã às 10h. Te mando o link no WhatsApp. Se cair um meteoro e você não puder, você me avisa. Combinado?&quot;</p></div><div style="display:contents" dir="auto"><hr id="3073a7ed-24c0-8072-976b-f185f92c14fb"/></div><div style="display:contents" dir="auto"><h3 id="3073a7ed-24c0-80dd-a29e-e0f1e930a7db" class=""><strong>Objeção: &quot;Vou ver primeiro, depois passo pro meu sócio.&quot; (O Telefone Sem Fio)</strong></h3></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-807d-b37f-cfaf784e60fd" class="bulleted-list"><li style="list-style-type:disc"><strong>Conceito:</strong> O produto não é &quot;encaixotado&quot;, é consultivo. Sem as duas visões, o diagnóstico sai errado.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8064-a3a1-f176ab02c608" class="bulleted-list"><li style="list-style-type:disc"><strong>Resposta:</strong><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8049-9e54-d855d7a62b28" class="">&quot;Entendo tua preocupação em otimizar o tempo, Doutor. Porém, aqui na System, a gente <strong>não tem um produto pronto de prateleira</strong> pra te entregar. O que a gente faz é uma <strong>construção personalizada</strong> baseada na visão de negócio dos donos. Se você vier sozinho, a gente desenha baseado só na tua visão. Quando você passar pro teu sócio, ele vai ter dúvidas sobre a parte dele que você não vai saber responder, e aí a estratégia trava. Pra gente não perder tempo desenhando algo que depois vai ter que ser refeito, precisamos dos dois na sala. Qual horário vocês conseguem conciliar?&quot;</p></div></li></ul></div><div style="display:contents" dir="auto"><h3 id="3073a7ed-24c0-80a4-ac12-d1b87ab0c43d" class=""><strong>&quot;Fala com a minha secretária pra agendar.&quot;</strong></h3></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-80d0-8480-da21a6327c99" class="bulleted-list"><li style="list-style-type:disc"><strong>Conceito:</strong> O médico terceiriza a agenda, mas você precisa garantir que a palavra da secretária é a palavra dele.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-806a-a6a3-f56e88d20992" class="bulleted-list"><li style="list-style-type:disc"><strong>Resposta:</strong><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8096-b6c9-f04b59302721" class="">&quot;Sem problemas, eu alinho com ela. Mas só pra confirmar: <strong>O horário que ela me passar e colocar na tua agenda, tá confirmado com você?</strong> Posso confiar que você vai estar lá?&quot; <em>(Esperar o Sim)</em> &quot;Fechado. Me passa o contato direto dela agora ou me transfere, que eu já resolvo isso em 1 minuto.&quot;</p></div></li></ul></div><div style="display:contents" dir="auto"><h3 id="3073a7ed-24c0-80b9-b724-d0de31570807" class=""><strong>&quot;Me manda os cases antes.&quot;</strong></h3></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8054-b7ca-fb45dc6585f8" class="bulleted-list"><li style="list-style-type:disc"><strong>Conceito:</strong> Você já tem os cases, mas o foco é a projeção dele.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8011-a659-e011c69f74a4" class="bulleted-list"><li style="list-style-type:disc"><strong>Resposta:</strong><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8068-8a81-cc7841040acc" class="">&quot;Doutor, a gente respira cirurgia da face. Tenho cases de Rino, Lifting, o que você imaginar. Mas te mandar um PDF frio não resolve teu problema. O que muda o jogo é você ver esses números aplicados <strong>na tua realidade atual</strong>. Na reunião, o especialista vai pegar esses benchmarks de face e simular dentro da tua clínica. É melhor ver o teu potencial de lucro ou ver o lucro dos outros? Vamos manter terça?&quot;</p></div></li></ul></div><div style="display:contents" dir="auto"><h3 id="3073a7ed-24c0-8098-8226-f9f4e4ff98ee" class=""><strong>4. Objeção: &quot;Vou ver mês que vem / Agora tá corrido.&quot; (Urgência de Mercado)</strong></h3></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-80d8-be78-fddc7b1b3878" class="bulleted-list"><li style="list-style-type:disc"><strong>Conceito:</strong> Cirurgia da Face é sobre Autoridade. Quem domina primeiro, leva o mercado.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8079-a5e8-f7cd54361695" class="bulleted-list"><li style="list-style-type:disc"><strong>Resposta:</strong><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-80cd-95d4-f5465a24f5ce" class="">&quot;Tranquilo, Doutor. Mas olha só: no mercado de estética facial e cirurgia, <strong>quem domina a região primeiro vira a referência</strong>. A gente vê isso todo dia: o cirurgião que começa a se posicionar antes, vira o &#x27;dono&#x27; daquele procedimento na cidade. Deixar pra depois é dar tempo pro teu concorrente pegar essa fatia de mercado. Vamos fazer o diagnóstico agora pra você pelo menos saber o que precisa ser feito pra não ficar pra trás?&quot;</p></div></li></ul></div><div style="display:contents" dir="auto"><hr id="3073a7ed-24c0-801c-80a4-e688b345c542"/></div><div style="display:contents" dir="auto"><h1 id="3073a7ed-24c0-804d-bea8-ed802a5cae40" class=""><strong>TÉCNICAS AVANÇADAS PARA O SDR</strong></h1></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8096-8384-df90717da709" class="">reenquadramento de terceiros</p></div><div style="display:contents" dir="auto"><h3 id="3073a7ed-24c0-80f2-ab15-c8c06f27b971" class=""><strong>TÉCNICA 1: O &quot;Loop de Concordância&quot; (Yes-Set)</strong></h3></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-80f7-ade8-dd20017aeff6" class=""><strong>Objetivo:</strong> Fazer o médico dizer &quot;sim&quot; para pequenas verdades antes de pedir o agendamento. É difícil dizer &quot;não&quot; depois de três &quot;sins&quot;.</p></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-800a-a391-f6a8094cb370" class="bulleted-list"><li style="list-style-type:disc"><strong>SDR:</strong> &quot;Doutor, você concorda que o mercado de cirurgia da face tá ficando cada vez mais concorrido?&quot;</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8021-8af4-f585e61955b4" class="bulleted-list"><li style="list-style-type:disc"><strong>Médico:</strong> &quot;Sim.&quot;</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-80e1-bb60-ff7f906a8ab4" class="bulleted-list"><li style="list-style-type:disc"><strong>SDR:</strong> &quot;E você concorda que depender só de indicação hoje em dia é arriscado pra manter a clínica cheia?&quot;</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-80c6-a093-dfffc9354d35" class="bulleted-list"><li style="list-style-type:disc"><strong>Médico:</strong> &quot;Sim, com certeza.&quot;</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8029-ae39-ef3003e7e63a" class="bulleted-list"><li style="list-style-type:disc"><strong>SDR:</strong> &quot;Então faz sentido a gente tirar 30 minutos pra montar um plano pra você não depender mais disso?&quot;</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-80b2-a8d8-cd3288332623" class="bulleted-list"><li style="list-style-type:disc"><strong>Médico:</strong> (Tendência alta a dizer Sim).</li></ul></div><div style="display:contents" dir="auto"><h3 id="3073a7ed-24c0-800c-9f2f-fe52cb21c993" class=""><strong>TÉCNICA 2: O &quot;Ou-Ou&quot; (Dupla Opção)</strong></h3></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8067-96ed-c468f7718feb" class=""><strong>Objetivo:</strong> Nunca perguntar &quot;Você pode?&quot;, e sim &quot;Quando você pode?&quot;. O cérebro tende a escolher uma das opções em vez de recusar.</p></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-80ed-bc08-ed85c4feb577" class="bulleted-list"><li style="list-style-type:disc"><strong>Errado:</strong> &quot;Você tem um tempinho essa semana?&quot;</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-801f-baef-d3877e914e4a" class="bulleted-list"><li style="list-style-type:disc"><strong>Certo:</strong> &quot;Doutor, pra essa auditoria, o especialista tem uma vaga na <strong>quinta às 10h</strong> ou na <strong>sexta às 16h</strong>. Qual encaixa melhor na tua rotina?&quot;</li></ul></div><div style="display:contents" dir="auto"><h3 id="3073a7ed-24c0-804d-9c7e-d0b0a1a86213" class=""><strong>TÉCNICA 3: O Desafio de Autoridade (Challenger)</strong></h3></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-80a1-bd82-de002ea6b6d1" class=""><strong>Objetivo:</strong> Usada quando o médico é muito cético ou arrogante. Você devolve a responsabilidade para ele.</p></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-80f0-9388-c01602b79938" class="bulleted-list"><li style="list-style-type:disc"><strong>Médico:</strong> &quot;Ah, não sei se isso funciona pra mim, já tentei de tudo.&quot;</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-806b-a897-d4d1bc2c556e" class="bulleted-list"><li style="list-style-type:disc"><strong>SDR:</strong> &quot;Doutor, se você continuar fazendo exatamente o que fez até hoje, você vai continuar atingindo o faturamento que colocou aqui na aplicação. A gente tá propondo um caminho diferente. Se você não quiser ver, tudo bem, a gente passa a vaga pra outro. Mas se quiser resultado diferente, precisa de uma ação diferente. concorda? (pausa) então tenho aqui na agenda as 16h e as 18 horas qual fica melhor?&quot;</li></ul></div><div style="display:contents" dir="auto"><h3 id="3073a7ed-24c0-8029-abc3-ca5caeab772f" class=""><strong>TÉCNICA 4: A Retirada (Takeaway)</strong></h3></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8026-8d00-ca5668356647" class=""><strong>Objetivo:</strong> Quando o médico está fazendo &quot;corpo mole&quot; ou desinteressado. Nós tiramos o doce da boca dele para gerar desejo.</p></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8041-b53a-c84fc81f6f0f" class="bulleted-list"><li style="list-style-type:disc"><strong>SDR:</strong> &quot;Doutor, sendo bem sincero com você. Pelo que você tá me falando, talvez <strong>não seja o momento</strong> da System entrar no teu negócio. A gente busca parceiros que estão com &#x27;sangue no olho&#x27; pra crescer agora.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-80c5-a2c7-d0043468ed4b" class="bulleted-list"><li style="list-style-type:disc">Se você prefere manter como está, eu vou encerrar teu processo aqui pra priorizar quem tá na fila de espera, pode ser?&quot;</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-805f-a8db-c46c7217a542" class="bulleted-list"><li style="list-style-type:disc"><strong>Efeito:</strong> Geralmente o médico reage: &quot;Não, não, espera, eu quero crescer sim...&quot;</li></ul></div><div style="display:contents" dir="auto"><h3 id="3073a7ed-24c0-80ec-b2a5-d71e6bfeea2a" class=""><strong>TÉCNICA 5: Tapa de Luva</strong></h3></div><div style="display:contents" dir="auto"><h1 id="3073a7ed-24c0-80e0-8ec7-dd9855c8132f" class="">Verificar</h1></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-805d-8b39-db985ef9bead" class=""><a href="https://www.facebook.com/ads/library/?active_status=active&amp;ad_type=all&amp;country=BR&amp;is_targeted_country=false&amp;media_type=all&amp;search_type=page&amp;sort_data[direction]=desc&amp;sort_data[mode]=total_impressions&amp;source=fb-logo&amp;view_all_page_id=347596562543275">https://www.facebook.com/ads/library/?active_status=active&amp;ad_type=all&amp;country=BR&amp;is_targeted_country=false&amp;media_type=all&amp;search_type=page&amp;sort_data[direction]=desc&amp;sort_data[mode]=total_impressions&amp;source=fb-logo&amp;view_all_page_id=347596562543275</a></p></div><div style="display:contents" dir="auto"><h2 id="3073a7ed-24c0-80e3-8ef1-e15d94955012" class=""><strong>Auditoria e Passagem de Bastão</strong></h2></div><div style="display:contents" dir="auto"><ol type="1" id="3073a7ed-24c0-80d4-9098-fad3a687eee0" class="numbered-list" start="1"><li><strong>Card sem BANT preenchido volta.</strong> O Closer não vai atender se não souber se tem sócio.</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="3073a7ed-24c0-80df-b3a0-e750fd01a39f" class="numbered-list" start="2"><li><strong>Agendamento Confirmado:</strong> O SDR deve mandar o invite e cobrar o &quot;OK&quot; no WhatsApp.</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="3073a7ed-24c0-8028-886f-d7982b037164" class="numbered-list" start="3"><li><strong>No-Show:</strong> Se o cara não apareceu, o SDR liga na hora da reunião. &quot;Doutor, o especialista está na sala te esperando. Vamos lá?&quot;</li></ol></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

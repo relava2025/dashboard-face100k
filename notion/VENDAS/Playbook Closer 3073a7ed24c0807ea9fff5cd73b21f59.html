@@ -1,0 +1,780 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Playbook Closer </title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+
+	table.collection-content {
+		width: 100%;
+		table-layout: fixed;
+	}
+
+	table.collection-content th,
+	table.collection-content td {
+		overflow-wrap: anywhere;
+	}
+
+	table.collection-content td > .user,
+	table.collection-content td > time {
+		white-space: pre-wrap;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content-wrapper {
+	overflow-x: auto;
+}
+
+@media only print {
+	.collection-content-wrapper {
+		overflow-x: visible;
+	}
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	gap: 46px;
+}
+
+.column {
+	min-width: 0;
+	overflow: hidden;
+}
+
+.column > *:first-child {
+	margin-top: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+table {
+	border-collapse: collapse;
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol.numbered-list.numbered-list-digits-2 {
+	padding-inline-start: 2em;
+}
+
+ol.numbered-list.numbered-list-digits-3plus {
+	padding-inline-start: 2.4em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="3073a7ed-24c0-807e-a9ff-f5cd73b21f59" class="page sans"><header><div class="page-header-icon undefined"><img class="icon notion-static-icon" src="https://www.notion.so/icons/bullseye_green.svg"/></div><h1 class="page-title" dir="auto">Playbook Closer </h1><p class="page-description" dir="auto"></p></header><div class="page-body"><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8168-ba04-f90a21241181" class="">O objetivo deste documento é consolidar em um único lugar todas as informações necessárias para que a equipe de closers realize um trabalho de alta performance.</p></div><div style="display:contents" dir="auto"><h3 id="3073a7ed-24c0-815b-b1c8-c94873f7807c" class=""><mark class="highlight-red"><strong>Introdução</strong></mark></h3></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-810a-89aa-d4d44881582d" class="">Todas as informações dos funis de vendas, as etapas dentro de cada funil, as atividades dentro de cada etapa bem como todos os scripts de chamadas, templates de e-mails estão inclusos aqui. Por fim, são apresentadas as principais objeções percebidas e os modos de tratar e contornar as mesmas e uma rápida análise dos pontos fortes e fracos dos principais concorrentes.</p></div><div style="display:contents" dir="auto"><h3 id="3073a7ed-24c0-81d7-8755-f827e7563940" class=""><mark class="highlight-red"><strong>Sobre esse Playbook</strong></mark></h3></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8193-a77b-e743037b93a1" class="">Esse Playbook é um Playbook universal para Fechamento (Closing) desenvolvido pela <strong>System digital</strong>. Ele pode ser usado tanto nos nossos negócios quanto em negócios mentorados ou estruturados por nós. Por isso, as mensagens específicas são feitas de negócio a negócio, mas os frameworks e estruturas podem ser facilmente editados e modelados, podendo este ser usado como Playbook oficial para qualquer negócio que venda por sistema de setters, closers e social sellers.</p></div><div style="display:contents" dir="auto"><h3 id="3073a7ed-24c0-8174-8b43-d3730df456a1" class=""><mark class="highlight-red"><strong>Função do Closer</strong></mark></h3></div><div style="display:contents" dir="auto"><h3 id="3073a7ed-24c0-81e0-bc3d-e1b296326b8c" class=""><mark class="highlight-red">Introdução ao Trabalho como Closer</mark></h3></div><div style="display:contents" dir="auto"><ol type="1" id="3073a7ed-24c0-8106-9764-cea4577bb539" class="numbered-list" start="1"><li>O closer estuda e se prepara para cada atendimento para fazer seu melhor trabalho. Ele mentaliza uma alta performance em cada interação que terá com cada cliente</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="3073a7ed-24c0-81ab-ae84-f1055086f9a9" class="numbered-list" start="2"><li>O closer faz uma apresentação totalmente personalizada, ouvindo o seu cliente potencial, se dedicando 110% àquele atendimento e fazendo um pitch calibrado e emocional.</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="3073a7ed-24c0-813c-b613-cb14cd1c32a3" class="numbered-list" start="3"><li>O closer faz o fechamento da venda com confiança e determinação se sentindo apto a auxiliar o cliente na melhor decisão para sua vida ou seu negócio</li></ol></div><div style="display:contents" dir="auto"><h3 id="3073a7ed-24c0-8126-b946-d4dfea07c690" class=""><mark class="highlight-red"><strong>Closer - Gestão de Atividades</strong></mark></h3></div><div style="display:contents" dir="ltr"><div id="3073a7ed-24c0-811a-9111-e05e17407294" class="collection-content"><h4 class="collection-title"></h4><div class="collection-content-wrapper"><table class="collection-content"><thead><tr><th><span class="icon property-icon"><img src="https://www.notion.so/icons/clock-alternate_gray.svg" style="width:14px;height:14px;display:block"/></span>Horário</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/timeline_gray.svg" style="width:14px;height:14px;display:block"/></span>Atividade</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/description_gray.svg" style="width:14px;height:14px;display:block"/></span>Detalhes</th></tr></thead><tbody><tr id="3073a7ed-24c0-8129-a1a6-d9364ca85618"><td class="cell-title"><a href="Playbook%20Closer/Sem%20t%C3%ADtulo/10h00%20-%2011h00%203073a7ed24c08129a1a6d9364ca85618.html">10h00 - 11h00</a></td><td class="cell-pM&gt;k"><span class="selected-value select-value-color-default">Treinamento</span></td><td class="cell-tFLU"></td></tr><tr id="3073a7ed-24c0-81f6-b2c8-f0fd20cfa000"><td class="cell-title"><a href="Playbook%20Closer/Sem%20t%C3%ADtulo/11h00%20-%2012h00%203073a7ed24c081f6b2c8f0fd20cfa000.html">11h00 - 12h00</a></td><td class="cell-pM&gt;k"><span class="selected-value select-value-color-green">Agenda de sessão / Follow</span></td><td class="cell-tFLU"><strong>1ª Ação </strong> | Entrar em contato com novos leads<br/><strong>2ª Ação</strong>  | Enviar mensagens para os outros leads</td></tr><tr id="3073a7ed-24c0-8165-b478-c0c01f777879"><td class="cell-title"><a href="Playbook%20Closer/Sem%20t%C3%ADtulo/14h00%203073a7ed24c08165b478c0c01f777879.html">14h00</a></td><td class="cell-pM&gt;k"><span class="selected-value select-value-color-blue">Agendamento Sessão/ Estudo/ Follow</span></td><td class="cell-tFLU"></td></tr><tr id="3073a7ed-24c0-8188-b0dd-fc1c74996d7e"><td class="cell-title"><a href="Playbook%20Closer/Sem%20t%C3%ADtulo/15h30%203073a7ed24c08188b0ddfc1c74996d7e.html">15h30</a></td><td class="cell-pM&gt;k"><span class="selected-value select-value-color-blue">Agendamento Sessão/ Estudo/ Follow</span></td><td class="cell-tFLU"></td></tr><tr id="3073a7ed-24c0-81d6-895f-dd1120702f69"><td class="cell-title"><a href="Playbook%20Closer/Sem%20t%C3%ADtulo/17h00%203073a7ed24c081d6895fdd1120702f69.html">17h00</a></td><td class="cell-pM&gt;k"><span class="selected-value select-value-color-blue">Agendamento Sessão/ Estudo/ Follow</span></td><td class="cell-tFLU"></td></tr><tr id="3073a7ed-24c0-8172-98c7-f91ccf29d252"><td class="cell-title"><a href="Playbook%20Closer/Sem%20t%C3%ADtulo/18h30%203073a7ed24c0817298c7f91ccf29d252.html">18h30</a></td><td class="cell-pM&gt;k"><span class="selected-value select-value-color-blue">Agendamento Sessão/ Estudo/ Follow</span></td><td class="cell-tFLU"></td></tr><tr id="3073a7ed-24c0-814f-94e4-fac2c39e4cfb"><td class="cell-title"><a href="Playbook%20Closer/Sem%20t%C3%ADtulo/20h00%203073a7ed24c0814f94e4fac2c39e4cfb.html">20h00</a></td><td class="cell-pM&gt;k"><span class="selected-value select-value-color-blue">Agendamento Sessão/ Estudo/ Follow</span></td><td class="cell-tFLU"></td></tr><tr id="3073a7ed-24c0-811b-84a8-faa50a9c225f"><td class="cell-title"><a href="Playbook%20Closer/Sem%20t%C3%ADtulo/Ap%C3%B3s%20Atendimentos%203073a7ed24c0811b84a8faa50a9c225f.html">Após Atendimentos</a></td><td class="cell-pM&gt;k"><span class="selected-value select-value-color-orange">Feedback resumido – Discord</span></td><td class="cell-tFLU"><strong>Layout para Discord                   </strong>Data: <br/>                                 <strong> </strong>                  Nome:<br/>                                 <strong> </strong>                  Feedback:</td></tr><tr id="3073a7ed-24c0-812a-954c-ff7a4315fe01"><td class="cell-title"><a href="Playbook%20Closer/Sem%20t%C3%ADtulo/Ap%C3%B3s%20Atendimentos%203073a7ed24c0812a954cff7a4315fe01.html">Após Atendimentos</a></td><td class="cell-pM&gt;k"><span class="selected-value select-value-color-yellow">Feedback completo</span><span class="selected-value select-value-color-pink">Gestão de CRM</span></td><td class="cell-tFLU"><strong>Layout para notas em CRM</strong>       Data:<br/>                                                    Nome:<br/>                                                    Detalhes:<br/>                                                    Ações no Card:</td></tr><tr id="3073a7ed-24c0-81ba-8cc7-d1fc9be4c153"><td class="cell-title"><a href="Playbook%20Closer/Sem%20t%C3%ADtulo/Ap%C3%B3s%20Atendimentos%203073a7ed24c081ba8cc7d1fc9be4c153.html">Após Atendimentos</a></td><td class="cell-pM&gt;k"><span class="selected-value select-value-color-brown">Upload das Gravações de Calls</span></td><td class="cell-tFLU">Salvar gravações das calls em sua devidas pastas</td></tr><tr id="3073a7ed-24c0-81c2-9b2e-cb94909b99f3"><td class="cell-title"><a href="Playbook%20Closer/Sem%20t%C3%ADtulo/Ap%C3%B3s%20Atendimentos%203073a7ed24c081c29b2ecb94909b99f3.html">Após Atendimentos</a></td><td class="cell-pM&gt;k"><span class="selected-value select-value-color-purple">Métricas - Grupo de Whatsapp</span></td><td class="cell-tFLU"><strong>Layout para Whatsapp</strong>               <mark class="highlight-red"><strong>Sessão estratégica </strong></mark>                         <mark class="highlight-red"><strong>Follow</strong></mark><br/>                                                    Agendamentos:                               Novos atendimentos:<br/>                                                    Atendimentos:                                 Atendimentos totais:<br/>                                                    No Show:                                         Atendimentos encerrados:<br/>                                                    Vendas:                                            Vendas:</td></tr></tbody></table></div><br/><br/></div></div><div style="display:contents" dir="auto"><h3 id="3073a7ed-24c0-81d5-bcaf-cb91d4ab2636" class=""><mark class="highlight-red"><strong>Atribuições e Responsabilidades do Closer</strong></mark></h3></div><div style="display:contents" dir="auto"><ol type="1" id="3073a7ed-24c0-8101-a964-d9e2fc79f041" class="numbered-list" start="1"><li>Fazer o contato com o lead se apresentando e reforçando o horário agendado</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="3073a7ed-24c0-8194-8800-d047ddb64783" class="numbered-list" start="2"><li>Enviar o Link de atendimento em até 1:30 h antes do agendamento</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="3073a7ed-24c0-8139-8e98-fbfae8ff8209" class="numbered-list" start="3"><li>Ligar para o cliente em caso de atraso de mais de 2 minutos</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="3073a7ed-24c0-810e-870e-d7337475a639" class="numbered-list" start="4"><li>Realizar a apresentação via modelo de Vendas de Alta Performance</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="3073a7ed-24c0-811d-a5b2-d1e78eb35e94" class="numbered-list" start="5"><li>Realizar o fechamento via modelo de Alta Performance pegando o pagamento</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="3073a7ed-24c0-815e-8499-e916a16c3a12" class="numbered-list" start="6"><li>Reagendar o contato quando necessário</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="3073a7ed-24c0-8111-89c2-fbbfc264d2a6" class="numbered-list" start="7"><li>Cadastrar o resultado do agendamento no CRM</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="3073a7ed-24c0-815e-b236-ee9510d8c076" class="numbered-list" start="8"><li>Realizar o processo de pós-venda imediato para garantir a assinatura dos termos</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="3073a7ed-24c0-815a-ba41-da2f10e1f78e" class="numbered-list" start="9"><li>Fortalecer o relacionamento com os clientes adquirentes;</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="3073a7ed-24c0-810f-ad5c-f0eb123efa88" class="numbered-list numbered-list-digits-2" start="10"><li>Realizar re-vendas, pegar indicações e embaixadorizar clientes</li></ol></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81b0-9193-ffda914c8141" class="">
+</p></div><div style="display:contents" dir="auto"><h3 id="3073a7ed-24c0-81cd-a588-efd2fc4b48e9" class=""><strong>Mentalidade e pré-preparação</strong></h3></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8126-bfb5-dec1ebe96d96" class=""><strong>Mentalidade: </strong> A autoconfiança inabalável é o fator preponderante para a venda e alta performance. Esse estado de alta autoconfiança é possível ser obtida a partir de treino, mentalização, auto sugestão e auto desenvolvimento.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8164-a368-fd8b658a3582" class="">Material Fórmula da manhã deve ser feito diariamente, para afiar a mentalidade:</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8137-80f7-eba68c628a81" class=""><a href="https://docs.google.com/document/d/19wyB8rjf-x4xu5YskFdU9dcE08ZO4dV8/edit">Acesse o Documento Fórmula da manhã</a></p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-814a-ac38-ebcdb1d65750" class=""><strong>Postura e aparência pessoal:</strong> Cuide muito bem da sua aparência pessoal, tanto na vestimenta, quanto na pele, cabelo e cuidados pessoais.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-818b-9fd8-c16011a75d8d" class="">Recomendamos que homens estejam sempre com barba e cabelo bem aparados e pele bem cuidada e mulheres bem maquiadas e bem arrumadas</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81dd-8204-f36666e89848" class=""><strong>Ajuste do Espaço</strong>: Seu espaço também é analisado pelo seu cliente. Se preocupe na iluminação, no fundo e tudo que seu cliente verá em volta. Caso não possua um fundo adequado, use um fundo personalizado pela empresa.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81b0-8db4-e0b2b8ec8b7d" class=""><strong>Estudo sobre o cliente:</strong>:  Estudar cada atendimento é fundamental. Veja as informações a respeito do seu cliente e veja, se tiver, suas mídias sociais, sites e informações extras que possam te ajudar no atendimento.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8176-987d-f36b95cf0495" class="">
+</p></div><div style="display:contents" dir="auto"><h3 id="3073a7ed-24c0-81f2-b19d-ca4f73025749" class=""><strong>Pré - Atendimento Closer</strong></h3></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81b1-b84f-e48d893df74d" class=""><strong>1 - Visualizar na agenda Google e no CRM</strong></p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-811d-8e3b-e9b10d98918e" class="">As informações sobre o cliente e horário do seu atendimento.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8192-bef9-ed82bb4d04cf" class="">
+</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8151-b5ba-ce335a10e8c1" class=""><strong>2 - Criar o Link no Meet</strong></p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81ec-b7d0-d31af63c848f" class="">Crie o link do Zoom se atentando a colocar Sem senha, colocar gravação automática na web  e vídeo do anfitrião e do convidado automaticamente ligado.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81d3-90a1-df056e7dd1e9" class="">
+</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81c4-993b-dba0b50c2fc1" class=""><strong>3 - Enviar 1:30h antes o link do Meet ao cliente</strong></p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8162-90ca-f33addb046a2" class="">Mensagem:</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8123-a6db-e41a326e2875" class=""><em>Olá, tudo bem?!</em></p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8139-8655-ea6e8d9d0316" class=""><em>Segue o link para a nossa conversa das xxx !</em></p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8191-9539-f9bce5db3394" class=""><em>link do meet.</em></p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-814e-b2fe-e967aab2075a" class="">Até logo!</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81b1-9d11-e140c37967a1" class="">
+</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8114-ba83-d9cb87ca5830" class=""><strong>4 - Ligação de confirmação pré-agendamento</strong></p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81d2-9f39-f85938067e00" class="">Ligar para o cliente que não respondeu confirmando o link de 30 a 15 min antes do meet.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-818a-84c2-f539745140d3" class="">
+</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8149-8072-f5935a6ddacf" class=""><strong>5 - Aguardar o cliente e avisar faltando 5 minutos que já está entrando no grupo.</strong></p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81de-b20e-deff7db4b9e5" class="">
+</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-815b-9c38-e803f8e80da0" class=""><strong>6 - Em caso o cliente atrasar, ligar depois de 1:30 minuto.</strong></p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81f9-9961-dafa7e80c9b8" class="">
+</p></div><div style="display:contents" dir="auto"><h3 id="3073a7ed-24c0-8199-abb0-ee25c41cc23c" class=""><strong>Introdução à Venda de Alta Performance</strong></h3></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-811f-9141-e3a1d09090a3" class="">A venda de Alta Performance é a venda em que o cliente passa por um processo comercial em que é feita a venda no final da interação. O objetivo deste estilo de vendas é aumentar a conversão, obter maior previsibilidade de agendamentos e diminuir o ciclo comercial.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-816d-b766-d5d89d722cbf" class="">Dessa forma a call de vendas possui uma estrutura clara que tem como objetivo aquecer o lead para decisão e acelerar sua decisão de compra ao final da call.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81d9-b569-c15a872e2b8a" class="">
+</p></div><div style="display:contents" dir="auto"><h3 id="3073a7ed-24c0-8186-80c4-d684c1ff28d4" class=""><strong>Princípios da Venda de Alta Performance</strong></h3></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-817b-ac8f-f85f9ba872c4" class=""><strong>Durante a Apresentação:</strong></p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-812e-9ecf-f5dcb1c0d3d6" class=""><strong>Princípio 1 - Sorriso e animação.</strong></p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-817c-b9ba-ea756f2a0e69" class="">Na entrada do seu cliente, coloque energia altamente positiva e sorria bastante! Entre com alta energia!  Fale com entusiasmo na sua voz! Um estudo nos EUA mostrou que a conversão de ligações de telemarketing aumentaram muito após os atendentes começarem a sorrir pelo telefone, mesmo que o sorriso não pudesse ser visto. O sorriso, de acordo com Dale Carnegie, é a arma mais poderosa do ser humano. Por isso, fale sorrindo, fale com entusiasmo! Entusiasmo contagia e vai contagiar seu prospecto de forma muito positiva e necessária para construir o big picture da venda.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81e5-986c-f82fbd2b9057" class="">
+</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-810d-8f69-f9cc146b2bf7" class=""><strong>Princípio 2 - Seja informal</strong> - Se divirta com seu cliente, sorria, fale da vida pessoal, descontraia, gere amizade, seja amigo do seu cliente.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81ee-b947-d6fbf8c349c7" class="">Fazer a apresentação ser divertida é um momento de descontração e não uma apresentação comercial. Envolva a participação do casal e ria bastante. Tire sarro. Se passar dos limites só peça desculpas de forma animada e falar que fez isso para quebrar o gelo e descontrair, porque quer que eles se divirtam. Não se apegue a formalismos. “O ridículo vende”.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81d0-ad6a-d26cb8e85a09" class="">
+</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8173-9bcb-c94696c1e86a" class=""><strong>Princípio 3 - Faça Marketing pessoal e gere pontos em comum.</strong></p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81fe-9686-cd007f8ff313" class="">Fazer marketing pessoal é falar pontos da sua trajetória profissional e pessoal, falar e aumentar suas qualificações, suas formações profissionais e o porquê está trabalhando com esse modelo (senão falar a pessoa pode se questionar). Gerar pontos em comum significa que você mostra que está inserido no mesmo  “universo” do seu cliente (gatilho mental da familiaridade que faz gerar a confiança). Se ele falar que foi a Cancun, fala que também foi (se foi mesmo).  Se ele é advogado, fale que seu irmão é advogado e sabe como é difícil a prova da OAB. Se ele tiver filhos e você também, fale sobre isso e mostre que tem um ponto em comum. Não comece sua apresentação sem pelo menos 1 ou mais pontos em comum.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-815c-8c3e-dbcb1a15b8f8" class="">
+</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81fb-a827-df8b47d8c479" class="">O vínculo vende e gera o elo de confiança entre vocês, enquanto o marketing pessoal faz a pessoa te admirar e dar valor no que você vai falar em seguida.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81dd-b93c-dba3c27f3565" class="">
+</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81c6-8308-f0b7f5bdf2f3" class=""><strong>Princípio 4 - Sua aparência é fundamental.</strong></p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81bc-b2e0-ebf7e39af044" class="">Chegue ao nível máximo de aparência profissional. Coloque um blazer . Melhore a iluminação. Deixe o cabelo muito arrumado e aparado. Se maquie. Mostre, sem verbalizar, que você é uma pessoa de valor antes mesmo de disparar a primeira palavra. Os seres humanos são atraídos pelo belo e a boa aparência passa credibilidade e confiança de acordo com estudos científicos.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8186-b471-ff9f49b0d80f" class="">Lembre-se que o seu cliente tomará uma decisão no valor de um carro após uma hora e todos os pontos precisam estar alinhados… Não só o seu speech afiado e bem trabalhado na oratória e cadência, mas sua aparência e seu espaço, que representa a comunicação não verbal.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-813f-985d-ea2ed66a12ac" class="">
+</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81b0-a9af-edb94f68ff4b" class=""><strong>Princípio 5 - Cadenciamento da voz</strong></p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8142-a9e8-f4a8f2e26040" class="">A sua voz e a boa utilização dela são a arma mais poderosa para gerar desejo e credibilidade.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8146-bde1-e8382e3ff864" class="">Lembre-se disso: “O Como você fala é mais importante do que o quê você fala”.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81bf-84ed-d40dbcc6c081" class="">Uma ideia boa apresentada de forma desanimada é muito menos convincente do que uma ideia ruim apresentada de forma eloquente.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-817e-89f8-d9a224c9a448" class="">Por isso, gerar variações na tonalidade da sua voz propositalmente, mudando o ritmo e velocidade da fala, o tom, aumentando e diminuindo a volume da voz, e pondo ênfase nos pontos que quer destacar fará o seu cliente vidrar na sua apresentação como um cão olhando um frango assado na padaria. Use pausas de forma estratégica.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-816d-a698-f86d4d18f2b8" class="">Fale sempre com dicção aberta (abrir a boca para falar). Mostrar os dentes, além do som sair de forma mais clara, é uma linguagem não verbal de quem quer passar confiança. Seres humanos mostram os dentes, desde a idade da pedra, para mostrarem que não são uma ameaça.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-815c-ba13-e6257604fef6" class="">Veja palestrantes, treine no espelho, veja sua própria apresentação.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81b5-ad18-e834ba3776aa" class="">
+</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8137-9e84-e4e94d25d12d" class=""><strong>Princípio 6 - Dê atenção aos dois !</strong></p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8190-b5bc-fb44b5a55325" class="">Quando tiver dois sócios, ou casal de marido e mulher, dê atenção aos dois, principalmente aquele que está falando mesmos ou que está interagindo menos, pois é esse que pode derrubar a venda lá na frente caso não receba atenção.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8149-8bf3-d7b6cfe12090" class="">
+</p></div><div style="display:contents" dir="auto"><h3 id="3073a7ed-24c0-81fd-a7bf-d919c613d4c6" class=""><strong>Durante o Fechamento:</strong></h3></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8173-8d28-e6f09863ab49" class=""><strong>Princípio 7 </strong>- Na hora do fechamento, fale devagar, com voz calma e reconfortante e o menos possível. Sua atitude deve ser mais passiva (apenas em momentos pontuais onde você deve mostrar firmeza e pulso)  Esse “modo buda”  vai comunicar ao cérebro límbico do seu cliente ( a parte do cérebro que realmente toma a decisão), de forma não verbal, que você não é uma ameaça, que você não está tentando convencê-lo de nada, que você está desapegado ao resultado… e que ele que tem que ir atrás.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81a8-b9d6-df99eb939147" class="">
+</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81c1-9f5d-ffcfe14dae55" class=""><strong>Princípio 8</strong> -  Silêncio é sua maior arma. Pausas de silêncio selam a confiança e demonstram que você entendeu e pensou no que seu prospecto disse antes de falar. O silêncio bem usado criará a confiança necessária para converter o interesse em ação. A venda de internet se trata de conforto. O quanto o casal está confortável para dar o passo que é melhor para vida dele e que essa é uma decisão bem tomada.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8134-a626-e3ae719baa17" class="">
+</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8113-8172-fa7e74a9ec92" class=""><strong>Princípio 9 -</strong> A venda da internet é idêntica à venda de salas de venda. Não ache que não há urgência ou que algo é diferente. Que não tem clima de sala… e todas essas outras coisas indiferentes à venda e crenças que muitos podem ter. Como nos vídeos acima de fechamento, a venda sempre é  feita na hora e ao vivo com o casal, apesar de alguns desejarem pensar depois, assim como na sala, esse pensamento era revertido em quebra de objeções e volta ao foco da negociação.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-813b-9098-cba5a9bd5564" class="">
+</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81bd-adf4-d36090b65c32" class=""><strong>Princípio 10 - </strong>Você tem à disposição recursos para mostrar o “detrás das cortinas” ao vivo com o casal. Então use! Mostre comparações ao vivo da Booking, canal do youtube, blog  post, disponibilidade da RCI, etc. Isso vai mostrar que o que ele viu é tudo real, que existe e está funcionando nesse exato momento.  Mostre depoimentos de clientes. Mostre fotos da sua família viajando. Mostre tudo o que puder mostrar para gerar a confiança necessária para o fechamento.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-812a-9933-e1f3dc84bda5" class="">
+</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81bc-b30e-c6a37e3472a6" class=""><strong>Princípio 11 -</strong> Fechamento sempre na hora, com firmeza, via garantia de sinal</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8190-afba-dbcfc264903b" class="">NUNCA acredite no “vou fazer amanhã cedo”, “vou fazer daqui a hora”, “está fechado pode contar que estou fazendo agora, podemos desligar a call”.  Não se engane, o cliente pode estar até falando a verdade, mas ele no dia seguinte vai desistir da decisão tomada 99% das vezes. É por isso que a conversão de boletos em infoprodutos é menor de 10%. Se você não quiser ter que fazer uma recuperação intensa no dia seguinte e contar com baixíssimas chances de virar a venda, tenha pulso firme, não tenha medo de perder a venda e feche na hora.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8164-b1c6-d1b05196afee" class="">
+</p></div><div style="display:contents" dir="auto"><h3 id="3073a7ed-24c0-8192-8cb0-f4dedccbee45" class=""><mark class="highlight-red"><strong>Etapas da Venda de Alta Performance</strong></mark></h3></div><div style="display:contents" dir="auto"><ol type="1" id="3073a7ed-24c0-81bc-acd7-d963d210f12f" class="numbered-list" start="1"><li><strong>Introdução</strong><div style="display:contents" dir="auto"><ol type="a" id="3073a7ed-24c0-81f8-8b83-d33ecff7b7d9" class="numbered-list" start="1"><li>Recepção</li></ol></div><div style="display:contents" dir="auto"><ol type="a" id="3073a7ed-24c0-818f-93f8-d3eb890fdeac" class="numbered-list" start="2"><li>Quebra gelo</li></ol></div><div style="display:contents" dir="auto"><ol type="a" id="3073a7ed-24c0-81e2-909d-ee1dc3ff8a57" class="numbered-list" start="3"><li>Ponto em comum, apreciação sincera e Rapport</li></ol></div><div style="display:contents" dir="auto"><ol type="a" id="3073a7ed-24c0-81db-bcbc-e31289058256" class="numbered-list" start="4"><li>Marketing Pessoal</li></ol></div><div style="display:contents" dir="auto"><ol type="a" id="3073a7ed-24c0-81ee-8115-f9624b610a3c" class="numbered-list" start="5"><li>Pacto de Início</li></ol></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="3073a7ed-24c0-81a4-abb5-e0e0cc7c49b0" class="numbered-list" start="2"><li><strong>Questionário Spin Selling</strong><div style="display:contents" dir="auto"><ol type="a" id="3073a7ed-24c0-810f-9430-d2c37f1dadaf" class="numbered-list" start="1"><li>Perguntas de situação</li></ol></div><div style="display:contents" dir="auto"><ol type="a" id="3073a7ed-24c0-8116-a599-c8552fd6d7b2" class="numbered-list" start="2"><li>Perguntas de Problema</li></ol></div><div style="display:contents" dir="auto"><ol type="a" id="3073a7ed-24c0-811a-815e-f01aa7307782" class="numbered-list" start="3"><li>Perguntas de Implicação</li></ol></div><div style="display:contents" dir="auto"><ol type="a" id="3073a7ed-24c0-81d8-8ad9-ff04930bc5e0" class="numbered-list" start="4"><li>Perguntas de Necessidade e Solução</li></ol></div><div style="display:contents" dir="auto"><ol type="a" id="3073a7ed-24c0-81e3-b9b5-cbfd560cf86d" class="numbered-list" start="5"><li>Pacto Sim ou Não</li></ol></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="3073a7ed-24c0-81c9-beb3-e2fd005f8289" class="numbered-list" start="3"><li><strong>Apresentação Pitch</strong><div style="display:contents" dir="auto"><ol type="a" id="3073a7ed-24c0-81ba-bb39-fbdec2fc3298" class="numbered-list" start="1"><li>Credibilidade da empresa</li></ol></div><div style="display:contents" dir="auto"><ol type="a" id="3073a7ed-24c0-813a-b8b9-c2fbf85573d3" class="numbered-list" start="2"><li>Apresentação do Método</li></ol></div><div style="display:contents" dir="auto"><ol type="a" id="3073a7ed-24c0-8163-9ff0-eb5fd214f300" class="numbered-list" start="3"><li>Pacto de Transição</li></ol></div><div style="display:contents" dir="auto"><ol type="a" id="3073a7ed-24c0-814e-b3b0-ccd64ac1d0c2" class="numbered-list" start="4"><li>Apresentação do Produto</li></ol></div><div style="display:contents" dir="auto"><ol type="a" id="3073a7ed-24c0-8163-8b6e-ca8b89fe785e" class="numbered-list" start="5"><li>Pacto Transição para Ancoragem</li></ol></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="3073a7ed-24c0-8146-aaea-e6a2eff23f44" class="numbered-list" start="4"><li><strong>Ancoragem</strong><div style="display:contents" dir="auto"><ol type="a" id="3073a7ed-24c0-812a-b452-ff55a5be1921" class="numbered-list" start="1"><li><strong>Lógica Financeira</strong></li></ol></div><div style="display:contents" dir="auto"><ol type="a" id="3073a7ed-24c0-81cf-9f75-f9cc98bee963" class="numbered-list" start="2"><li><strong>Pacto Final</strong></li></ol></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="3073a7ed-24c0-8190-b20d-df904fe6724c" class="numbered-list" start="5"><li><strong>Fechamento</strong><div style="display:contents" dir="auto"><ol type="a" id="3073a7ed-24c0-8103-81a6-e74ddfcf296d" class="numbered-list" start="1"><li><strong>Apresentação do valor de tabela</strong></li></ol></div><div style="display:contents" dir="auto"><ol type="a" id="3073a7ed-24c0-818f-9604-e9e6e31e7a39" class="numbered-list" start="2"><li><strong>Sustentação do valor de tabela</strong></li></ol></div><div style="display:contents" dir="auto"><ol type="a" id="3073a7ed-24c0-81e8-9549-cf9909539134" class="numbered-list" start="3"><li><strong>Tirar temperatura, como se encaixa?</strong></li></ol></div><div style="display:contents" dir="auto"><ol type="a" id="3073a7ed-24c0-81d3-9c62-fd0224d3a339" class="numbered-list" start="4"><li><strong>Razão para condição diferenciada do agora/hoje</strong></li></ol></div><div style="display:contents" dir="auto"><ol type="a" id="3073a7ed-24c0-81a5-aab0-c86950e5be40" class="numbered-list" start="5"><li><strong>Pacto antes de apresentar a condição diferenciada</strong></li></ol></div><div style="display:contents" dir="auto"><ol type="a" id="3073a7ed-24c0-81c3-875c-c7ae77a6fed3" class="numbered-list" start="6"><li><strong>Apresentação condição diferenciada agora hoje</strong></li></ol></div><div style="display:contents" dir="auto"><ol type="a" id="3073a7ed-24c0-8113-88a8-dcfb89286a4b" class="numbered-list" start="7"><li><strong>Queda/melhora 1 - bônus/ parcelamento</strong></li></ol></div><div style="display:contents" dir="auto"><ol type="a" id="3073a7ed-24c0-81c6-b10a-e2c8533f76b5" class="numbered-list" start="8"><li><strong>Queda/melhora 2 - produto/bonus/ parcelamento</strong></li></ol></div><div style="display:contents" dir="auto"><ol type="a" id="3073a7ed-24c0-8137-b8a9-d657262c2f59" class="numbered-list" start="9"><li><strong>&quot;Tirar da mesa&quot; e validar compromisso e orçamento</strong></li></ol></div><div style="display:contents" dir="auto"><ol type="a" id="3073a7ed-24c0-81b1-9986-e8ae05f8479a" class="numbered-list" start="10"><li><strong>Descer produto</strong></li></ol></div><div style="display:contents" dir="auto"><ol type="a" id="3073a7ed-24c0-81ac-a2be-d646166ce5f7" class="numbered-list" start="11"><li><strong>Pegando o pagamento</strong></li></ol></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8170-856f-f2b2328475f4" class="">
+</p></div></li></ol></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81dd-829d-d11283a45c02" class=""><strong>Scripts de Apresentação Closer: </strong></p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-811a-8460-e3947b3afb4b" class="">
+</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81aa-a98a-f67387fc84b7" class=""><strong>Scripts de Fechamento Closer: </strong><strong><a href="https://www.notion.so/FSS-CLOSER-Script-de-Fechamento-2663a7ed24c081baa4e3f311feb414a0?pvs=21"><img class="icon notion-static-icon" src="https://www.notion.so/icons/drafts_red.svg"/>[FSS] [CLOSER] Script de Fechamento</a></strong><strong> </strong></p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8112-8095-db817803a3cd" class="">
+</p></div><div style="display:contents" dir="auto"><h3 id="3073a7ed-24c0-818c-8452-e79665930333" class=""><strong>Treinamentos de Venda de Alta Performance</strong></h3></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81c2-a16f-e82d8cbcf49f" class=""><strong>Treinamento Inicial Pré-Qualificação</strong>:<br/><strong>Master Sales Script:</strong></p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8167-bb9f-ececc1422938" class=""><strong>Ead Closer: </strong></p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8109-b556-c924a8e0bf8b" class=""><strong>Closer Águia: </strong></p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81c3-bdb2-d2b82428e6b8" class="">
+</p></div><div style="display:contents" dir="auto"><h3 id="3073a7ed-24c0-816e-b339-dc41d63f48b0" class=""><strong>Gravações de Venda de Alta Performance</strong></h3></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81ff-9fa5-ce6d40356643" class=""><strong>Vendas de High Ticket Fração Imobiliária</strong></p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8142-a8f5-d4378e07bf8c" class="">1 Fechamento Simone Heringer: <a href="https://www.youtube.com/watch?v=m88xf0_2a2c">link</a>; (pegando pag a partir de 40:35)</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81b1-8ca5-f80262fb7df2" class="">2 Fechamento da Venda Rafael Ribeiro <a href="https://www.youtube.com/watch?v=M2tIkr12IeI&amp;t=9s">link</a>; (pegando pag a partir de 35:35)</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81b5-a304-c520fdf7befe" class="">3 Fechamento da Venda Sônia Braga e  Esposo <a href="https://www.youtube.com/watch?v=bWo7teDfIyU&amp;t=3022s">link</a>; pegando pag 51:30)</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81a5-b168-eb6e3e78af8b" class="">4 Fechamento da Venda Alex e Patrícia: <a href="https://www.youtube.com/watch?v=T7o7s7lfhmc">link</a>; (pegando pag a partir do 25:00)</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81bf-8db2-e60483f3b5e4" class="">5 Fechamento da Venda Jackson e Esposa:<a href="https://www.youtube.com/watch?v=uD1DrhKGpVI&amp;t=2072s">link</a>; (pegando pag a partir de 29:10)</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81b4-b08c-cf3b5c0dbe40" class="">6 Fechamento da Venda Rodrigo Cesar:<a href="https://www.youtube.com/watch?v=ANe2TCX_c18&amp;t=333s">link</a>; (pegando pag a partir do 15:05)</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8106-870c-cb33567e064d" class="">7 Fechamento Ricardo Ferreira:<a href="https://www.youtube.com/watch?v=xuzSEEu79Ug"> link</a>; (fechamento de contrato)</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-818c-9845-e3daf980498c" class="">8 Fechamento Cintia e Walber: <a href="https://www.youtube.com/watch?v=6CyQ81FIz0E&amp;t=2531s">link</a>; (pegando pag a partir do 50:30)</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8100-a9b9-e30a684bcd88" class="">9 Fechamento Sirlene:<a href="https://www.youtube.com/watch?v=QG7cdPxYG1U">link</a>; (pegando pag a partir do 28:00)</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81af-8358-cba78a36b42f" class="">10 Fechamento da Venda Sandra e Evaristo:<a href="https://www.youtube.com/watch?v=U-L3C4f-_0E&amp;t=2s">link</a>; (pegando pág a partir do 48:40)                     </p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81f0-89c8-c6cdfbfab3e5" class="">11 Fechamento da venda Marcus - Closer: Alexandre: <a href="https://youtu.be/acB0hfTVRRE">Link;</a></p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81a1-bfe0-e6af47d69b96" class="">12 Fechamento da venda Beatriz - Closer: Apoena: <a href="https://youtu.be/y0DR4WH6zLk">Link</a>;</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-810c-9e4c-efd0865ece39" class="">13 Fechamento da venda Leandro - Closer: Alexandre: <a href="https://youtu.be/BU73g7yjoUU">Link</a>;</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-817e-9e4f-f16e7c909e29" class="">14 Fechamento da venda Isabel - Closer: Alexandre:<a href="https://youtu.be/C0xSCyWwr4k"> Link</a>;</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81d3-8482-e87139e36568" class="">15 Fechamento da venda Otoni - Closer: Alexandre: <a href="https://youtu.be/3vg1MnPsyTY">Link</a>;</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-816b-841c-f84ca1a99644" class="">
+</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8151-af15-feaf520cbe45" class=""><strong>Vendas de High Ticket Mentoria</strong></p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8105-b851-ed8c99a95b6c" class=""><strong>Reversão de Objeções</strong></p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-815f-8d91-e31eef3036e3" class="">
+</p></div><div style="display:contents" dir="auto"><h3 id="3073a7ed-24c0-8192-9bf6-c46dd1878a2c" class=""><mark class="highlight-red"><strong>Introdução à reversão de Objeções</strong></mark></h3></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8162-af1a-d47adf7678e8" class="">Objeções são processos emocionais que o seu cliente coloca durante o processo para evitar mudança ou riscos à sua sobrevivência.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81be-a3f2-fc2c4a96ba44" class="">As objeções se lidam no processo emocional e não racional, por isso precisam de uma atuação não ortodoxa.  Veja no documento abaixo como trabalhar com objeções.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81ad-be67-d9094f566b37" class="">
+</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81c2-88c9-e500af04a0fb" class=""><strong>Documento de como Lidar com Objeções: </strong></p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8130-971d-c01a3ab59cd3" class="">
+</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81a7-8862-c5e07d5ac589" class=""><strong>REVENDO AS PRÓPRIAS APRESENTAÇÕES (ESTRATÉGIA PARA CRESCIMENTO EXPONENCIAL)</strong></p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-815c-848f-cb638a310b52" class="">Reveja sempre o seu atendimento anterior! Aproveite que as chamadas são gravadas para ver exatamente os pontos que você pode melhorar. Anote tudo que você achar que pode melhorar em um caderno, ou o que você poderia ter feito diferente.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81aa-a157-cf0ef93471d4" class="">Veja os fechamentos que geraram venda de outra pessoa, para ver o que elas fizeram para gerar a venda!</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81d8-94e9-eb4747a0f7de" class="">A grande vantagem desse nosso modelo de internet é a grande possibilidade de otimização graças a esses recursos digitais.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-814f-b991-e18fb368b7ef" class="">
+</p></div><div style="display:contents" dir="auto"><h3 id="3073a7ed-24c0-8130-aaae-f8bc18035c13" class=""><mark class="highlight-red"><strong>PROCESSO DE PRÉ-VENDAS - SEGURAR A PROPOSTA PARA PENSAR E FAZER O FOLLOW UP</strong></mark></h3></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81f1-82ba-d57078224e8e" class="">
+</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-812e-913c-f9db1624bfbd" class="">Processo para pegar algum valor do cliente e “segurar” a venda, através de uma pré-venda e dar a ele um tempo a mais para pensar.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-810d-ae4a-d4d2ebe898c6" class="">Cliente: - “Posso pensar depois e dar uma resposta?”</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8198-9abc-f159916ad0cb" class="">Consultor: - Pode, pode pensar até o final do mês. Há processo aqui para isso, você quer saber qual é?</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-811b-8d30-e3d7d51e5ebd" class="">Cliente: Sim</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8198-a026-c838cc004a49" class="">Silêncio estratégico.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-816e-9334-fb892b9c37aa" class="">Consultor:- A gente tem um depósito reembolsável para segurar essas condições que você viu aqui e nos agendarmos a segunda reunião, inclusive já bloqueamos uma das unidades nessas condições e horário nosso.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8152-a56d-e8d27355f83a" class="">“Esse depósito é de R$500 reais para a gente deixar reservada a sua vaga nessa condição apresentada. </p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-819c-bd94-f1c341ebb0ce" class="">“Se você quiser desistir, a gente devolve o valor.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81a5-abca-de00a9205b4a" class="">Senão, isso vira a integralização da sua primeira parcela.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8150-b479-fff25168401b" class="">Nenhum risco, nem de perder a oportunidade, nem de dar o sim definitivo.”</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8197-b105-f70bcc80ad60" class="">Cliente: “É possível reagendar sem ter que pagar esse valor?”</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-815a-b116-d157b9c9459b" class="">Consultor:  “Não, não é” + quebra de objeção.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8180-865c-ef19cca61572" class="">Dicas:</p></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-814a-9558-f03494e856b8" class="bulleted-list"><li style="list-style-type:disc">Oriente o menor tempo possível: melhor em até 24 horas, máximo 48 horas, para não cair a emoção.</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-810e-b53c-c019b696afeb" class="bulleted-list"><li style="list-style-type:disc">Melhore a condição antes da segunda visita</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8148-84f5-c263daa500de" class="bulleted-list"><li style="list-style-type:disc">Depois de propor esse método, volte para tentar fechar o produto.</li></ul></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81e4-943d-d907308a190f" class="">
+</p></div><div style="display:contents" dir="auto"><h3 id="3073a7ed-24c0-81b8-b8e1-ec403b02012f" class=""><mark class="highlight-red"><strong>APÓS PAGAMENTO (VENDA CONCLUÍDA 1º ETAPA)</strong></mark></h3></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8140-ae93-f56f62cddcf3" class="">
+</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81d2-ad84-f3bc5eccbbe4" class="">1- Parabéns caloroso pela aquisição e agradecendo muito pela confiança.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81eb-bd5b-f0c3b89a0518" class="">2- <strong>Pegar os dados do Cliente </strong>para confecção do contrato (lista mais abaixo)</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81e7-91d3-c2a0ae65895a" class="">3- Indicar materiais específicos para o cliente já ir vendo</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8106-9cd0-de6834780d6d" class="">4- Agendamento da reunião de boas vindas (próximos passos) em 24 horas já fazendo link e já registrando na agenda o horário a fim de evitar sobreposição de agendamentos.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8119-927b-da7119be6a20" class="">Regras:</p></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-811b-acd2-fb8f7a0194cb" class="bulleted-list"><li style="list-style-type:disc">Sempre agendar 24h após o pagamento do cliente</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-81a3-88a6-df390f5e89e5" class="bulleted-list"><li style="list-style-type:disc">Pegar os dados no momento do agendamento</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-817b-a3d3-f37fc1061182" class="bulleted-list"><li style="list-style-type:disc">Agendar para horários de não venda prioritariamente</li></ul></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-816f-a80e-c62a35eb15d4" class="">5- Citar O programa de Embaixadores, que vai explicar na reunião de boas vindas. (isso gerará uma curiosidade) -</p></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-813f-8436-de9f586ee1d8" class="bulleted-list"><li style="list-style-type:disc">Pessoas mais próximas a ela (pois assim a menção ao nome de quem indicou surtirá efeito)</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-8167-af1f-cc3245ae660c" class="bulleted-list"><li style="list-style-type:disc">Pessoas abertas a ouvir proposta</li></ul></div><div style="display:contents" dir="auto"><ul id="3073a7ed-24c0-81bd-8a51-f5af7e86f03e" class="bulleted-list"><li style="list-style-type:disc">Pessoas com renda e perfil de viagem</li></ul></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-816a-8a4a-c0786f1dd3ea" class="">
+</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81ef-90ad-f49661a391c8" class=""><strong>Dados do Cliente para Conclusão da Venda</strong></p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8186-958e-cd152dbb5340" class="">Nome:</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8166-abdd-f7e2d9bfbde9" class="">Email:</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-813f-908e-c03a8900f9a2" class="">Telefone:</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8156-b732-c8a134058a86" class="">CPF:</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-816e-8509-d5d030ff0625" class="">RG:</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81ee-b541-d071b6d87032" class="">Endereço:</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8153-b071-d10c3e85b2f1" class="">Produto:</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-810c-8373-e4e4e1af5e70" class="">Total de PAGAMENTO:</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81a2-b670-e6cf69380ec9" class="">Entrada:  (+ método de pagamento)</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8171-b9fd-d87c215ef837" class="">Parcelas:  (+ método de pagamento)</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8122-bfb8-dcf4a07247d3" class="">Embaixador/Afiliado/Hunter:</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8112-806a-ca3be68a33ad" class="">SDR::</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-814a-9db6-fadcfa68ffd7" class="">Closer:</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81dd-828e-d2dc86000dcd" class="">Reunião de Boas Vindas: (data)</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8161-b145-e51d4af123c0" class="">Bônus de Venda:</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-817f-9548-f5b0fe372a71" class="">
+</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-818c-98db-c1b91bbe4ac4" class=""><mark class="highlight-red"><strong>CONSIDERAÇÕES FINAIS</strong></mark></p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81f7-a10d-e833bb6ccf13" class="">
+</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8175-819e-f5e37d5770fe" class="">Esse guia deve ser revisado de forma frequente e com a participação de todos os envolvidos para a melhoria do processo.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8120-ad6d-eb54e0053596" class="">O uso do guia é obrigatório no seu DIA-A-DIA, como sua BÍBLIA DE VENDAS!!!!</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8148-b282-c14d3130493c" class="">Contamos com você e sua dedicação nessa execução.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8122-94e2-e7f9f3856260" class="">Bem vindo mais uma vez ao time e BOAS VENDAS.</p></div><div style="display:contents" dir="auto"><h3 id="3073a7ed-24c0-81f8-8326-e290f355017b" class=""><mark class="highlight-red"><strong>Gostaria de contratar Social Sellers, SDRs e Closers pré-treinados para o seu negócio? </strong></mark></h3></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-81f5-b3ad-e697a79fe17f" class=""><strong>Acesse: </strong></p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-8100-8f30-e08276e43452" class="">                                                           </p></div><div style="display:contents" dir="auto"><h3 id="3073a7ed-24c0-81cf-8d34-f2bdd97365a1" class="">                                               <mark class="highlight-red"><strong>ANOTAÇÕES</strong></mark></h3></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-813a-a944-deefd9ce89cf" class="">
+</p></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
