@@ -531,6 +531,57 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .tut-event-tema{font-size:14px;font-weight:700;color:var(--text);line-height:1.3}
 .tut-event-com{font-size:12px;color:var(--text-sec)}
 .tut-empty{color:var(--text-sec);font-size:14px;padding:12px 0}
+
+/* ONBOARDING CHECKLIST */
+.onb-overall{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px 22px;margin-bottom:20px;position:relative;overflow:hidden}
+.onb-overall::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,rgba(245,166,35,0) 0%,var(--amber) 40%,var(--amber) 60%,rgba(245,166,35,0) 100%)}
+.onb-overall-row{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.onb-overall-pct{font-size:42px;font-weight:800;font-family:'Montserrat',sans-serif;color:var(--amber);line-height:1;min-width:80px}
+.onb-overall-right{flex:1;min-width:160px}
+.onb-overall-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px}
+.onb-overall-sub{font-size:11px;color:var(--text-sec);margin-bottom:8px}
+.onb-overall-bar{height:5px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden}
+.onb-overall-fill{height:100%;background:linear-gradient(90deg,var(--amber),rgba(245,166,35,0.5));border-radius:3px;transition:width .5s}
+.onb-concluido-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:20px;font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;background:var(--green-dim);color:var(--green);border:1px solid var(--green-border);letter-spacing:.05em}
+.onb-stage-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:12px;overflow:hidden;transition:border-color .25s}
+.onb-stage-card.stage-done{border-color:rgba(34,197,94,0.35)}
+.onb-stage-hdr{display:flex;align-items:center;gap:12px;padding:14px 18px;cursor:pointer;user-select:none;transition:background .15s}
+.onb-stage-hdr:hover{background:var(--surface2)}
+.onb-stage-num{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;font-family:'Montserrat',sans-serif;flex-shrink:0;background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border);transition:all .25s}
+.onb-stage-card.stage-done .onb-stage-num{background:var(--green);color:#000;border-color:var(--green)}
+.onb-stage-title{font-size:13px;font-weight:600;color:var(--text);flex:1;font-family:'Montserrat',sans-serif}
+.onb-stage-resp{font-size:10px;color:var(--text-sec);white-space:nowrap}
+.onb-stage-prog{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.onb-stage-bar{width:70px;height:3px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden}
+.onb-stage-fill{height:100%;border-radius:2px;transition:width .4s}
+.onb-stage-card.stage-done .onb-stage-fill{background:var(--green)}
+.onb-stage-pct{font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--text-sec);min-width:36px;text-align:right}
+.onb-stage-chev{font-size:18px;color:var(--text-sec);transition:transform .2s;flex-shrink:0}
+.onb-items-wrap{border-top:1px solid var(--border);padding:14px 18px;display:none}
+.onb-items-wrap.open{display:block}
+.onb-objetivo{font-size:11px;color:var(--text-sec);line-height:1.6;padding:8px 12px;background:var(--surface2);border-radius:6px;border-left:2px solid var(--amber-border);margin-bottom:12px}
+.onb-item{display:flex;align-items:flex-start;gap:10px;padding:7px 2px;cursor:pointer;border-radius:5px;transition:background .12s}
+.onb-item:hover{background:var(--surface2)}
+.onb-item-check{width:16px;height:16px;border-radius:3px;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .18s;border:1.5px solid var(--border);background:transparent}
+.onb-item.item-done .onb-item-check{background:var(--green);border-color:var(--green)}
+.onb-item-text{font-size:13px;color:var(--text);line-height:1.4;transition:color .15s}
+.onb-item.item-done .onb-item-text{text-decoration:line-through;color:rgba(255,255,255,0.25)}
+.onb-resultado{font-size:11px;color:var(--amber);margin-top:10px;padding:8px 12px;background:var(--amber-dim);border-radius:6px;border:0.5px solid var(--amber-border)}
+.onb-conclusao{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-top:20px;transition:border-color .3s}
+.onb-conclusao.all-done{border-color:var(--green-border)}
+.onb-conclusao-hdr{display:flex;align-items:center;gap:12px;padding:16px 18px;cursor:pointer;border-bottom:1px solid var(--border);user-select:none;transition:background .15s}
+.onb-conclusao-hdr:hover{background:var(--surface2)}
+.onb-conclusao-title{font-size:14px;font-weight:700;color:var(--text);font-family:'Montserrat',sans-serif;flex:1}
+.onb-conclusao-body{padding:16px 18px}
+.onb-item-input{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-family:'Inter',sans-serif;font-size:13px;padding:0;min-width:0;transition:color .15s}
+.onb-item-input::placeholder{color:var(--text-dim)}
+.onb-item-input.onb-input-done{text-decoration:line-through;color:rgba(255,255,255,0.25)}
+.onb-item-input:focus{color:var(--text)!important;text-decoration:none!important}
+.onb-del-btn{opacity:0;background:transparent;border:none;color:var(--text-dim);font-size:11px;cursor:pointer;padding:2px 6px;border-radius:3px;transition:all .15s;flex-shrink:0}
+.onb-item:hover .onb-del-btn{opacity:1}
+.onb-del-btn:hover{color:var(--red);background:var(--red-dim)}
+.onb-add-btn{width:100%;margin-top:8px;padding:8px;background:transparent;border:1px dashed var(--border);border-radius:6px;color:var(--text-sec);font-size:12px;cursor:pointer;transition:all .15s;font-family:'Montserrat',sans-serif;font-weight:600;letter-spacing:.04em}
+.onb-add-btn:hover{border-color:var(--amber);color:var(--amber)}
 </style>
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#F5A623">
@@ -612,6 +663,10 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
       <button class="nav-btn" onclick="showPage('tutorias',this,'mnav-tut')">
         <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="11" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M5 1v3M11 1v3M2 7h12" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><path d="M5 10.5l1.5 1.5L11 9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
         Tutorias
+      </button>
+      <button class="nav-btn" onclick="showPage('onboarding',this,'mnav-onb')">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M3 4h4M3 8h3M3 12h2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><path d="M9 3l1.5 3 3.5.5-2.5 2 .5 3L9 10l-3 1.5.5-3L4 6l3.5-.5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+        Onboarding
       </button>
     </nav>
     <div class="sb-client">
@@ -1019,6 +1074,12 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
         </div>
       </div>
 
+      <!-- PAGE: ONBOARDING -->
+      <div id="page-onboarding" class="page">
+        <div class="brand-rail"></div>
+        <div id="onb-container"></div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -1053,6 +1114,10 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
     <button class="mobile-nav-btn" id="mnav-tut" onclick="showPage('tutorias',this,'mnav-tut')">
       <svg viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="11" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M5 1v3M11 1v3M2 7h12" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><path d="M5 10.5l1.5 1.5L11 9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
       Tutorias
+    </button>
+    <button class="mobile-nav-btn" id="mnav-onb" onclick="showPage('onboarding',this,'mnav-onb')">
+      <svg viewBox="0 0 16 16" fill="none"><path d="M3 4h4M3 8h3M3 12h2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><path d="M9 3l1.5 3 3.5.5-2.5 2 .5 3L9 10l-3 1.5.5-3L4 6l3.5-.5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+      Onboard
     </button>
   </div>
 </div>
@@ -1348,6 +1413,7 @@ function renderAll(){
   renderMarcosPreview();
   renderAlertPage();
   renderRotinaHoje();
+  renderOnboarding();
 }
 
 function renderTopbar(){
@@ -2123,6 +2189,288 @@ setTimeout(()=>{
     renderAll();
   }
 },5000);
+</script>
+<script>
+// ── ONBOARDING CHECKLIST ───────────────────────────────────────────────
+const ONB_STAGES = [
+  {
+    id:'cs1', num:1,
+    title:'CS1 — Call de Boas-Vindas', resp:'CS1',
+    objetivo:'Iniciar oficialmente a jornada do cliente, alinhar expectativas, entender o cenário atual e definir as metas principais.',
+    resultado:'Cliente entende como será a jornada, sabe suas responsabilidades e sai com metas claras.',
+    defaults:['Contrato assinado','Pagamento confirmado','Grupo oficial criado','Cliente integrado ao ecossistema','Acessos enviados','Aula obrigatória orientada','Call de Boas-Vindas realizada','Faturamento atual levantado','Ticket médio levantado','Gargalo principal identificado','Meta Base definida','Meta Média definida','Super Meta definida','Próxima call agendada: Esteira de Produtos']
+  },
+  {
+    id:'cs2', num:2,
+    title:'CS2 — Call de Esteira de Produtos', resp:'CS2',
+    objetivo:'Organizar os produtos/procedimentos do cliente e definir qual será o foco comercial da operação.',
+    resultado:'Cliente sai com clareza sobre o que vender, para quem vender e qual oferta será priorizada.',
+    defaults:['Mapear todos os produtos/procedimentos da clínica','Identificar produtos de entrada','Identificar produtos de maior margem','Definir produto foco','Definir oferta principal','Organizar esteira de produtos','Validar ticket médio ideal','Levantar principais objeções comerciais','Coletar informações necessárias para a apresentação de vendas','Encaminhar briefing para construção da apresentação']
+  },
+  {
+    id:'apres', num:3,
+    title:'Entrega da Apresentação de Venda', resp:'Equipe',
+    objetivo:'Transformar a oferta e a esteira em uma apresentação comercial prática para o cliente usar nas vendas.',
+    resultado:'Apresentação pronta para ser explicada, validada e implementada no processo comercial do cliente.',
+    defaults:['Apresentação comercial construída','Oferta principal incluída','Produto foco destacado','Benefícios organizados','Argumentos comerciais definidos','Quebra de objeções estruturada','Condição comercial organizada','Chamada para decisão incluída','Material revisado internamente','Apresentação enviada ou preparada para a call com CS3']
+  },
+  {
+    id:'cs3', num:4,
+    title:'CS3 — Call de Vendas e Apresentação', resp:'CS3',
+    objetivo:'Ensinar o cliente a usar a apresentação de vendas e validar se o processo comercial está claro.',
+    resultado:'Cliente entende como vender usando a apresentação e começa a aplicar o processo comercial com mais segurança.',
+    defaults:['Apresentar a estrutura da apresentação de venda','Explicar como conduzir a call comercial','Ensinar como usar os argumentos da oferta','Validar abordagem comercial','Ajustar discurso, se necessário','Mapear dúvidas do cliente','Identificar gargalos comerciais','Orientar uso da apresentação no atendimento','Definir próximas ações comerciais','Direcionar pontos de atenção para o CS responsável']
+  },
+  {
+    id:'trafego', num:5,
+    title:'Head de Tráfego — Call de Marketing e Tráfego', resp:'Pedro / Head de Tráfego',
+    objetivo:'Alinhar posicionamento, campanhas, geração de demanda e direção de marketing.',
+    resultado:'Cliente tem clareza sobre como marketing e tráfego vão apoiar a geração de oportunidades.',
+    defaults:['Analisar cenário atual de marketing','Verificar canais ativos','Avaliar Instagram e posicionamento','Entender investimento atual em tráfego','Definir direção inicial de campanhas','Alinhar produto foco com estratégia de tráfego','Validar público-alvo','Definir prioridade de geração de demanda','Orientar conteúdos, roteiros ou criativos necessários','Alinhar próximos passos com gestor de tráfego, se houver']
+  },
+];
+
+const ONB_CONC_DEFAULTS = ['Boas-Vindas realizada','Metas definidas','Cliente integrado ao ecossistema','Esteira de Produtos realizada','Produto foco definido','Apresentação de venda entregue','Call de vendas realizada pelo CS3','Call de marketing e tráfego realizada','Cliente sabe exatamente o que executar','Próximas ações registradas no acompanhamento interno'];
+
+const checkSvgOnb = `<svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+// ── DATA HELPERS ──
+// Items stored as [{text, done}]. Falls back to defaults if not yet in Firebase.
+function getOnbItems(stageId){
+  const raw = (S.onboarding||{})[stageId];
+  if(Array.isArray(raw) && raw.length && typeof raw[0]==='object') return raw;
+  const stage = ONB_STAGES.find(s=>s.id===stageId);
+  const defaults = stage ? stage.defaults : [];
+  // migrate old boolean array
+  if(Array.isArray(raw) && raw.length && typeof raw[0]==='boolean'){
+    return defaults.map((text,i)=>({text, done:!!raw[i]}));
+  }
+  return defaults.map(text=>({text, done:false}));
+}
+
+function getOnbConcItems(){
+  const raw = (S.onboarding||{}).conclusao;
+  if(Array.isArray(raw) && raw.length && typeof raw[0]==='object') return raw;
+  if(Array.isArray(raw) && raw.length && typeof raw[0]==='boolean'){
+    return ONB_CONC_DEFAULTS.map((text,i)=>({text, done:!!raw[i]}));
+  }
+  return ONB_CONC_DEFAULTS.map(text=>({text, done:false}));
+}
+
+function onbStageProgress(stageId){
+  const items = getOnbItems(stageId);
+  const done = items.filter(x=>x.done).length;
+  return { done, total:items.length, pct: items.length ? Math.round(done/items.length*100) : 0 };
+}
+
+function onbOverallProgress(){
+  let done=0, total=0;
+  ONB_STAGES.forEach(s=>{ const p=onbStageProgress(s.id); done+=p.done; total+=p.total; });
+  const ci=getOnbConcItems(); done+=ci.filter(x=>x.done).length; total+=ci.length;
+  return { done, total, pct: total ? Math.round(done/total*100) : 0 };
+}
+
+function ensureOnb(){ if(!S.onboarding) S.onboarding={}; }
+
+async function saveOnb(){ await save({onboarding:S.onboarding}); renderOnboarding(); }
+
+// ── TOGGLE ──
+async function toggleOnbItem(stageId, idx){
+  ensureOnb();
+  const items = getOnbItems(stageId);
+  items[idx].done = !items[idx].done;
+  S.onboarding[stageId] = items;
+  await saveOnb();
+}
+
+async function toggleOnbConc(idx){
+  ensureOnb();
+  const items = getOnbConcItems();
+  items[idx].done = !items[idx].done;
+  S.onboarding.conclusao = items;
+  await saveOnb();
+}
+
+// ── ADD ──
+async function addOnbItem(stageId){
+  ensureOnb();
+  const items = getOnbItems(stageId);
+  items.push({text:'', done:false});
+  S.onboarding[stageId] = items;
+  await save({onboarding:S.onboarding});
+  renderOnboarding();
+  // focus new input
+  const inp = document.getElementById(`onb-inp-${stageId}-${items.length-1}`);
+  if(inp){ inp.focus(); }
+}
+
+async function addOnbConcItem(){
+  ensureOnb();
+  const items = getOnbConcItems();
+  items.push({text:'', done:false});
+  S.onboarding.conclusao = items;
+  await save({onboarding:S.onboarding});
+  renderOnboarding();
+  const inp = document.getElementById(`onb-inp-conc-${items.length-1}`);
+  if(inp){ inp.focus(); }
+}
+
+// ── DELETE ──
+async function deleteOnbItem(stageId, idx){
+  ensureOnb();
+  const items = getOnbItems(stageId);
+  items.splice(idx,1);
+  S.onboarding[stageId] = items;
+  await saveOnb();
+}
+
+async function deleteOnbConcItem(idx){
+  ensureOnb();
+  const items = getOnbConcItems();
+  items.splice(idx,1);
+  S.onboarding.conclusao = items;
+  await saveOnb();
+}
+
+// ── EDIT TEXT (debounced) ──
+let onbEditTimer = null;
+function onbItemTextChange(stageId, idx, val){
+  ensureOnb();
+  const items = getOnbItems(stageId);
+  items[idx].text = val;
+  S.onboarding[stageId] = items;
+  clearTimeout(onbEditTimer);
+  onbEditTimer = setTimeout(()=>save({onboarding:S.onboarding}), 800);
+}
+
+function onbConcTextChange(idx, val){
+  ensureOnb();
+  const items = getOnbConcItems();
+  items[idx].text = val;
+  S.onboarding.conclusao = items;
+  clearTimeout(onbEditTimer);
+  onbEditTimer = setTimeout(()=>save({onboarding:S.onboarding}), 800);
+}
+
+// ── COLLAPSE ──
+function toggleOnbStage(stageId){
+  const body = document.getElementById('onb-body-'+stageId);
+  const chev = document.getElementById('onb-chev-'+stageId);
+  if(!body) return;
+  const open = body.classList.contains('open');
+  body.classList.toggle('open', !open);
+  if(chev) chev.style.transform = open ? '' : 'rotate(180deg)';
+}
+
+function toggleOnbConclusaoSection(){
+  const body = document.getElementById('onb-conclusao-body');
+  const chev = document.getElementById('onb-conclusao-chev');
+  if(!body) return;
+  const open = body.style.display !== 'none';
+  body.style.display = open ? 'none' : 'block';
+  if(chev) chev.style.transform = open ? '' : 'rotate(180deg)';
+}
+
+// ── RENDER ──
+function renderItemRow(item, i, {toggleFn, deleteFn, inputId}){
+  const chkStyle = item.done ? 'background:var(--green);border-color:var(--green);color:#000' : 'border:1.5px solid var(--border);color:transparent';
+  return `<div class="onb-item${item.done?' item-done':''}" style="padding-right:0">
+    <div class="onb-item-check" style="${chkStyle};cursor:pointer;flex-shrink:0" onclick="${toggleFn}">${checkSvgOnb}</div>
+    <input id="${inputId}" class="onb-item-input${item.done?' onb-input-done':''}" value="${item.text.replace(/"/g,'&quot;')}" placeholder="Descreva o item..." oninput="${inputId.startsWith('onb-inp-conc')?`onbConcTextChange(${i},this.value)`:`onbItemTextChange('${inputId.split('-')[2]}',${i},this.value)`}">
+    <button class="onb-del-btn" onclick="${deleteFn}" title="Remover">✕</button>
+  </div>`;
+}
+
+function renderOnboarding(){
+  const container = document.getElementById('onb-container');
+  if(!container) return;
+
+  const overall = onbOverallProgress();
+  const concItems = getOnbConcItems();
+  const allConcluido = ONB_STAGES.every(s=>{ const p=onbStageProgress(s.id); return p.done===p.total&&p.total>0; })
+    && concItems.length > 0 && concItems.every(x=>x.done);
+
+  // Overall card
+  let html = `<div class="onb-overall">
+    <div class="onb-overall-row">
+      <div class="onb-overall-pct">${overall.pct}%</div>
+      <div class="onb-overall-right">
+        <div class="onb-overall-title">Progresso do onboarding</div>
+        <div class="onb-overall-sub">${overall.done} de ${overall.total} itens concluídos</div>
+        <div class="onb-overall-bar"><div class="onb-overall-fill" style="width:${overall.pct}%"></div></div>
+      </div>
+      <div style="text-align:right;flex-shrink:0">
+        <div style="font-size:26px;font-weight:800;font-family:'Montserrat',sans-serif;line-height:1;color:${allConcluido?'var(--green)':'var(--text-sec)'}">R$ 100</div>
+        <div style="font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:${allConcluido?'var(--green)':'var(--text-dim)'};margin-top:3px">${allConcluido?'bônus desbloqueado':'bônus CS ao concluir'}</div>
+        ${allConcluido?`<div style="margin-top:6px"><div class="onb-concluido-badge">${checkSvgOnb} Concluído</div></div>`:''}
+      </div>
+    </div>
+  </div>`;
+
+  // Stage cards
+  ONB_STAGES.forEach(stage => {
+    const { done, total, pct } = onbStageProgress(stage.id);
+    const isDone = done === total && total > 0;
+    const items = getOnbItems(stage.id);
+    const fillColor = isDone ? 'var(--green)' : 'var(--amber)';
+
+    const itemsHtml = items.map((item, i) => renderItemRow(item, i, {
+      toggleFn: `toggleOnbItem('${stage.id}',${i})`,
+      deleteFn: `event.stopPropagation();deleteOnbItem('${stage.id}',${i})`,
+      inputId: `onb-inp-${stage.id}-${i}`
+    })).join('');
+
+    html += `<div class="onb-stage-card${isDone?' stage-done':''}">
+      <div class="onb-stage-hdr" onclick="toggleOnbStage('${stage.id}')">
+        <div class="onb-stage-num">${isDone?checkSvgOnb:stage.num}</div>
+        <div class="onb-stage-title">${stage.title}</div>
+        <div class="onb-stage-resp">${stage.resp}</div>
+        <div class="onb-stage-prog">
+          <div class="onb-stage-bar"><div class="onb-stage-fill" style="width:${pct}%;background:${fillColor}"></div></div>
+          <div class="onb-stage-pct" style="color:${isDone?'var(--green)':'var(--text-sec)'}">${done}/${total}</div>
+        </div>
+        <div class="onb-stage-chev" id="onb-chev-${stage.id}">&#8964;</div>
+      </div>
+      <div class="onb-items-wrap" id="onb-body-${stage.id}">
+        <div class="onb-objetivo">${stage.objetivo}</div>
+        ${itemsHtml}
+        <button class="onb-add-btn" onclick="addOnbItem('${stage.id}')">+ Adicionar item</button>
+        <div class="onb-resultado">Resultado esperado: ${stage.resultado}</div>
+      </div>
+    </div>`;
+  });
+
+  // Conclusão
+  const concDone = concItems.filter(x=>x.done).length;
+  const concTotal = concItems.length;
+  const concAll = concTotal > 0 && concDone === concTotal;
+
+  const concHtml = concItems.map((item, i) => renderItemRow(item, i, {
+    toggleFn: `toggleOnbConc(${i})`,
+    deleteFn: `event.stopPropagation();deleteOnbConcItem(${i})`,
+    inputId: `onb-inp-conc-${i}`
+  })).join('');
+
+  html += `<div class="onb-conclusao${concAll?' all-done':''}">
+    <div class="onb-conclusao-hdr" onclick="toggleOnbConclusaoSection()">
+      <div class="onb-stage-num" style="${concAll?'background:var(--green);color:#000;border-color:var(--green)':''}">
+        ${concAll?checkSvgOnb:'✓'}
+      </div>
+      <div class="onb-conclusao-title">Conclusão do Onboarding</div>
+      <div class="onb-stage-prog">
+        <div class="onb-stage-bar"><div class="onb-stage-fill" style="width:${concTotal?Math.round(concDone/concTotal*100):0}%;background:${concAll?'var(--green)':'var(--amber)'}"></div></div>
+        <div class="onb-stage-pct" style="color:${concAll?'var(--green)':'var(--text-sec)'}">${concDone}/${concTotal}</div>
+      </div>
+      <div class="onb-stage-chev" id="onb-conclusao-chev">&#8964;</div>
+    </div>
+    <div class="onb-conclusao-body" id="onb-conclusao-body" style="display:none">
+      ${concHtml}
+      <button class="onb-add-btn" onclick="addOnbConcItem()">+ Adicionar item</button>
+    </div>
+  </div>`;
+
+  container.innerHTML = html;
+}
 </script>
 <script>
 // ── MARCOS DE RESULTADO ────────────────────────────────────────────────
