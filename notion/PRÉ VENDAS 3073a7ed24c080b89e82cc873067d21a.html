@@ -1,745 +1,1116 @@
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>PRÉ VENDAS</title><style>
-/* cspell:disable-file */
-/* webkit printing magic: print all background colors */
-html {
-	-webkit-print-color-adjust: exact;
-}
-* {
-	box-sizing: border-box;
-	-webkit-print-color-adjust: exact;
-}
-
-html,
-body {
-	margin: 0;
-	padding: 0;
-}
-@media only screen {
-	body {
-		margin: 2em auto;
-		max-width: 900px;
-		color: rgb(55, 53, 47);
-	}
-}
-
-body {
-	line-height: 1.5;
-	white-space: pre-wrap;
-}
-
-a,
-a.visited {
-	color: inherit;
-	text-decoration: underline;
-}
-
-.pdf-relative-link-path {
-	font-size: 80%;
-	color: #444;
-}
-
-h1,
-h2,
-h3 {
-	letter-spacing: -0.01em;
-	line-height: 1.2;
-	font-weight: 600;
-	margin-bottom: 0;
-}
-
-/* Override strong tags inside headings to maintain consistent weight */
-h1 strong,
-h2 strong,
-h3 strong {
-	font-weight: 600;
-}
-
-.page-title {
-	font-size: 2.5rem;
-	font-weight: 700;
-	margin-top: 0;
-	margin-bottom: 0.75em;
-}
-
-h1 {
-	font-size: 1.875rem;
-	margin-top: 1.875rem;
-}
-
-h2 {
-	font-size: 1.5rem;
-	margin-top: 1.5rem;
-}
-
-h3 {
-	font-size: 1.25rem;
-	margin-top: 1.25rem;
-}
-
-.source {
-	border: 1px solid #ddd;
-	border-radius: 3px;
-	padding: 1.5em;
-	word-break: break-all;
-}
-
-.callout {
-	border-radius: 10px;
-	padding: 1rem;
-}
-
-figure {
-	margin: 1.25em 0;
-	page-break-inside: avoid;
-}
-
-figcaption {
-	opacity: 0.5;
-	font-size: 85%;
-	margin-top: 0.5em;
-}
-
-mark {
-	background-color: transparent;
-}
-
-.indented {
-	padding-left: 1.5em;
-}
-
-hr {
-	background: transparent;
-	display: block;
-	width: 100%;
-	height: 1px;
-	visibility: visible;
-	border: none;
-	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
-}
-
-img {
-	max-width: 100%;
-}
-
-@media only print {
-	img {
-		max-height: 100vh;
-		object-fit: contain;
-	}
-
-	table.collection-content {
-		width: 100%;
-		table-layout: fixed;
-	}
-
-	table.collection-content th,
-	table.collection-content td {
-		overflow-wrap: anywhere;
-	}
-
-	table.collection-content td > .user,
-	table.collection-content td > time {
-		white-space: pre-wrap;
-	}
-}
-
-@page {
-	margin: 1in;
-}
-
-.collection-content-wrapper {
-	overflow-x: auto;
-}
-
-@media only print {
-	.collection-content-wrapper {
-		overflow-x: visible;
-	}
-}
-
-.collection-content {
-	font-size: 0.875rem;
-}
-
-.collection-content td {
-	white-space: pre-wrap;
-	word-break: break-word;
-}
-
-.column-list {
-	display: flex;
-	gap: 46px;
-}
-
-.column {
-	min-width: 0;
-	overflow: hidden;
-}
-
-.column > *:first-child {
-	margin-top: 0;
-}
-
-.table_of_contents-item {
-	display: block;
-	font-size: 0.875rem;
-	line-height: 1.3;
-	padding: 0.125rem;
-}
-
-.table_of_contents-indent-1 {
-	margin-left: 1.5rem;
-}
-
-.table_of_contents-indent-2 {
-	margin-left: 3rem;
-}
-
-.table_of_contents-indent-3 {
-	margin-left: 4.5rem;
-}
-
-.table_of_contents-link {
-	text-decoration: none;
-	opacity: 0.7;
-	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
-}
-
-table,
-th,
-td {
-	border: 1px solid rgba(55, 53, 47, 0.09);
-}
-
-table {
-	border-collapse: collapse;
-	border-left: none;
-	border-right: none;
-}
-
-th,
-td {
-	font-weight: normal;
-	padding: 0.25em 0.5em;
-	line-height: 1.5;
-	min-height: 1.5em;
-	text-align: left;
-}
-
-th {
-	color: rgba(55, 53, 47, 0.6);
-}
-
-ol,
-ul {
-	margin: 0;
-	margin-block-start: 0.6em;
-	margin-block-end: 0.6em;
-}
-
-li > ol:first-child,
-li > ul:first-child {
-	margin-block-start: 0.6em;
-}
-
-ul > li {
-	list-style: disc;
-}
-
-ul.to-do-list {
-	padding-inline-start: 0;
-}
-
-ul.to-do-list > li {
-	list-style: none;
-}
-
-.to-do-children-checked {
-	text-decoration: line-through;
-	opacity: 0.375;
-}
-
-ul.toggle > li {
-	list-style: none;
-}
-
-ul {
-	padding-inline-start: 1.7em;
-}
-
-ul > li {
-	padding-left: 0.1em;
-}
-
-ol {
-	padding-inline-start: 1.6em;
-}
-
-ol.numbered-list.numbered-list-digits-2 {
-	padding-inline-start: 2em;
-}
-
-ol.numbered-list.numbered-list-digits-3plus {
-	padding-inline-start: 2.4em;
-}
-
-ol > li {
-	padding-left: 0.2em;
-}
-
-.mono ol {
-	padding-inline-start: 2em;
-}
-
-.mono ol > li {
-	text-indent: -0.4em;
-}
-
-.toggle {
-	padding-inline-start: 0em;
-	list-style-type: none;
-}
-
-/* Indent toggle children */
-.toggle > li > details {
-	padding-left: 1.7em;
-}
-
-.toggle > li > details > summary {
-	margin-left: -1.1em;
-}
-
-.selected-value {
-	display: inline-block;
-	padding: 0 0.5em;
-	background: rgba(206, 205, 202, 0.5);
-	border-radius: 3px;
-	margin-right: 0.5em;
-	margin-top: 0.3em;
-	margin-bottom: 0.3em;
-	white-space: nowrap;
-}
-
-.collection-title {
-	display: inline-block;
-	margin-right: 1em;
-}
-
-.page-description {
-	margin-bottom: 2em;
-}
-
-.simple-table {
-	margin-top: 1em;
-	font-size: 0.875rem;
-	empty-cells: show;
-}
-.simple-table td {
-	height: 29px;
-	min-width: 120px;
-}
-
-.simple-table th {
-	height: 29px;
-	min-width: 120px;
-}
-
-.simple-table-header-color {
-	background: rgb(247, 246, 243);
-	color: black;
-}
-.simple-table-header {
-	font-weight: 500;
-}
-
-time {
-	opacity: 0.5;
-}
-
-.icon {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	max-width: 1.2em;
-	max-height: 1.2em;
-	text-decoration: none;
-	vertical-align: text-bottom;
-	margin-right: 0.5em;
-}
-
-img.icon {
-	border-radius: 3px;
-}
-
-.callout img.notion-static-icon {
-	width: 1em;
-	height: 1em;
-}
-
-.callout p {
-	margin: 0;
-}
-
-.callout h1,
-.callout h2,
-.callout h3 {
-	margin: 0 0 0.6rem;
-}
-
-.user-icon {
-	width: 1.5em;
-	height: 1.5em;
-	border-radius: 100%;
-	margin-right: 0.5rem;
-}
-
-.user-icon-inner {
-	font-size: 0.8em;
-}
-
-.text-icon {
-	border: 1px solid #000;
-	text-align: center;
-}
-
-.page-cover-image {
-	display: block;
-	object-fit: cover;
-	width: 100%;
-	max-height: 30vh;
-}
-
-.page-header-icon {
-	font-size: 3rem;
-	margin-bottom: 1rem;
-}
-
-.page-header-icon-with-cover {
-	margin-top: -0.72em;
-	margin-left: 0.07em;
-}
-
-.page-header-icon img {
-	border-radius: 3px;
-}
-
-.link-to-page {
-	margin: 1em 0;
-	padding: 0;
-	border: none;
-	font-weight: 500;
-}
-
-p > .user {
-	opacity: 0.5;
-}
-
-td > .user,
-td > time {
-	white-space: nowrap;
-}
-
-input[type="checkbox"] {
-	transform: scale(1.5);
-	margin-right: 0.6em;
-	vertical-align: middle;
-}
-
-p {
-	margin-top: 0.5em;
-	margin-bottom: 0.5em;
-}
-
-.image {
-	border: none;
-	margin: 1.5em 0;
-	padding: 0;
-	border-radius: 0;
-	text-align: center;
-}
-
-.code,
-code {
-	background: rgba(135, 131, 120, 0.15);
-	border-radius: 3px;
-	padding: 0.2em 0.4em;
-	border-radius: 3px;
-	font-size: 85%;
-	tab-size: 2;
-}
-
-code {
-	color: #eb5757;
-}
-
-.code {
-	padding: 1.5em 1em;
-}
-
-.code-wrap {
-	white-space: pre-wrap;
-	word-break: break-all;
-}
-
-.code > code {
-	background: none;
-	padding: 0;
-	font-size: 100%;
-	color: inherit;
-}
-
-blockquote {
-	font-size: 1em;
-	margin: 1em 0;
-	padding-left: 1em;
-	border-left: 3px solid rgb(55, 53, 47);
-}
-
-blockquote.quote-large {
-	font-size: 1.25em;
-}
-
-.bookmark {
-	text-decoration: none;
-	max-height: 8em;
-	padding: 0;
-	display: flex;
-	width: 100%;
-	align-items: stretch;
-}
-
-.bookmark-title {
-	font-size: 0.85em;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	height: 1.75em;
-	white-space: nowrap;
-}
-
-.bookmark-text {
-	display: flex;
-	flex-direction: column;
-}
-
-.bookmark-info {
-	flex: 4 1 180px;
-	padding: 12px 14px 14px;
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-}
-
-.bookmark-image {
-	width: 33%;
-	flex: 1 1 180px;
-	display: block;
-	position: relative;
-	object-fit: cover;
-	border-radius: 1px;
-}
-
-.bookmark-description {
-	color: rgba(55, 53, 47, 0.6);
-	font-size: 0.75em;
-	overflow: hidden;
-	max-height: 4.5em;
-	word-break: break-word;
-}
-
-.bookmark-href {
-	font-size: 0.75em;
-	margin-top: 0.25em;
-}
-
-.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
-.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
-.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
-.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
-.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
-.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
-.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
-.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
-.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
-.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
-.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
-.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
-.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
-.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
-.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
-.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
-.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
-.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
-.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
-.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
-.highlight-default {
-	color: rgba(44, 44, 43, 1);
-}
-.highlight-gray {
-	color: rgba(125, 122, 117, 1);
-	fill: rgba(125, 122, 117, 1);
-}
-.highlight-brown {
-	color: rgba(159, 118, 90, 1);
-	fill: rgba(159, 118, 90, 1);
-}
-.highlight-orange {
-	color: rgba(210, 123, 45, 1);
-	fill: rgba(210, 123, 45, 1);
-}
-.highlight-yellow {
-	color: rgba(203, 148, 52, 1);
-	fill: rgba(203, 148, 52, 1);
-}
-.highlight-teal {
-	color: rgba(80, 148, 110, 1);
-	fill: rgba(80, 148, 110, 1);
-}
-.highlight-blue {
-	color: rgba(56, 125, 201, 1);
-	fill: rgba(56, 125, 201, 1);
-}
-.highlight-purple {
-	color: rgba(154, 107, 180, 1);
-	fill: rgba(154, 107, 180, 1);
-}
-.highlight-pink {
-	color: rgba(193, 76, 138, 1);
-	fill: rgba(193, 76, 138, 1);
-}
-.highlight-red {
-	color: rgba(207, 81, 72, 1);
-	fill: rgba(207, 81, 72, 1);
-}
-.highlight-default_background {
-	color: rgba(44, 44, 43, 1);
-}
-.highlight-gray_background {
-	background: rgba(42, 28, 0, 0.07);
-}
-.highlight-brown_background {
-	background: rgba(139, 46, 0, 0.086);
-}
-.highlight-orange_background {
-	background: rgba(224, 101, 1, 0.129);
-}
-.highlight-yellow_background {
-	background: rgba(211, 168, 0, 0.137);
-}
-.highlight-teal_background {
-	background: rgba(0, 100, 45, 0.09);
-}
-.highlight-blue_background {
-	background: rgba(0, 124, 215, 0.094);
-}
-.highlight-purple_background {
-	background: rgba(102, 0, 178, 0.078);
-}
-.highlight-pink_background {
-	background: rgba(197, 0, 93, 0.086);
-}
-.highlight-red_background {
-	background: rgba(223, 22, 0, 0.094);
-}
-.block-color-default {
-	color: inherit;
-	fill: inherit;
-}
-.block-color-gray {
-	color: rgba(125, 122, 117, 1);
-	fill: rgba(125, 122, 117, 1);
-}
-.block-color-brown {
-	color: rgba(159, 118, 90, 1);
-	fill: rgba(159, 118, 90, 1);
-}
-.block-color-orange {
-	color: rgba(210, 123, 45, 1);
-	fill: rgba(210, 123, 45, 1);
-}
-.block-color-yellow {
-	color: rgba(203, 148, 52, 1);
-	fill: rgba(203, 148, 52, 1);
-}
-.block-color-teal {
-	color: rgba(80, 148, 110, 1);
-	fill: rgba(80, 148, 110, 1);
-}
-.block-color-blue {
-	color: rgba(56, 125, 201, 1);
-	fill: rgba(56, 125, 201, 1);
-}
-.block-color-purple {
-	color: rgba(154, 107, 180, 1);
-	fill: rgba(154, 107, 180, 1);
-}
-.block-color-pink {
-	color: rgba(193, 76, 138, 1);
-	fill: rgba(193, 76, 138, 1);
-}
-.block-color-red {
-	color: rgba(207, 81, 72, 1);
-	fill: rgba(207, 81, 72, 1);
-}
-.block-color-default_background {
-	color: inherit;
-	fill: inherit;
-}
-.block-color-gray_background {
-	background: rgba(240, 239, 237, 1);
-}
-.block-color-brown_background {
-	background: rgba(245, 237, 233, 1);
-}
-.block-color-orange_background {
-	background: rgba(251, 235, 222, 1);
-}
-.block-color-yellow_background {
-	background: rgba(249, 243, 220, 1);
-}
-.block-color-teal_background {
-	background: rgba(232, 241, 236, 1);
-}
-.block-color-blue_background {
-	background: rgba(229, 242, 252, 1);
-}
-.block-color-purple_background {
-	background: rgba(243, 235, 249, 1);
-}
-.block-color-pink_background {
-	background: rgba(250, 233, 241, 1);
-}
-.block-color-red_background {
-	background: rgba(252, 233, 231, 1);
-}
-.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
-.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
-.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
-.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
-.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
-.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
-.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
-.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
-.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
-.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
-
-.checkbox {
-	display: inline-flex;
-	vertical-align: text-bottom;
-	width: 16;
-	height: 16;
-	background-size: 16px;
-	margin-left: 2px;
-	margin-right: 5px;
-}
-
-.checkbox-on {
-	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
-}
-
-.checkbox-off {
-	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
-}
-	
-</style></head><body><article id="3073a7ed-24c0-80b8-9e82-cc873067d21a" class="page sans"><header><img class="page-cover-image" src="PR%C3%89%20VENDAS/ChatGPT_Image_14_de_fev._de_2026_19_57_10.png" style="object-position:center 43.120000000000005%"/><div class="page-header-icon page-header-icon-with-cover"><img class="icon notion-static-icon" src="https://www.notion.so/icons/cash_green.svg"/></div><h1 class="page-title" dir="auto">PRÉ VENDAS</h1><p class="page-description" dir="auto"></p><table class="properties"><tbody><tr class="property-row property-row-status"><th><span class="icon property-icon"><img src="https://www.notion.so/icons/burst_gray.svg" style="width:14px;height:14px;display:block"/></span>Status</th><td><span class="status-value"><div class="status-dot"></div>Não iniciado</span></td></tr><tr class="property-row property-row-multi_select"><th><span class="icon property-icon"><img src="https://www.notion.so/icons/list_gray.svg" style="width:14px;height:14px;display:block"/></span>Tipo de recurso</th><td></td></tr><tr class="property-row property-row-last_edited_time"><th><span class="icon property-icon"><img src="https://www.notion.so/icons/clock_gray.svg" style="width:14px;height:14px;display:block"/></span>Última edição</th><td><time>4 de abril de 2026 15:14</time></td></tr></tbody></table></header><div class="page-body"><div style="display:contents" dir="auto"><h3 id="3073a7ed-24c0-8004-ac64-d02deee468be" class="">Sobre o ativo</h3></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-800b-a7b7-da4d7b6dd31d" class="">Insira uma breve visão geral descrevendo o ativo.</p></div><div style="display:contents" dir="auto"><p id="3073a7ed-24c0-80d8-9808-eb0b76458c20" class="">
-</p></div><div style="display:contents" dir="auto"><h3 id="3073a7ed-24c0-80d7-8805-f93b41d4f477" class="">Arquivos de apoio</h3></div><div style="display:contents" dir="ltr"><figure id="3073a7ed-24c0-80dd-a52b-cf8af2f3ac60" class="link-to-page"><a href="PR%C3%89%20VENDAS/PLAYBOOK%20SDR%20SYSTEM%20DIGITAL%203073a7ed24c080dda52bcf8af2f3ac60.html">PLAYBOOK SDR: SYSTEM DIGITAL</a></figure></div><div style="display:contents" dir="ltr"><figure id="3383a7ed-24c0-8059-bebe-f866513f3632" class="link-to-page"><a href="PR%C3%89%20VENDAS/%5BSD%5D%20%5BSDR%5D%20SPEECH%20LIGA%C3%87%C3%83O%203383a7ed24c08059bebef866513f3632.html">[SD] [SDR] SPEECH LIGAÇÃO</a></figure></div><div style="display:contents" dir="ltr"><figure id="3383a7ed-24c0-80f2-9278-d84275a8be20" class="link-to-page"><a href="PR%C3%89%20VENDAS/Script%20de%20Pr%C3%A9-Vendas%20de%20Repescagem%20Mensal%203383a7ed24c080f29278d84275a8be20.html">Script de Pré-Vendas de Repescagem Mensal</a></figure></div><div style="display:contents" dir="ltr"><figure id="31e3a7ed-24c0-80b7-9a86-dfb06a79936f" class="link-to-page"><a href="PR%C3%89%20VENDAS/RELATORIOS%20DE%20MAR%C3%87O%2031e3a7ed24c080b79a86dfb06a79936f.html"><img class="icon notion-static-icon" src="https://www.notion.so/icons/activity_lightgray.svg"/>RELATORIOS DE MARÇO</a></figure></div><div style="display:contents" dir="ltr"><figure id="3073a7ed-24c0-804e-9aeb-eb0ae66d6cee" class="link-to-page"><a href="PR%C3%89%20VENDAS/#1%20Protocolo%20de%20comparecimento%20(Cria%C3%A7%C3%A3o%20de%20Grupos)%203073a7ed24c0804e9aebeb0ae66d6cee.html">#1 Protocolo de comparecimento (Criação de Grupos)</a></figure></div><div style="display:contents" dir="auto"><p id="3383a7ed-24c0-80e1-bc88-e7fd32f0ea1a" class="">
-</p></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pré Vendas — System Digital</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0D1117;--surface:#1A2025;--surface2:#212830;--surface3:#272F38;
+  --amber:#F5A623;--amber-dim:rgba(245,166,35,0.10);--amber-border:rgba(245,166,35,0.20);
+  --border:#3E4249;--border-light:rgba(255,255,255,0.06);
+  --text:#F0F0F0;--text-sec:#B8B8C0;--text-dim:rgba(255,255,255,0.25);
+  --green:#22C55E;--green-dim:rgba(34,197,94,0.10);--green-border:rgba(34,197,94,0.22);
+  --blue:#3B82F6;--blue-dim:rgba(59,130,246,0.10);--blue-border:rgba(59,130,246,0.22);
+  --purple:#A855F7;--purple-dim:rgba(168,85,247,0.10);--purple-border:rgba(168,85,247,0.22);
+  --red:#EF4444;--red-dim:rgba(239,68,68,0.10);
+}
+html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:15px;line-height:1.6;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(0deg,transparent 24%,rgba(245,166,35,0.02) 25%,rgba(245,166,35,0.02) 26%,transparent 27%),linear-gradient(90deg,transparent 24%,rgba(245,166,35,0.02) 25%,rgba(245,166,35,0.02) 26%,transparent 27%);background-size:50px 50px;pointer-events:none;z-index:0}
+
+/* TOPBAR */
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:13px 28px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:50}
+.logo{font-family:'Montserrat',sans-serif;font-size:15px;font-weight:800;letter-spacing:.04em;flex-shrink:0}
+.logo span{color:var(--amber);font-style:italic}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-sec);flex:1}
+.breadcrumb-sep{opacity:.4}
+.breadcrumb-current{color:var(--text);font-weight:500}
+.mod-badge{padding:4px 12px;border-radius:16px;font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:.06em;background:var(--green-dim);color:var(--green);border:1px solid var(--green-border);white-space:nowrap;flex-shrink:0}
+
+/* LAYOUT */
+.page{position:relative;z-index:1;max-width:820px;margin:0 auto;padding:32px 28px 80px}
+
+/* HERO */
+.hero{margin-bottom:32px}
+.hero-tag{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--green);margin-bottom:12px}
+.hero-tag-dot{width:6px;height:6px;border-radius:50%;background:var(--green)}
+.hero-title{font-family:'Montserrat',sans-serif;font-size:28px;font-weight:800;line-height:1.2;margin-bottom:10px}
+.hero-title span{color:var(--amber)}
+.hero-desc{font-size:15px;color:var(--text-sec);max-width:580px;line-height:1.7;margin-bottom:24px}
+.hero-stats{display:flex;gap:12px;flex-wrap:wrap}
+.hstat{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 18px;text-align:center;min-width:110px}
+.hstat-val{font-family:'Montserrat',sans-serif;font-size:21px;font-weight:800;color:var(--amber);line-height:1}
+.hstat-lbl{font-size:11px;color:var(--text-sec);margin-top:4px}
+
+/* NAV PILLS */
+.nav-pills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:32px;border-bottom:1px solid var(--border);padding-bottom:20px}
+.nav-pill{padding:7px 16px;border-radius:20px;font-size:12px;font-weight:600;font-family:'Montserrat',sans-serif;letter-spacing:.04em;cursor:pointer;transition:all .15s;border:1px solid transparent;color:var(--text-sec);background:transparent;white-space:nowrap}
+.nav-pill:hover{color:var(--text);background:var(--surface2)}
+.nav-pill.active{background:var(--amber-dim);color:var(--amber);border-color:var(--amber-border)}
+
+/* SECTIONS */
+.section{display:none;animation:fadeIn .25s ease}
+.section.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.sec-title{font-family:'Montserrat',sans-serif;font-size:18px;font-weight:700;margin-bottom:6px}
+.sec-desc{font-size:14px;color:var(--text-sec);margin-bottom:24px;line-height:1.7}
+
+/* CARDS */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 22px;margin-bottom:14px}
+.card-title{font-size:14px;font-weight:700;font-family:'Montserrat',sans-serif;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.card-body{font-size:14px;color:var(--text-sec);line-height:1.75}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+
+/* TAGS */
+.tag{display:inline-flex;align-items:center;padding:3px 10px;border-radius:8px;font-size:11px;font-weight:600;font-family:'Montserrat',sans-serif;letter-spacing:.05em;white-space:nowrap;margin:2px}
+.tag-green{background:var(--green-dim);color:var(--green);border:.5px solid var(--green-border)}
+.tag-amber{background:var(--amber-dim);color:var(--amber);border:.5px solid var(--amber-border)}
+.tag-blue{background:var(--blue-dim);color:var(--blue);border:.5px solid var(--blue-border)}
+.tag-red{background:var(--red-dim);color:var(--red);border:.5px solid rgba(239,68,68,0.25)}
+.tag-purple{background:var(--purple-dim);color:var(--purple);border:.5px solid var(--purple-border)}
+
+/* SCRIPT CARDS */
+.script-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:14px;transition:border-color .15s}
+.script-card:hover{border-color:var(--amber-border)}
+.script-hdr{padding:16px 20px;display:flex;align-items:center;gap:12px;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
+.script-num{width:28px;height:28px;border-radius:8px;background:var(--amber-dim);border:1px solid var(--amber-border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--amber);font-family:'Montserrat',sans-serif;flex-shrink:0}
+.script-info{flex:1}
+.script-title{font-size:14px;font-weight:600;line-height:1.3}
+.script-meta{font-size:12px;color:var(--text-sec);margin-top:2px}
+.script-chev{font-size:18px;color:var(--text-sec);transition:transform .2s;flex-shrink:0}
+.script-body{display:none;border-top:1px solid var(--border);padding:20px}
+.script-body.open{display:block}
+.script-context{font-size:13px;color:var(--text-sec);background:var(--surface2);border-radius:8px;padding:12px 14px;margin-bottom:14px;line-height:1.65}
+.script-context strong{color:var(--amber)}
+.script-text{background:var(--surface3);border-radius:10px;padding:16px 18px;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.9;color:var(--text);position:relative;white-space:pre-wrap;word-break:break-word}
+.copy-btn{position:absolute;top:10px;right:10px;padding:5px 12px;border-radius:7px;background:var(--surface);border:1px solid var(--border);color:var(--text-sec);font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;font-family:'Inter',sans-serif}
+.copy-btn:hover{border-color:var(--amber-border);color:var(--amber)}
+.copy-btn.copied{background:var(--green-dim);border-color:var(--green-border);color:var(--green)}
+.script-obs{font-size:13px;color:var(--text-sec);margin-top:12px;padding:10px 14px;background:rgba(245,166,35,0.05);border-left:2px solid var(--amber-border);border-radius:0 6px 6px 0;line-height:1.6}
+.script-obs2{font-size:13px;color:var(--text-sec);margin-top:8px;padding:10px 14px;background:var(--green-dim);border-left:2px solid var(--green-border);border-radius:0 6px 6px 0;line-height:1.6}
+
+/* CHECKLIST */
+.checklist{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.check-item{display:flex;align-items:flex-start;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.check-num{width:26px;height:26px;border-radius:6px;background:var(--amber-dim);border:1px solid var(--amber-border);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--amber);font-family:'Montserrat',sans-serif;flex-shrink:0;margin-top:1px}
+.check-content{flex:1}
+.check-title{font-size:14px;font-weight:600;margin-bottom:3px}
+.check-desc{font-size:13px;color:var(--text-sec);line-height:1.6}
+
+/* BANT */
+.bant-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.bant-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 20px}
+.bant-letter{font-family:'Montserrat',sans-serif;font-size:32px;font-weight:800;line-height:1;margin-bottom:8px}
+.bant-name{font-size:13px;font-weight:700;margin-bottom:6px;color:var(--text)}
+.bant-how{font-size:12px;color:var(--text-sec);line-height:1.65;margin-bottom:8px}
+.bant-script{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--amber);background:var(--amber-dim);border:1px solid var(--amber-border);border-radius:6px;padding:8px 10px;line-height:1.7}
+
+/* FUNIL */
+.funil{display:flex;flex-direction:column;margin-bottom:14px}
+.funil-step{display:flex;flex-direction:column}
+.funil-box{background:var(--surface);border:1px solid var(--border);padding:16px 20px;display:flex;align-items:center;gap:14px;transition:border-color .15s}
+.funil-step:first-child .funil-box{border-radius:12px 12px 0 0}
+.funil-step:last-child .funil-box{border-radius:0 0 12px 12px}
+.funil-step:not(:last-child) .funil-box{border-bottom:none}
+.funil-icon{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px}
+.funil-info{flex:1}
+.funil-title{font-size:14px;font-weight:600;margin-bottom:2px}
+.funil-desc{font-size:12px;color:var(--text-sec)}
+.funil-meta{text-align:right;flex-shrink:0}
+.funil-val{font-family:'Montserrat',sans-serif;font-size:17px;font-weight:800;color:var(--amber)}
+.funil-lbl{font-size:11px;color:var(--text-sec);margin-top:1px}
+
+/* OBJEÇÃO */
+.obj-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:10px;transition:border-color .15s}
+.obj-card:hover{border-color:var(--amber-border)}
+.obj-hdr{padding:14px 18px;display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+.obj-q{flex:1;font-size:14px;font-weight:600}
+.obj-chev{font-size:17px;color:var(--text-sec);transition:transform .2s}
+.obj-body{display:none;padding:0 18px 16px;border-top:1px solid var(--border)}
+.obj-body.open{display:block}
+.obj-answer{font-size:13px;color:var(--text-sec);line-height:1.8;padding-top:14px;font-family:'JetBrains Mono',monospace;white-space:pre-wrap;background:var(--surface3);border-radius:8px;padding:14px 16px;margin-top:14px}
+.obj-tip{margin-top:10px;padding:10px 14px;background:var(--green-dim);border-radius:8px;font-size:13px;color:var(--green);line-height:1.6}
+
+/* FOLLOW-UP */
+.fu-step{display:flex;gap:14px;margin-bottom:14px;position:relative}
+.fu-step:not(:last-child)::after{content:'';position:absolute;left:18px;top:40px;bottom:-14px;width:1px;background:var(--border)}
+.fu-dot{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;flex-shrink:0;border:1px solid}
+.fu-content{flex:1;padding-top:6px}
+.fu-title{font-size:14px;font-weight:600;margin-bottom:4px}
+.fu-desc{font-size:13px;color:var(--text-sec);line-height:1.65}
+.fu-msg{font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--surface3);border-radius:6px;padding:10px 12px;margin-top:8px;color:var(--text-sec);line-height:1.7;white-space:pre-wrap}
+
+/* KPI TABLE */
+.kpi-table{width:100%;border-collapse:collapse;font-size:14px;margin-bottom:14px}
+.kpi-table th{text-align:left;font-size:10px;font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--text-sec);padding:8px 14px;background:var(--surface2);border-bottom:1px solid var(--border)}
+.kpi-table th:first-child{border-radius:8px 0 0 0}
+.kpi-table th:last-child{border-radius:0 8px 0 0}
+.kpi-table td{padding:12px 14px;border-bottom:.5px solid var(--border-light);vertical-align:top;color:var(--text-sec)}
+.kpi-table tr:last-child td{border-bottom:none}
+.kpi-table tr:hover td{background:rgba(255,255,255,0.02)}
+.kpi-name{font-weight:600;color:var(--text)}
+.kpi-val{font-family:'Montserrat',sans-serif;font-weight:700;color:var(--amber)}
+
+/* ALERTS */
+.alert{border-radius:10px;padding:14px 18px;font-size:14px;line-height:1.65;margin-bottom:16px;display:flex;gap:12px;align-items:flex-start}
+.alert-amber{background:rgba(245,166,35,0.07);border:1px solid rgba(245,166,35,0.2);color:var(--text-sec)}
+.alert-green{background:var(--green-dim);border:1px solid var(--green-border);color:var(--text-sec)}
+.alert-red{background:var(--red-dim);border:1px solid rgba(239,68,68,0.25);color:var(--text-sec)}
+.alert-icon{font-size:18px;flex-shrink:0}
+.alert strong{color:var(--text)}
+
+/* TIER */
+.tier-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.tier-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px}
+.tier-badge{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border-radius:6px;padding:4px 10px;display:inline-block;margin-bottom:12px}
+.tier-name{font-size:15px;font-weight:700;margin-bottom:8px}
+.tier-criteria{font-size:13px;color:var(--text-sec);line-height:1.65}
+
+@media(max-width:680px){
+  .topbar{padding:12px 16px}
+  .page{padding:20px 16px 60px}
+  .hero-title{font-size:22px}
+  .grid2,.bant-grid,.tier-grid{grid-template-columns:1fr}
+  .hero-stats{gap:8px}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">FACE <span>100K</span></div>
+  <div class="breadcrumb">
+    <span class="breadcrumb-sep">/</span>
+    <span>Workspace</span>
+    <span class="breadcrumb-sep">/</span>
+    <span class="breadcrumb-current">Pré Vendas</span>
+  </div>
+  <div class="mod-badge">SDR</div>
+</div>
+
+<div class="page">
+
+  <div class="hero">
+    <div class="hero-tag"><div class="hero-tag-dot"></div>Módulo 01</div>
+    <h1 class="hero-title">Pré Vendas — <span>Sistema de Agendamentos</span></h1>
+    <p class="hero-desc">Playbook operacional do SDR para clínicas de cirurgia facial e odontologia de alto valor. Objetivo: qualificar em menos de 1 minuto e agendar. O lead nunca morre na tentativa 3.</p>
+    <div class="hero-stats">
+      <div class="hstat"><div class="hstat-val">5 min</div><div class="hstat-lbl">tempo máx. de resposta</div></div>
+      <div class="hstat"><div class="hstat-val">70%</div><div class="hstat-lbl">meta de comparecimento</div></div>
+      <div class="hstat"><div class="hstat-val">50x</div><div class="hstat-lbl">tentativas de ligação/dia</div></div>
+      <div class="hstat"><div class="hstat-val">12h</div><div class="hstat-lbl">SLA de resposta no WhatsApp</div></div>
+    </div>
+  </div>
+
+  <div class="nav-pills">
+    <div class="nav-pill active" onclick="showSection('mindset',this)">Mindset</div>
+    <div class="nav-pill" onclick="showSection('bant',this)">B.A.N.T.</div>
+    <div class="nav-pill" onclick="showSection('scripts',this)">Scripts</div>
+    <div class="nav-pill" onclick="showSection('funil',this)">Funil</div>
+    <div class="nav-pill" onclick="showSection('followup',this)">Follow-up</div>
+    <div class="nav-pill" onclick="showSection('objecoes',this)">Objeções</div>
+    <div class="nav-pill" onclick="showSection('naodiz',this)">Cliente diz NÃO</div>
+    <div class="nav-pill" onclick="showSection('pix',this)">PIX + Show-up</div>
+    <div class="nav-pill" onclick="showSection('kpis',this)">KPIs</div>
+  </div>
+
+  <!-- MINDSET -->
+  <div class="section active" id="sec-mindset">
+    <div class="sec-title">Mindset e Regras da Operação</div>
+    <p class="sec-desc">Antes de qualquer script, o SDR precisa internalizar as regras do jogo. Sem mentalidade certa, o melhor script do mundo não funciona.</p>
+
+    <div class="alert alert-amber">
+      <div class="alert-icon">🧭</div>
+      <div><strong>Mantra do SDR:</strong> "Não pedimos licença, pedimos decisão. Meta: qualificar em menos de 1 minuto e agendar."</div>
+    </div>
+
+    <div class="checklist">
+      <div class="check-item">
+        <div class="check-num">01</div>
+        <div class="check-content">
+          <div class="check-title">O Lead Nunca Morre na Tentativa 3</div>
+          <div class="check-desc">Se o paciente não atendeu na 1ª, 2ª ou 3ª tentativa, não descarta. Move para a esteira de Follow-up. "Perdido" é só se a pessoa falecer ou mandar parar de ligar.</div>
+        </div>
+      </div>
+      <div class="check-item">
+        <div class="check-num">02</div>
+        <div class="check-content">
+          <div class="check-title">Regra das 12 Horas</div>
+          <div class="check-desc">Se um paciente interessado parou de responder no WhatsApp há mais de 12 horas → LIGAÇÃO IMEDIATA. Não deixe o card apodrecer no CRM.</div>
+        </div>
+      </div>
+      <div class="check-item">
+        <div class="check-num">03</div>
+        <div class="check-content">
+          <div class="check-title">Caixa é Rei (Cash-In)</div>
+          <div class="check-desc">Consulta só está agendada de verdade quando o valor cai na conta. Não tenha medo de cobrar ao vivo — faz parte do processo.</div>
+        </div>
+      </div>
+      <div class="check-item">
+        <div class="check-num">04</div>
+        <div class="check-content">
+          <div class="check-title">Você é Estrategista, Não Atendente</div>
+          <div class="check-desc">Você não agenda horários — você traz pacientes qualificados para a cadeira do doutor. Cada consulta agendada é faturamento potencial para a clínica.</div>
+        </div>
+      </div>
+      <div class="check-item">
+        <div class="check-num">05</div>
+        <div class="check-content">
+          <div class="check-title">O Objetivo do WhatsApp NÃO é vender procedimento</div>
+          <div class="check-desc">O objetivo é conduzir o paciente para a consulta, onde a venda de alto valor acontece com o doutor. Não dê preço, não venda procedimento — venda a consulta.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">⚡ Blocos de Trabalho Diário</div>
+      <div class="card-body">
+        <div class="checklist" style="margin-bottom:0">
+          <div class="check-item">
+            <div class="check-num" style="background:var(--blue-dim);border-color:var(--blue-border);color:var(--blue)">08h</div>
+            <div class="check-content">
+              <div class="check-title">Abertura — Zerar o WhatsApp</div>
+              <div class="check-desc">Verificar todos os leads que chegaram fora do horário. Responder leads em aberto. Nenhuma mensagem pode ficar sem resposta após a abertura.</div>
+            </div>
+          </div>
+          <div class="check-item">
+            <div class="check-num" style="background:var(--blue-dim);border-color:var(--blue-border);color:var(--blue)">09h</div>
+            <div class="check-content">
+              <div class="check-title">Confirmar consultas do dia</div>
+              <div class="check-desc">Enviar confirmação para todos os agendados de hoje. Registrar confirmações e cancelamentos. Reagendar no-shows da véspera.</div>
+            </div>
+          </div>
+          <div class="check-item">
+            <div class="check-num" style="background:var(--amber-dim);border-color:var(--amber-border);color:var(--amber)">10h</div>
+            <div class="check-content">
+              <div class="check-title">Bloco Espada — Ligações ativas (fone no ouvido)</div>
+              <div class="check-desc">Foco total em ligar. Meta: 50 tentativas por dia. Ignorar o balcão durante esse bloco. Qualificar e agendar.</div>
+            </div>
+          </div>
+          <div class="check-item">
+            <div class="check-num" style="background:var(--amber-dim);border-color:var(--amber-border);color:var(--amber)">14h</div>
+            <div class="check-content">
+              <div class="check-title">Follow-up + Base Antiga</div>
+              <div class="check-desc">Protocolo de follow-up para leads nos dias 30min, 24h, 48h, 72h e 96h. Reativação de base antiga com script específico.</div>
+            </div>
+          </div>
+          <div class="check-item">
+            <div class="check-num" style="background:var(--green-dim);border-color:var(--green-border);color:var(--green)">17h</div>
+            <div class="check-content">
+              <div class="check-title">Fechamento + KPIs</div>
+              <div class="check-desc">Atualizar CRM com todos os movimentos do dia. Preencher o Raio-X Diário. Lançar os números no Flashboard.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BANT -->
+  <div class="section" id="sec-bant">
+    <div class="sec-title">Qualificação — Método B.A.N.T.</div>
+    <p class="sec-desc">Nenhum paciente senta na cadeira do doutor sem passar pela qualificação. O tempo do doutor é valioso demais para atender "curiosos". Use o B.A.N.T. em toda conversa.</p>
+
+    <div class="alert alert-amber">
+      <div class="alert-icon">🎯</div>
+      <div><strong>Regra de ouro:</strong> O SDR deve preencher mentalmente (ou no CRM) essas 4 letras em toda conversa. Se passar no filtro — agenda. Se não passar — não agenda.</div>
+    </div>
+
+    <div class="bant-grid">
+      <div class="bant-card">
+        <div class="bant-letter" style="color:var(--green)">N</div>
+        <div class="bant-name">Need — Necessidade / Dor</div>
+        <div class="bant-how">O paciente tem um problema real que o doutor resolve? Identifique a dor específica — não deixe ele dar uma resposta genérica.</div>
+        <div class="bant-script">"Fulana, vi que você buscou sobre o procedimento X. Hoje, o que mais te incomoda quando você se olha no espelho?"</div>
+      </div>
+      <div class="bant-card">
+        <div class="bant-letter" style="color:var(--blue)">A</div>
+        <div class="bant-name">Authority — Autoridade / Decisor</div>
+        <div class="bant-how">Ela toma a decisão sozinha ou precisa da aprovação do marido/filha? Se precisar do marido, ele TEM que estar na consulta.</div>
+        <div class="bant-script">"Para ganharmos tempo: se você amar o plano do doutor, essa decisão depende só de você ou seu marido precisa estar junto?"</div>
+      </div>
+      <div class="bant-card">
+        <div class="bant-letter" style="color:var(--amber)">B</div>
+        <div class="bant-name">Budget — Orçamento / Momento Financeiro</div>
+        <div class="bant-how">Ela entende que o trabalho da clínica é premium e tem como pagar? Use o gatilho do bônus/PLR para revelar a real capacidade financeira.</div>
+        <div class="bant-script">"Estamos falando de uma mudança de vida e autoestima. Você tem algum planejamento financeiro para resolver isso neste semestre?"</div>
+      </div>
+      <div class="bant-card">
+        <div class="bant-letter" style="color:var(--purple)">T</div>
+        <div class="bant-name">Timing — Urgência / Prioridade</div>
+        <div class="bant-how">É para agora ou para depois? Escala de 0 a 10. Se der menos que 10, pergunte o que falta para chegar lá.</div>
+        <div class="bant-script">"De 0 a 10, qual o seu nível de prioridade em resolver isso hoje?" → Se &lt;10: "O que falta para ser um 10?"</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="color:var(--red)">🚨 Gatilhos de Atenção — Falsos Qualificados</div>
+      <div class="card-body">
+        <p style="margin-bottom:14px">São o "detector de mentiras" da operação. Quando o paciente abre a boca com esses sinais, o SDR trava a conversa e confronta na hora.</p>
+        <div class="grid2">
+          <div>
+            <p style="font-size:12px;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">Gatilhos de Falta de Caixa</p>
+            <div style="display:flex;flex-wrap:wrap;gap:4px">
+              <span class="tag tag-red">Fatura menos de 20k/mês</span>
+              <span class="tag tag-red">Em reforma</span>
+              <span class="tag tag-red">Começando agora</span>
+              <span class="tag tag-red">Faturou nada no mês passado</span>
+            </div>
+            <div class="bant-script" style="margin-top:10px;font-size:12px">"Sendo transparente: nossos programas variam de 5k a 42k. Considerando que você [está em reforma / fatura menos de 20k], esse valor se encaixa hoje na sua realidade?"</div>
+          </div>
+          <div>
+            <p style="font-size:12px;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">Gatilhos de Falta de Autoridade</p>
+            <div style="display:flex;flex-wrap:wrap;gap:4px">
+              <span class="tag tag-amber">Trabalha na clínica do pai</span>
+              <span class="tag tag-amber">A esposa administra</span>
+              <span class="tag tag-amber">Tenho sócio</span>
+            </div>
+            <div class="bant-script" style="margin-top:10px;font-size:12px">"Se o especialista apresentar o plano e fizer sentido, você tem a caneta para aprovar um investimento sozinho ou precisa do sócio? Se precisar, a reunião só acontece com os dois."</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tier-grid">
+      <div class="tier-card" style="border-color:rgba(245,166,35,0.4)">
+        <div class="tier-badge" style="background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border)">Nível A — Ouro</div>
+        <div class="tier-name">A Baleia (Whale)</div>
+        <div class="tier-criteria">Faturamento +50k/mês · Autoridade na região · Posicionamento excelente · Decisor · +3 anos de mercado</div>
+      </div>
+      <div class="tier-card" style="border-color:rgba(148,163,184,0.4)">
+        <div class="tier-badge" style="background:rgba(148,163,184,0.1);color:#94A3B8;border:1px solid rgba(148,163,184,0.3)">Nível B — Prata</div>
+        <div class="tier-name">O Ideal (Target)</div>
+        <div class="tier-criteria">Faturamento 30k–50k · Dor latente · Decisor · Posicionamento baixo ou bom · +2 anos de mercado</div>
+      </div>
+      <div class="tier-card" style="border-color:rgba(180,83,9,0.3)">
+        <div class="tier-badge" style="background:rgba(180,83,9,0.1);color:#D97706;border:1px solid rgba(180,83,9,0.25)">Nível C — Bronze</div>
+        <div class="tier-name">O Ninja (Mínimo)</div>
+        <div class="tier-criteria">Faturamento 20k- · Tem uma dor · Decisor · Posicionamento baixo · Menos de 1 ano de mercado</div>
+      </div>
+    </div>
+    <p style="font-size:12px;color:var(--text-sec);margin-bottom:14px">⚠️ <strong style="color:var(--red)">Regra de Ouro:</strong> Lead Ouro NUNCA cai na mão de Closer Tier 3. É proibido.</p>
+  </div>
+
+  <!-- SCRIPTS -->
+  <div class="section" id="sec-scripts">
+    <div class="sec-title">Scripts de Abordagem</div>
+    <p class="sec-desc">Scripts testados e validados. Use sempre linguagem simples, direta e humanizada. Sempre conduza para a consulta — nunca venda procedimento no WhatsApp.</p>
+
+    <div class="alert alert-amber">
+      <div class="alert-icon">⚡</div>
+      <div><strong>Regra dos 5 minutos:</strong> Leads de anúncio precisam de resposta em até 5 minutos. Após 1 hora, a conversão cai 10x. Configure automação para fora do horário comercial.</div>
+    </div>
+
+    <div class="script-card">
+      <div class="script-hdr" onclick="toggleScript(this)">
+        <div class="script-num">01</div>
+        <div class="script-info">
+          <div class="script-title">Boas-vindas — Primeiro contato (WhatsApp)</div>
+          <div class="script-meta">Canal: WhatsApp · Momento: imediatamente após o lead chegar</div>
+        </div>
+        <div class="script-chev">⌄</div>
+      </div>
+      <div class="script-body">
+        <div class="script-context"><strong>Opção 1:</strong></div>
+        <div class="script-text" id="sc01">Bom dia! Tudo bem? 🥰
+Sou [seu nome], do time de atendimento aqui da clínica.
+Me conta, qual tratamento você tem interesse ou o que te motivou a nos procurar?
+<button class="copy-btn" onclick="copyScript('sc01',this)">Copiar</button></div>
+        <div class="script-context" style="margin-top:10px"><strong>Opção 2:</strong></div>
+        <div class="script-text" id="sc01b">Bom dia! Tudo bem? 🥰
+Sou [nome], do time de atendimento da clínica do Dr. [Nome].
+Me conta, qual tratamento você busca ou qual é sua maior dúvida hoje?
+<button class="copy-btn" onclick="copyScript('sc01b',this)">Copiar</button></div>
+        <div class="script-obs">💡 Foco direto na dor ou desejo do paciente. Não apresente nada ainda — escute primeiro.</div>
+      </div>
+    </div>
+
+    <div class="script-card">
+      <div class="script-hdr" onclick="toggleScript(this)">
+        <div class="script-num">02</div>
+        <div class="script-info">
+          <div class="script-title">Identificação da dor</div>
+          <div class="script-meta">Momento: após o primeiro contato</div>
+        </div>
+        <div class="script-chev">⌄</div>
+      </div>
+      <div class="script-body">
+        <div class="script-text" id="sc02">Perfeito! E me fala um pouquinho: qual é exatamente o seu objetivo ou o que mais te incomoda hoje?
+<button class="copy-btn" onclick="copyScript('sc02',this)">Copiar</button></div>
+        <div class="script-obs">💡 Se o paciente der resposta vaga ("quero melhorar"), aprofunde: "Quando fala em melhorar, quais aspectos específicos te incomodam?"</div>
+      </div>
+    </div>
+
+    <div class="script-card">
+      <div class="script-hdr" onclick="toggleScript(this)">
+        <div class="script-num">03</div>
+        <div class="script-info">
+          <div class="script-title">Geração de conexão + validação da dor</div>
+          <div class="script-meta">Momento: após identificar o incômodo</div>
+        </div>
+        <div class="script-chev">⌄</div>
+      </div>
+      <div class="script-body">
+        <div class="script-text" id="sc03">Entendo super bem... muitas pessoas nos procuram justamente por isso.
+Inclusive, é bem comum tentarem resolver com outros tratamentos. Você já tentou algo assim também?
+<button class="copy-btn" onclick="copyScript('sc03',this)">Copiar</button></div>
+        <div class="script-obs">💡 Essa pergunta qualifica e cria vínculo ao mesmo tempo. Paciente que já tentou outras soluções está mais próxima de fechar.</div>
+      </div>
+    </div>
+
+    <div class="script-card">
+      <div class="script-hdr" onclick="toggleScript(this)">
+        <div class="script-num">04</div>
+        <div class="script-info">
+          <div class="script-title">Apresentação da consulta como solução</div>
+          <div class="script-meta">Momento: após validar o interesse</div>
+        </div>
+        <div class="script-chev">⌄</div>
+      </div>
+      <div class="script-body">
+        <div class="script-text" id="sc04">Aqui na clínica nós trabalhamos com procedimentos personalizados, sempre pensando no que faz mais sentido pra você.
+
+Pra isso, o primeiro passo é a consulta de avaliação. ✔️
+É nela que o Dr. [Nome] vai entender seu caso, avaliar sua necessidade e montar o melhor plano pra você.
+
+Inclusive, olha alguns resultados que nossos pacientes tiveram! [Inserir foto de antes e depois]
+<button class="copy-btn" onclick="copyScript('sc04',this)">Copiar</button></div>
+        <div class="script-obs">💡 Sempre envie prova social (foto de resultado) antes de fechar o agendamento. É o elemento que mais acelera a decisão.</div>
+      </div>
+    </div>
+
+    <div class="script-card">
+      <div class="script-hdr" onclick="toggleScript(this)">
+        <div class="script-num">05</div>
+        <div class="script-info">
+          <div class="script-title">Confirmação de interesse + fechamento do agendamento</div>
+          <div class="script-meta">Momento: após mostrar prova social</div>
+        </div>
+        <div class="script-chev">⌄</div>
+      </div>
+      <div class="script-body">
+        <div class="script-context"><strong>Após foto de antes e depois:</strong></div>
+        <div class="script-text" id="sc05a">São resultados assim que você deseja também?
+<button class="copy-btn" onclick="copyScript('sc05a',this)">Copiar</button></div>
+        <div class="script-context" style="margin-top:10px"><strong>Fechamento direto (2 opções de horário):</strong></div>
+        <div class="script-text" id="sc05b">Perfeito! 💙
+Então vamos para o primeiro passo, que é agendar sua consulta. Nessa avaliação, o Dr. [Nome] vai:
+✔️ Fazer uma análise completa;
+✔️ Entender seu objetivo e suas necessidades;
+✔️ Montar seu plano personalizado e te explicar todos os detalhes.
+
+Qual período é melhor pra você, na parte da manhã ou à tarde?
+<button class="copy-btn" onclick="copyScript('sc05b',this)">Copiar</button></div>
+        <div class="script-obs">💡 Sempre ofereça 2 opções de horário — nunca só um, nunca mais de três. Facilita a decisão sem sobrecarregar.</div>
+      </div>
+    </div>
+
+    <div class="script-card">
+      <div class="script-hdr" onclick="toggleScript(this)">
+        <div class="script-num">06</div>
+        <div class="script-info">
+          <div class="script-title">Confirmação da consulta — 24h antes</div>
+          <div class="script-meta">Canal: WhatsApp · Momento: véspera da consulta</div>
+        </div>
+        <div class="script-chev">⌄</div>
+      </div>
+      <div class="script-body">
+        <div class="script-text" id="sc06">Oi, [Nome]! Tudo bem? 😍
+Passando só pra te lembrar que sua consulta está marcada pra amanhã, dia [data], às [horário], aqui na clínica. 💙
+
+Se acontecer qualquer imprevisto, me avisa, tá?
+Estamos te esperando com carinho! 🥰
+<button class="copy-btn" onclick="copyScript('sc06',this)">Copiar</button></div>
+        <div class="script-context" style="margin-top:10px"><strong>Lembrete no dia (manhã):</strong></div>
+        <div class="script-text" id="sc06b">Bom dia, [Nome]! 🌸
+Só lembrando que hoje é o dia da sua consulta! 😍
+📅 Horário: [horário]
+📍 Local: [endereço]
+Se tiver qualquer dúvida, é só me chamar aqui!
+Nos vemos logo mais! 💙
+<button class="copy-btn" onclick="copyScript('sc06b',this)">Copiar</button></div>
+      </div>
+    </div>
+
+    <div class="script-card">
+      <div class="script-hdr" onclick="toggleScript(this)">
+        <div class="script-num">07</div>
+        <div class="script-info">
+          <div class="script-title">Script de resgate — base antiga (ligação)</div>
+          <div class="script-meta">Canal: Ligação · Momento: base de leads que sumiram há meses</div>
+        </div>
+        <div class="script-chev">⌄</div>
+      </div>
+      <div class="script-body">
+        <div class="script-context"><strong>Situação:</strong> Usar gatilho da exclusividade e da lembrança. Nunca ligue perguntando "você ainda quer comprar?"</div>
+        <div class="script-text" id="sc07">Alô, [Nome]? Aqui é a [Seu Nome] da clínica do Dr. [Nome]. Tudo bem?
+
+Estou te ligando rapidamente porque o doutor estava revisando alguns casos antigos aqui e lembrou de você.
+
+Sendo bem sincera, o ano está voando. Quando a gente conversou lá atrás, você tinha me relatado que estava muito incomodada com [dor/procedimento].
+
+Você já conseguiu resolver essa questão ou isso ainda tira o seu sono?
+<button class="copy-btn" onclick="copyScript('sc07',this)">Copiar</button></div>
+        <div class="script-obs">💡 O gatilho "o doutor lembrou de você" ativa reciprocidade e urgência. Aguarde a resposta antes de continuar.</div>
+      </div>
+    </div>
+
+    <div class="script-card">
+      <div class="script-hdr" onclick="toggleScript(this)">
+        <div class="script-num">07b</div>
+        <div class="script-info">
+          <div class="script-title">Coleta de dados — após agendamento confirmado</div>
+          <div class="script-meta">Canal: WhatsApp · Momento: logo após confirmar horário</div>
+        </div>
+        <div class="script-chev">⌄</div>
+      </div>
+      <div class="script-body">
+        <div class="script-context"><strong>Situação:</strong> Paciente confirmou o horário. Agora colete os dados para o cadastro e reforce todos os detalhes da consulta.</div>
+        <div class="script-text" id="sc07c">Ótimo, agendado então! 🌷
+
+Só preciso dos seus dados para finalizar direitinho, tudo bem?
+
+📋 DADOS PESSOAIS:
+Nome completo:
+Data de nascimento:
+CPF:
+Cidade/Estado:
+<button class="copy-btn" onclick="copyScript('sc07c',this)">Copiar</button></div>
+        <div class="script-context" style="margin-top:10px"><strong>Após o paciente enviar os dados:</strong></div>
+        <div class="script-text" id="sc07d">Perfeito, obrigada! 💖
+
+Seu horário está confirmado para o dia [data e horário], no endereço:
+📍 [Endereço completo]
+
+Quer que eu te envie o link do local no Google Maps pra facilitar?
+<button class="copy-btn" onclick="copyScript('sc07d',this)">Copiar</button></div>
+        <div class="script-obs">💡 Sempre reforce endereço + data + horário após a coleta. Quanto mais detalhes o paciente tiver, menor a taxa de no-show.</div>
+      </div>
+    </div>
+
+    <div class="script-card">
+      <div class="script-hdr" onclick="toggleScript(this)">
+        <div class="script-num">08</div>
+        <div class="script-info">
+          <div class="script-title">Pós-consulta — paciente que foi mas não comprou</div>
+          <div class="script-meta">Canal: WhatsApp · Momento: dia seguinte após a consulta</div>
+        </div>
+        <div class="script-chev">⌄</div>
+      </div>
+      <div class="script-body">
+        <div class="script-context"><strong>Dia 1 após consulta:</strong></div>
+        <div class="script-text" id="sc08a">Oi, [Nome]! 💙
+Quero te agradecer por ter vindo ontem na nossa clínica. Foi um prazer te receber e conhecer mais sobre seus objetivos.
+
+Ficou alguma dúvida sobre seu protocolo ou algo que você gostaria de entender melhor? 😊
+
+Estou por aqui pra te ajudar quando se sentir pronta pra dar esse passo!
+<button class="copy-btn" onclick="copyScript('sc08a',this)">Copiar</button></div>
+        <div class="script-context" style="margin-top:10px"><strong>7 a 10 dias depois — condição especial:</strong></div>
+        <div class="script-text" id="sc08b">Oi, [Nome]! 🥰
+Passando pra te avisar que estamos com algumas condições especiais essa semana pra quem participou da avaliação e ainda não conseguiu dar continuidade.
+
+Se você quiser, posso verificar se conseguimos algum benefício extra pra te ajudar a começar. Quer que eu veja pra você? 💙
+<button class="copy-btn" onclick="copyScript('sc08b',this)">Copiar</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FUNIL -->
+  <div class="section" id="sec-funil">
+    <div class="sec-title">Funil SDR — Passo a Passo</div>
+    <p class="sec-desc">O fluxo completo de cadência desde o lead novo até o agendamento qualificado com PIX confirmado.</p>
+
+    <div class="funil">
+      <div class="funil-step">
+        <div class="funil-box">
+          <div class="funil-icon" style="background:var(--blue-dim);border:1px solid var(--blue-border)">📥</div>
+          <div class="funil-info">
+            <div class="funil-title">Lead Novo recebido</div>
+            <div class="funil-desc">Chegou via anúncio, Instagram, indicação ou Google. Ação: ligação imediata.</div>
+          </div>
+          <div class="funil-meta"><div class="funil-val">100%</div><div class="funil-lbl">todos os leads</div></div>
+        </div>
+      </div>
+      <div class="funil-step">
+        <div class="funil-box">
+          <div class="funil-icon" style="background:var(--amber-dim);border:1px solid var(--amber-border)">📞</div>
+          <div class="funil-info">
+            <div class="funil-title">Tentativa 1 · 2 · 3 — Não atendeu</div>
+            <div class="funil-desc">Não descarta. Move para Follow-up (N2/N3). Automação nutre. SDR volta a ligar periodicamente.</div>
+          </div>
+          <div class="funil-meta"><div class="funil-val">3x</div><div class="funil-lbl">tentativas mínimas</div></div>
+        </div>
+      </div>
+      <div class="funil-step">
+        <div class="funil-box">
+          <div class="funil-icon" style="background:var(--purple-dim);border:1px solid var(--purple-border)">🎯</div>
+          <div class="funil-info">
+            <div class="funil-title">Conversa em andamento — B.A.N.T.</div>
+            <div class="funil-desc">SLA de estagnação: 12h. Se o lead parou de responder → LIGAÇÃO. Preencher as 4 letras do BANT.</div>
+          </div>
+          <div class="funil-meta"><div class="funil-val">12h</div><div class="funil-lbl">SLA máximo</div></div>
+        </div>
+      </div>
+      <div class="funil-step">
+        <div class="funil-box">
+          <div class="funil-icon" style="background:var(--amber-dim);border:1px solid var(--amber-border)">📅</div>
+          <div class="funil-info">
+            <div class="funil-title">Qualificado — Agendamento com 2 opções de horário</div>
+            <div class="funil-desc">Passar 2 horários disponíveis. Nunca 1, nunca mais de 3. Obter confirmação verbal/escrita.</div>
+          </div>
+          <div class="funil-meta"><div class="funil-val">2 opções</div><div class="funil-lbl">de horário</div></div>
+        </div>
+      </div>
+      <div class="funil-step">
+        <div class="funil-box">
+          <div class="funil-icon" style="background:var(--green-dim);border:1px solid var(--green-border)">💰</div>
+          <div class="funil-info">
+            <div class="funil-title">PIX confirmado — Consulta garantida</div>
+            <div class="funil-desc">Enviar chave PIX. Aguardar na linha. Confirmar só após comprovante. Criar Grupo VIP no WhatsApp.</div>
+          </div>
+          <div class="funil-meta"><div class="funil-val">✅</div><div class="funil-lbl">vaga garantida</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="alert alert-green">
+      <div class="alert-icon">🏆</div>
+      <div><strong>Meta diária:</strong> 3 a 5 agendamentos qualificados com PIX confirmado. Qualquer agendamento sem PIX não conta — é promessa, não venda.</div>
+    </div>
+  </div>
+
+  <!-- FOLLOW-UP -->
+  <div class="section" id="sec-followup">
+    <div class="sec-title">Cadência de Follow-up</div>
+    <p class="sec-desc">A maioria das vendas acontece entre o 2º e o 5º contato. Siga a cadência — não pressione, mas não desapareça.</p>
+
+    <div class="fu-step">
+      <div class="fu-dot" style="background:var(--blue-dim);border-color:var(--blue-border);color:var(--blue)">30m</div>
+      <div class="fu-content">
+        <div class="fu-title">30 minutos sem resposta</div>
+        <div class="fu-desc">Verificar se visualizou. Tom leve — sem cobrar.</div>
+        <div class="fu-msg">👀 Oi! Tudo certo por aí? Vi que você visualizou e quis garantir que não perdeu a mensagem. 😄</div>
+      </div>
+    </div>
+    <div class="fu-step">
+      <div class="fu-dot" style="background:var(--amber-dim);border-color:var(--amber-border);color:var(--amber)">24h</div>
+      <div class="fu-content">
+        <div class="fu-title">24 horas — Follow-up 1</div>
+        <div class="fu-desc">Retomar a conversa com abertura para a dúvida.</div>
+        <div class="fu-msg">Oi, tudo bem? 😊 Vi que você entrou em contato sobre o procedimento e não sei se ficou alguma dúvida pendente. Quero muito te ajudar a entender melhor como funciona. Posso te explicar rapidinho?</div>
+      </div>
+    </div>
+    <div class="fu-step">
+      <div class="fu-dot" style="background:var(--amber-dim);border-color:var(--amber-border);color:var(--amber)">48h</div>
+      <div class="fu-content">
+        <div class="fu-title">48 horas — Follow-up 2</div>
+        <div class="fu-desc">Despertar a dor e manter o interesse vivo.</div>
+        <div class="fu-msg">Oi! Você tem um minutinho agora? Queria te mostrar como podemos te ajudar a atingir seu objetivo. 😉
+
+Oi, tudo bem? Notei que você entrou em contato. Geralmente quem procura esse procedimento está incomodado com [problema]. Você sente que isso tem te incomodado mais?</div>
+      </div>
+    </div>
+    <div class="fu-step">
+      <div class="fu-dot" style="background:var(--purple-dim);border-color:var(--purple-border);color:var(--purple)">72h</div>
+      <div class="fu-content">
+        <div class="fu-title">72 horas — Follow-up 3</div>
+        <div class="fu-desc">Gatilho de cuidado — mostrar que está presente sem pressionar.</div>
+        <div class="fu-msg">Oi, tudo bem? Vi que ficou sem me responder — será que te peguei em um momento corrido?
+Quero te passar todas as informações para que você entenda como o Dr. [Nome] pode te ajudar a tratar isso de forma definitiva.</div>
+      </div>
+    </div>
+    <div class="fu-step">
+      <div class="fu-dot" style="background:var(--red-dim);border-color:rgba(239,68,68,0.3);color:var(--red)">96h</div>
+      <div class="fu-content">
+        <div class="fu-title">96 horas — Follow-up 4 (último)</div>
+        <div class="fu-desc">Quebra de padrão — muitos respondem por esse gatilho de perda.</div>
+        <div class="fu-msg">Olá! 😊 Tentamos contato e, como não tivemos retorno, vamos retirar seu nome da nossa lista de atendimentos por enquanto. Esperamos que esteja tudo bem!
+
+Se quiser voltar a falar com a gente ou receber condições especiais, é só nos chamar. 🌸</div>
+      </div>
+    </div>
+
+    <div class="alert alert-red">
+      <div class="alert-icon">🚫</div>
+      <div><strong>O que NÃO fazer:</strong> Mandar "oi" e "oi sumido(a)" em seguida. Não enviar áudio para leads frios. Não usar letras maiúsculas em excesso — parece desespero. Nunca pressione ou cobre de forma agressiva.</div>
+    </div>
+  </div>
+
+  <!-- OBJEÇÕES -->
+  <div class="section" id="sec-objecoes">
+    <div class="sec-title">Matriz de Objeções</div>
+    <p class="sec-desc">Scripts de quebra para as principais objeções. A secretária não gagueja — ela tem a resposta pronta.</p>
+
+    <div class="obj-card">
+      <div class="obj-hdr" onclick="toggleObj(this)">
+        <div class="obj-q">💬 "Quanto custa?" — logo no início</div>
+        <div class="obj-chev">⌄</div>
+      </div>
+      <div class="obj-body">
+        <div class="obj-answer">O valor exato depende muito do que for indicado na consulta, já que tudo aqui é personalizado.
+
+Na avaliação o Dr. [Nome] te explica tudo, inclusive valores, condições e o melhor caminho pra você.</div>
+        <div class="obj-tip">✅ Nunca dê preço no WhatsApp. Se der, o paciente vai comparar com a concorrência sem ter o contexto do diferencial do doutor.</div>
+      </div>
+    </div>
+
+    <div class="obj-card">
+      <div class="obj-hdr" onclick="toggleObj(this)">
+        <div class="obj-q">💬 "Ah, eu tenho que pagar para fazer uma avaliação?"</div>
+        <div class="obj-chev">⌄</div>
+      </div>
+      <div class="obj-body">
+        <div class="obj-answer">Excelente pergunta. Na verdade, esse valor não é para um simples bate-papo.
+
+O que o Dr. [Nome] entrega é um Planejamento Cirúrgico e um Diagnóstico Completo. Ele vai analisar toda a sua estrutura, desenhar o plano exato para o seu caso e abrir a 'caixa preta' do que precisa ser feito.
+
+Profissionais que não cobram avaliação geralmente trabalham com 'linha de produção'. Aqui, o seu caso é tratado como único.
+
+Tenho amanhã às 14h ou quinta às 10h. Qual fica melhor?</div>
+        <div class="obj-tip">✅ Ancore a consulta como "Diagnóstico Premium" ou "Planejamento Cirúrgico" — não como "avaliação". Muda a percepção de valor imediatamente.</div>
+      </div>
+    </div>
+
+    <div class="obj-card">
+      <div class="obj-hdr" onclick="toggleObj(this)">
+        <div class="obj-q">💬 "Vou falar com meu marido/parceiro primeiro."</div>
+        <div class="obj-chev">⌄</div>
+      </div>
+      <div class="obj-body">
+        <div class="obj-answer">Entendo sua preocupação. Porém, o que o doutor faz é uma construção muito personalizada.
+
+Se você vier sozinha ou tentar explicar para ele em casa, ele vai ter dúvidas técnicas e sobre os valores que você não vai saber responder — e aí o seu sonho trava.
+
+Por isso a regra aqui da clínica é: precisamos dos dois na consulta para o diagnóstico.
+
+Qual horário vocês dois conseguem conciliar nesta semana?</div>
+        <div class="obj-tip">✅ Inclua o parceiro no processo — isso remove a objeção na raiz e aumenta a taxa de fechamento na consulta.</div>
+      </div>
+    </div>
+
+    <div class="obj-card">
+      <div class="obj-hdr" onclick="toggleObj(this)">
+        <div class="obj-q">💬 "Achei caro." / "Está caro demais."</div>
+        <div class="obj-chev">⌄</div>
+      </div>
+      <div class="obj-body">
+        <div class="obj-answer">Hmm... entendo. Fiquei curiosa: o que fez você considerar resolver isso agora, mesmo não parecendo ser o melhor momento?</div>
+        <div class="obj-tip">✅ Resposta alternativa: "Caro em relação ao que você estava esperando?" — Faz o paciente revelar o valor de referência que tem na cabeça, o que facilita o reposicionamento.</div>
+      </div>
+    </div>
+
+    <div class="obj-card">
+      <div class="obj-hdr" onclick="toggleObj(this)">
+        <div class="obj-q">💬 "Vou esperar o mês que vem."</div>
+        <div class="obj-chev">⌄</div>
+      </div>
+      <div class="obj-body">
+        <div class="obj-answer">Tranquilo. Mas olha só: a agenda do Dr. [Nome] lota com semanas de antecedência.
+
+Deixar o planejamento para depois é adiar ainda mais o seu resultado.
+
+Vamos fazer o diagnóstico agora para você pelo menos saber o que precisa ser feito financeiramente e já travar os valores de hoje? Assim você se programa com calma.</div>
+        <div class="obj-tip">✅ Crie urgência real com a escassez de agenda — não invente. Use datas reais de alta demanda quando disponível.</div>
+      </div>
+    </div>
+
+    <div class="obj-card">
+      <div class="obj-hdr" onclick="toggleObj(this)">
+        <div class="obj-q">💬 "Tenho medo do procedimento / da cirurgia."</div>
+        <div class="obj-chev">⌄</div>
+      </div>
+      <div class="obj-body">
+        <div class="obj-answer">Oi, [Nome]! Entendo totalmente o seu receio — é super comum ter esse medo.
+
+Mas pode ficar tranquila: é exatamente por isso que a avaliação com o Dr. [Nome] é tão importante. Lá ele explica todo o processo com calma, tira todas as suas dúvidas e você sai sabendo exatamente o que esperar — sem surpresas.
+
+Muitos pacientes chegam com esse mesmo medo e saem bem mais tranquilos depois da conversa. 😊
+
+Quer agendar para conhecer pessoalmente?</div>
+        <div class="obj-tip">✅ Valide o medo sem minimizá-lo. O doutor vai dissipar esse medo na consulta — não o SDR. Seu papel é levar o paciente até lá.</div>
+      </div>
+    </div>
+
+    <div class="obj-card">
+      <div class="obj-hdr" onclick="toggleObj(this)">
+        <div class="obj-q">💬 "Vou pensar e te aviso."</div>
+        <div class="obj-chev">⌄</div>
+      </div>
+      <div class="obj-body">
+        <div class="obj-answer">Claro, sem pressa! 😊
+
+Só para eu entender melhor e poder te ajudar — tem alguma dúvida específica que você ainda precisa resolver? Às vezes eu consigo já esclarecer aqui mesmo.</div>
+        <div class="obj-tip">✅ Nunca aceite o "vou pensar" sem entender o que está por trás. Pode ser dinheiro, medo, falta de urgência ou aprovação de terceiros — cada um tem um tratamento diferente.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CLIENTE DIZ NÃO -->
+  <div class="section" id="sec-naodiz">
+    <div class="sec-title">Quando o Cliente Diz "NÃO"</div>
+    <p class="sec-desc">O "não" raramente é definitivo — é um pedido de mais informação ou segurança. Entenda o motivo antes de reagir. Cada cenário tem uma abordagem diferente.</p>
+
+    <div class="alert alert-amber">
+      <div class="alert-icon">🎯</div>
+      <div><strong>Primeiro passo sempre:</strong> Quando o paciente recusa sem explicar o motivo, pergunte: <em>"Foi por falta de tempo, dúvida sobre o tratamento ou questão de valores?"</em> — a resposta define o próximo movimento.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📍 Cenário 1 — "Não quero agendar agora." (sem motivo)</div>
+      <div class="card-body">
+        <div class="fu-msg">Tudo bem, [Nome]! 😊
+Posso te perguntar só pra eu te orientar melhor — foi por falta de tempo, por dúvida sobre o tratamento ou por questão de valores?</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📍 Cenário 2 — "Não tenho tempo agora."</div>
+      <div class="card-body">
+        <div class="fu-msg">Entendo totalmente, a rotina é uma correria mesmo! 💕
+
+A boa notícia é que a avaliação é rápida, e já te ajuda a entender o que realmente vale a pena investir quando tiver tempo pra fazer.
+
+Você prefere que eu te avise quando abrirmos novos horários mais pra frente?</div>
+        <div class="script-obs" style="margin-top:10px">💡 Se disser "sim": <em>"Combinado! Assim que abrirmos novas vagas, eu te envio uma mensagem com prioridade."</em> — Anote no follow-up.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📍 Cenário 3 — "É por causa do valor."</div>
+      <div class="card-body">
+        <div class="fu-msg">Entendo perfeitamente, [Nome]! ❤️
+
+O Dr. [Nome] trabalha com protocolos personalizados que realmente entregam resultado e segurança — por isso cada tratamento é pensado conforme o caso.
+
+Mas a avaliação é gratuita, sem custo algum, e nela você já entende quais opções podem se encaixar melhor no seu orçamento.
+
+Quer que eu veja um horário pra essa avaliação sem compromisso?</div>
+        <div class="script-obs" style="margin-top:10px">💡 Se ainda recusar: <em>"Posso te deixar na lista de avisos pra quando tivermos condições especiais — posso te incluir?"</em></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📍 Cenário 4 — "Tenho medo / insegurança."</div>
+      <div class="card-body">
+        <div class="fu-msg">Oi, [Nome]! Entendo totalmente o seu receio — é super natural sentir isso quando falamos em procedimento estético ou cirúrgico. 💙
+
+Mas pode ficar tranquila: o Dr. [Nome] trabalha com uma abordagem muito segura e humanizada. A avaliação existe exatamente pra você tirar todas as dúvidas, entender cada etapa e só então decidir — sem nenhuma pressão.
+
+Muitos pacientes chegam com esse mesmo medo e saem bem mais tranquilos depois da conversa. 😊
+
+Quer agendar só pra conhecer pessoalmente?</div>
+        <div class="script-obs" style="margin-top:10px">💡 Nunca minimize o medo. Valide, acolha, e direcione para a consulta — é o doutor quem vai dissipar essa insegurança de verdade.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📍 Cenário 5 — Paciente recusa definitivamente</div>
+      <div class="card-body">
+        <div class="fu-msg">Sem problemas, [Nome]! 😊
+
+Deixo aqui nosso Instagram e nosso grupo VIP pra você acompanhar nossas novidades, promoções e conteúdos exclusivos. 💙
+
+➡️ Instagram: [@clínica]
+➡️ Grupo VIP: [link]
+
+Quando sentir que é o momento, é só chamar. Estaremos aqui! 🌸</div>
+        <div class="script-obs" style="margin-top:10px">💡 Mantenha o canal aberto — pacientes que recusaram hoje voltam em 30, 60, 90 dias. Inclua na lista de reativação mensal.</div>
+      </div>
+    </div>
+
+    <div class="alert alert-green">
+      <div class="alert-icon">💡</div>
+      <div><strong>Gatilho de oportunidade:</strong> "Se eu conseguir estender essa condição especial só pra você, podemos seguir com o agendamento da sua avaliação? Me confirma! 💙" — Use quando sentir que o paciente está na borda da decisão.</div>
+    </div>
+  </div>
+
+  <!-- PIX + SHOW-UP -->
+  <div class="section" id="sec-pix">
+    <div class="sec-title">Protocolo PIX + Blindagem Anti No-Show</div>
+    <p class="sec-desc">Consulta agendada sem PIX não conta. E paciente que pagou também pode dar no-show — use o Protocolo de Comparecimento para blindar cada vaga.</p>
+
+    <div class="alert alert-amber">
+      <div class="alert-icon">💸</div>
+      <div><strong>Regra:</strong> Nunca desligue a ligação (ou encerre o WhatsApp) antes de o PIX cair na conta. Vaga reservada = PIX confirmado.</div>
+    </div>
+
+    <div class="checklist">
+      <div class="check-item">
+        <div class="check-num">P1</div>
+        <div class="check-content">
+          <div class="check-title">Gatilho da Vaga — Solicitar PIX</div>
+          <div class="check-desc">
+            <div class="fu-msg" style="margin-top:8px">Perfeito, [Nome]. Para travar essa vaga com o Dr. [Nome] nesta [dia], o investimento do seu Diagnóstico Premium é de R$ [valor]. Vou te mandar a nossa chave PIX agora aí no seu WhatsApp. Me diz se chegou, por favor.</div>
+          </div>
+        </div>
+      </div>
+      <div class="check-item">
+        <div class="check-num">P2</div>
+        <div class="check-content">
+          <div class="check-title">Silêncio de Ouro — Aguardar</div>
+          <div class="check-desc">Aguardar a paciente dizer "Chegou aqui". Zero pressão — apenas presença.</div>
+        </div>
+      </div>
+      <div class="check-item">
+        <div class="check-num">P3</div>
+        <div class="check-content">
+          <div class="check-title">Trava de Segurança na Ligação</div>
+          <div class="check-desc">
+            <div class="fu-msg" style="margin-top:8px">Excelente. Você consegue fazer essa transferência agora? Vou aguardar aqui na linha com você caso dê algum erro no aplicativo do banco, assim já confirmo sua vaga na hora.</div>
+          </div>
+        </div>
+      </div>
+      <div class="check-item">
+        <div class="check-num">P4</div>
+        <div class="check-content">
+          <div class="check-title">Silêncio Absoluto — Aguardar o PIX</div>
+          <div class="check-desc">Mutar o microfone ou falar de assuntos leves enquanto ela faz o PIX. Confirmar só após receber o comprovante.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🛡️ Protocolo de Comparecimento — Grupo VIP</div>
+      <div class="card-body">
+        <p style="margin-bottom:12px">Após o PIX confirmado, crie um grupo no WhatsApp imediatamente. Isso aumenta a taxa de comparecimento em até 40%.</p>
+        <div class="checklist" style="margin-bottom:12px">
+          <div class="check-item">
+            <div class="check-num">1</div>
+            <div class="check-content">
+              <div class="check-title">Nome do grupo</div>
+              <div class="check-desc">"Planejamento Premium | [Nome da Paciente] + Dr. [Nome]"</div>
+            </div>
+          </div>
+          <div class="check-item">
+            <div class="check-num">2</div>
+            <div class="check-content">
+              <div class="check-title">Participantes</div>
+              <div class="check-desc">Secretária + Paciente (+ marido/decisor, se for o caso) + Doutor</div>
+            </div>
+          </div>
+          <div class="check-item">
+            <div class="check-num">3</div>
+            <div class="check-content">
+              <div class="check-title">Mensagem de acolhimento (enviada pela secretária)</div>
+              <div class="check-desc">
+                <div class="fu-msg" style="margin-top:8px">Olá, [Nome]! Criei este grupo para facilitar nossa comunicação e tornar sua experiência ainda mais VIP. 💎
+
+Seu Planejamento Cirúrgico com o Dr. [Nome] está 100% CONFIRMADO para:
+📅 [Data]
+⏰ [Horário]
+📍 [Endereço]
+
+Por favor, programe-se com 15 minutos de antecedência. Como sua consulta é um horário reservado e exclusivo, não conseguimos reagendar em caso de falta de última hora, apenas em caráter de emergência médica.
+
+Até breve! Te esperamos no horário combinado 😉</div>
+              </div>
+            </div>
+          </div>
+          <div class="check-item">
+            <div class="check-num">4</div>
+            <div class="check-content">
+              <div class="check-title">Dica: Áudio do doutor no grupo</div>
+              <div class="check-desc">O doutor pode mandar um áudio de 15 segundos dizendo "Oi [Nome], estou com seu prontuário aqui e animado para montarmos o seu plano amanhã!" — isso cria comprometimento e praticamente elimina o no-show.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KPIs -->
+  <div class="section" id="sec-kpis">
+    <div class="sec-title">Raio-X Diário — KPIs do SDR</div>
+    <p class="sec-desc">O que não é medido, não é gerenciado. Preencha o raio-x todo dia — seja brutalmente honesto(a). Se a resposta for "Não", anote o porquê para resolver amanhã.</p>
+
+    <table class="kpi-table">
+      <thead>
+        <tr><th>Métrica</th><th>Meta Diária</th><th>Meta Semanal</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><div class="kpi-name">Tentativas de ligação ativa</div><div style="font-size:12px;color:var(--text-dim)">SDR com fone no ouvido, foco total</div></td>
+          <td class="kpi-val">50</td><td class="kpi-val">250</td>
+          <td><span class="tag tag-amber">Prioridade</span></td>
+        </tr>
+        <tr>
+          <td><div class="kpi-name">WhatsApp zerado (SLA 12h)</div><div style="font-size:12px;color:var(--text-dim)">Nenhum lead interessado sem resposta</div></td>
+          <td class="kpi-val">100%</td><td class="kpi-val">100%</td>
+          <td><span class="tag tag-red">Obrigatório</span></td>
+        </tr>
+        <tr>
+          <td><div class="kpi-name">Agendamentos qualificados (PIX pago)</div><div style="font-size:12px;color:var(--text-dim)">Consultas com pagamento confirmado</div></td>
+          <td class="kpi-val">3–5</td><td class="kpi-val">15–25</td>
+          <td><span class="tag tag-green">Principal</span></td>
+        </tr>
+        <tr>
+          <td><div class="kpi-name">Taxa de comparecimento</div><div style="font-size:12px;color:var(--text-dim)">% de agendados que aparecem</div></td>
+          <td class="kpi-val">—</td><td class="kpi-val">&gt; 70%</td>
+          <td><span class="tag tag-green">Meta crítica</span></td>
+        </tr>
+        <tr>
+          <td><div class="kpi-name">B.A.N.T. feito em todas as conversas</div><div style="font-size:12px;color:var(--text-dim)">Nenhum "curioso" passou para a agenda</div></td>
+          <td class="kpi-val">100%</td><td class="kpi-val">100%</td>
+          <td><span class="tag tag-amber">Filtro</span></td>
+        </tr>
+        <tr>
+          <td><div class="kpi-name">Grupos VIP criados</div><div style="font-size:12px;color:var(--text-dim)">1 grupo por agendamento confirmado</div></td>
+          <td class="kpi-val">= agend.</td><td class="kpi-val">= agend.</td>
+          <td><span class="tag tag-blue">Show-up</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="card">
+      <div class="card-title">📋 Checklist de Autoavaliação — Raio-X Diário</div>
+      <div class="card-body">
+        <p style="margin-bottom:12px">Responda sim ou não para cada item. Se for "Não", anote o porquê.</p>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="background:var(--surface2);border-radius:8px;padding:12px 14px;font-size:13px;color:var(--text-sec)">☐ Cumpri os blocos de "Espada" (foco total, fone no ouvido, ignorei o balcão)?</div>
+          <div style="background:var(--surface2);border-radius:8px;padding:12px 14px;font-size:13px;color:var(--text-sec)">☐ Atingi minha meta mínima de 50 tentativas de ligação ativa hoje?</div>
+          <div style="background:var(--surface2);border-radius:8px;padding:12px 14px;font-size:13px;color:var(--text-sec)">☐ Zerei meu WhatsApp? Nenhum lead interessado ficou sem resposta há mais de 12h?</div>
+          <div style="background:var(--surface2);border-radius:8px;padding:12px 14px;font-size:13px;color:var(--text-sec)">☐ Fiz as 4 perguntas do B.A.N.T. para TODAS as pacientes que atendi hoje?</div>
+          <div style="background:var(--surface2);border-radius:8px;padding:12px 14px;font-size:13px;color:var(--text-sec)">☐ Fui firme o suficiente para NÃO agendar pessoas "curiosas" que não passaram no filtro?</div>
+          <div style="background:var(--surface2);border-radius:8px;padding:12px 14px;font-size:13px;color:var(--text-sec)">☐ Bati o pé no valor da consulta posicionando-a como Diagnóstico/Planejamento Premium?</div>
+          <div style="background:var(--surface2);border-radius:8px;padding:12px 14px;font-size:13px;color:var(--text-sec)">☐ Fiquei em silêncio absoluto após enviar a chave PIX e aguardei o comprovante?</div>
+          <div style="background:var(--surface2);border-radius:8px;padding:12px 14px;font-size:13px;color:var(--text-sec)">☐ Criei o Grupo VIP para TODOS os agendamentos com PIX confirmado hoje?</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+function showSection(id,el){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-pill').forEach(p=>p.classList.remove('active'));
+  document.getElementById('sec-'+id).classList.add('active');
+  el.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function toggleScript(hdr){
+  const body=hdr.nextElementSibling,chev=hdr.querySelector('.script-chev'),isOpen=body.classList.contains('open');
+  body.classList.toggle('open',!isOpen);
+  chev.style.transform=isOpen?'':'rotate(180deg)';
+}
+function toggleObj(hdr){
+  const body=hdr.nextElementSibling,chev=hdr.querySelector('.obj-chev'),isOpen=body.classList.contains('open');
+  body.classList.toggle('open',!isOpen);
+  chev.style.transform=isOpen?'':'rotate(180deg)';
+}
+function copyScript(id,btn){
+  const el=document.getElementById(id);
+  const text=el.childNodes[0].textContent.trim();
+  navigator.clipboard.writeText(text).then(()=>{
+    btn.textContent='Copiado!';btn.classList.add('copied');
+    setTimeout(()=>{btn.textContent='Copiar';btn.classList.remove('copied')},2000);
+  });
+}
+</script>
+</body>
+</html>
