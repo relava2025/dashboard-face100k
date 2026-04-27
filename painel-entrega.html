@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-  import { getFirestore, collection, onSnapshot, doc, setDoc, deleteDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+  import { getFirestore, collection, onSnapshot, doc, setDoc, deleteDoc, getDoc, updateDoc, enableNetwork } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
   const firebaseConfig = {
     apiKey:"AIzaSyAyupUdCsEb6pPVmTs2clhayS84-TUovGA",
     authDomain:"dashboard-e465d.firebaseapp.com",
@@ -18,8 +18,22 @@
   };
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
+  function snapRetry(refFn,cb){
+    let unsub,timer,tries=0;
+    function sub(){
+      try{
+        if(unsub){try{unsub();}catch(e){}}
+        unsub=onSnapshot(refFn(),
+          s=>{tries=0;cb(s);},
+          e=>{console.warn('fb err',e);if(timer)clearTimeout(timer);tries++;setSyncStatus('connecting');timer=setTimeout(()=>{enableNetwork(db).then(sub).catch(sub);},Math.min(3000*tries,15000));}
+        );
+      }catch(e){console.warn('fb sub err',e);timer=setTimeout(sub,5000);}
+    }
+    sub();
+    return()=>{if(unsub)unsub();if(timer)clearTimeout(timer);};
+  }
   window._fb = {
-    listenClients(cb){ return onSnapshot(collection(db,"entrega"), snap=>{ const l=[]; snap.forEach(d=>l.push({id:d.id,...d.data()})); cb(l); }); },
+    listenClients(cb){ return snapRetry(()=>collection(db,"entrega"), snap=>{ const l=[]; snap.forEach(d=>l.push({id:d.id,...d.data()})); cb(l); }); },
     async save(id,data){ await setDoc(doc(db,"entrega",id),data,{merge:true}); },
     async delete(id){ await deleteDoc(doc(db,"entrega",id)); },
     async getDoc(id){ const s=await getDoc(doc(db,"entrega",id)); return s.exists()?s.data():null; },
@@ -910,10 +924,10 @@ window.addEventListener('fb-ready',()=>{
 setTimeout(()=>{
   if(!document.getElementById('loading').classList.contains('hidden')){
     document.getElementById('loading').classList.add('hidden');
-    setSyncStatus('error');
-    showToast('Firebase não conectado — modo offline','');
+    setSyncStatus('connecting');
+    showToast('Aguardando conexão com Firebase...','');
   }
-},5000);
+},15000);
 
 document.addEventListener('keydown',e=>{
   if(e.key==='Enter'&&document.getElementById('modal').classList.contains('open')) saveClient();
