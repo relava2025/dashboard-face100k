@@ -8,15 +8,31 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-import{getFirestore,doc,onSnapshot,updateDoc,getDoc,collection,query,where}from"https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+import{getFirestore,doc,onSnapshot,updateDoc,getDoc,collection,query,where,enableNetwork}from"https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 const cfg={apiKey:"AIzaSyAyupUdCsEb6pPVmTs2clhayS84-TUovGA",authDomain:"dashboard-e465d.firebaseapp.com",projectId:"dashboard-e465d",storageBucket:"dashboard-e465d.firebasestorage.app",messagingSenderId:"865986158280",appId:"1:865986158280:web:1531d13630f9835a9f0ffd"};
 const db=getFirestore(initializeApp(cfg));
 const cid=new URLSearchParams(location.search).get('cliente')||'';
 window._clientId=cid;
+function setFbDot(s){const el=document.getElementById('fb-dot');if(!el)return;el.className='fb-dot fb-dot-'+s;el.title=s==='ok'?'Conectado':s==='warn'?'Reconectando...':'Sem conexão';}
+function snapRetry(refFn,cb){
+  let unsub,timer,tries=0;
+  function sub(){
+    try{
+      if(unsub){try{unsub();}catch(e){}}
+      setFbDot(tries>0?'warn':'ok');
+      unsub=onSnapshot(refFn(),
+        s=>{tries=0;setFbDot('ok');cb(s);},
+        e=>{console.warn('fb snap err',e);setFbDot('warn');if(timer)clearTimeout(timer);tries++;timer=setTimeout(()=>{enableNetwork(db).then(sub).catch(sub);},Math.min(3000*tries,15000));}
+      );
+    }catch(e){console.warn('fb sub err',e);setFbDot('error');timer=setTimeout(sub,5000);}
+  }
+  sub();
+  return()=>{if(unsub)unsub();if(timer)clearTimeout(timer);};
+}
 if(cid)window._fb={
-  listen(cb){return onSnapshot(doc(db,'entrega',cid),s=>{s.exists()&&cb(s.data())})},
+  listen(cb){return snapRetry(()=>doc(db,'entrega',cid),s=>{s.exists()&&cb(s.data())})},
   save(d){return updateDoc(doc(db,'entrega',cid),d).catch(console.warn)},
-  listenRoteiros(cb){const q=query(collection(db,'roteiros'),where('clienteId','==',cid));return onSnapshot(q,snap=>{const list=[];snap.forEach(d=>list.push(d.data()));list.sort((a,b)=>(b.criadoEm||'').localeCompare(a.criadoEm||''));cb(list);})},
+  listenRoteiros(cb){return snapRetry(()=>query(collection(db,'roteiros'),where('clienteId','==',cid)),snap=>{const list=[];snap.forEach(d=>list.push(d.data()));list.sort((a,b)=>(b.criadoEm||'').localeCompare(a.criadoEm||''));cb(list);})},
   async getTutorias(){const s=await getDoc(doc(db,'config','tutorias'));return s.exists()?s.data():{mes:'',sessoes:[]}}
 };
 window.dispatchEvent(new Event("fb-ready"));
@@ -58,6 +74,11 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50}
 .logo{font-family:'Montserrat',sans-serif;font-size:16px;font-weight:800;letter-spacing:.04em;flex-shrink:0}
 .logo span{color:var(--amber);font-style:italic}
+.fb-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;transition:background .4s}
+.fb-dot-ok{background:var(--green)}
+.fb-dot-warn{background:var(--amber);animation:fbpulse 1s ease-in-out infinite}
+.fb-dot-error{background:var(--red)}
+@keyframes fbpulse{0%,100%{opacity:1}50%{opacity:.3}}
 .tb-sep{width:1px;height:16px;background:var(--border);flex-shrink:0}
 .tb-client{font-size:14px;color:var(--text-sec);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .tb-badge{padding:4px 12px;border-radius:16px;font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:.08em;background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border);white-space:nowrap;flex-shrink:0}
@@ -409,6 +430,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
     <div class="tb-sep"></div>
     <div class="tb-client" id="tb-client">Meu programa</div>
     <div class="tb-badge" id="tb-week">—</div>
+    <div class="fb-dot fb-dot-warn" id="fb-dot" title="Conectando..."></div>
   </div>
 
   <!-- HERO -->
