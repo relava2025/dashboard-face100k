@@ -168,11 +168,48 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .tier-name{font-size:15px;font-weight:700;margin-bottom:8px}
 .tier-criteria{font-size:13px;color:var(--text-sec);line-height:1.65}
 
+/* DECISION TREE */
+.dtree{display:flex;flex-direction:column;align-items:stretch;gap:0}
+.dt-start-box{background:var(--surface);border:1.5px solid var(--amber-border);border-radius:12px;padding:16px 20px;display:flex;align-items:center;gap:14px;margin-bottom:4px}
+.dt-start-icon{font-size:24px;flex-shrink:0}
+.dt-start-info{flex:1}
+.dt-start-title{font-family:'Montserrat',sans-serif;font-size:15px;font-weight:700}
+.dt-start-sub{font-size:13px;color:var(--text-sec);margin-top:2px}
+.dt-start-badge{background:var(--amber-dim);border:1px solid var(--amber-border);border-radius:8px;padding:4px 10px;font-size:11px;font-weight:700;color:var(--amber);font-family:'Montserrat',sans-serif;white-space:nowrap;flex-shrink:0}
+.dt-rule-bar{background:rgba(59,130,246,0.06);border:1px solid var(--blue-border);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--text-sec);line-height:1.55;margin-bottom:4px}
+.dt-arrow{text-align:center;font-size:20px;color:var(--text-dim);padding:2px 0;line-height:1}
+.dt-question{background:var(--amber-dim);border:1.5px solid var(--amber-border);border-radius:12px;padding:13px 20px;font-size:14px;font-weight:700;font-family:'Montserrat',sans-serif;text-align:center;margin-bottom:6px}
+.dt-split{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:4px}
+.dt-path{border-radius:12px;overflow:hidden;cursor:pointer;transition:opacity .15s}
+.dt-path:hover{opacity:.9}
+.dt-path-yes{border:1.5px solid var(--green-border)}
+.dt-path-no{border:1.5px solid rgba(239,68,68,0.35)}
+.dt-path-warn{border:1.5px solid var(--amber-border)}
+.dt-path-label{padding:11px 16px;font-size:13px;font-weight:700;font-family:'Montserrat',sans-serif;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.dt-path-yes .dt-path-label{color:var(--green);background:rgba(34,197,94,0.07)}
+.dt-path-no .dt-path-label{color:var(--red);background:rgba(239,68,68,0.07)}
+.dt-path-warn .dt-path-label{color:var(--amber);background:var(--amber-dim)}
+.dt-path-chev{font-size:16px;transition:transform .2s;flex-shrink:0}
+.dt-path-body{display:none;padding:14px 16px;border-top:1px solid var(--border-light);background:var(--surface)}
+.dt-path-body.open{display:block}
+.dt-ai{font-size:13px;color:var(--text-sec);padding:6px 0;border-bottom:.5px solid var(--border-light);line-height:1.55}
+.dt-ai:last-of-type{border-bottom:none;padding-bottom:0}
+.dt-sub-list{display:flex;flex-direction:column;gap:7px;margin:10px 0 4px}
+.dt-sub-opt{background:var(--surface2);border-radius:8px;padding:9px 12px}
+.dt-sub-lbl{font-size:12px;font-weight:700;margin-bottom:3px}
+.dt-sub-desc{font-size:12px;color:var(--text-sec);line-height:1.5}
+.dt-link{font-size:12px;color:var(--amber);font-weight:600;margin-top:10px;cursor:pointer;display:inline-block;padding:5px 0}
+.dt-link:hover{text-decoration:underline}
+.dt-final{background:linear-gradient(135deg,rgba(34,197,94,0.1),rgba(245,166,35,0.06));border:2px solid var(--green-border);border-radius:14px;padding:24px;text-align:center;margin-top:4px}
+.dt-final-icon{font-size:36px;margin-bottom:8px}
+.dt-final-title{font-family:'Montserrat',sans-serif;font-size:20px;font-weight:800;color:var(--green);margin-bottom:8px}
+.dt-final-tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+
 @media(max-width:680px){
   .topbar{padding:12px 16px}
   .page{padding:20px 16px 60px}
   .hero-title{font-size:22px}
-  .grid2,.bant-grid,.tier-grid{grid-template-columns:1fr}
+  .grid2,.bant-grid,.tier-grid,.dt-split{grid-template-columns:1fr}
   .hero-stats{gap:8px}
 }
 </style>
@@ -206,6 +243,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 
   <div class="nav-pills">
     <div class="nav-pill active" onclick="showSection('mindset',this)">Mindset</div>
+    <div class="nav-pill" onclick="showSection('fluxo',this)">🗺 Fluxo</div>
     <div class="nav-pill" onclick="showSection('bant',this)">B.A.N.T.</div>
     <div class="nav-pill" onclick="showSection('scripts',this)">Scripts</div>
     <div class="nav-pill" onclick="showSection('funil',this)">Funil</div>
@@ -305,6 +343,183 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
           </div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- FLUXO -->
+  <div class="section" id="sec-fluxo">
+    <div class="sec-title">Fluxo de Decisão — Do Lead à Consulta</div>
+    <p class="sec-desc">Cada ponto de decisão mostra o que fazer. Clique no ramo para ver os detalhes e scripts.</p>
+
+    <div class="dtree">
+
+      <!-- INÍCIO -->
+      <div class="dt-start-box">
+        <div class="dt-start-icon">📥</div>
+        <div class="dt-start-info">
+          <div class="dt-start-title">Lead Novo Chegou</div>
+          <div class="dt-start-sub">Via anúncio, Instagram, indicação ou Google</div>
+        </div>
+        <div class="dt-start-badge">⚡ 5 min</div>
+      </div>
+      <div class="dt-rule-bar">Responder em até <strong>5 minutos</strong>. Após 1h, a conversão cai 10x. Fora do horário comercial: configure automação de boas-vindas para garantir o primeiro contato imediato.</div>
+
+      <div class="dt-arrow">↓</div>
+
+      <!-- DECISÃO 1 -->
+      <div class="dt-question">📞 O lead atendeu / respondeu?</div>
+      <div class="dt-split">
+        <div class="dt-path dt-path-no" onclick="togglePath(this)">
+          <div class="dt-path-label">❌ Não atendeu <span class="dt-path-chev">⌄</span></div>
+          <div class="dt-path-body">
+            <div class="dt-ai">Fazer até <strong>3 tentativas</strong> (ligação + WhatsApp) com intervalo de 30–60 min</div>
+            <div class="dt-ai">Após 3 tentativas sem resposta → mover para a esteira de Follow-up</div>
+            <div class="dt-sub-list">
+              <div class="dt-sub-opt">
+                <div class="dt-sub-lbl" style="color:var(--blue)">👻 N1 — Fantasma Precoce</div>
+                <div class="dt-sub-desc">Levantou a mão, mandou "quero saber mais" e sumiu. Cadência: D1 · D4 · D9 · D15 (Takeaway)</div>
+              </div>
+              <div class="dt-sub-opt">
+                <div class="dt-sub-lbl" style="color:var(--purple)">🧠 N2 — Desperta Incompleta</div>
+                <div class="dt-sub-desc">Respondeu o básico, não sente urgência. Nutrição com depoimentos. Cadência: D2 · D6 · D10 · D14</div>
+              </div>
+            </div>
+            <div class="dt-link" onclick="event.stopPropagation();goSection('followup')">→ Ver scripts de Follow-up completos</div>
+          </div>
+        </div>
+        <div class="dt-path dt-path-yes" onclick="togglePath(this)">
+          <div class="dt-path-label">✅ Atendeu / Respondeu <span class="dt-path-chev">⌄</span></div>
+          <div class="dt-path-body">
+            <div class="dt-ai">Iniciar <strong>qualificação B.A.N.T.</strong> imediatamente</div>
+            <div class="dt-ai">Objetivo: preencher as 4 letras em menos de 1 minuto</div>
+            <div class="dt-ai">Não dê preço, não apresente procedimento — conduza para a consulta</div>
+            <div class="dt-link" onclick="event.stopPropagation();goSection('bant')">→ Ver método B.A.N.T. completo</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dt-arrow">↓ se atendeu</div>
+
+      <!-- DECISÃO 2 -->
+      <div class="dt-question">🎯 Passou no filtro B.A.N.T.?</div>
+      <div class="dt-split">
+        <div class="dt-path dt-path-no" onclick="togglePath(this)">
+          <div class="dt-path-label">❌ Não passou <span class="dt-path-chev">⌄</span></div>
+          <div class="dt-path-body">
+            <div class="dt-ai"><strong>NÃO agendar</strong> — protege a agenda e o tempo do doutor</div>
+            <div class="dt-sub-list">
+              <div class="dt-sub-opt">
+                <div class="dt-sub-lbl" style="color:var(--amber)">Falhou no B — Budget</div>
+                <div class="dt-sub-desc">Aplicar o "Pulo do Gato" (PLR/bônus). Se ainda sem verba → lista de nutrição mensal</div>
+              </div>
+              <div class="dt-sub-opt">
+                <div class="dt-sub-lbl" style="color:var(--amber)">Falhou no A — Authority</div>
+                <div class="dt-sub-desc">Sem o decisor (marido/parceiro) na consulta → não agenda. Reagendar com os dois presentes</div>
+              </div>
+              <div class="dt-sub-opt">
+                <div class="dt-sub-lbl" style="color:var(--amber)">Falhou no T — Timing</div>
+                <div class="dt-sub-desc">Score abaixo de 7 → perguntar o que falta para chegar em 10. Mover para N2 de nutrição</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="dt-path dt-path-yes" onclick="togglePath(this)">
+          <div class="dt-path-label">✅ Passou no B.A.N.T. <span class="dt-path-chev">⌄</span></div>
+          <div class="dt-path-body">
+            <div class="dt-ai">Oferecer <strong>2 opções de horário</strong> — nunca 1, nunca mais de 3</div>
+            <div class="dt-ai">"Tenho [dia] às [hora] ou [dia] às [hora]. Qual fica melhor pra você?"</div>
+            <div class="dt-ai">Obter confirmação verbal/escrita antes de prosseguir</div>
+            <div class="dt-link" onclick="event.stopPropagation();goSection('scripts')">→ Ver script de fechamento do agendamento</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dt-arrow">↓ se aceitou horário</div>
+
+      <!-- DECISÃO 3 -->
+      <div class="dt-question">💬 Aceitou o horário ou levantou objeção?</div>
+      <div class="dt-split">
+        <div class="dt-path dt-path-warn" onclick="togglePath(this)">
+          <div class="dt-path-label">💬 Levantou objeção <span class="dt-path-chev">⌄</span></div>
+          <div class="dt-path-body">
+            <div class="dt-sub-list">
+              <div class="dt-sub-opt">
+                <div class="dt-sub-lbl">💰 "Está caro" / "Só pra avaliar?"</div>
+                <div class="dt-sub-desc">Ancorar como Diagnóstico Premium ou Planejamento Cirúrgico. Nunca justificar o preço — reposicionar o valor</div>
+              </div>
+              <div class="dt-sub-opt">
+                <div class="dt-sub-lbl">👫 "Preciso falar com meu marido"</div>
+                <div class="dt-sub-desc">Convidar o decisor para a consulta. Sem ele presente, o sonho trava em casa</div>
+              </div>
+              <div class="dt-sub-opt">
+                <div class="dt-sub-lbl">⏰ "Vou pensar" / "Mês que vem"</div>
+                <div class="dt-sub-desc">Urgência real de agenda + escassez de vagas. Perguntar o que está travando a decisão</div>
+              </div>
+              <div class="dt-sub-opt">
+                <div class="dt-sub-lbl">😨 "Tenho medo"</div>
+                <div class="dt-sub-desc">Validar sem minimizar. A consulta existe para dissipar o medo — não o SDR. Conduzir para lá</div>
+              </div>
+            </div>
+            <div class="dt-link" onclick="event.stopPropagation();goSection('objecoes')">→ Ver scripts de Objeções</div>
+          </div>
+        </div>
+        <div class="dt-path dt-path-yes" onclick="togglePath(this)">
+          <div class="dt-path-label">✅ Aceitou o horário <span class="dt-path-chev">⌄</span></div>
+          <div class="dt-path-body">
+            <div class="dt-ai">Iniciar <strong>Protocolo PIX imediatamente</strong></div>
+            <div class="dt-ai">Nunca desligar antes do PIX cair na conta — vaga só é real com comprovante</div>
+            <div class="dt-ai">Enviar chave PIX e aguardar em silêncio na linha</div>
+            <div class="dt-link" onclick="event.stopPropagation();goSection('pix')">→ Ver Protocolo PIX completo</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dt-arrow">↓ protocolo PIX</div>
+
+      <!-- DECISÃO 4 -->
+      <div class="dt-question">💸 PIX confirmado (comprovante recebido)?</div>
+      <div class="dt-split">
+        <div class="dt-path dt-path-no" onclick="togglePath(this)">
+          <div class="dt-path-label">❌ Não pagou / sumiu <span class="dt-path-chev">⌄</span></div>
+          <div class="dt-path-body">
+            <div class="dt-sub-list">
+              <div class="dt-sub-opt">
+                <div class="dt-sub-lbl" style="color:var(--amber)">⏱️ N3 — A Quase Lá</div>
+                <div class="dt-sub-desc">Travou na hora do PIX. Confronto educado + urgência real. Cadência: D1 · D5 · D8 · D12</div>
+              </div>
+              <div class="dt-sub-opt">
+                <div class="dt-sub-lbl" style="color:var(--green)">🔨 N4 — Martelo Batedor</div>
+                <div class="dt-sub-desc">"Eu quero, só preciso ver um dia." Técnica Dupla Opção sem parar. Cadência: D2 · D6 · D10 · D15</div>
+              </div>
+            </div>
+            <div class="dt-link" onclick="event.stopPropagation();goSection('followup')">→ Ver scripts N3 e N4</div>
+          </div>
+        </div>
+        <div class="dt-path dt-path-yes" onclick="togglePath(this)">
+          <div class="dt-path-label">✅ PIX confirmado <span class="dt-path-chev">⌄</span></div>
+          <div class="dt-path-body">
+            <div class="dt-ai">Criar <strong>Grupo VIP no WhatsApp imediatamente</strong></div>
+            <div class="dt-ai">Nome: "Planejamento Premium | [Nome] + Dr. [Nome]"</div>
+            <div class="dt-ai">Enviar mensagem de acolhimento e pedir áudio do doutor (15 segundos)</div>
+            <div class="dt-link" onclick="event.stopPropagation();goSection('pix')">→ Ver protocolo Grupo VIP</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dt-arrow">↓</div>
+
+      <!-- FINAL -->
+      <div class="dt-final">
+        <div class="dt-final-icon">🏆</div>
+        <div class="dt-final-title">CONSULTA GARANTIDA</div>
+        <div class="dt-final-tags">
+          <span class="tag tag-green">PIX confirmado</span>
+          <span class="tag tag-green">Grupo VIP criado</span>
+          <span class="tag tag-amber">Doutor avisado</span>
+          <span class="tag tag-blue">Paciente comprometido</span>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -1180,6 +1395,17 @@ Até breve! Te esperamos no horário combinado 😉</div>
 </div>
 
 <script>
+function goSection(id){
+  const pill=document.querySelector('.nav-pill[onclick*="\''+id+'\'"]');
+  if(pill){showSection(id,pill);}
+}
+function togglePath(path){
+  const body=path.querySelector('.dt-path-body');
+  const chev=path.querySelector('.dt-path-chev');
+  const isOpen=body.classList.contains('open');
+  body.classList.toggle('open',!isOpen);
+  if(chev)chev.style.transform=isOpen?'':'rotate(180deg)';
+}
 function showSection(id,el){
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.nav-pill').forEach(p=>p.classList.remove('active'));
