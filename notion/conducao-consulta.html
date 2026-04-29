@@ -147,8 +147,53 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'In
 .sec-sub{font-size:17px;font-weight:700;margin:28px 0 14px;color:var(--text);display:flex;align-items:center;gap:10px}
 .sec-sub::after{content:'';flex:1;height:1px;background:var(--border)}
 
-@media(max-width:900px){.page{padding:32px 24px 80px}.spin-grid,.logic-grid{grid-template-columns:1fr 1fr}}
-@media(max-width:640px){.page{padding:24px 16px 60px}.hero-title{font-size:26px}.spin-grid,.logic-grid{grid-template-columns:1fr}}
+@media(max-width:900px){
+  .page{padding:32px 24px 80px}
+  .spin-grid,.logic-grid{grid-template-columns:1fr 1fr}
+  .spin-3col{grid-template-columns:1fr 1fr!important}
+}
+@media(max-width:640px){
+  .topbar{padding:10px 16px;gap:8px}
+  .breadcrumb>span:not(.breadcrumb-current):not(.breadcrumb-sep){display:none}
+  .breadcrumb .breadcrumb-sep:first-child{display:none}
+  .page{padding:20px 16px 60px}
+  .hero-title{font-size:24px}
+  .hero-desc{font-size:15px}
+  .hero-stats{flex-wrap:wrap}
+  .hstat{min-width:50%;border-bottom:1px solid var(--border)}
+  .hstat-val{font-size:22px}
+  .nav-pills{gap:4px;margin-bottom:24px;padding-bottom:20px}
+  .nav-pill{padding:6px 12px;font-size:13px}
+  .sec-title{font-size:18px}
+  .sec-desc{font-size:15px}
+  .spin-grid,.logic-grid,.spin-2col,.spin-3col{grid-template-columns:1fr!important}
+  .tl-q{font-size:13px}
+  .script-box{font-size:14px;padding:14px}
+  .script-box.highlight,.script-box.green,.script-box.red{font-size:14px}
+  .spin-card-hdr{padding:12px 14px}
+  .spin-name{font-size:14px}
+  .spin-q{font-size:13px}
+  .frase-row{font-size:14px;padding-left:36px}
+  .frase-row::before{font-size:22px}
+  .check-title{font-size:14px}
+  .check-desc{font-size:13px}
+  .error-text{font-size:14px}
+  .logic-card{padding:12px}
+  .logic-num{font-size:18px}
+  .logic-title{font-size:13px}
+  .logic-desc{font-size:12px}
+  .callout{font-size:14px;padding:12px 14px}
+  .ancora-item{font-size:14px}
+  .tl-card{padding:12px 14px}
+  .tl-card-title{font-size:14px}
+  .tl-dot{width:28px;height:28px;font-size:12px}
+  .tl-step:not(:last-child)::after{left:13px}
+}
+@media(max-width:400px){
+  .hero-title{font-size:21px}
+  .hstat{min-width:100%}
+  .mod-badge{display:none}
+}
 </style>
 </head>
 <body>
@@ -453,7 +498,7 @@ Olha como melhorou essa região…</div>
           </div>
         </div>
         <div class="spin-body">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div class="spin-2col" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
             <div>
               <div class="spin-q">Você comentou que isso já te incomoda há um tempo… o que fez você ir adiando até agora?</div>
               <div class="spin-note">(descobrir medo, dinheiro, insegurança)</div>
@@ -480,7 +525,7 @@ Olha como melhorou essa região…</div>
           </div>
         </div>
         <div class="spin-body">
-          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+          <div class="spin-3col" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
             <div>
               <div class="spin-q">Resolver isso hoje, pra você, é uma vontade ou já virou uma necessidade?</div>
             </div>
