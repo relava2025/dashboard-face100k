@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Condução de Consulta — System Digital</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F8F9FA;--surface:#FFFFFF;--border:#E5E7EB;--border-soft:#F3F4F6;
+  --text:#111827;--text-sec:#6B7280;--text-dim:#9CA3AF;
+  --amber:#D97706;--amber-bg:#FFFBEB;--amber-border:#FDE68A;
+  --green:#059669;--green-bg:#ECFDF5;--green-border:#A7F3D0;
+  --blue:#2563EB;--blue-bg:#EFF6FF;--blue-border:#BFDBFE;
+  --red:#DC2626;--red-bg:#FEF2F2;--red-border:#FECACA;
+  --purple:#7C3AED;--purple-bg:#F5F3FF;--purple-border:#DDD6FE;
+  --pink:#DB2777;--pink-bg:#FDF2F8;--pink-border:#FBCFE8;
+}
+html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:17px;line-height:1.65}
+
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:12px 32px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50}
+.logo{font-size:14px;font-weight:700;letter-spacing:.02em;flex-shrink:0}
+.logo span{color:var(--amber)}
+.breadcrumb{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text-sec);flex:1}
+.breadcrumb-sep{color:var(--text-dim)}
+.breadcrumb-current{color:var(--text);font-weight:500}
+.mod-badge{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:.04em;background:var(--green-bg);color:var(--green);border:1px solid var(--green-border);white-space:nowrap}
+
+.page{max-width:1180px;margin:0 auto;padding:48px 48px 100px}
+
+/* HERO */
+.hero{margin-bottom:40px}
+.hero-eyebrow{font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--green);margin-bottom:12px}
+.hero-title{font-size:34px;font-weight:700;line-height:1.2;margin-bottom:14px}
+.hero-title span{color:var(--amber)}
+.hero-desc{font-size:17px;color:var(--text-sec);line-height:1.7;margin-bottom:28px;max-width:760px}
+.hero-stats{display:flex;gap:0;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface)}
+.hstat{flex:1;padding:20px 24px;text-align:center;border-right:1px solid var(--border)}
+.hstat:last-child{border-right:none}
+.hstat-val{font-size:26px;font-weight:700;color:var(--amber);line-height:1;margin-bottom:5px}
+.hstat-lbl{font-size:13px;color:var(--text-sec)}
+
+/* NAV */
+.nav-pills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:36px;padding-bottom:28px;border-bottom:1px solid var(--border)}
+.nav-pill{padding:8px 18px;border-radius:7px;font-size:15px;font-weight:500;cursor:pointer;transition:all .12s;color:var(--text-sec);border:1px solid transparent;white-space:nowrap}
+.nav-pill:hover{background:var(--border-soft);color:var(--text)}
+.nav-pill.active{background:var(--text);color:#fff;border-color:var(--text)}
+
+/* SECTIONS */
+.section{display:none;animation:fadeIn .2s ease}
+.section.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.sec-title{font-size:21px;font-weight:700;margin-bottom:6px}
+.sec-desc{font-size:16px;color:var(--text-sec);margin-bottom:28px;line-height:1.7}
+
+/* CALLOUT */
+.callout{border-radius:10px;padding:16px 18px;font-size:15px;line-height:1.7;margin-bottom:24px;display:flex;gap:14px}
+.callout-amber{background:var(--amber-bg);border:1px solid var(--amber-border);color:#92400E}
+.callout-green{background:var(--green-bg);border:1px solid var(--green-border);color:#065F46}
+.callout-red{background:var(--red-bg);border:1px solid var(--red-border);color:#991B1B}
+.callout-blue{background:var(--blue-bg);border:1px solid var(--blue-border);color:#1E40AF}
+.callout-purple{background:var(--purple-bg);border:1px solid var(--purple-border);color:#5B21B6}
+.callout-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+.callout strong{font-weight:700}
+
+/* STEP TIMELINE */
+.timeline{display:flex;flex-direction:column;gap:0;margin-bottom:24px}
+.tl-step{display:flex;gap:0;position:relative}
+.tl-step:not(:last-child)::after{content:'';position:absolute;left:17px;top:38px;bottom:0;width:2px;background:var(--border)}
+.tl-dot{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;z-index:1;margin-top:2px;border:2px solid}
+.tl-content{flex:1;padding:2px 0 24px 16px}
+.tl-label{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px}
+.tl-time{font-size:12px;color:var(--text-dim);margin-left:8px;font-weight:400;letter-spacing:0;text-transform:none}
+.tl-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 18px}
+.tl-card-title{font-size:16px;font-weight:600;margin-bottom:6px;color:var(--text)}
+.tl-card-body{font-size:14px;color:var(--text-sec);line-height:1.7}
+.tl-questions{display:flex;flex-direction:column;gap:6px;margin-top:10px}
+.tl-q{font-size:14px;color:var(--text-sec);padding:8px 12px;background:var(--border-soft);border-radius:7px;line-height:1.6;position:relative;padding-right:70px}
+.tl-warning{font-size:13px;font-weight:600;color:var(--red);margin-top:4px;display:flex;align-items:center;gap:6px}
+.tl-note{font-size:13px;color:var(--text-dim);margin-top:6px;font-style:italic}
+
+/* SCRIPT BOX */
+.script-box{font-size:15px;background:var(--border-soft);border:1px solid var(--border);border-radius:10px;padding:18px 80px 18px 18px;color:var(--text-sec);line-height:1.9;position:relative;white-space:pre-wrap;margin-bottom:14px}
+.script-box.highlight{background:var(--amber-bg);border-color:var(--amber-border);color:#92400E}
+.script-box.green{background:var(--green-bg);border-color:var(--green-border);color:#065F46}
+.script-box.red{background:var(--red-bg);border-color:var(--red-border);color:#991B1B}
+.copy-btn{position:absolute;top:10px;right:10px;padding:5px 12px;border-radius:6px;background:var(--surface);border:1px solid var(--border);color:var(--text-sec);font-size:11px;font-weight:600;cursor:pointer;transition:all .12s;font-family:'Inter',sans-serif;white-space:nowrap}
+.copy-btn:hover{border-color:var(--amber);color:var(--amber)}
+.copy-btn.copied{background:var(--green-bg);border-color:var(--green-border);color:var(--green)}
+.script-label{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-dim);margin-bottom:6px;margin-top:16px}
+.script-label:first-child{margin-top:0}
+
+/* SPIN CARDS */
+.spin-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:24px}
+.spin-card{border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface)}
+.spin-card-hdr{padding:16px 18px;border-bottom:1px solid var(--border-soft);display:flex;align-items:center;gap:12px}
+.spin-letter{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;flex-shrink:0;border:2px solid}
+.spin-info{flex:1}
+.spin-name{font-size:16px;font-weight:700;color:var(--text)}
+.spin-sub{font-size:13px;color:var(--text-sec);margin-top:2px}
+.spin-body{padding:16px 18px}
+.spin-q{font-size:14px;color:var(--text-sec);padding:8px 12px;background:var(--border-soft);border-radius:7px;margin-bottom:6px;line-height:1.65;position:relative;padding-right:70px}
+.spin-q:last-child{margin-bottom:0}
+.spin-note{font-size:12px;color:var(--text-dim);padding:6px 10px;background:var(--surface);border:1px solid var(--border);border-radius:6px;margin-bottom:6px;font-style:italic}
+.spin-key{font-size:13px;font-weight:700;color:var(--red);padding:10px 14px;background:var(--red-bg);border-radius:8px;border:1px solid var(--red-border);margin-top:8px;margin-bottom:6px;line-height:1.6}
+.spin-key2{font-size:13px;font-weight:700;color:var(--amber);padding:10px 14px;background:var(--amber-bg);border-radius:8px;border:1px solid var(--amber-border);margin-top:8px;margin-bottom:6px;line-height:1.6}
+.spin-emot{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--purple);margin:10px 0 6px}
+
+/* CHECKLIST */
+.check-list{display:flex;flex-direction:column;gap:1px;border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:20px}
+.check-row{display:flex;align-items:flex-start;gap:14px;padding:14px 18px;background:var(--surface);border-bottom:1px solid var(--border-soft)}
+.check-row:last-child{border-bottom:none}
+.check-ico{font-size:17px;flex-shrink:0;margin-top:1px}
+.check-title{font-size:16px;font-weight:600;color:var(--text);margin-bottom:3px}
+.check-desc{font-size:14px;color:var(--text-sec);line-height:1.6}
+
+/* ERROR LIST */
+.error-list{display:flex;flex-direction:column;gap:8px;margin-bottom:24px}
+.error-row{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;background:var(--red-bg);border:1px solid var(--red-border);border-radius:10px}
+.error-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+.error-text{font-size:15px;color:#991B1B;line-height:1.6}
+
+/* FRASE */
+.frase-list{display:flex;flex-direction:column;gap:10px;margin-bottom:24px}
+.frase-row{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 80px 16px 18px;position:relative;font-size:16px;color:var(--text);line-height:1.65;font-style:italic}
+.frase-row::before{content:'"';position:absolute;left:14px;top:12px;font-size:28px;color:var(--amber);font-style:normal;line-height:1}
+
+/* LOGIC GRID */
+.logic-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px}
+.logic-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center}
+.logic-num{font-size:22px;font-weight:800;color:var(--amber);margin-bottom:4px}
+.logic-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px}
+.logic-desc{font-size:13px;color:var(--text-sec)}
+
+/* ANCORAMENTO */
+.ancora-box{border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:20px;background:var(--surface)}
+.ancora-hdr{padding:14px 18px;font-size:15px;font-weight:600;background:var(--border-soft);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.ancora-item{padding:12px 18px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border-soft);font-size:15px;color:var(--text-sec)}
+.ancora-item:last-child{border-bottom:none}
+.ancora-icon{color:var(--green);flex-shrink:0}
+
+/* DIFERENCIAL */
+.dif-list{display:flex;flex-direction:column;gap:8px;margin-bottom:24px}
+.dif-row{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;background:var(--green-bg);border:1px solid var(--green-border);border-radius:9px}
+.dif-icon{font-size:15px;flex-shrink:0;color:var(--green);margin-top:1px}
+.dif-text{font-size:15px;color:#065F46;line-height:1.6}
+
+/* SECTION DIVIDER */
+.sec-sub{font-size:17px;font-weight:700;margin:28px 0 14px;color:var(--text);display:flex;align-items:center;gap:10px}
+.sec-sub::after{content:'';flex:1;height:1px;background:var(--border)}
+
+@media(max-width:900px){.page{padding:32px 24px 80px}.spin-grid,.logic-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){.page{padding:24px 16px 60px}.hero-title{font-size:26px}.spin-grid,.logic-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">FACE <span>100K</span></div>
+  <div class="breadcrumb">
+    <span class="breadcrumb-sep">/</span>
+    <span>Workspace</span>
+    <span class="breadcrumb-sep">/</span>
+    <span class="breadcrumb-current">Condução de Consulta</span>
+  </div>
+  <div class="mod-badge">CLOSER · CONSULTA</div>
+</div>
+
+<div class="page">
+
+  <div class="hero">
+    <div class="hero-eyebrow">Módulo Closer</div>
+    <h1 class="hero-title">Condução de Consulta — <span>Do Diagnóstico ao Fechamento</span></h1>
+    <p class="hero-desc">Roteiro completo para conduzir a consulta de cirurgias faciais: do primeiro "oi" até o pagamento confirmado. Inclui SPIN Avançado, ancoragem de valor e técnicas de fechamento.</p>
+    <div class="hero-stats">
+      <div class="hstat"><div class="hstat-val">9</div><div class="hstat-lbl">etapas da consulta</div></div>
+      <div class="hstat"><div class="hstat-val">4</div><div class="hstat-lbl">perguntas SPIN</div></div>
+      <div class="hstat"><div class="hstat-val">1–2min</div><div class="hstat-lbl">abertura/conexão</div></div>
+      <div class="hstat"><div class="hstat-val">Silêncio</div><div class="hstat-lbl">arma após o preço</div></div>
+    </div>
+  </div>
+
+  <div class="nav-pills">
+    <div class="nav-pill active" onclick="showSection('roteiro',this)">Roteiro Completo</div>
+    <div class="nav-pill" onclick="showSection('spin',this)">SPIN Avançado</div>
+    <div class="nav-pill" onclick="showSection('fechamento',this)">Fechamento</div>
+    <div class="nav-pill" onclick="showSection('frases',this)">Frases que Convertem</div>
+    <div class="nav-pill" onclick="showSection('erros',this)">Erros a Evitar</div>
+  </div>
+
+  <!-- ─── ROTEIRO COMPLETO ─── -->
+  <div class="section active" id="sec-roteiro">
+    <div class="sec-title">Roteiro — 9 Etapas da Consulta</div>
+    <p class="sec-desc">Siga a ordem. Cada etapa prepara o terreno para a próxima. Pular etapas gera resistência — especialmente pular o diagnóstico e ir direto para a solução.</p>
+
+    <div class="callout callout-red">
+      <div class="callout-icon">⚠️</div>
+      <div><strong>Erro fatal:</strong> Explicar antes de diagnosticar. O paciente só compra quando sente que você entende a dor dele — não quando você explica o procedimento.</div>
+    </div>
+
+    <div class="timeline">
+
+      <!-- ETAPA 1 -->
+      <div class="tl-step">
+        <div class="tl-dot" style="background:var(--pink-bg);border-color:var(--pink-border);color:var(--pink)">1</div>
+        <div class="tl-content">
+          <div class="tl-label" style="color:var(--pink)">Abertura — Conexão <span class="tl-time">1 a 2 min</span></div>
+          <div class="tl-card">
+            <div class="tl-card-title">Não pule isso — é onde a confiança começa</div>
+            <div class="tl-questions">
+              <div class="tl-q">Oi, tudo bem?<button class="copy-btn">Copiar</button></div>
+              <div class="tl-q">Você está falando de onde?<button class="copy-btn">Copiar</button></div>
+              <div class="tl-q">Como está seu dia hoje?<button class="copy-btn">Copiar</button></div>
+            </div>
+            <div class="tl-note" style="margin-top:10px">Transição → "Me conta, o que te fez buscar ajuda agora?"</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ETAPA 2 -->
+      <div class="tl-step">
+        <div class="tl-dot" style="background:var(--blue-bg);border-color:var(--blue-border);color:var(--blue)">2</div>
+        <div class="tl-content">
+          <div class="tl-label" style="color:var(--blue)">SPIN — Diagnóstico Profundo</div>
+          <div class="tl-card">
+            <div class="tl-card-title">S — Situação</div>
+            <div class="tl-questions">
+              <div class="tl-q">Há quanto tempo isso vem te incomodando?<button class="copy-btn">Copiar</button></div>
+              <div class="tl-q">Você já tentou alguma coisa pra melhorar essa região?<button class="copy-btn">Copiar</button></div>
+              <div class="tl-q">Isso te atrapalha em algo no seu dia a dia? (foto, espelho, autoestima)<button class="copy-btn">Copiar</button></div>
+            </div>
+
+            <div class="tl-card-title" style="margin-top:16px">P — Problema (Fazer Doer)</div>
+            <div class="tl-questions">
+              <div class="tl-q">O que mais te incomoda nisso hoje?<button class="copy-btn">Copiar</button></div>
+              <div class="tl-q">O que você sente quando se olha no espelho?<button class="copy-btn">Copiar</button></div>
+              <div class="tl-q">De 0 a 10, o quanto isso te incomoda?<button class="copy-btn">Copiar</button></div>
+              <div class="tl-q">Você evita foto de alguns ângulos?<button class="copy-btn">Copiar</button></div>
+              <div class="tl-q">Isso mexe com sua confiança?<button class="copy-btn">Copiar</button></div>
+            </div>
+            <div class="tl-note">(pausa — deixa ela responder)</div>
+
+            <div class="tl-card-title" style="margin-top:16px">I — Implicação (Aumentar a Dor)</div>
+            <div class="tl-questions">
+              <div class="tl-q">Você me falou que isso já te incomoda há um tempo… por que acabou adiando até agora?<button class="copy-btn">Copiar</button></div>
+              <div class="tl-q">Se continuar assim, como você acha que isso vai estar daqui a 1 ou 2 anos?<button class="copy-btn">Copiar</button></div>
+              <div class="tl-q">E emocionalmente… como isso impacta você hoje?<button class="copy-btn">Copiar</button></div>
+            </div>
+            <div style="margin-top:10px;padding:12px 14px;background:var(--red-bg);border:1px solid var(--red-border);border-radius:8px;font-size:14px;color:#991B1B;font-weight:600">
+              💥 Pergunta Forte: "Se você tivesse que conviver com isso pelos próximos 5 anos, como você se sentiria?"
+            </div>
+
+            <div class="tl-card-title" style="margin-top:16px">N — Necessidade (Fazer Querer)</div>
+            <div class="tl-questions">
+              <div class="tl-q">Resolver isso hoje é uma prioridade pra você?<button class="copy-btn">Copiar</button></div>
+              <div class="tl-q">Se você resolvesse isso, como você acha que se sentiria?<button class="copy-btn">Copiar</button></div>
+            </div>
+            <div class="tl-note">(deixa ela visualizar o resultado)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ETAPA 3 -->
+      <div class="tl-step">
+        <div class="tl-dot" style="background:var(--purple-bg);border-color:var(--purple-border);color:var(--purple)">3</div>
+        <div class="tl-content">
+          <div class="tl-label" style="color:var(--purple)">Transição para Solução</div>
+          <div class="tl-card">
+            <div class="script-label">Fala de transição</div>
+            <div class="script-box">Perfeito. Pelo que você me trouxe, o que mais te incomoda é [dor dela].
+E isso já vem afetando sua [autoestima / confiança / imagem].
+
+Analisando seu caso e de acordo com o que estamos conversando, com certeza posso te ajudar a resolver esse incômodo com o método XXX, eu vou te apresentar como funciona, alguns resultados e gostaria de fazer um combinado com você Dona Maria, tudo bem?<button class="copy-btn">Copiar</button></div>
+
+            <div class="script-label" style="color:var(--red)">⚠️ Pacto do Sim ou Não — NÃO PULE ISSO, É ESSENCIAL</div>
+            <div class="script-box highlight">Dona Maria, eu gostaria de fazer um combinado com você: de acordo com o que eu te apresentar e te explicar aqui, se fizer sentido pra você resolver essa questão que te afeta comigo, eu gostaria de um SIM, quero fazer, OU caso não faça sentido pra você, um NÃO quero fazer de forma muito clara, de toda forma vai ser um prazer te atender. Posso contar com seu sim ou não hoje?<button class="copy-btn">Copiar</button></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ETAPA 4 -->
+      <div class="tl-step">
+        <div class="tl-dot" style="background:var(--amber-bg);border-color:var(--amber-border);color:var(--amber)">4</div>
+        <div class="tl-content">
+          <div class="tl-label" style="color:var(--amber)">Apresentação — Venda Emocional + Lógica</div>
+          <div class="tl-card">
+            <div class="callout callout-amber" style="margin-bottom:12px">
+              <div class="callout-icon">📌</div>
+              <div><strong>Regra:</strong> NÃO explique só técnica. Conecte cada ponto com a dor que ela trouxe.</div>
+            </div>
+            <div class="script-label">Script de apresentação</div>
+            <div class="script-box">Esse procedimento vai atuar exatamente em [dor dela], melhorando [resultado direto que ela quer].<button class="copy-btn">Copiar</button></div>
+            <div class="script-label" style="color:var(--green)">Prova Social (MUITO IMPORTANTE)</div>
+            <div class="script-box green">Deixa eu te mostrar alguns casos…
+
+Esse caso aqui é parecido com o seu…
+Olha como melhorou essa região…<button class="copy-btn">Copiar</button></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ETAPA 5 -->
+      <div class="tl-step">
+        <div class="tl-dot" style="background:var(--green-bg);border-color:var(--green-border);color:var(--green)">5</div>
+        <div class="tl-content">
+          <div class="tl-label" style="color:var(--green)">Ancoragem de Valor — Antes do Preço</div>
+          <div class="tl-card">
+            <div class="callout callout-green" style="margin-bottom:14px">
+              <div class="callout-icon">💡</div>
+              <div><strong>Aqui a maioria erra.</strong> Nunca fale o preço sem antes construir o valor. O preço só pode aparecer depois que a paciente entendeu o que está comprando.</div>
+            </div>
+
+            <div class="script-label">Construção de valor</div>
+            <div class="script-box">Quando falamos desse tratamento, não é só o procedimento. Você tem:<button class="copy-btn">Copiar</button></div>
+
+            <div class="ancora-box">
+              <div class="ancora-hdr">✅ O que está incluído</div>
+              <div class="ancora-item"><span class="ancora-icon">✓</span> Avaliação personalizada</div>
+              <div class="ancora-item"><span class="ancora-icon">✓</span> Planejamento do seu caso</div>
+              <div class="ancora-item"><span class="ancora-icon">✓</span> Procedimento com segurança</div>
+              <div class="ancora-item"><span class="ancora-icon">✓</span> Acompanhamento completo no pós</div>
+              <div class="ancora-item"><span class="ancora-icon">✓</span> Suporte até o resultado final</div>
+            </div>
+
+            <div class="script-box highlight">Tudo isso envolve um processo completo. Um tratamento com tudo isso facilmente ultrapassa X mil reais.<button class="copy-btn">Copiar</button></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ETAPA 6 -->
+      <div class="tl-step">
+        <div class="tl-dot" style="background:var(--blue-bg);border-color:var(--blue-border);color:var(--blue)">6</div>
+        <div class="tl-content">
+          <div class="tl-label" style="color:var(--blue)">Pergunta de Compra — Antes do Preço</div>
+          <div class="tl-card">
+            <div class="tl-note" style="font-style:normal;color:var(--text-sec);margin-bottom:10px">Isola objeção antes do preço aparecer. Se ela travar aqui, o problema não é o valor — é outra coisa.</div>
+            <div class="script-box">Tirando a parte de valores… você se vê fazendo esse procedimento?<button class="copy-btn">Copiar</button></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ETAPA 7 -->
+      <div class="tl-step">
+        <div class="tl-dot" style="background:var(--red-bg);border-color:var(--red-border);color:var(--red)">7</div>
+        <div class="tl-content">
+          <div class="tl-label" style="color:var(--red)">Preço — Sem Medo</div>
+          <div class="tl-card">
+            <div class="script-box">O investimento para fazer isso hoje é de R$ X.<button class="copy-btn">Copiar</button></div>
+            <div style="margin-top:8px;padding:12px 16px;background:var(--red-bg);border:1px solid var(--red-border);border-radius:8px;font-size:15px;color:#991B1B;font-weight:600;text-align:center">
+              🔇 SILÊNCIO — Muito importante. Quem fala primeiro perde.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ETAPA 8 -->
+      <div class="tl-step">
+        <div class="tl-dot" style="background:var(--amber-bg);border-color:var(--amber-border);color:var(--amber)">8</div>
+        <div class="tl-content">
+          <div class="tl-label" style="color:var(--amber)">Fechamento — Checkmate</div>
+          <div class="tl-card">
+            <div class="script-label">Se ela travar no valor</div>
+            <div class="script-box">Hoje o que pesa mais pra você: o valor ou continuar convivendo com isso?<button class="copy-btn">Copiar</button></div>
+            <div class="script-label">Se estiver inclinada</div>
+            <div class="script-box">Quer que eu já veja uma data pra você?<button class="copy-btn">Copiar</button></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ETAPA 9 -->
+      <div class="tl-step">
+        <div class="tl-dot" style="background:var(--green-bg);border-color:var(--green-border);color:var(--green)">9</div>
+        <div class="tl-content">
+          <div class="tl-label" style="color:var(--green)">Fechamento Final — System</div>
+          <div class="tl-card">
+            <div class="script-box green">Pra garantir sua vaga e esse valor, conseguimos fazer um sinal agora. Você prefere PIX ou cartão?<button class="copy-btn">Copiar</button></div>
+            <div class="tl-note">Sempre oferecer a opção — nunca perguntar "quer fazer?"</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- LÓGICA -->
+    <div class="sec-sub">Resumo da Lógica</div>
+    <div class="logic-grid">
+      <div class="logic-card"><div class="logic-num">1</div><div class="logic-title">Conectar</div><div class="logic-desc">Abertura e rapport</div></div>
+      <div class="logic-card"><div class="logic-num">2</div><div class="logic-title">Fazer Doer</div><div class="logic-desc">Problema + emoção</div></div>
+      <div class="logic-card"><div class="logic-num">3</div><div class="logic-title">Aumentar a Dor</div><div class="logic-desc">Implicação + futuro</div></div>
+      <div class="logic-card"><div class="logic-num">4</div><div class="logic-title">Fazer Desejar</div><div class="logic-desc">Necessidade clara</div></div>
+      <div class="logic-card"><div class="logic-num">5</div><div class="logic-title">Mostrar Solução</div><div class="logic-desc">Prova + conexão com dor</div></div>
+      <div class="logic-card"><div class="logic-num">6</div><div class="logic-title">Ancorar Valor</div><div class="logic-desc">Construir antes do preço</div></div>
+      <div class="logic-card"><div class="logic-num">7</div><div class="logic-title">Mostrar Preço</div><div class="logic-desc">Silêncio após</div></div>
+      <div class="logic-card"><div class="logic-num">8</div><div class="logic-title">Conduzir Decisão</div><div class="logic-desc">Checkmate + System</div></div>
+    </div>
+  </div>
+
+  <!-- ─── SPIN AVANÇADO ─── -->
+  <div class="section" id="sec-spin">
+    <div class="sec-title">SPIN Avançado — Cirurgias da Face</div>
+    <p class="sec-desc">Versão aprofundada do SPIN específica para cirurgias. Trabalha identidade, tempo (passado → futuro) e gera urgência real antes mesmo do preço aparecer.</p>
+
+    <div class="callout callout-purple">
+      <div class="callout-icon">🎯</div>
+      <div><strong>Diferencial:</strong> Este SPIN ativa identidade (não só estética), trabalha tempo, gera urgência real, quebra objeção antes dela aparecer e conduz para decisão naturalmente.</div>
+    </div>
+
+    <div class="spin-grid">
+
+      <!-- S -->
+      <div class="spin-card">
+        <div class="spin-card-hdr">
+          <div class="spin-letter" style="background:var(--blue-bg);border-color:var(--blue-border);color:var(--blue)">S</div>
+          <div class="spin-info">
+            <div class="spin-name">Situação</div>
+            <div class="spin-sub">Contexto + consciência leve · sem gastar tempo aqui</div>
+          </div>
+        </div>
+        <div class="spin-body">
+          <div class="spin-q">Há quanto tempo você percebe essa mudança no seu rosto?<button class="copy-btn">Copiar</button></div>
+          <div class="spin-q">Isso começou de forma leve ou foi algo que você sentiu piorar mais recentemente?<button class="copy-btn">Copiar</button></div>
+          <div class="spin-q">Você já chegou a fazer algum procedimento pra tentar melhorar?<button class="copy-btn">Copiar</button></div>
+          <div class="spin-emot">Aprofundamento leve</div>
+          <div class="spin-q">Hoje, isso aparece mais em fotos, no espelho ou no dia a dia mesmo?<button class="copy-btn">Copiar</button></div>
+        </div>
+      </div>
+
+      <!-- P -->
+      <div class="spin-card">
+        <div class="spin-card-hdr">
+          <div class="spin-letter" style="background:var(--amber-bg);border-color:var(--amber-border);color:var(--amber)">P</div>
+          <div class="spin-info">
+            <div class="spin-name">Problema</div>
+            <div class="spin-sub">Trazer a dor real — emocional</div>
+          </div>
+        </div>
+        <div class="spin-body">
+          <div class="spin-q">O que mais te incomoda quando você olha para essa região?<button class="copy-btn">Copiar</button></div>
+          <div class="spin-q">É algo que você pensa todos os dias ou só em alguns momentos?<button class="copy-btn">Copiar</button></div>
+          <div class="spin-emot">Emocional</div>
+          <div class="spin-q">Quando você se vê assim, o que passa na sua cabeça?<button class="copy-btn">Copiar</button></div>
+          <div class="spin-q">Você sente que isso não representa quem você é hoje?<button class="copy-btn">Copiar</button></div>
+          <div class="spin-emot">Escala (urgência)</div>
+          <div class="spin-q">De 0 a 10, o quanto isso te incomoda hoje?<button class="copy-btn">Copiar</button></div>
+        </div>
+      </div>
+
+      <!-- I -->
+      <div class="spin-card" style="grid-column:1/-1">
+        <div class="spin-card-hdr">
+          <div class="spin-letter" style="background:var(--red-bg);border-color:var(--red-border);color:var(--red)">I</div>
+          <div class="spin-info">
+            <div class="spin-name">Implicação</div>
+            <div class="spin-sub">Aqui é onde fecha — aprofundar + criar tensão</div>
+          </div>
+        </div>
+        <div class="spin-body">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div>
+              <div class="spin-q">Você comentou que isso já te incomoda há um tempo… o que fez você ir adiando até agora?<button class="copy-btn">Copiar</button></div>
+              <div class="spin-note">(descobrir medo, dinheiro, insegurança)</div>
+              <div class="spin-q">E hoje, você sente que está melhorando ou piorando com o tempo?<button class="copy-btn">Copiar</button></div>
+              <div class="spin-emot">Impacto direto</div>
+              <div class="spin-q">Isso tem afetado sua confiança? Fotos? Você evita alguns ângulos ou situações por conta disso?<button class="copy-btn">Copiar</button></div>
+            </div>
+            <div>
+              <div class="spin-key">🎯 Pergunta Chave: "Se nada mudar, como você imagina seu rosto daqui a 2 ou 3 anos?"</div>
+              <div class="spin-key2">💥 Pergunta de Pressão: "E se você tiver que conviver com isso por mais 5 anos… como isso te faria sentir?"</div>
+              <div class="spin-note">(silêncio — deixa ela sentir)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- N -->
+      <div class="spin-card" style="grid-column:1/-1">
+        <div class="spin-card-hdr">
+          <div class="spin-letter" style="background:var(--green-bg);border-color:var(--green-border);color:var(--green)">N</div>
+          <div class="spin-info">
+            <div class="spin-name">Necessidade</div>
+            <div class="spin-sub">Gerar decisão emocional — ela precisa querer, não só precisar</div>
+          </div>
+        </div>
+        <div class="spin-body">
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+            <div>
+              <div class="spin-q">Resolver isso hoje, pra você, é uma vontade ou já virou uma necessidade?<button class="copy-btn">Copiar</button></div>
+            </div>
+            <div>
+              <div class="spin-emot">Visualização</div>
+              <div class="spin-q">Como você acredita que vai se sentir quando olhar no espelho e se reconhecer de novo?<button class="copy-btn">Copiar</button></div>
+            </div>
+            <div>
+              <div class="spin-emot">Validação</div>
+              <div class="spin-q">Você sente que já passou do momento de tentar alternativas e quer algo mais definitivo?<button class="copy-btn">Copiar</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- PRÉ-FECHAMENTO -->
+    <div class="callout callout-amber">
+      <div class="callout-icon">🔒</div>
+      <div>
+        <strong>Pré-Fechamento — Muito importante</strong><br>
+        Isola a objeção antes do preço aparecer. Use após o N, antes de falar qualquer valor.<br><br>
+        <em>"Tirando a parte do investimento… você se vê fazendo esse procedimento?"</em>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── FECHAMENTO ─── -->
+  <div class="section" id="sec-fechamento">
+    <div class="sec-title">Sequência de Fechamento</div>
+    <p class="sec-desc">As etapas 6 a 9 em detalhe. O fechamento começa antes do preço — começa na ancoragem de valor.</p>
+
+    <div class="sec-sub">Passo 1 — Pergunta de Compra (antes do preço)</div>
+    <div class="script-box">Tirando a parte de valores… você se vê fazendo esse procedimento?<button class="copy-btn">Copiar</button></div>
+
+    <div class="sec-sub">Passo 2 — Preço (sem medo, com silêncio)</div>
+    <div class="script-box">O investimento para fazer isso hoje é de R$ X.<button class="copy-btn">Copiar</button></div>
+    <div class="callout callout-red">
+      <div class="callout-icon">🔇</div>
+      <div><strong>Silêncio absoluto após falar o preço.</strong> Não preencha o vazio. Quem fala primeiro sente a pressão — deixa ela sentir.</div>
+    </div>
+
+    <div class="sec-sub">Passo 3 — Se ela travar (Checkmate)</div>
+    <div class="script-box">Hoje o que pesa mais pra você: o valor ou continuar convivendo com isso?<button class="copy-btn">Copiar</button></div>
+
+    <div class="sec-sub">Passo 4 — Se estiver inclinada</div>
+    <div class="script-box">Quer que eu já veja uma data pra você?<button class="copy-btn">Copiar</button></div>
+
+    <div class="sec-sub">Passo 5 — Fechamento Final (System)</div>
+    <div class="script-box green">Pra garantir sua vaga e esse valor, conseguimos fazer um sinal agora. Você prefere PIX ou cartão?<button class="copy-btn">Copiar</button></div>
+    <div class="callout callout-green">
+      <div class="callout-icon">✅</div>
+      <div><strong>Ofereça a opção — nunca pergunte se quer fazer.</strong> A pergunta "PIX ou cartão?" pressupõe que ela vai fazer. A pergunta "quer fazer?" abre espaço para o não.</div>
+    </div>
+
+    <div class="sec-sub">Pacto do Sim ou Não — Use na Transição</div>
+    <div class="script-box highlight">Dona Maria, eu gostaria de fazer um combinado com você: de acordo com o que eu te apresentar e te explicar aqui, se fizer sentido pra você resolver essa questão que te afeta comigo, eu gostaria de um SIM, quero fazer, OU caso não faça sentido pra você, um NÃO quero fazer de forma muito clara, de toda forma vai ser um prazer te atender. Posso contar com seu sim ou não hoje?<button class="copy-btn">Copiar</button></div>
+  </div>
+
+  <!-- ─── FRASES ─── -->
+  <div class="section" id="sec-frases">
+    <div class="sec-title">Frases que Convertem Muito</div>
+    <p class="sec-desc">Use durante a conversa — naturalmente, não como script decorado. Cada uma ativa uma camada diferente: identidade, tempo, desejo, realidade.</p>
+
+    <div class="frase-list">
+      <div class="frase-row">Isso não é só estética, é como você se enxerga.<button class="copy-btn">Copiar</button></div>
+      <div class="frase-row">O problema não é hoje, é a tendência disso.<button class="copy-btn">Copiar</button></div>
+      <div class="frase-row">Você não quer só melhorar, você quer se reconhecer.<button class="copy-btn">Copiar</button></div>
+      <div class="frase-row">Tem coisas que o tempo resolve… e outras que só tratamento resolve.<button class="copy-btn">Copiar</button></div>
+    </div>
+
+    <div class="sec-sub">Contexto de uso</div>
+    <div class="check-list">
+      <div class="check-row">
+        <div class="check-ico">🪞</div>
+        <div>
+          <div class="check-title">"Isso não é só estética, é como você se enxerga."</div>
+          <div class="check-desc">Use quando ela minimiza o incômodo. Eleva a importância — não é frescura, é identidade.</div>
+        </div>
+      </div>
+      <div class="check-row">
+        <div class="check-ico">📈</div>
+        <div>
+          <div class="check-title">"O problema não é hoje, é a tendência disso."</div>
+          <div class="check-desc">Use quando ela diz "está suportável". Faz ela pensar no futuro, não no presente.</div>
+        </div>
+      </div>
+      <div class="check-row">
+        <div class="check-ico">💛</div>
+        <div>
+          <div class="check-title">"Você não quer só melhorar, você quer se reconhecer."</div>
+          <div class="check-desc">Use após a N — quando ela expressou como se sentiria resolvendo. Amplifica o desejo.</div>
+        </div>
+      </div>
+      <div class="check-row">
+        <div class="check-ico">⏱️</div>
+        <div>
+          <div class="check-title">"Tem coisas que o tempo resolve… e outras que só tratamento resolve."</div>
+          <div class="check-desc">Use quando ela diz "vou esperar para ver". Elimina a procrastinação com gentileza.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── ERROS ─── -->
+  <div class="section" id="sec-erros">
+    <div class="sec-title">Erros que Você Evita com Esse Script</div>
+    <p class="sec-desc">Esses são os erros mais comuns. Reconhecer é o primeiro passo — evitar sistematicamente é o que separa closers mediocres de closers de alto desempenho.</p>
+
+    <div class="error-list">
+      <div class="error-row">
+        <div class="error-icon">❌</div>
+        <div class="error-text"><strong>Explicar antes de diagnosticar</strong> — O paciente não compra de quem explica, compra de quem entende. Diagnóstico primeiro, sempre.</div>
+      </div>
+      <div class="error-row">
+        <div class="error-icon">❌</div>
+        <div class="error-text"><strong>Falar preço sem ancorar</strong> — Preço sem valor parece caro. Construa o valor antes — avaliação, planejamento, acompanhamento, suporte.</div>
+      </div>
+      <div class="error-row">
+        <div class="error-icon">❌</div>
+        <div class="error-text"><strong>Não conduzir decisão</strong> — "Quer fazer?" abre o não. "PIX ou cartão?" pressupõe o sim. Conduza, não peça permissão.</div>
+      </div>
+      <div class="error-row">
+        <div class="error-icon">❌</div>
+        <div class="error-text"><strong>Não explorar emoção</strong> — Cirurgia é decisão emocional racionalizada depois. Quem não faz a paciente sentir, não fecha.</div>
+      </div>
+      <div class="error-row">
+        <div class="error-icon">❌</div>
+        <div class="error-text"><strong>Deixar paciente no controle</strong> — Você é o especialista. Conduza a consulta com confiança — ela veio até você para ser orientada, não para decidir sozinha.</div>
+      </div>
+      <div class="error-row">
+        <div class="error-icon">❌</div>
+        <div class="error-text"><strong>Pular a abertura/conexão</strong> — Os 1–2 minutos de rapport são onde a confiança se forma. Sem confiança, qualquer argumento técnico cai no vazio.</div>
+      </div>
+      <div class="error-row">
+        <div class="error-icon">❌</div>
+        <div class="error-text"><strong>Pular o Pacto do Sim ou Não</strong> — Sem o pacto, a paciente pode ouvir tudo e sair sem responder. O pacto cria comprometimento verbal antes da apresentação.</div>
+      </div>
+    </div>
+
+    <div class="callout callout-green">
+      <div class="callout-icon">✅</div>
+      <div><strong>Resumo do SPIN:</strong> Situação → leve · Problema → emocional · Implicação → dor + futuro · Necessidade → decisão</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function showSection(id,el){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-pill').forEach(p=>p.classList.remove('active'));
+  document.getElementById('sec-'+id).classList.add('active');
+  if(el) el.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('.tl-q,.script-box,.frase-row').forEach(el=>{
+  const btn=el.querySelector('.copy-btn');
+  if(!btn) return;
+  const txt=el.textContent.replace(/Copiar|Copiado!/g,'').trim();
+  btn.onclick=function(e){
+    e.stopPropagation();
+    navigator.clipboard.writeText(txt).then(()=>{
+      btn.textContent='Copiado!';btn.classList.add('copied');
+      setTimeout(()=>{btn.textContent='Copiar';btn.classList.remove('copied');},2000);
+    });
+  };
+});
+</script>
+</body>
+</html>
