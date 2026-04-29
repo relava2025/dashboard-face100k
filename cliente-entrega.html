@@ -2386,23 +2386,24 @@ function onbConcTextChange(idx, val){
   onbEditTimer = setTimeout(()=>save({onboarding:S.onboarding}), 800);
 }
 
-// ── COLLAPSE ──
+// ── COLLAPSE — state stored in JS vars so re-renders don't lose open state ──
+const _onbOpen = new Set();
+let _onbConcOpen = false;
+
 function toggleOnbStage(stageId){
+  if(_onbOpen.has(stageId)) _onbOpen.delete(stageId); else _onbOpen.add(stageId);
   const body = document.getElementById('onb-body-'+stageId);
   const chev = document.getElementById('onb-chev-'+stageId);
-  if(!body) return;
-  const open = body.classList.contains('open');
-  body.classList.toggle('open', !open);
-  if(chev) chev.style.transform = open ? '' : 'rotate(180deg)';
+  if(body) body.classList.toggle('open', _onbOpen.has(stageId));
+  if(chev) chev.style.transform = _onbOpen.has(stageId) ? 'rotate(180deg)' : '';
 }
 
 function toggleOnbConclusaoSection(){
+  _onbConcOpen = !_onbConcOpen;
   const body = document.getElementById('onb-conclusao-body');
   const chev = document.getElementById('onb-conclusao-chev');
-  if(!body) return;
-  const open = body.style.display !== 'none';
-  body.style.display = open ? 'none' : 'block';
-  if(chev) chev.style.transform = open ? '' : 'rotate(180deg)';
+  if(body) body.style.display = _onbConcOpen ? 'block' : 'none';
+  if(chev) chev.style.transform = _onbConcOpen ? 'rotate(180deg)' : '';
 }
 
 // ── RENDER ──
@@ -2418,15 +2419,6 @@ function renderItemRow(item, i, {toggleFn, deleteFn, inputId}){
 function renderOnboarding(){
   const container = document.getElementById('onb-container');
   if(!container) return;
-
-  // preserve which sections are open before re-render
-  const openStages = new Set();
-  ONB_STAGES.forEach(s=>{
-    const b = document.getElementById('onb-body-'+s.id);
-    if(b && b.classList.contains('open')) openStages.add(s.id);
-  });
-  const concBodyEl = document.getElementById('onb-conclusao-body');
-  const concWasOpen = concBodyEl && concBodyEl.style.display !== 'none';
 
   const overall = onbOverallProgress();
   const concItems = getOnbConcItems();
@@ -2514,14 +2506,14 @@ function renderOnboarding(){
 
   container.innerHTML = html;
 
-  // restore open states after re-render
-  openStages.forEach(id=>{
+  // restore open states from persistent vars
+  _onbOpen.forEach(id=>{
     const body = document.getElementById('onb-body-'+id);
     const chev = document.getElementById('onb-chev-'+id);
     if(body) body.classList.add('open');
     if(chev) chev.style.transform = 'rotate(180deg)';
   });
-  if(concWasOpen){
+  if(_onbConcOpen){
     const body = document.getElementById('onb-conclusao-body');
     const chev = document.getElementById('onb-conclusao-chev');
     if(body) body.style.display = 'block';
