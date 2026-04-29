@@ -1,745 +1,1199 @@
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>SOCIAL SELLING</title><style>
-/* cspell:disable-file */
-/* webkit printing magic: print all background colors */
-html {
-	-webkit-print-color-adjust: exact;
-}
-* {
-	box-sizing: border-box;
-	-webkit-print-color-adjust: exact;
-}
-
-html,
-body {
-	margin: 0;
-	padding: 0;
-}
-@media only screen {
-	body {
-		margin: 2em auto;
-		max-width: 900px;
-		color: rgb(55, 53, 47);
-	}
-}
-
-body {
-	line-height: 1.5;
-	white-space: pre-wrap;
-}
-
-a,
-a.visited {
-	color: inherit;
-	text-decoration: underline;
-}
-
-.pdf-relative-link-path {
-	font-size: 80%;
-	color: #444;
-}
-
-h1,
-h2,
-h3 {
-	letter-spacing: -0.01em;
-	line-height: 1.2;
-	font-weight: 600;
-	margin-bottom: 0;
-}
-
-/* Override strong tags inside headings to maintain consistent weight */
-h1 strong,
-h2 strong,
-h3 strong {
-	font-weight: 600;
-}
-
-.page-title {
-	font-size: 2.5rem;
-	font-weight: 700;
-	margin-top: 0;
-	margin-bottom: 0.75em;
-}
-
-h1 {
-	font-size: 1.875rem;
-	margin-top: 1.875rem;
-}
-
-h2 {
-	font-size: 1.5rem;
-	margin-top: 1.5rem;
-}
-
-h3 {
-	font-size: 1.25rem;
-	margin-top: 1.25rem;
-}
-
-.source {
-	border: 1px solid #ddd;
-	border-radius: 3px;
-	padding: 1.5em;
-	word-break: break-all;
-}
-
-.callout {
-	border-radius: 10px;
-	padding: 1rem;
-}
-
-figure {
-	margin: 1.25em 0;
-	page-break-inside: avoid;
-}
-
-figcaption {
-	opacity: 0.5;
-	font-size: 85%;
-	margin-top: 0.5em;
-}
-
-mark {
-	background-color: transparent;
-}
-
-.indented {
-	padding-left: 1.5em;
-}
-
-hr {
-	background: transparent;
-	display: block;
-	width: 100%;
-	height: 1px;
-	visibility: visible;
-	border: none;
-	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
-}
-
-img {
-	max-width: 100%;
-}
-
-@media only print {
-	img {
-		max-height: 100vh;
-		object-fit: contain;
-	}
-
-	table.collection-content {
-		width: 100%;
-		table-layout: fixed;
-	}
-
-	table.collection-content th,
-	table.collection-content td {
-		overflow-wrap: anywhere;
-	}
-
-	table.collection-content td > .user,
-	table.collection-content td > time {
-		white-space: pre-wrap;
-	}
-}
-
-@page {
-	margin: 1in;
-}
-
-.collection-content-wrapper {
-	overflow-x: auto;
-}
-
-@media only print {
-	.collection-content-wrapper {
-		overflow-x: visible;
-	}
-}
-
-.collection-content {
-	font-size: 0.875rem;
-}
-
-.collection-content td {
-	white-space: pre-wrap;
-	word-break: break-word;
-}
-
-.column-list {
-	display: flex;
-	gap: 46px;
-}
-
-.column {
-	min-width: 0;
-	overflow: hidden;
-}
-
-.column > *:first-child {
-	margin-top: 0;
-}
-
-.table_of_contents-item {
-	display: block;
-	font-size: 0.875rem;
-	line-height: 1.3;
-	padding: 0.125rem;
-}
-
-.table_of_contents-indent-1 {
-	margin-left: 1.5rem;
-}
-
-.table_of_contents-indent-2 {
-	margin-left: 3rem;
-}
-
-.table_of_contents-indent-3 {
-	margin-left: 4.5rem;
-}
-
-.table_of_contents-link {
-	text-decoration: none;
-	opacity: 0.7;
-	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
-}
-
-table,
-th,
-td {
-	border: 1px solid rgba(55, 53, 47, 0.09);
-}
-
-table {
-	border-collapse: collapse;
-	border-left: none;
-	border-right: none;
-}
-
-th,
-td {
-	font-weight: normal;
-	padding: 0.25em 0.5em;
-	line-height: 1.5;
-	min-height: 1.5em;
-	text-align: left;
-}
-
-th {
-	color: rgba(55, 53, 47, 0.6);
-}
-
-ol,
-ul {
-	margin: 0;
-	margin-block-start: 0.6em;
-	margin-block-end: 0.6em;
-}
-
-li > ol:first-child,
-li > ul:first-child {
-	margin-block-start: 0.6em;
-}
-
-ul > li {
-	list-style: disc;
-}
-
-ul.to-do-list {
-	padding-inline-start: 0;
-}
-
-ul.to-do-list > li {
-	list-style: none;
-}
-
-.to-do-children-checked {
-	text-decoration: line-through;
-	opacity: 0.375;
-}
-
-ul.toggle > li {
-	list-style: none;
-}
-
-ul {
-	padding-inline-start: 1.7em;
-}
-
-ul > li {
-	padding-left: 0.1em;
-}
-
-ol {
-	padding-inline-start: 1.6em;
-}
-
-ol.numbered-list.numbered-list-digits-2 {
-	padding-inline-start: 2em;
-}
-
-ol.numbered-list.numbered-list-digits-3plus {
-	padding-inline-start: 2.4em;
-}
-
-ol > li {
-	padding-left: 0.2em;
-}
-
-.mono ol {
-	padding-inline-start: 2em;
-}
-
-.mono ol > li {
-	text-indent: -0.4em;
-}
-
-.toggle {
-	padding-inline-start: 0em;
-	list-style-type: none;
-}
-
-/* Indent toggle children */
-.toggle > li > details {
-	padding-left: 1.7em;
-}
-
-.toggle > li > details > summary {
-	margin-left: -1.1em;
-}
-
-.selected-value {
-	display: inline-block;
-	padding: 0 0.5em;
-	background: rgba(206, 205, 202, 0.5);
-	border-radius: 3px;
-	margin-right: 0.5em;
-	margin-top: 0.3em;
-	margin-bottom: 0.3em;
-	white-space: nowrap;
-}
-
-.collection-title {
-	display: inline-block;
-	margin-right: 1em;
-}
-
-.page-description {
-	margin-bottom: 2em;
-}
-
-.simple-table {
-	margin-top: 1em;
-	font-size: 0.875rem;
-	empty-cells: show;
-}
-.simple-table td {
-	height: 29px;
-	min-width: 120px;
-}
-
-.simple-table th {
-	height: 29px;
-	min-width: 120px;
-}
-
-.simple-table-header-color {
-	background: rgb(247, 246, 243);
-	color: black;
-}
-.simple-table-header {
-	font-weight: 500;
-}
-
-time {
-	opacity: 0.5;
-}
-
-.icon {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	max-width: 1.2em;
-	max-height: 1.2em;
-	text-decoration: none;
-	vertical-align: text-bottom;
-	margin-right: 0.5em;
-}
-
-img.icon {
-	border-radius: 3px;
-}
-
-.callout img.notion-static-icon {
-	width: 1em;
-	height: 1em;
-}
-
-.callout p {
-	margin: 0;
-}
-
-.callout h1,
-.callout h2,
-.callout h3 {
-	margin: 0 0 0.6rem;
-}
-
-.user-icon {
-	width: 1.5em;
-	height: 1.5em;
-	border-radius: 100%;
-	margin-right: 0.5rem;
-}
-
-.user-icon-inner {
-	font-size: 0.8em;
-}
-
-.text-icon {
-	border: 1px solid #000;
-	text-align: center;
-}
-
-.page-cover-image {
-	display: block;
-	object-fit: cover;
-	width: 100%;
-	max-height: 30vh;
-}
-
-.page-header-icon {
-	font-size: 3rem;
-	margin-bottom: 1rem;
-}
-
-.page-header-icon-with-cover {
-	margin-top: -0.72em;
-	margin-left: 0.07em;
-}
-
-.page-header-icon img {
-	border-radius: 3px;
-}
-
-.link-to-page {
-	margin: 1em 0;
-	padding: 0;
-	border: none;
-	font-weight: 500;
-}
-
-p > .user {
-	opacity: 0.5;
-}
-
-td > .user,
-td > time {
-	white-space: nowrap;
-}
-
-input[type="checkbox"] {
-	transform: scale(1.5);
-	margin-right: 0.6em;
-	vertical-align: middle;
-}
-
-p {
-	margin-top: 0.5em;
-	margin-bottom: 0.5em;
-}
-
-.image {
-	border: none;
-	margin: 1.5em 0;
-	padding: 0;
-	border-radius: 0;
-	text-align: center;
-}
-
-.code,
-code {
-	background: rgba(135, 131, 120, 0.15);
-	border-radius: 3px;
-	padding: 0.2em 0.4em;
-	border-radius: 3px;
-	font-size: 85%;
-	tab-size: 2;
-}
-
-code {
-	color: #eb5757;
-}
-
-.code {
-	padding: 1.5em 1em;
-}
-
-.code-wrap {
-	white-space: pre-wrap;
-	word-break: break-all;
-}
-
-.code > code {
-	background: none;
-	padding: 0;
-	font-size: 100%;
-	color: inherit;
-}
-
-blockquote {
-	font-size: 1em;
-	margin: 1em 0;
-	padding-left: 1em;
-	border-left: 3px solid rgb(55, 53, 47);
-}
-
-blockquote.quote-large {
-	font-size: 1.25em;
-}
-
-.bookmark {
-	text-decoration: none;
-	max-height: 8em;
-	padding: 0;
-	display: flex;
-	width: 100%;
-	align-items: stretch;
-}
-
-.bookmark-title {
-	font-size: 0.85em;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	height: 1.75em;
-	white-space: nowrap;
-}
-
-.bookmark-text {
-	display: flex;
-	flex-direction: column;
-}
-
-.bookmark-info {
-	flex: 4 1 180px;
-	padding: 12px 14px 14px;
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-}
-
-.bookmark-image {
-	width: 33%;
-	flex: 1 1 180px;
-	display: block;
-	position: relative;
-	object-fit: cover;
-	border-radius: 1px;
-}
-
-.bookmark-description {
-	color: rgba(55, 53, 47, 0.6);
-	font-size: 0.75em;
-	overflow: hidden;
-	max-height: 4.5em;
-	word-break: break-word;
-}
-
-.bookmark-href {
-	font-size: 0.75em;
-	margin-top: 0.25em;
-}
-
-.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
-.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
-.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
-.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
-.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
-.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
-.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
-.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
-.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
-.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
-.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
-.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
-.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
-.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
-.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
-.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
-.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
-.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
-.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
-.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
-.highlight-default {
-	color: rgba(44, 44, 43, 1);
-}
-.highlight-gray {
-	color: rgba(125, 122, 117, 1);
-	fill: rgba(125, 122, 117, 1);
-}
-.highlight-brown {
-	color: rgba(159, 118, 90, 1);
-	fill: rgba(159, 118, 90, 1);
-}
-.highlight-orange {
-	color: rgba(210, 123, 45, 1);
-	fill: rgba(210, 123, 45, 1);
-}
-.highlight-yellow {
-	color: rgba(203, 148, 52, 1);
-	fill: rgba(203, 148, 52, 1);
-}
-.highlight-teal {
-	color: rgba(80, 148, 110, 1);
-	fill: rgba(80, 148, 110, 1);
-}
-.highlight-blue {
-	color: rgba(56, 125, 201, 1);
-	fill: rgba(56, 125, 201, 1);
-}
-.highlight-purple {
-	color: rgba(154, 107, 180, 1);
-	fill: rgba(154, 107, 180, 1);
-}
-.highlight-pink {
-	color: rgba(193, 76, 138, 1);
-	fill: rgba(193, 76, 138, 1);
-}
-.highlight-red {
-	color: rgba(207, 81, 72, 1);
-	fill: rgba(207, 81, 72, 1);
-}
-.highlight-default_background {
-	color: rgba(44, 44, 43, 1);
-}
-.highlight-gray_background {
-	background: rgba(42, 28, 0, 0.07);
-}
-.highlight-brown_background {
-	background: rgba(139, 46, 0, 0.086);
-}
-.highlight-orange_background {
-	background: rgba(224, 101, 1, 0.129);
-}
-.highlight-yellow_background {
-	background: rgba(211, 168, 0, 0.137);
-}
-.highlight-teal_background {
-	background: rgba(0, 100, 45, 0.09);
-}
-.highlight-blue_background {
-	background: rgba(0, 124, 215, 0.094);
-}
-.highlight-purple_background {
-	background: rgba(102, 0, 178, 0.078);
-}
-.highlight-pink_background {
-	background: rgba(197, 0, 93, 0.086);
-}
-.highlight-red_background {
-	background: rgba(223, 22, 0, 0.094);
-}
-.block-color-default {
-	color: inherit;
-	fill: inherit;
-}
-.block-color-gray {
-	color: rgba(125, 122, 117, 1);
-	fill: rgba(125, 122, 117, 1);
-}
-.block-color-brown {
-	color: rgba(159, 118, 90, 1);
-	fill: rgba(159, 118, 90, 1);
-}
-.block-color-orange {
-	color: rgba(210, 123, 45, 1);
-	fill: rgba(210, 123, 45, 1);
-}
-.block-color-yellow {
-	color: rgba(203, 148, 52, 1);
-	fill: rgba(203, 148, 52, 1);
-}
-.block-color-teal {
-	color: rgba(80, 148, 110, 1);
-	fill: rgba(80, 148, 110, 1);
-}
-.block-color-blue {
-	color: rgba(56, 125, 201, 1);
-	fill: rgba(56, 125, 201, 1);
-}
-.block-color-purple {
-	color: rgba(154, 107, 180, 1);
-	fill: rgba(154, 107, 180, 1);
-}
-.block-color-pink {
-	color: rgba(193, 76, 138, 1);
-	fill: rgba(193, 76, 138, 1);
-}
-.block-color-red {
-	color: rgba(207, 81, 72, 1);
-	fill: rgba(207, 81, 72, 1);
-}
-.block-color-default_background {
-	color: inherit;
-	fill: inherit;
-}
-.block-color-gray_background {
-	background: rgba(240, 239, 237, 1);
-}
-.block-color-brown_background {
-	background: rgba(245, 237, 233, 1);
-}
-.block-color-orange_background {
-	background: rgba(251, 235, 222, 1);
-}
-.block-color-yellow_background {
-	background: rgba(249, 243, 220, 1);
-}
-.block-color-teal_background {
-	background: rgba(232, 241, 236, 1);
-}
-.block-color-blue_background {
-	background: rgba(229, 242, 252, 1);
-}
-.block-color-purple_background {
-	background: rgba(243, 235, 249, 1);
-}
-.block-color-pink_background {
-	background: rgba(250, 233, 241, 1);
-}
-.block-color-red_background {
-	background: rgba(252, 233, 231, 1);
-}
-.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
-.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
-.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
-.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
-.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
-.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
-.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
-.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
-.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
-.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
-
-.checkbox {
-	display: inline-flex;
-	vertical-align: text-bottom;
-	width: 16;
-	height: 16;
-	background-size: 16px;
-	margin-left: 2px;
-	margin-right: 5px;
-}
-
-.checkbox-on {
-	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
-}
-
-.checkbox-off {
-	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
-}
-	
-</style></head><body><article id="3083a7ed-24c0-8090-8038-cfb71bf8b1e3" class="page sans"><header><img class="page-cover-image" src="SOCIAL%20SELLING/ChatGPT_Image_14_de_fev._de_2026_20_59_59.png" style="object-position:center 16.21%"/><div class="page-header-icon page-header-icon-with-cover"><img class="icon notion-static-icon" src="https://www.notion.so/icons/photo-landscape_green.svg"/></div><h1 class="page-title" dir="auto">SOCIAL SELLING</h1><p class="page-description" dir="auto"></p><table class="properties"><tbody><tr class="property-row property-row-status"><th><span class="icon property-icon"><img src="https://www.notion.so/icons/burst_gray.svg" style="width:14px;height:14px;display:block"/></span>Status</th><td><span class="status-value"><div class="status-dot"></div>Não iniciado</span></td></tr><tr class="property-row property-row-multi_select"><th><span class="icon property-icon"><img src="https://www.notion.so/icons/list_gray.svg" style="width:14px;height:14px;display:block"/></span>Tipo de recurso</th><td></td></tr><tr class="property-row property-row-last_edited_time"><th><span class="icon property-icon"><img src="https://www.notion.so/icons/clock_gray.svg" style="width:14px;height:14px;display:block"/></span>Última edição</th><td><time>14 de fevereiro de 2026 21:01</time></td></tr></tbody></table></header><div class="page-body"><div style="display:contents" dir="auto"><h3 id="3083a7ed-24c0-807d-81b8-f9e2341ef511" class="">Sobre o ativo</h3></div><div style="display:contents" dir="auto"><p id="3083a7ed-24c0-8081-83c6-f952d41354b4" class="">Insira uma breve visão geral descrevendo o ativo.</p></div><div style="display:contents" dir="auto"><p id="3083a7ed-24c0-802a-be27-ee2389eec8eb" class="">
-</p></div><div style="display:contents" dir="auto"><h3 id="3083a7ed-24c0-80f0-84a9-f7b496c4fe20" class="">Arquivos de apoio</h3></div><div style="display:contents" dir="auto"><p id="3083a7ed-24c0-8025-b7b7-dee97f2acb47" class="">
-</p></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Social Selling — System Digital</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0D1117;--surface:#1A2025;--surface2:#212830;--surface3:#272F38;
+  --amber:#F5A623;--amber-dim:rgba(245,166,35,0.10);--amber-border:rgba(245,166,35,0.20);
+  --border:#3E4249;--border-light:rgba(255,255,255,0.06);
+  --text:#F0F0F0;--text-sec:#B8B8C0;--text-dim:rgba(255,255,255,0.25);
+  --green:#22C55E;--green-dim:rgba(34,197,94,0.10);--green-border:rgba(34,197,94,0.22);
+  --blue:#3B82F6;--blue-dim:rgba(59,130,246,0.10);--blue-border:rgba(59,130,246,0.22);
+  --purple:#A855F7;--purple-dim:rgba(168,85,247,0.10);--purple-border:rgba(168,85,247,0.22);
+  --red:#EF4444;--red-dim:rgba(239,68,68,0.10);
+  --pink:#EC4899;--pink-dim:rgba(236,72,153,0.10);--pink-border:rgba(236,72,153,0.22);
+}
+html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:15px;line-height:1.6;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(0deg,transparent 24%,rgba(245,166,35,0.02) 25%,rgba(245,166,35,0.02) 26%,transparent 27%),linear-gradient(90deg,transparent 24%,rgba(245,166,35,0.02) 25%,rgba(245,166,35,0.02) 26%,transparent 27%);background-size:50px 50px;pointer-events:none;z-index:0}
+
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:13px 28px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:50}
+.logo{font-family:'Montserrat',sans-serif;font-size:15px;font-weight:800;letter-spacing:.04em;flex-shrink:0}
+.logo span{color:var(--amber);font-style:italic}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-sec);flex:1}
+.breadcrumb-sep{opacity:.4}
+.breadcrumb-current{color:var(--text);font-weight:500}
+.mod-badge{padding:4px 12px;border-radius:16px;font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:.06em;background:var(--pink-dim);color:var(--pink);border:1px solid var(--pink-border);white-space:nowrap;flex-shrink:0}
+
+.page{position:relative;z-index:1;max-width:820px;margin:0 auto;padding:32px 28px 80px}
+
+.hero{margin-bottom:32px}
+.hero-tag{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--pink);margin-bottom:12px}
+.hero-tag-dot{width:6px;height:6px;border-radius:50%;background:var(--pink)}
+.hero-title{font-family:'Montserrat',sans-serif;font-size:28px;font-weight:800;line-height:1.2;margin-bottom:10px}
+.hero-title span{color:var(--amber)}
+.hero-desc{font-size:15px;color:var(--text-sec);max-width:580px;line-height:1.7;margin-bottom:24px}
+.hero-stats{display:flex;gap:12px;flex-wrap:wrap}
+.hstat{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 18px;text-align:center;min-width:110px}
+.hstat-val{font-family:'Montserrat',sans-serif;font-size:21px;font-weight:800;color:var(--amber);line-height:1}
+.hstat-lbl{font-size:11px;color:var(--text-sec);margin-top:4px}
+
+.nav-pills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:32px;border-bottom:1px solid var(--border);padding-bottom:20px}
+.nav-pill{padding:7px 16px;border-radius:20px;font-size:12px;font-weight:600;font-family:'Montserrat',sans-serif;letter-spacing:.04em;cursor:pointer;transition:all .15s;border:1px solid transparent;color:var(--text-sec);background:transparent;white-space:nowrap}
+.nav-pill:hover{color:var(--text);background:var(--surface2)}
+.nav-pill.active{background:var(--amber-dim);color:var(--amber);border-color:var(--amber-border)}
+
+.section{display:none;animation:fadeIn .25s ease}
+.section.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.sec-title{font-family:'Montserrat',sans-serif;font-size:18px;font-weight:700;margin-bottom:6px}
+.sec-desc{font-size:14px;color:var(--text-sec);margin-bottom:24px;line-height:1.7}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 22px;margin-bottom:14px}
+.card-title{font-size:14px;font-weight:700;font-family:'Montserrat',sans-serif;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.card-body{font-size:14px;color:var(--text-sec);line-height:1.75}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+
+.tag{display:inline-flex;align-items:center;padding:3px 10px;border-radius:8px;font-size:11px;font-weight:600;font-family:'Montserrat',sans-serif;letter-spacing:.05em;white-space:nowrap;margin:2px}
+.tag-green{background:var(--green-dim);color:var(--green);border:.5px solid var(--green-border)}
+.tag-amber{background:var(--amber-dim);color:var(--amber);border:.5px solid var(--amber-border)}
+.tag-blue{background:var(--blue-dim);color:var(--blue);border:.5px solid var(--blue-border)}
+.tag-red{background:var(--red-dim);color:var(--red);border:.5px solid rgba(239,68,68,0.25)}
+.tag-purple{background:var(--purple-dim);color:var(--purple);border:.5px solid var(--purple-border)}
+.tag-pink{background:var(--pink-dim);color:var(--pink);border:.5px solid var(--pink-border)}
+
+/* SCRIPT CARDS */
+.script-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:14px;transition:border-color .15s}
+.script-card:hover{border-color:var(--amber-border)}
+.script-hdr{padding:16px 20px;display:flex;align-items:center;gap:12px;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
+.script-num{width:28px;height:28px;border-radius:8px;background:var(--amber-dim);border:1px solid var(--amber-border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--amber);font-family:'Montserrat',sans-serif;flex-shrink:0}
+.script-info{flex:1}
+.script-title{font-size:14px;font-weight:600;line-height:1.3}
+.script-meta{font-size:12px;color:var(--text-sec);margin-top:2px}
+.script-chev{font-size:18px;color:var(--text-sec);transition:transform .2s;flex-shrink:0}
+.script-body{display:none;border-top:1px solid var(--border);padding:20px}
+.script-body.open{display:block}
+.script-context{font-size:13px;color:var(--text-sec);background:var(--surface2);border-radius:8px;padding:12px 14px;margin-bottom:14px;line-height:1.65}
+.script-context strong{color:var(--amber)}
+.script-text{background:var(--surface3);border-radius:10px;padding:16px 18px;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.9;color:var(--text);position:relative;white-space:pre-wrap;word-break:break-word;margin-bottom:10px}
+.copy-btn{position:absolute;top:10px;right:10px;padding:5px 12px;border-radius:7px;background:var(--surface);border:1px solid var(--border);color:var(--text-sec);font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;font-family:'Inter',sans-serif}
+.copy-btn:hover{border-color:var(--amber-border);color:var(--amber)}
+.copy-btn.copied{background:var(--green-dim);border-color:var(--green-border);color:var(--green)}
+.script-obs{font-size:13px;color:var(--text-sec);margin-top:10px;padding:10px 14px;background:rgba(245,166,35,0.05);border-left:2px solid var(--amber-border);border-radius:0 6px 6px 0;line-height:1.6}
+.script-obs2{font-size:13px;color:var(--text-sec);margin-top:8px;padding:10px 14px;background:var(--green-dim);border-left:2px solid var(--green-border);border-radius:0 6px 6px 0;line-height:1.6}
+
+/* CHECKLIST */
+.checklist{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.check-item{display:flex;align-items:flex-start;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.check-num{width:26px;height:26px;border-radius:6px;background:var(--amber-dim);border:1px solid var(--amber-border);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--amber);font-family:'Montserrat',sans-serif;flex-shrink:0;margin-top:1px}
+.check-content{flex:1}
+.check-title{font-size:14px;font-weight:600;margin-bottom:3px}
+.check-desc{font-size:13px;color:var(--text-sec);line-height:1.6}
+
+/* ROTEIRO STEPS */
+.roteiro{display:flex;flex-direction:column;gap:0;margin-bottom:14px}
+.roteiro-step{display:flex;gap:0;position:relative}
+.roteiro-step:not(:last-child)::after{content:'';position:absolute;left:18px;top:42px;bottom:-2px;width:1px;background:var(--border);z-index:0}
+.roteiro-dot{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;flex-shrink:0;border:1.5px solid;z-index:1;margin-top:2px}
+.roteiro-content{flex:1;padding:4px 0 18px 16px}
+.roteiro-label{font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
+.roteiro-msg{font-family:'JetBrains Mono',monospace;font-size:12.5px;background:var(--surface3);border-radius:8px;padding:12px 14px;color:var(--text-sec);line-height:1.75;white-space:pre-wrap;position:relative}
+
+/* FUNIL CRM */
+.crm-funil{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.crm-stage{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 18px;display:flex;align-items:flex-start;gap:14px}
+.crm-icon{font-size:20px;flex-shrink:0;margin-top:2px}
+.crm-name{font-size:13px;font-weight:700;font-family:'Montserrat',sans-serif;margin-bottom:3px}
+.crm-desc{font-size:12px;color:var(--text-sec);line-height:1.55}
+.crm-tip{font-size:11px;color:var(--amber);font-weight:600;margin-top:4px}
+
+/* OBJEÇÃO */
+.obj-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:10px;transition:border-color .15s}
+.obj-card:hover{border-color:var(--amber-border)}
+.obj-hdr{padding:14px 18px;display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+.obj-q{flex:1;font-size:14px;font-weight:600}
+.obj-chev{font-size:17px;color:var(--text-sec);transition:transform .2s}
+.obj-body{display:none;padding:0 18px 16px;border-top:1px solid var(--border)}
+.obj-body.open{display:block}
+.obj-answer{font-size:13px;color:var(--text-sec);line-height:1.8;font-family:'JetBrains Mono',monospace;white-space:pre-wrap;background:var(--surface3);border-radius:8px;padding:14px 16px;margin-top:14px;position:relative}
+.obj-tip{margin-top:10px;padding:10px 14px;background:var(--green-dim);border-radius:8px;font-size:13px;color:var(--green);line-height:1.6}
+
+/* KPI */
+.kpi-table{width:100%;border-collapse:collapse;font-size:14px;margin-bottom:14px}
+.kpi-table th{text-align:left;font-size:10px;font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--text-sec);padding:8px 14px;background:var(--surface2);border-bottom:1px solid var(--border)}
+.kpi-table th:first-child{border-radius:8px 0 0 0}
+.kpi-table th:last-child{border-radius:0 8px 0 0}
+.kpi-table td{padding:12px 14px;border-bottom:.5px solid var(--border-light);vertical-align:top;color:var(--text-sec)}
+.kpi-table tr:last-child td{border-bottom:none}
+.kpi-table tr:hover td{background:rgba(255,255,255,0.02)}
+.kpi-name{font-weight:600;color:var(--text)}
+.kpi-val{font-family:'Montserrat',sans-serif;font-weight:700;color:var(--amber)}
+
+/* ALERT */
+.alert{border-radius:10px;padding:14px 18px;font-size:14px;line-height:1.65;margin-bottom:16px;display:flex;gap:12px;align-items:flex-start}
+.alert-amber{background:rgba(245,166,35,0.07);border:1px solid rgba(245,166,35,0.2);color:var(--text-sec)}
+.alert-green{background:var(--green-dim);border:1px solid var(--green-border);color:var(--text-sec)}
+.alert-red{background:var(--red-dim);border:1px solid rgba(239,68,68,0.25);color:var(--text-sec)}
+.alert-pink{background:var(--pink-dim);border:1px solid var(--pink-border);color:var(--text-sec)}
+.alert-blue{background:var(--blue-dim);border:1px solid var(--blue-border);color:var(--text-sec)}
+.alert-icon{font-size:18px;flex-shrink:0}
+.alert strong{color:var(--text)}
+
+/* DECISION TREE */
+.dtree{display:flex;flex-direction:column;align-items:stretch;gap:0}
+.dt-start-box{background:var(--surface);border:1.5px solid var(--amber-border);border-radius:12px;padding:16px 20px;display:flex;align-items:center;gap:14px;margin-bottom:4px}
+.dt-start-icon{font-size:24px;flex-shrink:0}
+.dt-start-info{flex:1}
+.dt-start-title{font-family:'Montserrat',sans-serif;font-size:15px;font-weight:700}
+.dt-start-sub{font-size:13px;color:var(--text-sec);margin-top:2px}
+.dt-start-badge{background:var(--amber-dim);border:1px solid var(--amber-border);border-radius:8px;padding:4px 10px;font-size:11px;font-weight:700;color:var(--amber);font-family:'Montserrat',sans-serif;white-space:nowrap;flex-shrink:0}
+.dt-rule-bar{background:rgba(59,130,246,0.06);border:1px solid var(--blue-border);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--text-sec);line-height:1.55;margin-bottom:4px}
+.dt-arrow{text-align:center;font-size:20px;color:var(--text-dim);padding:2px 0;line-height:1}
+.dt-question{background:var(--amber-dim);border:1.5px solid var(--amber-border);border-radius:12px;padding:13px 20px;font-size:14px;font-weight:700;font-family:'Montserrat',sans-serif;text-align:center;margin-bottom:6px}
+.dt-split{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:4px}
+.dt-path{border-radius:12px;overflow:hidden;cursor:pointer;transition:opacity .15s}
+.dt-path:hover{opacity:.9}
+.dt-path-yes{border:1.5px solid var(--green-border)}
+.dt-path-no{border:1.5px solid rgba(239,68,68,0.35)}
+.dt-path-warn{border:1.5px solid var(--amber-border)}
+.dt-path-label{padding:11px 16px;font-size:13px;font-weight:700;font-family:'Montserrat',sans-serif;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.dt-path-yes .dt-path-label{color:var(--green);background:rgba(34,197,94,0.07)}
+.dt-path-no .dt-path-label{color:var(--red);background:rgba(239,68,68,0.07)}
+.dt-path-warn .dt-path-label{color:var(--amber);background:var(--amber-dim)}
+.dt-path-chev{font-size:16px;transition:transform .2s;flex-shrink:0}
+.dt-path-body{display:none;padding:14px 16px;border-top:1px solid var(--border-light);background:var(--surface)}
+.dt-path-body.open{display:block}
+.dt-ai{font-size:13px;color:var(--text-sec);padding:6px 0;border-bottom:.5px solid var(--border-light);line-height:1.55}
+.dt-ai:last-of-type{border-bottom:none;padding-bottom:0}
+.dt-sub-list{display:flex;flex-direction:column;gap:7px;margin:10px 0 4px}
+.dt-sub-opt{background:var(--surface2);border-radius:8px;padding:9px 12px}
+.dt-sub-lbl{font-size:12px;font-weight:700;margin-bottom:3px}
+.dt-sub-desc{font-size:12px;color:var(--text-sec);line-height:1.5}
+.dt-link{font-size:12px;color:var(--amber);font-weight:600;margin-top:10px;cursor:pointer;display:inline-block;padding:5px 0}
+.dt-link:hover{text-decoration:underline}
+.dt-final{background:linear-gradient(135deg,rgba(34,197,94,0.1),rgba(245,166,35,0.06));border:2px solid var(--green-border);border-radius:14px;padding:24px;text-align:center;margin-top:4px}
+.dt-final-icon{font-size:36px;margin-bottom:8px}
+.dt-final-title{font-family:'Montserrat',sans-serif;font-size:20px;font-weight:800;color:var(--green);margin-bottom:8px}
+.dt-final-tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+
+/* REPORT BOX */
+.report-box{background:var(--surface3);border:1px solid var(--border);border-radius:10px;padding:18px 20px;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:2;color:var(--text-sec);position:relative;white-space:pre-wrap;margin-bottom:14px}
+
+/* NIVEL LEAD */
+.nivel-list{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.nivel-row{display:flex;align-items:flex-start;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:13px 16px}
+.nivel-badge{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;flex-shrink:0;white-space:nowrap;margin-top:1px}
+.nivel-content{flex:1}
+.nivel-title{font-size:13px;font-weight:600;margin-bottom:2px}
+.nivel-desc{font-size:12px;color:var(--text-sec);line-height:1.55}
+
+@media(max-width:680px){
+  .topbar{padding:12px 16px}
+  .page{padding:20px 16px 60px}
+  .hero-title{font-size:22px}
+  .grid2,.dt-split{grid-template-columns:1fr}
+  .hero-stats{gap:8px}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">FACE <span>100K</span></div>
+  <div class="breadcrumb">
+    <span class="breadcrumb-sep">/</span>
+    <span>Workspace</span>
+    <span class="breadcrumb-sep">/</span>
+    <span class="breadcrumb-current">Social Selling</span>
+  </div>
+  <div class="mod-badge">SDR · INSTAGRAM</div>
+</div>
+
+<div class="page">
+
+  <div class="hero">
+    <div class="hero-tag"><div class="hero-tag-dot"></div>Módulo 07</div>
+    <h1 class="hero-title">Social Selling — <span>Do Seguidor à Avaliação</span></h1>
+    <p class="hero-desc">Playbook completo do SDR para clínicas de estética e cirurgias faciais. O objetivo não é vender procedimento — é conduzir o paciente com clareza e segurança até a decisão de agendar uma avaliação.</p>
+    <div class="hero-stats">
+      <div class="hstat"><div class="hstat-val">24h</div><div class="hstat-lbl">contato com novo seguidor</div></div>
+      <div class="hstat"><div class="hstat-val">6</div><div class="hstat-lbl">níveis de follow-up</div></div>
+      <div class="hstat"><div class="hstat-val">9</div><div class="hstat-lbl">etapas do roteiro</div></div>
+      <div class="hstat"><div class="hstat-val">8</div><div class="hstat-lbl">etapas do CRM</div></div>
+    </div>
+  </div>
+
+  <div class="nav-pills">
+    <div class="nav-pill active" onclick="showSection('conceito',this)">Conceito</div>
+    <div class="nav-pill" onclick="showSection('roteiro',this)">Roteiro</div>
+    <div class="nav-pill" onclick="showSection('fluxo',this)">🗺 Fluxo</div>
+    <div class="nav-pill" onclick="showSection('scripts',this)">Scripts</div>
+    <div class="nav-pill" onclick="showSection('followup',this)">Follow-up</div>
+    <div class="nav-pill" onclick="showSection('crm',this)">CRM</div>
+    <div class="nav-pill" onclick="showSection('rotina',this)">Rotina</div>
+    <div class="nav-pill" onclick="showSection('acolhimento',this)">Grupo de Acolhimento</div>
+    <div class="nav-pill" onclick="showSection('kpis',this)">KPIs</div>
+  </div>
+
+  <!-- ──────── CONCEITO ──────── -->
+  <div class="section active" id="sec-conceito">
+    <div class="sec-title">Conceito e Papel do SDR</div>
+    <p class="sec-desc">Social Selling é o processo de iniciar relacionamentos comerciais pelas redes sociais, a partir de interações espontâneas do público — curtidas, comentários, stories e directs.</p>
+
+    <div class="alert alert-pink">
+      <div class="alert-icon">📱</div>
+      <div><strong>Diretriz Central:</strong> A venda não ocorre no direct. O direct tem como função preparar o lead, reduzir objeções e conduzir para a avaliação qualificada — onde a decisão será construída.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🎯 Papel do SDR (Social Seller)</div>
+      <div class="card-body">
+        <div class="checklist" style="margin-bottom:0">
+          <div class="check-item">
+            <div class="check-num">01</div>
+            <div class="check-content">
+              <div class="check-title">Iniciar conversas com leads que demonstraram interesse</div>
+              <div class="check-desc">Priorizar leads que já interagiram com conteúdo — curtiu, comentou, respondeu enquete ou story.</div>
+            </div>
+          </div>
+          <div class="check-item">
+            <div class="check-num">02</div>
+            <div class="check-content">
+              <div class="check-title">Construir conexão e confiança</div>
+              <div class="check-desc">Escutar antes de direcionar. Incentivar o lead a falar mais do que o atendente. Manter tom acolhedor, claro e objetivo.</div>
+            </div>
+          </div>
+          <div class="check-item">
+            <div class="check-num">03</div>
+            <div class="check-content">
+              <div class="check-title">Identificar dores, desejos e contexto do paciente</div>
+              <div class="check-desc">Validar a dor antes de direcionar qualquer solução. Trabalhar sempre com base no incômodo relatado.</div>
+            </div>
+          </div>
+          <div class="check-item">
+            <div class="check-num">04</div>
+            <div class="check-content">
+              <div class="check-title">Realizar qualificação e conduzir para o agendamento</div>
+              <div class="check-desc">Não antecipar valores. Usar perguntas para manter a conversa ativa. Conduzir para a avaliação, não para a venda direta.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🧠 3 Fatores que Movem a Decisão do Paciente</div>
+      <div class="card-body">
+        <div class="grid2" style="margin-bottom:0">
+          <div style="background:var(--surface2);border-radius:10px;padding:16px">
+            <div style="font-size:24px;margin-bottom:8px">😟</div>
+            <div style="font-size:13px;font-weight:700;margin-bottom:4px">Incômodos Estéticos Recorrentes</div>
+            <div style="font-size:12px;color:var(--text-sec);line-height:1.55">A dor que aparece toda vez que a pessoa se olha no espelho. Papada, olhar cansado, flacidez, assimetria facial.</div>
+          </div>
+          <div style="background:var(--surface2);border-radius:10px;padding:16px">
+            <div style="font-size:24px;margin-bottom:8px">💛</div>
+            <div style="font-size:13px;font-weight:700;margin-bottom:4px">Impacto na Autoestima</div>
+            <div style="font-size:12px;color:var(--text-sec);line-height:1.55">O ponto que mexe com a confiança, que ela evita em fotos, que incomoda no trabalho ou na vida social.</div>
+          </div>
+          <div style="background:var(--surface2);border-radius:10px;padding:16px">
+            <div style="font-size:24px;margin-bottom:8px">✨</div>
+            <div style="font-size:13px;font-weight:700;margin-bottom:4px">Busca por Naturalidade e Segurança</div>
+            <div style="font-size:12px;color:var(--text-sec);line-height:1.55">Medo de ficar artificial. Querer resultado sutil que "sempre pareceu que ela era assim". Confiança no profissional.</div>
+          </div>
+          <div style="background:var(--amber-dim);border:1px solid var(--amber-border);border-radius:10px;padding:16px">
+            <div style="font-size:24px;margin-bottom:8px">🚫</div>
+            <div style="font-size:13px;font-weight:700;margin-bottom:4px;color:var(--amber)">Palavras Proibidas</div>
+            <div style="font-size:12px;color:var(--text-sec);line-height:1.7">"call" · "sessão estratégica" · "faturamento" · termos técnicos · linguagem comercial agressiva</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="alert alert-green">
+      <div class="alert-icon">🧭</div>
+      <div><strong>Linha Mestra do SDR:</strong> Interesse → Dor → Validação → Direcionamento → Agendamento</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">⚡ Rotina Diária — Gestão de Tempo</div>
+      <div class="card-body">
+        <div class="checklist" style="margin-bottom:0">
+          <div class="check-item">
+            <div class="check-num" style="background:var(--blue-dim);border-color:var(--blue-border);color:var(--blue)">Início</div>
+            <div class="check-content">
+              <div class="check-title">Revisão e confirmações</div>
+              <div class="check-desc">Verificar pendências do dia anterior. Confirmar avaliações agendadas.</div>
+            </div>
+          </div>
+          <div class="check-item">
+            <div class="check-num" style="background:var(--amber-dim);border-color:var(--amber-border);color:var(--amber)">Manhã</div>
+            <div class="check-content">
+              <div class="check-title">Respostas e novas conversas</div>
+              <div class="check-desc">Zerar DMs recebidos. Contato com novos seguidores (até 24h). Abordagem de gatilhos sociais (enquetes, stories).</div>
+            </div>
+          </div>
+          <div class="check-item">
+            <div class="check-num" style="background:var(--amber-dim);border-color:var(--amber-border);color:var(--amber)">Tarde</div>
+            <div class="check-content">
+              <div class="check-title">Follow-ups avançados e novos contatos</div>
+              <div class="check-desc">Executar follow-ups dos níveis 2 a 4. Leads de anúncios ADS. Reativação de base antiga (60-90 dias).</div>
+            </div>
+          </div>
+          <div class="check-item">
+            <div class="check-num" style="background:var(--green-dim);border-color:var(--green-border);color:var(--green)">Final</div>
+            <div class="check-content">
+              <div class="check-title">Ligações e organização</div>
+              <div class="check-desc">Atualizar CRM com todos os movimentos do dia. Preencher relatório diário. Programar ações de amanhã.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ──────── ROTEIRO ──────── -->
+  <div class="section" id="sec-roteiro">
+    <div class="sec-title">Roteiro de Contato com Leads — 9 Etapas</div>
+    <p class="sec-desc">Sequência completa do primeiro contato ao agendamento. Siga a ordem. Cada etapa tem um objetivo claro.</p>
+
+    <div class="alert alert-amber">
+      <div class="alert-icon">📌</div>
+      <div><strong>Regra de ouro:</strong> nunca pule etapas. Quem pula "Investigação" e vai direto para "Agendamento" gera resistência. A ordem cria confiança.</div>
+    </div>
+
+    <div class="roteiro">
+      <div class="roteiro-step">
+        <div class="roteiro-dot" style="background:var(--pink-dim);border-color:var(--pink-border);color:var(--pink)">1</div>
+        <div class="roteiro-content">
+          <div class="roteiro-label" style="color:var(--pink)">Abertura</div>
+          <div class="roteiro-msg">Oi, [Nome].
+Vi que você respondeu nossa enquete sobre [procedimento].
+Você gostaria de entender melhor ou já está considerando realizar?<button class="copy-btn">Copiar</button></div>
+        </div>
+      </div>
+      <div class="roteiro-step">
+        <div class="roteiro-dot" style="background:var(--blue-dim);border-color:var(--blue-border);color:var(--blue)">2</div>
+        <div class="roteiro-content">
+          <div class="roteiro-label" style="color:var(--blue)">Conexão</div>
+          <div class="roteiro-msg">Notei que você interagiu com o conteúdo sobre [dor específica].
+Isso é algo que tem te incomodado com frequência?<button class="copy-btn">Copiar</button></div>
+        </div>
+      </div>
+      <div class="roteiro-step">
+        <div class="roteiro-dot" style="background:var(--amber-dim);border-color:var(--amber-border);color:var(--amber)">3</div>
+        <div class="roteiro-content">
+          <div class="roteiro-label" style="color:var(--amber)">Investigação</div>
+          <div class="roteiro-msg">O que mais te incomoda hoje em relação a isso?
+
+Se necessário:
+Esse incômodo é mais estético ou já impacta sua autoestima?<button class="copy-btn">Copiar</button></div>
+        </div>
+      </div>
+      <div class="roteiro-step">
+        <div class="roteiro-dot" style="background:var(--green-dim);border-color:var(--green-border);color:var(--green)">4</div>
+        <div class="roteiro-content">
+          <div class="roteiro-label" style="color:var(--green)">Validação e Posicionamento</div>
+          <div class="roteiro-msg">Entendo. Esse tipo de queixa é bastante comum.
+Hoje trabalhamos com um planejamento individualizado, considerando as características de cada rosto, sempre priorizando naturalidade e harmonia.<button class="copy-btn">Copiar</button></div>
+        </div>
+      </div>
+      <div class="roteiro-step">
+        <div class="roteiro-dot" style="background:var(--purple-dim);border-color:var(--purple-border);color:var(--purple)">5</div>
+        <div class="roteiro-content">
+          <div class="roteiro-label" style="color:var(--purple)">Direcionamento</div>
+          <div class="roteiro-msg">Para o seu caso, o mais indicado é uma avaliação individual, onde conseguimos analisar com mais precisão e indicar o melhor caminho.<button class="copy-btn">Copiar</button></div>
+        </div>
+      </div>
+      <div class="roteiro-step">
+        <div class="roteiro-dot" style="background:var(--amber-dim);border-color:var(--amber-border);color:var(--amber)">6</div>
+        <div class="roteiro-content">
+          <div class="roteiro-label" style="color:var(--amber)">Qualificação</div>
+          <div class="roteiro-msg">Você já pesquisou sobre o procedimento ou tem alguma referência de investimento para esse tipo de tratamento?<button class="copy-btn">Copiar</button></div>
+          <div class="script-obs" style="margin-top:6px">📌 Não force resposta sobre valor. Essa pergunta serve para entender o nível de maturidade do lead, não para negociar preço.</div>
+        </div>
+      </div>
+      <div class="roteiro-step">
+        <div class="roteiro-dot" style="background:var(--blue-dim);border-color:var(--blue-border);color:var(--blue)">7</div>
+        <div class="roteiro-content">
+          <div class="roteiro-label" style="color:var(--blue)">Priorização</div>
+          <div class="roteiro-msg">Hoje isso é algo que você pretende resolver no curto prazo ou ainda está em fase de entendimento?<button class="copy-btn">Copiar</button></div>
+        </div>
+      </div>
+      <div class="roteiro-step">
+        <div class="roteiro-dot" style="background:var(--green-dim);border-color:var(--green-border);color:var(--green)">8</div>
+        <div class="roteiro-content">
+          <div class="roteiro-label" style="color:var(--green)">Agendamento</div>
+          <div class="roteiro-msg">Vou verificar a disponibilidade para avaliação.
+Você prefere início ou final da semana?<button class="copy-btn">Copiar</button></div>
+        </div>
+      </div>
+      <div class="roteiro-step">
+        <div class="roteiro-dot" style="background:var(--pink-dim);border-color:var(--pink-border);color:var(--pink)">9</div>
+        <div class="roteiro-content">
+          <div class="roteiro-label" style="color:var(--pink)">Continuidade</div>
+          <div class="roteiro-msg">Pode me informar seu WhatsApp? Assim organizo os detalhes e te encaminho as informações da avaliação.<button class="copy-btn">Copiar</button></div>
+          <div class="script-obs2" style="margin-top:6px">✅ Coletar o WhatsApp e repassar ao SDR com o contexto completo da conversa. A qualidade do handoff define a taxa de comparecimento.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🔍 Perguntas de Aprofundamento — Extração de Dor</div>
+      <div class="card-body">
+        <div style="display:flex;flex-direction:column;gap:8px;font-size:13px;color:var(--text-sec)">
+          <div style="padding:9px 14px;background:var(--surface2);border-radius:8px;border-left:2px solid var(--amber-border)">O que mais te incomoda hoje no seu rosto?</div>
+          <div style="padding:9px 14px;background:var(--surface2);border-radius:8px;border-left:2px solid var(--amber-border)">Isso é algo recente ou já vem te incomodando há um tempo?</div>
+          <div style="padding:9px 14px;background:var(--surface2);border-radius:8px;border-left:2px solid var(--amber-border)">Esse ponto mexe com sua autoestima no dia a dia?</div>
+          <div style="padding:9px 14px;background:var(--surface2);border-radius:8px;border-left:2px solid var(--amber-border)">Você já chegou a pesquisar ou tentar resolver isso antes?</div>
+          <div style="padding:9px 14px;background:var(--surface2);border-radius:8px;border-left:2px solid var(--amber-border)">O que te impede hoje de dar esse passo?</div>
+          <div style="padding:9px 14px;background:var(--surface2);border-radius:8px;border-left:2px solid var(--amber-border)">Você busca algo mais natural ou uma mudança mais perceptível?</div>
+        </div>
+        <div class="script-obs" style="margin-top:12px">📌 Use conforme a conversa evolui. Nunca disparar todas de uma vez — parece interrogatório.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ──────── FLUXO ──────── -->
+  <div class="section" id="sec-fluxo">
+    <div class="sec-title">Fluxo de Decisão — Do Engajamento ao Agendamento</div>
+    <p class="sec-desc">Cada tipo de entrada tem um fluxo diferente. Identifique a origem do lead e siga o caminho correto.</p>
+
+    <div class="dtree">
+
+      <div class="dt-start-box">
+        <div class="dt-start-icon">📲</div>
+        <div class="dt-start-info">
+          <div class="dt-start-title">Lead Identificado</div>
+          <div class="dt-start-sub">Novo seguidor, curtida, comentário, enquete, story ou anúncio</div>
+        </div>
+        <div class="dt-start-badge">⚡ até 24h</div>
+      </div>
+      <div class="dt-rule-bar">Contato com novos seguidores em até <strong>24h</strong>. Leads de anúncio: resposta em até <strong>15 minutos</strong>. Gatilho social (enquete/story): em até <strong>30 minutos</strong>.</div>
+
+      <div class="dt-arrow">↓</div>
+
+      <div class="dt-question">📥 Qual é a origem do lead?</div>
+      <div class="dt-split">
+        <div class="dt-path dt-path-yes" onclick="togglePath(this)">
+          <div class="dt-path-label">👤 Novo Seguidor <span class="dt-path-chev">⌄</span></div>
+          <div class="dt-path-body">
+            <div class="dt-ai">Lead <strong>morno</strong> — demonstrou interesse geral. Abordagem leve.</div>
+            <div class="dt-ai">"Oi, [Nome]! Vi que você começou a nos seguir, seja bem-vinda!"</div>
+            <div class="dt-ai">Pergunta de conexão: "Você se interessa mais por procedimentos faciais ou só está acompanhando?"</div>
+            <div class="dt-link" onclick="event.stopPropagation();goSection('scripts')">→ Ver Script de Boas-Vindas</div>
+          </div>
+        </div>
+        <div class="dt-path dt-path-warn" onclick="togglePath(this)">
+          <div class="dt-path-label">🔥 Gatilho Social <span class="dt-path-chev">⌄</span></div>
+          <div class="dt-path-body">
+            <div class="dt-ai">Lead <strong>quente</strong> — respondeu enquete, story ou pediu informação.</div>
+            <div class="dt-ai">Aproveitar interesse ativo. Abrir DM referenciando o gatilho específico.</div>
+            <div class="dt-ai">"Vi que você respondeu nossa enquete sobre [procedimento]…"</div>
+            <div class="dt-link" onclick="event.stopPropagation();goSection('scripts')">→ Ver Script de Gatilho Social</div>
+          </div>
+        </div>
+      </div>
+      <div class="dt-split" style="margin-top:6px">
+        <div class="dt-path dt-path-yes" onclick="togglePath(this)">
+          <div class="dt-path-label">📢 Lead de Anúncio (ADS) <span class="dt-path-chev">⌄</span></div>
+          <div class="dt-path-body">
+            <div class="dt-ai">Lead com <strong>intenção declarada</strong> — clicou no anúncio. Conectar rápido.</div>
+            <div class="dt-ai">"Vi que você se interessou pelo nosso conteúdo sobre [procedimento]"</div>
+            <div class="dt-ai">Pergunta direta: "Me conta, isso é algo que já vem te incomodando há um tempo?"</div>
+            <div class="dt-link" onclick="event.stopPropagation();goSection('scripts')">→ Ver Script de ADS</div>
+          </div>
+        </div>
+        <div class="dt-path dt-path-warn" onclick="togglePath(this)">
+          <div class="dt-path-label">🎯 Prospecção Ativa (Frio) <span class="dt-path-chev">⌄</span></div>
+          <div class="dt-path-body">
+            <div class="dt-ai">Lead <strong>sem sinal anterior</strong> — você identifica e abre. Sem parecer invasivo.</div>
+            <div class="dt-ai">"Vi que você acompanha bastante conteúdo sobre estética facial…"</div>
+            <div class="dt-ai">"Tem algo que você olha no espelho hoje e gostaria de melhorar?"</div>
+            <div class="dt-link" onclick="event.stopPropagation();goSection('scripts')">→ Ver Script de Prospecção Fria</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dt-arrow">↓</div>
+
+      <div class="dt-question">💬 O lead respondeu?</div>
+      <div class="dt-split">
+        <div class="dt-path dt-path-no" onclick="togglePath(this)">
+          <div class="dt-path-label">👻 Não respondeu <span class="dt-path-chev">⌄</span></div>
+          <div class="dt-path-body">
+            <div class="dt-ai">Entrar no pipeline como <strong>Nível 1</strong> de follow-up</div>
+            <div class="dt-ai">Retomar de forma leve e contextual — nunca "oi, viu minha mensagem?"</div>
+            <div class="dt-ai">Alternar canal (Instagram → WhatsApp) quando necessário</div>
+            <div class="dt-link" onclick="event.stopPropagation();goSection('followup')">→ Ver Protocolo de Follow-up</div>
+          </div>
+        </div>
+        <div class="dt-path dt-path-yes" onclick="togglePath(this)">
+          <div class="dt-path-label">✅ Respondeu — Aplicar Roteiro <span class="dt-path-chev">⌄</span></div>
+          <div class="dt-path-body">
+            <div class="dt-ai">Seguir as <strong>9 etapas do roteiro</strong>: Abertura → Conexão → Investigação → Validação → Direcionamento → Qualificação → Priorização → Agendamento → Continuidade</div>
+            <div class="dt-ai">Escutar mais do que falar. Usar perguntas de aprofundamento conforme necessário.</div>
+            <div class="dt-link" onclick="event.stopPropagation();goSection('roteiro')">→ Ver Roteiro completo</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dt-arrow">↓</div>
+
+      <div class="dt-question">📋 O lead avançou para agendamento?</div>
+      <div class="dt-split">
+        <div class="dt-path dt-path-warn" onclick="togglePath(this)">
+          <div class="dt-path-label">⏸ Parou no meio / "vou pensar" <span class="dt-path-chev">⌄</span></div>
+          <div class="dt-path-body">
+            <div class="dt-ai">Mover para <strong>Nutrição</strong> no CRM</div>
+            <div class="dt-ai">Manter relacionamento via stories e conteúdo</div>
+            <div class="dt-ai">Follow-up com contexto após 48h sem evolução</div>
+            <div class="dt-link" onclick="event.stopPropagation();goSection('followup')">→ Ver Níveis de Follow-up</div>
+          </div>
+        </div>
+        <div class="dt-path dt-path-yes" onclick="togglePath(this)">
+          <div class="dt-path-label">✅ Quer agendar avaliação <span class="dt-path-chev">⌄</span></div>
+          <div class="dt-path-body">
+            <div class="dt-ai">Coletar WhatsApp com contexto completo</div>
+            <div class="dt-ai">Passar para o SDR: nome, procedimento, dor, temperatura</div>
+            <div class="dt-ai">Após PIX confirmado → criar Grupo de Acolhimento</div>
+            <div class="dt-link" onclick="event.stopPropagation();goSection('acolhimento')">→ Ver Grupo de Acolhimento</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dt-arrow">↓</div>
+
+      <div class="dt-final">
+        <div class="dt-final-icon">🎉</div>
+        <div class="dt-final-title">Avaliação Agendada</div>
+        <p style="font-size:14px;color:var(--text-sec);margin-bottom:16px">Atendimento bem conduzido gera pacientes. Atendimento genérico gera curiosos.</p>
+        <div class="dt-final-tags">
+          <span class="tag tag-green">Lead qualificado</span>
+          <span class="tag tag-amber">Contexto documentado</span>
+          <span class="tag tag-blue">PIX confirmado</span>
+          <span class="tag tag-green">Grupo de Acolhimento criado</span>
+          <span class="tag tag-purple">CRM atualizado</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ──────── SCRIPTS ──────── -->
+  <div class="section" id="sec-scripts">
+    <div class="sec-title">Scripts de Abordagem</div>
+    <p class="sec-desc">4 fluxos de entrada, cada um com 3 variações. Adapte sempre com o nome e o contexto real — nunca copie e cole sem personalizar.</p>
+
+    <!-- FLUXO 1 -->
+    <div style="font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--pink);margin-bottom:10px;margin-top:4px">Fluxo 1 — Novos Seguidores</div>
+    <div class="script-card">
+      <div class="script-hdr" onclick="toggleScript(this)">
+        <div class="script-num">1a</div>
+        <div class="script-info">
+          <div class="script-title">Boas-vindas + interesse em procedimento</div>
+          <div class="script-meta">Objetivo: iniciar conversa leve e abrir conexão</div>
+        </div>
+        <div class="script-chev">⌄</div>
+      </div>
+      <div class="script-body">
+        <div class="script-text">Oi, [Nome], tudo bem?
+Vi que você começou a acompanhar a gente por aqui, seja bem-vinda 😊
+
+Aproveitei pra dar uma olhadinha no seu perfil… me conta, você se interessa mais por procedimentos faciais ou só está acompanhando os conteúdos?<button class="copy-btn">Copiar</button></div>
+      </div>
+    </div>
+    <div class="script-card">
+      <div class="script-hdr" onclick="toggleScript(this)">
+        <div class="script-num">1b</div>
+        <div class="script-info">
+          <div class="script-title">Boas-vindas + identificar incômodo</div>
+          <div class="script-meta">Objetivo: descobrir se existe dor estética</div>
+        </div>
+        <div class="script-chev">⌄</div>
+      </div>
+      <div class="script-body">
+        <div class="script-text">Oi, [Nome]! Tudo bem?
+Vi que você começou a nos seguir e quis vir aqui te dar as boas-vindas 😊
+
+Você costuma se interessar mais por conteúdos de estética ou tem algo específico que vem te incomodando?<button class="copy-btn">Copiar</button></div>
+      </div>
+    </div>
+    <div class="script-card">
+      <div class="script-hdr" onclick="toggleScript(this)">
+        <div class="script-num">1c</div>
+        <div class="script-info">
+          <div class="script-title">Boas-vindas + melhoria desejada</div>
+          <div class="script-meta">Objetivo: identificar vontade latente de melhora</div>
+        </div>
+        <div class="script-chev">⌄</div>
+      </div>
+      <div class="script-body">
+        <div class="script-text">Oi, [Nome]! Seja bem-vinda!
+Vi que você acompanha conteúdos de harmonização/rejuvenescimento…
+
+Tem alguma coisa específica que você tem vontade de melhorar ou está só pesquisando por enquanto?<button class="copy-btn">Copiar</button></div>
+      </div>
+    </div>
+
+    <!-- FLUXO 2 -->
+    <div style="font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--blue);margin-bottom:10px;margin-top:20px">Fluxo 2 — Leads de Anúncios (ADS)</div>
+    <div class="script-card">
+      <div class="script-hdr" onclick="toggleScript(this)">
+        <div class="script-num">2a</div>
+        <div class="script-info">
+          <div class="script-title">ADS — Entender intenção direto</div>
+          <div class="script-meta">Objetivo: conectar rápido e qualificar</div>
+        </div>
+        <div class="script-chev">⌄</div>
+      </div>
+      <div class="script-body">
+        <div class="script-text">Oi, [Nome]! Tudo bem?
+Vi que você se interessou pelo nosso conteúdo sobre [procedimento] 😊
+
+Queria te perguntar… você está buscando entender melhor ou já pensa em realizar?<button class="copy-btn">Copiar</button></div>
+      </div>
+    </div>
+    <div class="script-card">
+      <div class="script-hdr" onclick="toggleScript(this)">
+        <div class="script-num">2b</div>
+        <div class="script-info">
+          <div class="script-title">ADS — Confirmar o incômodo</div>
+          <div class="script-meta">Objetivo: identificar se existe dor real por trás do clique</div>
+        </div>
+        <div class="script-chev">⌄</div>
+      </div>
+      <div class="script-body">
+        <div class="script-text">Oi, [Nome]!
+Vi que você clicou no nosso anúncio sobre [ex: lipo de papada / blefaroplastia]…
+
+Me conta, isso é algo que já vem te incomodando há um tempo?<button class="copy-btn">Copiar</button></div>
+      </div>
+    </div>
+    <div class="script-card">
+      <div class="script-hdr" onclick="toggleScript(this)">
+        <div class="script-num">2c</div>
+        <div class="script-info">
+          <div class="script-title">ADS — Rejuvenescimento / pergunta aberta</div>
+          <div class="script-meta">Objetivo: deixar o lead falar sobre a dor dele</div>
+        </div>
+        <div class="script-chev">⌄</div>
+      </div>
+      <div class="script-body">
+        <div class="script-text">Oi, [Nome]! Tudo bem?
+Vi que você demonstrou interesse no conteúdo sobre rejuvenescimento facial…
+
+Fiquei curioso: o que mais te incomoda hoje no seu rosto?<button class="copy-btn">Copiar</button></div>
+      </div>
+    </div>
+
+    <!-- FLUXO 3 -->
+    <div style="font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin-bottom:10px;margin-top:20px">Fluxo 3 — Gatilho Social (Stories / Enquete / Caixa)</div>
+    <div class="script-card">
+      <div class="script-hdr" onclick="toggleScript(this)">
+        <div class="script-num">3a</div>
+        <div class="script-info">
+          <div class="script-title">Enquete — O que chamou atenção</div>
+          <div class="script-meta">Objetivo: aproveitar interesse ativo declarado</div>
+        </div>
+        <div class="script-chev">⌄</div>
+      </div>
+      <div class="script-body">
+        <div class="script-text">Oi, [Nome]! 😊
+Vi que você respondeu nossa enquete sobre [procedimento]…
+
+Me conta, o que mais te chamou atenção nisso?<button class="copy-btn">Copiar</button></div>
+      </div>
+    </div>
+    <div class="script-card">
+      <div class="script-hdr" onclick="toggleScript(this)">
+        <div class="script-num">3b</div>
+        <div class="script-info">
+          <div class="script-title">Story de dor — confirmar incômodo</div>
+          <div class="script-meta">Objetivo: transformar resposta ao story em conversa qualificada</div>
+        </div>
+        <div class="script-chev">⌄</div>
+      </div>
+      <div class="script-body">
+        <div class="script-text">Oi, [Nome]!
+Vi sua resposta lá no story sobre [dor: papada, flacidez, olhar cansado]…
+
+Isso é algo que já vem te incomodando no dia a dia?<button class="copy-btn">Copiar</button></div>
+      </div>
+    </div>
+    <div class="script-card">
+      <div class="script-hdr" onclick="toggleScript(this)">
+        <div class="script-num">3c</div>
+        <div class="script-info">
+          <div class="script-title">Caixa de perguntas — orientação personalizada</div>
+          <div class="script-meta">Objetivo: responder no privado e iniciar qualificação</div>
+        </div>
+        <div class="script-chev">⌄</div>
+      </div>
+      <div class="script-body">
+        <div class="script-text">Oi, [Nome]!
+Vi que você pediu mais informações sobre [procedimento]…
+
+Queria entender melhor pra te orientar certo: o que mais te incomoda hoje?<button class="copy-btn">Copiar</button></div>
+      </div>
+    </div>
+
+    <!-- FLUXO 4 -->
+    <div style="font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;margin-top:20px">Fluxo 4 — Prospecção Ativa (Frio)</div>
+    <div class="script-card">
+      <div class="script-hdr" onclick="toggleScript(this)">
+        <div class="script-num">4a</div>
+        <div class="script-info">
+          <div class="script-title">Respondendo story da pessoa</div>
+          <div class="script-meta">Objetivo: iniciar conversa sem parecer invasivo</div>
+        </div>
+        <div class="script-chev">⌄</div>
+      </div>
+      <div class="script-body">
+        <div class="script-text">Oi, [Nome]! Tudo bem?
+Vi seu story e acabei chegando no seu perfil… gostei bastante 😊
+
+Aproveitando, posso te perguntar uma coisa?
+Você já pensou em fazer algum procedimento facial ou está só acompanhando conteúdos?<button class="copy-btn">Copiar</button></div>
+      </div>
+    </div>
+    <div class="script-card">
+      <div class="script-hdr" onclick="toggleScript(this)">
+        <div class="script-num">4b</div>
+        <div class="script-info">
+          <div class="script-title">Perfil que acompanha estética</div>
+          <div class="script-meta">Objetivo: identificar interesse ou curiosidade latente</div>
+        </div>
+        <div class="script-chev">⌄</div>
+      </div>
+      <div class="script-body">
+        <div class="script-text">Oi, [Nome]! Tudo bem?
+Seu perfil apareceu pra gente e vi que você acompanha conteúdos de estética…
+
+Hoje tem algo específico que te incomoda ou você está só pesquisando por curiosidade?<button class="copy-btn">Copiar</button></div>
+      </div>
+    </div>
+    <div class="script-card">
+      <div class="script-hdr" onclick="toggleScript(this)">
+        <div class="script-num">4c</div>
+        <div class="script-info">
+          <div class="script-title">Pergunta do espelho</div>
+          <div class="script-meta">Objetivo: provocar reflexão sobre a dor de forma natural</div>
+        </div>
+        <div class="script-chev">⌄</div>
+      </div>
+      <div class="script-body">
+        <div class="script-text">Oi, [Nome]!
+Vi que você acompanha bastante conteúdo sobre estética facial…
+
+Me conta uma coisa: tem algo que você olha no espelho hoje e gostaria de melhorar?<button class="copy-btn">Copiar</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ──────── FOLLOW-UP ──────── -->
+  <div class="section" id="sec-followup">
+    <div class="sec-title">Estratégia de Follow-up — 6 Níveis</div>
+    <p class="sec-desc">Cada lead parado tem um nível. Retomar sempre de forma leve e contextual — referenciar a conversa anterior e nunca insistir sem valor.</p>
+
+    <div class="alert alert-amber">
+      <div class="alert-icon">📌</div>
+      <div><strong>Diretrizes:</strong> Retomar de forma leve e contextual · Referenciar a conversa anterior · Evitar insistência excessiva · Alternar canal (Instagram / WhatsApp) quando necessário · Usar áudio ou vídeo para humanizar.</div>
+    </div>
+
+    <div class="nivel-list">
+      <div class="nivel-row">
+        <div class="nivel-badge" style="background:var(--blue-dim);color:var(--blue);border:1px solid var(--blue-border)">N1</div>
+        <div class="nivel-content">
+          <div class="nivel-title">Não respondeu à abordagem inicial</div>
+          <div class="nivel-desc">Retomar após 48h com mensagem curta e de valor. Enviar conteúdo relevante (resultado ou artigo) sem cobrar resposta.</div>
+        </div>
+      </div>
+      <div class="nivel-row">
+        <div class="nivel-badge" style="background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border)">N2</div>
+        <div class="nivel-content">
+          <div class="nivel-title">Iniciou interação, mas interrompeu</div>
+          <div class="nivel-desc">Retomar referenciando o que foi dito. "Fiquei pensando no que você comentou sobre [dor], conseguiu avançar nisso?"</div>
+        </div>
+      </div>
+      <div class="nivel-row">
+        <div class="nivel-badge" style="background:var(--purple-dim);color:var(--purple);border:1px solid var(--purple-border)">N3</div>
+        <div class="nivel-content">
+          <div class="nivel-title">Demonstrou interesse, sem concluir agendamento</div>
+          <div class="nivel-desc">Usar escassez real: "Tenho uma vaga de avaliação disponível essa semana — caso ainda tenha interesse, posso verificar se temos horário pra você."</div>
+        </div>
+      </div>
+      <div class="nivel-row">
+        <div class="nivel-badge" style="background:var(--red-dim);color:var(--red);border:1px solid rgba(239,68,68,0.3)">N4</div>
+        <div class="nivel-content">
+          <div class="nivel-title">Agendou e não compareceu (no-show)</div>
+          <div class="nivel-desc">Não cobrar. Retomar com empatia: "Tudo bem com você? Vi que não conseguiu vir na data combinada — sem problema! Posso ver quando teria disponibilidade novamente."</div>
+        </div>
+      </div>
+      <div class="nivel-row">
+        <div class="nivel-badge" style="background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border)">N5</div>
+        <div class="nivel-content">
+          <div class="nivel-title">Compareceu, mas não fechou</div>
+          <div class="nivel-desc">Nutrir com prova social relacionada à dor específica dela. Não pressionar. Retomar após 7 dias com novo resultado ou depoimento.</div>
+        </div>
+      </div>
+      <div class="nivel-row">
+        <div class="nivel-badge" style="background:var(--green-dim);color:var(--green);border:1px solid var(--green-border)">N6</div>
+        <div class="nivel-content">
+          <div class="nivel-title">Relacionamento de longo prazo</div>
+          <div class="nivel-desc">Lead que não está no momento de decisão agora. Manter em nutrição com stories e conteúdo. Reativar a cada 30-60 dias com mensagem contextual.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">💬 Mensagens de Retomada</div>
+      <div class="card-body">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div class="script-text" style="margin-bottom:0;font-size:12.5px">Oi, [Nome], tudo bem? Semana corrida por aí?<button class="copy-btn">Copiar</button></div>
+          <div class="script-text" style="margin-bottom:0;font-size:12.5px">Conseguiu ver o que te expliquei?<button class="copy-btn">Copiar</button></div>
+          <div class="script-text" style="margin-bottom:0;font-size:12.5px">Fiquei pensando no que você comentou sobre [dor], conseguiu avançar nisso?<button class="copy-btn">Copiar</button></div>
+          <div class="script-text" style="margin-bottom:0;font-size:12.5px">Tenho uma vaga de avaliação disponível essa semana — caso ainda tenha interesse, posso verificar se temos horário para você.<button class="copy-btn">Copiar</button></div>
+        </div>
+        <div class="script-obs" style="margin-top:12px">📌 Técnicas: reação em story para reativação · mensagens curtas e diretas · uso de contexto · mudança de canal (Insta → WhatsApp) · áudio ou vídeo para humanizar.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ──────── CRM ──────── -->
+  <div class="section" id="sec-crm">
+    <div class="sec-title">CRM — Pipeline de Atendimento</div>
+    <p class="sec-desc">Cada lead tem uma etapa no funil. A correta organização permite continuidade das conversas e controle total do processo.</p>
+
+    <div class="crm-funil">
+      <div class="crm-stage">
+        <div class="crm-icon">📥</div>
+        <div>
+          <div class="crm-name">1. Leads de Entrada</div>
+          <div class="crm-desc">Todos os contatos que chegam via Direct, WhatsApp, enquetes, caixinhas ou anúncios.</div>
+          <div class="crm-tip">→ Registrar origem e data de entrada</div>
+        </div>
+      </div>
+      <div class="crm-stage">
+        <div class="crm-icon">✉️</div>
+        <div>
+          <div class="crm-name">2. Ativações</div>
+          <div class="crm-desc">Leads que foram abordados pela SDR. Primeiro contato realizado.</div>
+          <div class="crm-tip">→ Registrar qual script foi usado</div>
+        </div>
+      </div>
+      <div class="crm-stage">
+        <div class="crm-icon">🤝</div>
+        <div>
+          <div class="crm-name">3. Conexão</div>
+          <div class="crm-desc">Leads que responderam e iniciaram conversa. Momento de criar vínculo e iniciar entendimento da dor.</div>
+          <div class="crm-tip">→ Registrar o incômodo estético identificado</div>
+        </div>
+      </div>
+      <div class="crm-stage">
+        <div class="crm-icon">🔍</div>
+        <div>
+          <div class="crm-name">4. Mapeamento</div>
+          <div class="crm-desc">Leads em processo de qualificação. Objetivo: entender incômodo, há quanto tempo, nível de interesse e intenção real de resolver.</div>
+          <div class="crm-tip">→ Registrar: procedimento de interesse + urgência + budget</div>
+        </div>
+      </div>
+      <div class="crm-stage">
+        <div class="crm-icon">🌱</div>
+        <div>
+          <div class="crm-name">5. Nutrição</div>
+          <div class="crm-desc">Leads que conversaram mas não avançaram (+48h sem resposta ou evolução). Permanecem em relacionamento via stories e conteúdo.</div>
+          <div class="crm-tip">→ Agendar follow-up com data</div>
+        </div>
+      </div>
+      <div class="crm-stage">
+        <div class="crm-icon">📨</div>
+        <div>
+          <div class="crm-name">6. Convite para Avaliação</div>
+          <div class="crm-desc">Leads que receberam o direcionamento para avaliação mas ainda não confirmaram horário.</div>
+          <div class="crm-tip">→ Follow-up em até 24h se sem resposta</div>
+        </div>
+      </div>
+      <div class="crm-stage" style="border-color:var(--amber-border)">
+        <div class="crm-icon">📅</div>
+        <div>
+          <div class="crm-name">7. Avaliação Agendada</div>
+          <div class="crm-desc">Leads com horário marcado. Aplicar protocolo de confirmação D-1 e criar Grupo de Acolhimento.</div>
+          <div class="crm-tip" style="color:var(--green)">→ Criar Grupo de Acolhimento após PIX confirmado</div>
+        </div>
+      </div>
+      <div class="crm-stage">
+        <div class="crm-icon">⭐</div>
+        <div>
+          <div class="crm-name">8. Follow-up Pós Consulta</div>
+          <div class="crm-desc">Leads que já passaram pela avaliação e estão em acompanhamento. Não fecharam na consulta — retomar após 7 dias com prova social.</div>
+          <div class="crm-tip">→ Registrar: o que foi avaliado + objeção apresentada</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📊 Relatório Diário — Modelo</div>
+      <div class="card-body">
+        <div class="report-box">📊 Relatório Diário — [Data]
+
+📞 Confirmação de Avaliações:
+👀 Follow-up realizados:
+🔥 Reaquecimento:
+🤝 Boas-vindas (novos seguidores):
+♾ Nutrição:
+📢 Leads de anúncios:
+📢 Gatilhos sociais (enquetes/stories):
+☎️ Avaliações agendadas:
+
+Observações — Avaliações
+(dificuldades para agendar, objeções frequentes, faltas)
+
+─────────────────────
+💬 Ativações:
+🔗 Conexões:
+🎯 Mapeamentos:
+📅 Convites para avaliação:
+✅ Avaliações confirmadas:<button class="copy-btn">Copiar</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ──────── ROTINA ──────── -->
+  <div class="section" id="sec-rotina">
+    <div class="sec-title">Rotina Operacional do SDR</div>
+    <p class="sec-desc">Consistência é o que separa uma operação que funciona de uma que depende de sorte. Cada frequência tem um objetivo claro.</p>
+
+    <div class="checklist">
+      <div class="check-item">
+        <div class="check-num" style="background:var(--amber-dim);border-color:var(--amber-border);color:var(--amber);font-size:9px">DIÁRIO</div>
+        <div class="check-content">
+          <div class="check-title">Quick Check-in — Alinhamento e Role Play</div>
+          <div class="check-desc">Simulação de conversas reais (abordagem inicial, condução, identificação de dor, direcionamento para avaliação). Definição de metas do dia: novos leads a abordar, follow-ups a executar, agendamentos esperados. Correção de tom para manter comunicação natural, acolhedora e sem parecer venda.</div>
+        </div>
+      </div>
+      <div class="check-item">
+        <div class="check-num" style="background:var(--blue-dim);border-color:var(--blue-border);color:var(--blue);font-size:9px">2x/SEM</div>
+        <div class="check-content">
+          <div class="check-title">Análise de Atendimentos (Instagram / WhatsApp)</div>
+          <div class="check-desc">Selecionar conversas reais e avaliar: qualidade da abordagem, profundidade na investigação da dor, clareza na condução para avaliação, erros de comunicação (pressa, excesso de informação, quebra de conexão). Ajustar e simular como deveria ter sido conduzido.</div>
+        </div>
+      </div>
+      <div class="check-item">
+        <div class="check-num" style="background:var(--green-dim);border-color:var(--green-border);color:var(--green);font-size:9px">1x/SEM</div>
+        <div class="check-content">
+          <div class="check-title">Revisão de Leads e Pipeline</div>
+          <div class="check-desc">Analisar: novos seguidores, leads de anúncio, leads que pararam no meio da conversa. Identificar padrões (principais dores, perfil de quem mais engaja, perfil de quem agenda). Reativar leads parados e ajustar abordagem.</div>
+        </div>
+      </div>
+      <div class="check-item">
+        <div class="check-num" style="background:var(--green-dim);border-color:var(--green-border);color:var(--green);font-size:9px">1x/SEM</div>
+        <div class="check-content">
+          <div class="check-title">Alinhamento e Motivação do Time</div>
+          <div class="check-desc">Compartilhar resultados: agendamentos, leads convertidos, conversas que performaram bem. Exemplos reais de abordagem que geraram agendamento. Treinamento comportamental: lidar com rejeição, manter constância, postura profissional.</div>
+        </div>
+      </div>
+      <div class="check-item">
+        <div class="check-num" style="background:var(--purple-dim);border-color:var(--purple-border);color:var(--purple);font-size:9px">2x/MÊS</div>
+        <div class="check-content">
+          <div class="check-title">Análise de Desempenho (KPIs)</div>
+          <div class="check-desc">Indicadores: leads abordados, taxa de resposta, conversas iniciadas, agendamentos, taxa de comparecimento. Identificar gargalos (abordagem, conexão, fechamento). Ajustes necessários no processo.</div>
+        </div>
+      </div>
+      <div class="check-item">
+        <div class="check-num" style="background:var(--pink-dim);border-color:var(--pink-border);color:var(--pink);font-size:9px">3 MES</div>
+        <div class="check-content">
+          <div class="check-title">Revisão Completa do Processo</div>
+          <div class="check-desc">Atualização dos roteiros (novos procedimentos, linguagem). Refinamento dos follow-ups. Treinamento de objeções: preço, medo de procedimento, insegurança com resultado, tempo / momento de vida. Revisão de posicionamento e padrão de atendimento.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ──────── GRUPO DE ACOLHIMENTO ──────── -->
+  <div class="section" id="sec-acolhimento">
+    <div class="sec-title">Protocolo de Comparecimento — Grupo de Acolhimento</div>
+    <p class="sec-desc">A paciente pagou e mandou o comprovante. O risco agora é ela não comparecer. O Grupo de Acolhimento é o protocolo de show-up.</p>
+
+    <div class="alert alert-amber">
+      <div class="alert-icon">🎯</div>
+      <div><strong>Objetivo:</strong> Criar comprometimento público, humanizar o atendimento com a presença da Doutora e eliminar o risco de no-show antes da avaliação.</div>
+    </div>
+
+    <div class="checklist">
+      <div class="check-item">
+        <div class="check-num" style="background:var(--green-dim);border-color:var(--green-border);color:var(--green)">01</div>
+        <div class="check-content">
+          <div class="check-title">Criação Imediata do Grupo</div>
+          <div class="check-desc">Criar o grupo no WhatsApp imediatamente após o PIX cair na conta. Não esperar — o grupo é parte do processo de conversão, não um detalhe administrativo.</div>
+        </div>
+      </div>
+      <div class="check-item">
+        <div class="check-num" style="background:var(--amber-dim);border-color:var(--amber-border);color:var(--amber)">02</div>
+        <div class="check-content">
+          <div class="check-title">Nome do Grupo</div>
+          <div class="check-desc">Formato: "Planejamento Premium | [Nome da Paciente] + Doutora" — ou "Acolhimento | [Nome] + Dra. [Nome]". O nome precisa transmitir exclusividade e personalização.</div>
+        </div>
+      </div>
+      <div class="check-item">
+        <div class="check-num" style="background:var(--blue-dim);border-color:var(--blue-border);color:var(--blue)">03</div>
+        <div class="check-content">
+          <div class="check-title">Participantes</div>
+          <div class="check-desc">SDR/Secretária + Paciente + Doutora. Se o marido for o decisor financeiro: incluir ele também e tornar a paciente administradora para ela mesma adicionar.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">💬 Mensagem de Acolhimento — Enviada pela Secretária no Grupo</div>
+      <div class="card-body">
+        <div class="report-box">Olá, [Nome da Paciente]! Criei este grupo para facilitar nossa comunicação e tornar sua experiência ainda mais VIP.
+
+O seu Planejamento Cirúrgico com a Doutora está 100% CONFIRMADO para:
+
+📅 [Data]
+⏰ [Horário]
+
+Importante: o tempo da Doutora é dedicado com exclusividade para a sua análise. Por favor, programe-se com 15 minutos de antecedência. Como sua consulta é um horário reservado e exclusivo, não conseguimos reagendar em caso de falta de última hora, apenas em caráter de emergência médica.
+
+(Se o marido for participar):
+Conforme combinamos, te coloquei como administradora para você adicionar o [Nome do Marido] aqui no grupo para alinharmos tudo juntos.
+
+Até breve! Te esperamos no horário combinado 😉<button class="copy-btn">Copiar</button></div>
+      </div>
+    </div>
+
+    <div class="alert alert-green">
+      <div class="alert-icon">🎙️</div>
+      <div><strong>Dica de ouro:</strong> A Doutora pode mandar um áudio rápido de 15 segundos no grupo dizendo: "Oi [Nome], estou com seu prontuário aqui e ansiosa para montarmos o seu plano amanhã! Até lá!" — esse áudio praticamente elimina o no-show.</div>
+    </div>
+
+    <div class="grid2">
+      <div class="card" style="margin-bottom:0">
+        <div class="card-title">✅ Por que o Grupo funciona</div>
+        <div class="card-body">
+          <div style="display:flex;flex-direction:column;gap:6px;font-size:13px">
+            <div style="display:flex;gap:8px"><span style="color:var(--green)">→</span> Cria comprometimento público</div>
+            <div style="display:flex;gap:8px"><span style="color:var(--green)">→</span> Humaniza com a presença da Doutora</div>
+            <div style="display:flex;gap:8px"><span style="color:var(--green)">→</span> Permite lembrete no dia sem parecer cobrança</div>
+            <div style="display:flex;gap:8px"><span style="color:var(--green)">→</span> Paciente se sente VIP e exclusiva</div>
+            <div style="display:flex;gap:8px"><span style="color:var(--green)">→</span> Áudio da Doutora cria antecipação emocional</div>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:0">
+        <div class="card-title">📋 Checklist pós-PIX</div>
+        <div class="card-body">
+          <div style="display:flex;flex-wrap:wrap;gap:6px">
+            <span class="tag tag-green">PIX confirmado na conta</span>
+            <span class="tag tag-green">Grupo criado imediatamente</span>
+            <span class="tag tag-green">Mensagem de acolhimento enviada</span>
+            <span class="tag tag-green">Áudio da Doutora no grupo</span>
+            <span class="tag tag-amber">Lembrete D-1 programado</span>
+            <span class="tag tag-amber">CRM atualizado: "Avaliação Agendada"</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ──────── KPIs ──────── -->
+  <div class="section" id="sec-kpis">
+    <div class="sec-title">KPIs e Métricas</div>
+    <p class="sec-desc">Analisar a cada 2 semanas. Identificar em qual etapa do funil está o gargalo — abordagem, conexão ou fechamento.</p>
+
+    <div class="alert alert-green">
+      <div class="alert-icon">📊</div>
+      <div><strong>Análise estratégica:</strong> onde estão os gargalos · qualidade dos leads vs. qualidade do atendimento · ajustes necessários no processo.</div>
+    </div>
+
+    <table class="kpi-table">
+      <thead>
+        <tr><th>Métrica</th><th>Meta</th><th>Onde atua no funil</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="kpi-name">Leads abordados/dia</td><td class="kpi-val">5+</td><td>Topo — volume de entrada</td></tr>
+        <tr><td class="kpi-name">Taxa de resposta</td><td class="kpi-val">40%+</td><td>Abordagem — qualidade do script</td></tr>
+        <tr><td class="kpi-name">Conversas iniciadas/semana</td><td class="kpi-val">15+</td><td>Conexão — SDR conseguiu abrir diálogo</td></tr>
+        <tr><td class="kpi-name">Leads que chegaram ao Mapeamento</td><td class="kpi-val">50% das conversas</td><td>Qualificação — profundidade da investigação</td></tr>
+        <tr><td class="kpi-name">Convites para avaliação enviados</td><td class="kpi-val">5+/semana</td><td>Direcionamento — SDR chegou no fechamento</td></tr>
+        <tr><td class="kpi-name">Avaliações agendadas/semana</td><td class="kpi-val">3+</td><td>Conversão — resultado final do SDR</td></tr>
+        <tr><td class="kpi-name">Taxa de comparecimento</td><td class="kpi-val">80%+</td><td>Show-up — qualidade do Grupo de Acolhimento</td></tr>
+        <tr><td class="kpi-name">Tempo médio de resposta (DM)</td><td class="kpi-val">até 1h</td><td>Velocidade — leads esfriam rápido</td></tr>
+      </tbody>
+    </table>
+
+    <div class="grid2">
+      <div class="card">
+        <div class="card-title">🚨 Gargalos Comuns</div>
+        <div class="card-body">
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div><span class="tag tag-red">Abordagem</span><div style="font-size:12px;color:var(--text-sec);margin-top:4px">Taxa de resposta abaixo de 20% — revisar scripts e personalização</div></div>
+            <div><span class="tag tag-amber">Conexão</span><div style="font-size:12px;color:var(--text-sec);margin-top:4px">Lead responde mas para rápido — investigação de dor fraca</div></div>
+            <div><span class="tag tag-amber">Fechamento</span><div style="font-size:12px;color:var(--text-sec);margin-top:4px">Muitas conversas, poucos agendamentos — pular direto para "quer agendar?" sem criar valor</div></div>
+            <div><span class="tag tag-red">Show-up</span><div style="font-size:12px;color:var(--text-sec);margin-top:4px">Muitos agendados, poucos comparecem — Grupo de Acolhimento não está sendo criado</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">✅ Sinais Saudáveis</div>
+        <div class="card-body">
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;gap:8px;align-items:flex-start"><span class="tag tag-green" style="flex-shrink:0">BOM</span><span style="font-size:12px">Leads respondendo e fazendo perguntas sobre procedimento</span></div>
+            <div style="display:flex;gap:8px;align-items:flex-start"><span class="tag tag-green" style="flex-shrink:0">BOM</span><span style="font-size:12px">Pacientes mencionando "vi no Instagram" na consulta</span></div>
+            <div style="display:flex;gap:8px;align-items:flex-start"><span class="tag tag-green" style="flex-shrink:0">BOM</span><span style="font-size:12px">Show rate acima de 80% dos leads sociais</span></div>
+            <div style="display:flex;gap:8px;align-items:flex-start"><span class="tag tag-green" style="flex-shrink:0">BOM</span><span style="font-size:12px">Enquetes gerando DMs ativos toda semana</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function showSection(id, el){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-pill').forEach(p=>p.classList.remove('active'));
+  document.getElementById('sec-'+id).classList.add('active');
+  if(el) el.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function toggleScript(hdr){
+  const body=hdr.nextElementSibling,chev=hdr.querySelector('.script-chev'),open=body.classList.contains('open');
+  body.classList.toggle('open',!open);
+  if(chev) chev.style.transform=open?'':'rotate(180deg)';
+}
+function toggleObj(hdr){
+  const body=hdr.nextElementSibling,chev=hdr.querySelector('.obj-chev'),open=body.classList.contains('open');
+  body.classList.toggle('open',!open);
+  if(chev) chev.style.transform=open?'':'rotate(180deg)';
+}
+function togglePath(el){
+  const body=el.querySelector('.dt-path-body'),chev=el.querySelector('.dt-path-chev'),open=body.classList.contains('open');
+  body.classList.toggle('open',!open);
+  if(chev) chev.style.transform=open?'':'rotate(180deg)';
+}
+function goSection(id){
+  const pill=document.querySelector(`.nav-pill[onclick*="'${id}'"]`);
+  showSection(id,pill);
+}
+
+// inject copy buttons
+document.querySelectorAll('.script-text, .roteiro-msg, .report-box').forEach(el=>{
+  const btn=el.querySelector('.copy-btn');
+  if(!btn) return;
+  const txt=el.childNodes[0]?el.textContent.replace(/Copiar|Copiado!/g,'').trim():'';
+  btn.onclick=function(){
+    navigator.clipboard.writeText(txt).then(()=>{
+      btn.textContent='Copiado!';btn.classList.add('copied');
+      setTimeout(()=>{btn.textContent='Copiar';btn.classList.remove('copied');},2000);
+    });
+  };
+});
+</script>
+</body>
+</html>
