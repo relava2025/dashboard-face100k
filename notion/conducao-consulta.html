@@ -76,18 +76,15 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'In
 .tl-card-title{font-size:16px;font-weight:600;margin-bottom:6px;color:var(--text)}
 .tl-card-body{font-size:14px;color:var(--text-sec);line-height:1.7}
 .tl-questions{display:flex;flex-direction:column;gap:6px;margin-top:10px}
-.tl-q{font-size:14px;color:var(--text-sec);padding:8px 12px;background:var(--border-soft);border-radius:7px;line-height:1.6;position:relative;padding-right:70px}
+.tl-q{font-size:14px;color:var(--text-sec);padding:8px 12px;background:var(--border-soft);border-radius:7px;line-height:1.6}
 .tl-warning{font-size:13px;font-weight:600;color:var(--red);margin-top:4px;display:flex;align-items:center;gap:6px}
 .tl-note{font-size:13px;color:var(--text-dim);margin-top:6px;font-style:italic}
 
 /* SCRIPT BOX */
-.script-box{font-size:15px;background:var(--border-soft);border:1px solid var(--border);border-radius:10px;padding:18px 80px 18px 18px;color:var(--text-sec);line-height:1.9;position:relative;white-space:pre-wrap;margin-bottom:14px}
+.script-box{font-size:15px;background:var(--border-soft);border:1px solid var(--border);border-radius:10px;padding:18px;color:var(--text-sec);line-height:1.9;white-space:pre-wrap;margin-bottom:14px}
 .script-box.highlight{background:var(--amber-bg);border-color:var(--amber-border);color:#92400E}
 .script-box.green{background:var(--green-bg);border-color:var(--green-border);color:#065F46}
 .script-box.red{background:var(--red-bg);border-color:var(--red-border);color:#991B1B}
-.copy-btn{position:absolute;top:10px;right:10px;padding:5px 12px;border-radius:6px;background:var(--surface);border:1px solid var(--border);color:var(--text-sec);font-size:11px;font-weight:600;cursor:pointer;transition:all .12s;font-family:'Inter',sans-serif;white-space:nowrap}
-.copy-btn:hover{border-color:var(--amber);color:var(--amber)}
-.copy-btn.copied{background:var(--green-bg);border-color:var(--green-border);color:var(--green)}
 .script-label{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-dim);margin-bottom:6px;margin-top:16px}
 .script-label:first-child{margin-top:0}
 
@@ -100,7 +97,7 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'In
 .spin-name{font-size:16px;font-weight:700;color:var(--text)}
 .spin-sub{font-size:13px;color:var(--text-sec);margin-top:2px}
 .spin-body{padding:16px 18px}
-.spin-q{font-size:14px;color:var(--text-sec);padding:8px 12px;background:var(--border-soft);border-radius:7px;margin-bottom:6px;line-height:1.65;position:relative;padding-right:70px}
+.spin-q{font-size:14px;color:var(--text-sec);padding:8px 12px;background:var(--border-soft);border-radius:7px;margin-bottom:6px;line-height:1.65}
 .spin-q:last-child{margin-bottom:0}
 .spin-note{font-size:12px;color:var(--text-dim);padding:6px 10px;background:var(--surface);border:1px solid var(--border);border-radius:6px;margin-bottom:6px;font-style:italic}
 .spin-key{font-size:13px;font-weight:700;color:var(--red);padding:10px 14px;background:var(--red-bg);border-radius:8px;border:1px solid var(--red-border);margin-top:8px;margin-bottom:6px;line-height:1.6}
@@ -123,7 +120,7 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'In
 
 /* FRASE */
 .frase-list{display:flex;flex-direction:column;gap:10px;margin-bottom:24px}
-.frase-row{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 80px 16px 18px;position:relative;font-size:16px;color:var(--text);line-height:1.65;font-style:italic}
+.frase-row{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 18px 16px 44px;position:relative;font-size:16px;color:var(--text);line-height:1.65;font-style:italic}
 .frase-row::before{content:'"';position:absolute;left:14px;top:12px;font-size:28px;color:var(--amber);font-style:normal;line-height:1}
 
 /* LOGIC GRID */
@@ -209,9 +206,9 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'In
           <div class="tl-card">
             <div class="tl-card-title">Não pule isso — é onde a confiança começa</div>
             <div class="tl-questions">
-              <div class="tl-q">Oi, tudo bem?<button class="copy-btn">Copiar</button></div>
-              <div class="tl-q">Você está falando de onde?<button class="copy-btn">Copiar</button></div>
-              <div class="tl-q">Como está seu dia hoje?<button class="copy-btn">Copiar</button></div>
+              <div class="tl-q">Oi, tudo bem?</div>
+              <div class="tl-q">Você está falando de onde?</div>
+              <div class="tl-q">Como está seu dia hoje?</div>
             </div>
             <div class="tl-note" style="margin-top:10px">Transição → "Me conta, o que te fez buscar ajuda agora?"</div>
           </div>
@@ -226,26 +223,26 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'In
           <div class="tl-card">
             <div class="tl-card-title">S — Situação</div>
             <div class="tl-questions">
-              <div class="tl-q">Há quanto tempo isso vem te incomodando?<button class="copy-btn">Copiar</button></div>
-              <div class="tl-q">Você já tentou alguma coisa pra melhorar essa região?<button class="copy-btn">Copiar</button></div>
-              <div class="tl-q">Isso te atrapalha em algo no seu dia a dia? (foto, espelho, autoestima)<button class="copy-btn">Copiar</button></div>
+              <div class="tl-q">Há quanto tempo isso vem te incomodando?</div>
+              <div class="tl-q">Você já tentou alguma coisa pra melhorar essa região?</div>
+              <div class="tl-q">Isso te atrapalha em algo no seu dia a dia? (foto, espelho, autoestima)</div>
             </div>
 
             <div class="tl-card-title" style="margin-top:16px">P — Problema (Fazer Doer)</div>
             <div class="tl-questions">
-              <div class="tl-q">O que mais te incomoda nisso hoje?<button class="copy-btn">Copiar</button></div>
-              <div class="tl-q">O que você sente quando se olha no espelho?<button class="copy-btn">Copiar</button></div>
-              <div class="tl-q">De 0 a 10, o quanto isso te incomoda?<button class="copy-btn">Copiar</button></div>
-              <div class="tl-q">Você evita foto de alguns ângulos?<button class="copy-btn">Copiar</button></div>
-              <div class="tl-q">Isso mexe com sua confiança?<button class="copy-btn">Copiar</button></div>
+              <div class="tl-q">O que mais te incomoda nisso hoje?</div>
+              <div class="tl-q">O que você sente quando se olha no espelho?</div>
+              <div class="tl-q">De 0 a 10, o quanto isso te incomoda?</div>
+              <div class="tl-q">Você evita foto de alguns ângulos?</div>
+              <div class="tl-q">Isso mexe com sua confiança?</div>
             </div>
             <div class="tl-note">(pausa — deixa ela responder)</div>
 
             <div class="tl-card-title" style="margin-top:16px">I — Implicação (Aumentar a Dor)</div>
             <div class="tl-questions">
-              <div class="tl-q">Você me falou que isso já te incomoda há um tempo… por que acabou adiando até agora?<button class="copy-btn">Copiar</button></div>
-              <div class="tl-q">Se continuar assim, como você acha que isso vai estar daqui a 1 ou 2 anos?<button class="copy-btn">Copiar</button></div>
-              <div class="tl-q">E emocionalmente… como isso impacta você hoje?<button class="copy-btn">Copiar</button></div>
+              <div class="tl-q">Você me falou que isso já te incomoda há um tempo… por que acabou adiando até agora?</div>
+              <div class="tl-q">Se continuar assim, como você acha que isso vai estar daqui a 1 ou 2 anos?</div>
+              <div class="tl-q">E emocionalmente… como isso impacta você hoje?</div>
             </div>
             <div style="margin-top:10px;padding:12px 14px;background:var(--red-bg);border:1px solid var(--red-border);border-radius:8px;font-size:14px;color:#991B1B;font-weight:600">
               💥 Pergunta Forte: "Se você tivesse que conviver com isso pelos próximos 5 anos, como você se sentiria?"
@@ -253,8 +250,8 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'In
 
             <div class="tl-card-title" style="margin-top:16px">N — Necessidade (Fazer Querer)</div>
             <div class="tl-questions">
-              <div class="tl-q">Resolver isso hoje é uma prioridade pra você?<button class="copy-btn">Copiar</button></div>
-              <div class="tl-q">Se você resolvesse isso, como você acha que se sentiria?<button class="copy-btn">Copiar</button></div>
+              <div class="tl-q">Resolver isso hoje é uma prioridade pra você?</div>
+              <div class="tl-q">Se você resolvesse isso, como você acha que se sentiria?</div>
             </div>
             <div class="tl-note">(deixa ela visualizar o resultado)</div>
           </div>
@@ -271,10 +268,10 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'In
             <div class="script-box">Perfeito. Pelo que você me trouxe, o que mais te incomoda é [dor dela].
 E isso já vem afetando sua [autoestima / confiança / imagem].
 
-Analisando seu caso e de acordo com o que estamos conversando, com certeza posso te ajudar a resolver esse incômodo com o método XXX, eu vou te apresentar como funciona, alguns resultados e gostaria de fazer um combinado com você Dona Maria, tudo bem?<button class="copy-btn">Copiar</button></div>
+Analisando seu caso e de acordo com o que estamos conversando, com certeza posso te ajudar a resolver esse incômodo com o método XXX, eu vou te apresentar como funciona, alguns resultados e gostaria de fazer um combinado com você Dona Maria, tudo bem?</div>
 
             <div class="script-label" style="color:var(--red)">⚠️ Pacto do Sim ou Não — NÃO PULE ISSO, É ESSENCIAL</div>
-            <div class="script-box highlight">Dona Maria, eu gostaria de fazer um combinado com você: de acordo com o que eu te apresentar e te explicar aqui, se fizer sentido pra você resolver essa questão que te afeta comigo, eu gostaria de um SIM, quero fazer, OU caso não faça sentido pra você, um NÃO quero fazer de forma muito clara, de toda forma vai ser um prazer te atender. Posso contar com seu sim ou não hoje?<button class="copy-btn">Copiar</button></div>
+            <div class="script-box highlight">Dona Maria, eu gostaria de fazer um combinado com você: de acordo com o que eu te apresentar e te explicar aqui, se fizer sentido pra você resolver essa questão que te afeta comigo, eu gostaria de um SIM, quero fazer, OU caso não faça sentido pra você, um NÃO quero fazer de forma muito clara, de toda forma vai ser um prazer te atender. Posso contar com seu sim ou não hoje?</div>
           </div>
         </div>
       </div>
@@ -290,12 +287,12 @@ Analisando seu caso e de acordo com o que estamos conversando, com certeza posso
               <div><strong>Regra:</strong> NÃO explique só técnica. Conecte cada ponto com a dor que ela trouxe.</div>
             </div>
             <div class="script-label">Script de apresentação</div>
-            <div class="script-box">Esse procedimento vai atuar exatamente em [dor dela], melhorando [resultado direto que ela quer].<button class="copy-btn">Copiar</button></div>
+            <div class="script-box">Esse procedimento vai atuar exatamente em [dor dela], melhorando [resultado direto que ela quer].</div>
             <div class="script-label" style="color:var(--green)">Prova Social (MUITO IMPORTANTE)</div>
             <div class="script-box green">Deixa eu te mostrar alguns casos…
 
 Esse caso aqui é parecido com o seu…
-Olha como melhorou essa região…<button class="copy-btn">Copiar</button></div>
+Olha como melhorou essa região…</div>
           </div>
         </div>
       </div>
@@ -312,7 +309,7 @@ Olha como melhorou essa região…<button class="copy-btn">Copiar</button></div>
             </div>
 
             <div class="script-label">Construção de valor</div>
-            <div class="script-box">Quando falamos desse tratamento, não é só o procedimento. Você tem:<button class="copy-btn">Copiar</button></div>
+            <div class="script-box">Quando falamos desse tratamento, não é só o procedimento. Você tem:</div>
 
             <div class="ancora-box">
               <div class="ancora-hdr">✅ O que está incluído</div>
@@ -323,7 +320,7 @@ Olha como melhorou essa região…<button class="copy-btn">Copiar</button></div>
               <div class="ancora-item"><span class="ancora-icon">✓</span> Suporte até o resultado final</div>
             </div>
 
-            <div class="script-box highlight">Tudo isso envolve um processo completo. Um tratamento com tudo isso facilmente ultrapassa X mil reais.<button class="copy-btn">Copiar</button></div>
+            <div class="script-box highlight">Tudo isso envolve um processo completo. Um tratamento com tudo isso facilmente ultrapassa X mil reais.</div>
           </div>
         </div>
       </div>
@@ -335,7 +332,7 @@ Olha como melhorou essa região…<button class="copy-btn">Copiar</button></div>
           <div class="tl-label" style="color:var(--blue)">Pergunta de Compra — Antes do Preço</div>
           <div class="tl-card">
             <div class="tl-note" style="font-style:normal;color:var(--text-sec);margin-bottom:10px">Isola objeção antes do preço aparecer. Se ela travar aqui, o problema não é o valor — é outra coisa.</div>
-            <div class="script-box">Tirando a parte de valores… você se vê fazendo esse procedimento?<button class="copy-btn">Copiar</button></div>
+            <div class="script-box">Tirando a parte de valores… você se vê fazendo esse procedimento?</div>
           </div>
         </div>
       </div>
@@ -346,7 +343,7 @@ Olha como melhorou essa região…<button class="copy-btn">Copiar</button></div>
         <div class="tl-content">
           <div class="tl-label" style="color:var(--red)">Preço — Sem Medo</div>
           <div class="tl-card">
-            <div class="script-box">O investimento para fazer isso hoje é de R$ X.<button class="copy-btn">Copiar</button></div>
+            <div class="script-box">O investimento para fazer isso hoje é de R$ X.</div>
             <div style="margin-top:8px;padding:12px 16px;background:var(--red-bg);border:1px solid var(--red-border);border-radius:8px;font-size:15px;color:#991B1B;font-weight:600;text-align:center">
               🔇 SILÊNCIO — Muito importante. Quem fala primeiro perde.
             </div>
@@ -361,9 +358,9 @@ Olha como melhorou essa região…<button class="copy-btn">Copiar</button></div>
           <div class="tl-label" style="color:var(--amber)">Fechamento — Checkmate</div>
           <div class="tl-card">
             <div class="script-label">Se ela travar no valor</div>
-            <div class="script-box">Hoje o que pesa mais pra você: o valor ou continuar convivendo com isso?<button class="copy-btn">Copiar</button></div>
+            <div class="script-box">Hoje o que pesa mais pra você: o valor ou continuar convivendo com isso?</div>
             <div class="script-label">Se estiver inclinada</div>
-            <div class="script-box">Quer que eu já veja uma data pra você?<button class="copy-btn">Copiar</button></div>
+            <div class="script-box">Quer que eu já veja uma data pra você?</div>
           </div>
         </div>
       </div>
@@ -374,7 +371,7 @@ Olha como melhorou essa região…<button class="copy-btn">Copiar</button></div>
         <div class="tl-content">
           <div class="tl-label" style="color:var(--green)">Fechamento Final — System</div>
           <div class="tl-card">
-            <div class="script-box green">Pra garantir sua vaga e esse valor, conseguimos fazer um sinal agora. Você prefere PIX ou cartão?<button class="copy-btn">Copiar</button></div>
+            <div class="script-box green">Pra garantir sua vaga e esse valor, conseguimos fazer um sinal agora. Você prefere PIX ou cartão?</div>
             <div class="tl-note">Sempre oferecer a opção — nunca perguntar "quer fazer?"</div>
           </div>
         </div>
@@ -418,11 +415,11 @@ Olha como melhorou essa região…<button class="copy-btn">Copiar</button></div>
           </div>
         </div>
         <div class="spin-body">
-          <div class="spin-q">Há quanto tempo você percebe essa mudança no seu rosto?<button class="copy-btn">Copiar</button></div>
-          <div class="spin-q">Isso começou de forma leve ou foi algo que você sentiu piorar mais recentemente?<button class="copy-btn">Copiar</button></div>
-          <div class="spin-q">Você já chegou a fazer algum procedimento pra tentar melhorar?<button class="copy-btn">Copiar</button></div>
+          <div class="spin-q">Há quanto tempo você percebe essa mudança no seu rosto?</div>
+          <div class="spin-q">Isso começou de forma leve ou foi algo que você sentiu piorar mais recentemente?</div>
+          <div class="spin-q">Você já chegou a fazer algum procedimento pra tentar melhorar?</div>
           <div class="spin-emot">Aprofundamento leve</div>
-          <div class="spin-q">Hoje, isso aparece mais em fotos, no espelho ou no dia a dia mesmo?<button class="copy-btn">Copiar</button></div>
+          <div class="spin-q">Hoje, isso aparece mais em fotos, no espelho ou no dia a dia mesmo?</div>
         </div>
       </div>
 
@@ -436,13 +433,13 @@ Olha como melhorou essa região…<button class="copy-btn">Copiar</button></div>
           </div>
         </div>
         <div class="spin-body">
-          <div class="spin-q">O que mais te incomoda quando você olha para essa região?<button class="copy-btn">Copiar</button></div>
-          <div class="spin-q">É algo que você pensa todos os dias ou só em alguns momentos?<button class="copy-btn">Copiar</button></div>
+          <div class="spin-q">O que mais te incomoda quando você olha para essa região?</div>
+          <div class="spin-q">É algo que você pensa todos os dias ou só em alguns momentos?</div>
           <div class="spin-emot">Emocional</div>
-          <div class="spin-q">Quando você se vê assim, o que passa na sua cabeça?<button class="copy-btn">Copiar</button></div>
-          <div class="spin-q">Você sente que isso não representa quem você é hoje?<button class="copy-btn">Copiar</button></div>
+          <div class="spin-q">Quando você se vê assim, o que passa na sua cabeça?</div>
+          <div class="spin-q">Você sente que isso não representa quem você é hoje?</div>
           <div class="spin-emot">Escala (urgência)</div>
-          <div class="spin-q">De 0 a 10, o quanto isso te incomoda hoje?<button class="copy-btn">Copiar</button></div>
+          <div class="spin-q">De 0 a 10, o quanto isso te incomoda hoje?</div>
         </div>
       </div>
 
@@ -458,11 +455,11 @@ Olha como melhorou essa região…<button class="copy-btn">Copiar</button></div>
         <div class="spin-body">
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
             <div>
-              <div class="spin-q">Você comentou que isso já te incomoda há um tempo… o que fez você ir adiando até agora?<button class="copy-btn">Copiar</button></div>
+              <div class="spin-q">Você comentou que isso já te incomoda há um tempo… o que fez você ir adiando até agora?</div>
               <div class="spin-note">(descobrir medo, dinheiro, insegurança)</div>
-              <div class="spin-q">E hoje, você sente que está melhorando ou piorando com o tempo?<button class="copy-btn">Copiar</button></div>
+              <div class="spin-q">E hoje, você sente que está melhorando ou piorando com o tempo?</div>
               <div class="spin-emot">Impacto direto</div>
-              <div class="spin-q">Isso tem afetado sua confiança? Fotos? Você evita alguns ângulos ou situações por conta disso?<button class="copy-btn">Copiar</button></div>
+              <div class="spin-q">Isso tem afetado sua confiança? Fotos? Você evita alguns ângulos ou situações por conta disso?</div>
             </div>
             <div>
               <div class="spin-key">🎯 Pergunta Chave: "Se nada mudar, como você imagina seu rosto daqui a 2 ou 3 anos?"</div>
@@ -485,15 +482,15 @@ Olha como melhorou essa região…<button class="copy-btn">Copiar</button></div>
         <div class="spin-body">
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
             <div>
-              <div class="spin-q">Resolver isso hoje, pra você, é uma vontade ou já virou uma necessidade?<button class="copy-btn">Copiar</button></div>
+              <div class="spin-q">Resolver isso hoje, pra você, é uma vontade ou já virou uma necessidade?</div>
             </div>
             <div>
               <div class="spin-emot">Visualização</div>
-              <div class="spin-q">Como você acredita que vai se sentir quando olhar no espelho e se reconhecer de novo?<button class="copy-btn">Copiar</button></div>
+              <div class="spin-q">Como você acredita que vai se sentir quando olhar no espelho e se reconhecer de novo?</div>
             </div>
             <div>
               <div class="spin-emot">Validação</div>
-              <div class="spin-q">Você sente que já passou do momento de tentar alternativas e quer algo mais definitivo?<button class="copy-btn">Copiar</button></div>
+              <div class="spin-q">Você sente que já passou do momento de tentar alternativas e quer algo mais definitivo?</div>
             </div>
           </div>
         </div>
@@ -518,30 +515,30 @@ Olha como melhorou essa região…<button class="copy-btn">Copiar</button></div>
     <p class="sec-desc">As etapas 6 a 9 em detalhe. O fechamento começa antes do preço — começa na ancoragem de valor.</p>
 
     <div class="sec-sub">Passo 1 — Pergunta de Compra (antes do preço)</div>
-    <div class="script-box">Tirando a parte de valores… você se vê fazendo esse procedimento?<button class="copy-btn">Copiar</button></div>
+    <div class="script-box">Tirando a parte de valores… você se vê fazendo esse procedimento?</div>
 
     <div class="sec-sub">Passo 2 — Preço (sem medo, com silêncio)</div>
-    <div class="script-box">O investimento para fazer isso hoje é de R$ X.<button class="copy-btn">Copiar</button></div>
+    <div class="script-box">O investimento para fazer isso hoje é de R$ X.</div>
     <div class="callout callout-red">
       <div class="callout-icon">🔇</div>
       <div><strong>Silêncio absoluto após falar o preço.</strong> Não preencha o vazio. Quem fala primeiro sente a pressão — deixa ela sentir.</div>
     </div>
 
     <div class="sec-sub">Passo 3 — Se ela travar (Checkmate)</div>
-    <div class="script-box">Hoje o que pesa mais pra você: o valor ou continuar convivendo com isso?<button class="copy-btn">Copiar</button></div>
+    <div class="script-box">Hoje o que pesa mais pra você: o valor ou continuar convivendo com isso?</div>
 
     <div class="sec-sub">Passo 4 — Se estiver inclinada</div>
-    <div class="script-box">Quer que eu já veja uma data pra você?<button class="copy-btn">Copiar</button></div>
+    <div class="script-box">Quer que eu já veja uma data pra você?</div>
 
     <div class="sec-sub">Passo 5 — Fechamento Final (System)</div>
-    <div class="script-box green">Pra garantir sua vaga e esse valor, conseguimos fazer um sinal agora. Você prefere PIX ou cartão?<button class="copy-btn">Copiar</button></div>
+    <div class="script-box green">Pra garantir sua vaga e esse valor, conseguimos fazer um sinal agora. Você prefere PIX ou cartão?</div>
     <div class="callout callout-green">
       <div class="callout-icon">✅</div>
       <div><strong>Ofereça a opção — nunca pergunte se quer fazer.</strong> A pergunta "PIX ou cartão?" pressupõe que ela vai fazer. A pergunta "quer fazer?" abre espaço para o não.</div>
     </div>
 
     <div class="sec-sub">Pacto do Sim ou Não — Use na Transição</div>
-    <div class="script-box highlight">Dona Maria, eu gostaria de fazer um combinado com você: de acordo com o que eu te apresentar e te explicar aqui, se fizer sentido pra você resolver essa questão que te afeta comigo, eu gostaria de um SIM, quero fazer, OU caso não faça sentido pra você, um NÃO quero fazer de forma muito clara, de toda forma vai ser um prazer te atender. Posso contar com seu sim ou não hoje?<button class="copy-btn">Copiar</button></div>
+    <div class="script-box highlight">Dona Maria, eu gostaria de fazer um combinado com você: de acordo com o que eu te apresentar e te explicar aqui, se fizer sentido pra você resolver essa questão que te afeta comigo, eu gostaria de um SIM, quero fazer, OU caso não faça sentido pra você, um NÃO quero fazer de forma muito clara, de toda forma vai ser um prazer te atender. Posso contar com seu sim ou não hoje?</div>
   </div>
 
   <!-- ─── FRASES ─── -->
@@ -550,10 +547,10 @@ Olha como melhorou essa região…<button class="copy-btn">Copiar</button></div>
     <p class="sec-desc">Use durante a conversa — naturalmente, não como script decorado. Cada uma ativa uma camada diferente: identidade, tempo, desejo, realidade.</p>
 
     <div class="frase-list">
-      <div class="frase-row">Isso não é só estética, é como você se enxerga.<button class="copy-btn">Copiar</button></div>
-      <div class="frase-row">O problema não é hoje, é a tendência disso.<button class="copy-btn">Copiar</button></div>
-      <div class="frase-row">Você não quer só melhorar, você quer se reconhecer.<button class="copy-btn">Copiar</button></div>
-      <div class="frase-row">Tem coisas que o tempo resolve… e outras que só tratamento resolve.<button class="copy-btn">Copiar</button></div>
+      <div class="frase-row">Isso não é só estética, é como você se enxerga.</div>
+      <div class="frase-row">O problema não é hoje, é a tendência disso.</div>
+      <div class="frase-row">Você não quer só melhorar, você quer se reconhecer.</div>
+      <div class="frase-row">Tem coisas que o tempo resolve… e outras que só tratamento resolve.</div>
     </div>
 
     <div class="sec-sub">Contexto de uso</div>
@@ -641,18 +638,6 @@ function showSection(id,el){
   if(el) el.classList.add('active');
   window.scrollTo({top:0,behavior:'smooth'});
 }
-document.querySelectorAll('.tl-q,.script-box,.frase-row').forEach(el=>{
-  const btn=el.querySelector('.copy-btn');
-  if(!btn) return;
-  const txt=el.textContent.replace(/Copiar|Copiado!/g,'').trim();
-  btn.onclick=function(e){
-    e.stopPropagation();
-    navigator.clipboard.writeText(txt).then(()=>{
-      btn.textContent='Copiado!';btn.classList.add('copied');
-      setTimeout(()=>{btn.textContent='Copiar';btn.classList.remove('copied');},2000);
-    });
-  };
-});
 </script>
 </body>
 </html>
