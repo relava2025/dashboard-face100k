@@ -2409,8 +2409,8 @@ function toggleOnbConclusaoSection(){
 function renderItemRow(item, i, {toggleFn, deleteFn, inputId}){
   const chkStyle = item.done ? 'background:var(--green);border-color:var(--green);color:#000' : 'border:1.5px solid var(--border);color:transparent';
   return `<div class="onb-item${item.done?' item-done':''}" style="padding-right:0">
-    <div class="onb-item-check" style="${chkStyle};cursor:pointer;flex-shrink:0" onclick="${toggleFn}">${checkSvgOnb}</div>
-    <input id="${inputId}" class="onb-item-input${item.done?' onb-input-done':''}" value="${item.text.replace(/"/g,'&quot;')}" placeholder="Descreva o item..." oninput="${inputId.startsWith('onb-inp-conc')?`onbConcTextChange(${i},this.value)`:`onbItemTextChange('${inputId.split('-')[2]}',${i},this.value)`}">
+    <div class="onb-item-check" style="${chkStyle};cursor:pointer;flex-shrink:0" onclick="event.stopPropagation();${toggleFn}">${checkSvgOnb}</div>
+    <input id="${inputId}" class="onb-item-input${item.done?' onb-input-done':''}" value="${item.text.replace(/"/g,'&quot;')}" placeholder="Descreva o item..." onclick="event.stopPropagation()" oninput="${inputId.startsWith('onb-inp-conc')?`onbConcTextChange(${i},this.value)`:`onbItemTextChange('${inputId.split('-')[2]}',${i},this.value)`}">
     <button class="onb-del-btn" onclick="${deleteFn}" title="Remover">✕</button>
   </div>`;
 }
