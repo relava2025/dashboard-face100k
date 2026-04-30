@@ -89,7 +89,12 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'In
 .msg-block{margin-bottom:14px}
 .msg-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim);margin-bottom:4px}
 .msg-struct{font-size:12px;color:var(--text-dim);margin-bottom:8px;font-style:italic}
-.wa-msg{background:var(--wa-bg);border:1px solid var(--wa-border);border-left:3px solid var(--green);border-radius:0 10px 10px 10px;padding:14px 18px;font-size:14px;line-height:1.9;color:var(--wa-text);white-space:pre-wrap}
+.msg-wrap{position:relative}
+.wa-msg{background:var(--wa-bg);border:1px solid var(--wa-border);border-left:3px solid var(--green);border-radius:0 10px 10px 10px;padding:14px 18px 14px 18px;font-size:14px;line-height:1.9;color:var(--wa-text);white-space:pre-wrap}
+.copy-btn{position:absolute;top:8px;right:8px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:4px 9px;font-size:11px;font-weight:600;color:var(--text-sec);cursor:pointer;transition:all .15s;letter-spacing:.02em;opacity:0}
+.msg-wrap:hover .copy-btn{opacity:1}
+.copy-btn:hover{background:var(--text);color:#fff;border-color:var(--text)}
+.copy-btn.copied{background:var(--green);color:#fff;border-color:var(--green);opacity:1}
 
 /* GUIDELINES */
 .guide-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:20px}
@@ -212,7 +217,7 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'In
         <div class="msg-block">
           <div class="msg-label">Exemplo 01 — Olhar Cansado</div>
           <div class="msg-struct">Estrutura: Pergunta surpresa + Educação + Identificação</div>
-          <div class="wa-msg">Você sabia que o problema pode não ser a pele?
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Você sabia que o problema pode não ser a pele?
 
 Muitas pessoas acreditam que o olhar cansado está ligado apenas à pele, mas na maioria dos casos envolve perda de estrutura na região dos olhos.
 
@@ -220,13 +225,13 @@ Isso faz com que a expressão fique mais pesada e envelhecida ao longo do tempo.
 
 Hoje já conseguimos tratar isso de forma natural e progressiva.
 
-Você sente que seu olhar parece mais cansado do que realmente está?</div>
+Você sente que seu olhar parece mais cansado do que realmente está?</div></div>
         </div>
 
         <div class="msg-block">
           <div class="msg-label">Exemplo 02 — Papada</div>
           <div class="msg-struct">Estrutura: Afirmação surpresa + Educação + CTA pergunta</div>
-          <div class="wa-msg">Nem sempre a papada está relacionada ao peso
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Nem sempre a papada está relacionada ao peso
 
 Você sabia que a papada pode estar ligada à flacidez e à estrutura do rosto — e não apenas ao acúmulo de gordura?
 
@@ -234,13 +239,13 @@ Por isso, em muitos casos, o tratamento não é só remover gordura, mas melhora
 
 Esse é um dos pontos mais comuns de queixa hoje em dia.
 
-Isso é algo que te incomoda?</div>
+Isso é algo que te incomoda?</div></div>
         </div>
 
         <div class="msg-block">
           <div class="msg-label">Exemplo 03 — Envelhecimento</div>
           <div class="msg-struct">Estrutura: Mito + Realidade + Solução + Pergunta</div>
-          <div class="wa-msg">O envelhecimento não acontece só na pele
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">O envelhecimento não acontece só na pele
 
 A maioria das pessoas acha que envelhecer é apenas "perder firmeza da pele", mas na verdade envolve mudanças mais profundas, como perda de volume e sustentação.
 
@@ -248,7 +253,7 @@ A maioria das pessoas acha que envelhecer é apenas "perder firmeza da pele", ma
 
 Hoje trabalhamos com abordagens mais completas e naturais.
 
-Você já percebeu alguma mudança assim no seu rosto?</div>
+Você já percebeu alguma mudança assim no seu rosto?</div></div>
         </div>
 
         <div class="guide-grid">
@@ -310,7 +315,7 @@ Você já percebeu alguma mudança assim no seu rosto?</div>
         <div class="msg-block">
           <div class="msg-label">Modelo Principal</div>
           <div class="msg-struct">Estrutura: Headline + Conteúdo + Prova + CTA indireto</div>
-          <div class="wa-msg">Melhorar a qualidade da sua pele sem exageros
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Melhorar a qualidade da sua pele sem exageros
 
 Bom dia, [Nome].
 
@@ -322,12 +327,12 @@ Esse tipo de tratamento tem trazido resultados muito interessantes, principalmen
 
 A imagem abaixo é um exemplo real de evolução.
 
-Se quiser, posso te enviar o vídeo para você entender melhor como funciona.</div>
+Se quiser, posso te enviar o vídeo para você entender melhor como funciona.</div></div>
         </div>
 
         <div class="msg-block">
           <div class="msg-label">Exemplo 01 — Rejuvenescimento</div>
-          <div class="wa-msg">Rejuvenescer sem mudar seu rosto é possível
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Rejuvenescer sem mudar seu rosto é possível
 
 Oi, [Nome].
 
@@ -339,12 +344,12 @@ Por isso, trabalhamos com abordagens mais completas e progressivas.
 
 Temos visto resultados muito interessantes com esse tipo de estratégia.
 
-Quer que eu te envie o vídeo para você entender melhor?</div>
+Quer que eu te envie o vídeo para você entender melhor?</div></div>
         </div>
 
         <div class="msg-block">
           <div class="msg-label">Exemplo 02 — Manchas / Melasma</div>
-          <div class="wa-msg">Por que seu melasma volta mesmo após tratamento?
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Por que seu melasma volta mesmo após tratamento?
 
 Oi, [Nome].
 
@@ -356,12 +361,12 @@ Hoje já trabalhamos com abordagens que tratam a pele de forma mais profunda e e
 
 A doutora explicou isso em um conteúdo bem simples.
 
-Se quiser, posso te enviar.</div>
+Se quiser, posso te enviar.</div></div>
         </div>
 
         <div class="msg-block">
           <div class="msg-label">Exemplo 03 — Flacidez</div>
-          <div class="wa-msg">Flacidez não é só falta de pele firme
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Flacidez não é só falta de pele firme
 
 Oi, [Nome].
 
@@ -373,7 +378,7 @@ Hoje já utilizamos estratégias que atuam de forma mais completa.
 
 Temos visto uma evolução muito interessante nos pacientes.
 
-Se quiser entender melhor, posso te explicar.</div>
+Se quiser entender melhor, posso te explicar.</div></div>
         </div>
 
         <div class="guide-grid">
@@ -425,7 +430,7 @@ Se quiser entender melhor, posso te explicar.</div>
         <div class="msg-block">
           <div class="msg-label">Mensagem 01 — Educação + Curiosidade</div>
           <div class="msg-struct">Estrutura: Headline + Conteúdo + CTA para assistir</div>
-          <div class="wa-msg">Entenda o que realmente está acontecendo com a sua pele
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Entenda o que realmente está acontecendo com a sua pele
 
 Bom dia, [Nome].
 
@@ -435,13 +440,13 @@ A doutora pediu para te enviar um conteúdo rápido explicando algo que muitos p
 
 A imagem abaixo é um exemplo real de resultado (antes e depois).
 
-Aqui o link para você assistir: [link]</div>
+Aqui o link para você assistir: [link]</div></div>
         </div>
 
         <div class="msg-block">
           <div class="msg-label">Mensagem 02 — Conteúdo + Direcionamento</div>
           <div class="msg-struct">Estrutura: Conteúdo + Benefício + CTA para avaliação</div>
-          <div class="wa-msg">Como melhorar a qualidade da pele de forma estruturada
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Como melhorar a qualidade da pele de forma estruturada
 
 Oi, [Nome].
 
@@ -453,13 +458,13 @@ Vale a pena assistir para entender melhor como funciona. [link]
 
 A agenda para avaliação desse tipo de tratamento está aberta a partir desta semana.
 
-Se quiser, posso te explicar como funciona e ver um horário para você.</div>
+Se quiser, posso te explicar como funciona e ver um horário para você.</div></div>
         </div>
 
         <div class="msg-block">
           <div class="msg-label">Mensagem 03 — Quebra de Objeção + Conversão</div>
           <div class="msg-struct">Estrutura: Quebra de objeção + Prova + CTA</div>
-          <div class="wa-msg">Você não precisa fazer tudo de uma vez
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Você não precisa fazer tudo de uma vez
 
 Bom dia, [Nome].
 
@@ -471,7 +476,7 @@ A doutora inclusive gravou um áudio explicando como estruturamos esse processo 
 
 Esse é um exemplo de paciente que seguiu esse planejamento e teve uma evolução natural e consistente.
 
-Se fizer sentido pra você, podemos agendar uma avaliação para entender o melhor caminho no seu caso.</div>
+Se fizer sentido pra você, podemos agendar uma avaliação para entender o melhor caminho no seu caso.</div></div>
         </div>
 
         <div class="guide-grid">
@@ -521,7 +526,7 @@ Se fizer sentido pra você, podemos agendar uma avaliação para entender o melh
         <div class="msg-block">
           <div class="msg-label">Mensagem 01 — Manifesto Emocional</div>
           <div class="msg-struct">Estrutura: Headline + Manifesto + Assinatura</div>
-          <div class="wa-msg">Cuidar do seu rosto vai muito além de estética
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Cuidar do seu rosto vai muito além de estética
 
 Nós acreditamos que cada rosto carrega história, identidade e expressão — e que qualquer tratamento deve respeitar isso acima de tudo.
 
@@ -530,13 +535,13 @@ Desde o início da clínica, nosso compromisso sempre foi oferecer um cuidado in
 Hoje queremos te lembrar que você não precisa mudar seu rosto — apenas cuidar dele da forma certa.
 
 Com carinho,
-[Nome da Clínica / Doutora]</div>
+[Nome da Clínica / Doutora]</div></div>
         </div>
 
         <div class="msg-block">
           <div class="msg-label">Mensagem 02 — Conteúdo + Posicionamento</div>
           <div class="msg-struct">Estrutura: Explicação + Autoridade + CTA</div>
-          <div class="wa-msg">Oi, [Nome].
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Oi, [Nome].
 
 Quando falamos em tratamentos estéticos, o mais importante não é apenas o procedimento, mas o planejamento por trás dele.
 
@@ -544,17 +549,17 @@ Aqui na clínica, trabalhamos com uma abordagem que respeita a estrutura do rost
 
 Isso faz toda diferença no resultado final e na sua satisfação ao longo do tempo.
 
-Se fizer sentido pra você, podemos marcar uma avaliação para entender o que realmente seria indicado no seu caso.</div>
+Se fizer sentido pra você, podemos marcar uma avaliação para entender o que realmente seria indicado no seu caso.</div></div>
         </div>
 
         <div class="msg-block">
           <div class="msg-label">Mensagem 03 — Convite para Avaliação</div>
           <div class="msg-struct">Estrutura: CTA direto</div>
-          <div class="wa-msg">Oi, [Nome].
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Oi, [Nome].
 
 Queremos te convidar para uma avaliação aqui na clínica, onde conseguimos analisar com mais precisão suas necessidades e te orientar da melhor forma.
 
-Quer que eu veja os horários disponíveis para você?</div>
+Quer que eu veja os horários disponíveis para você?</div></div>
         </div>
 
         <div class="guide-grid">
@@ -607,7 +612,7 @@ Quer que eu veja os horários disponíveis para você?</div>
         <div class="msg-block">
           <div class="msg-label">Mensagem 01 — Abertura (Conexão + Posicionamento)</div>
           <div class="msg-struct">Estrutura: Headline + Contexto + Apresentação da solução</div>
-          <div class="wa-msg">[Nome], posso te fazer uma pergunta?
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">[Nome], posso te fazer uma pergunta?
 
 Você já pensou em dar um presente que realmente impacta a autoestima de alguém?
 
@@ -615,12 +620,12 @@ Muitas pessoas acabam optando por algo comum… mas quando o assunto é estétic
 
 Pensando nisso, estruturamos aqui na clínica uma opção de vale-presente para tratamentos faciais, com protocolos personalizados e acompanhamento profissional.
 
-É uma forma diferente de presentear — com cuidado, segurança e resultado.</div>
+É uma forma diferente de presentear — com cuidado, segurança e resultado.</div></div>
         </div>
         <div class="msg-block">
           <div class="msg-label">Mensagem 02 — Desejo + Benefício + Condução</div>
           <div class="msg-struct">Estrutura: Conexão emocional + Benefício + Diferenciação + CTA</div>
-          <div class="wa-msg">Oi, [Nome].
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Oi, [Nome].
 
 Pensa em alguém importante pra você…
 
@@ -630,12 +635,12 @@ Aqui na clínica, todos os tratamentos são definidos de forma individual, respe
 
 Para esse período, liberamos uma condição especial para os vales-presente, com vantagens exclusivas para quem adquirir agora.
 
-Se fizer sentido pra você, posso te explicar como funciona e te orientar na melhor opção.</div>
+Se fizer sentido pra você, posso te explicar como funciona e te orientar na melhor opção.</div></div>
         </div>
         <div class="msg-block">
           <div class="msg-label">Mensagem 03 — Objeção + Segurança + Escassez</div>
           <div class="msg-struct">Estrutura: Escassez + Quebra de objeção + Segurança + CTA</div>
-          <div class="wa-msg">Bom dia, [Nome].
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Bom dia, [Nome].
 
 Estou passando para te avisar que estamos nos últimos dias para aquisição dos vales-presente com as condições especiais.
 
@@ -643,7 +648,7 @@ Um ponto importante: antes de qualquer procedimento, sempre realizamos uma avali
 
 Ou seja, não é apenas um presente — é um cuidado estruturado e personalizado.
 
-Se ainda estiver considerando, posso te explicar os detalhes e verificar as opções disponíveis.</div>
+Se ainda estiver considerando, posso te explicar os detalhes e verificar as opções disponíveis.</div></div>
         </div>
       </div>
     </div>
@@ -666,35 +671,35 @@ Se ainda estiver considerando, posso te explicar os detalhes e verificar as opç
         <div class="msg-block">
           <div class="msg-label">Mensagem 01 — Abertura (Interesse + Oportunidade)</div>
           <div class="msg-struct">Estrutura: Headline + Contexto + Direcionamento</div>
-          <div class="wa-msg">Cuidar da sua pele no momento certo faz toda diferença no resultado.
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Cuidar da sua pele no momento certo faz toda diferença no resultado.
 
 [Nome], neste mês estamos com uma condição especial em alguns protocolos estéticos aqui na clínica, pensados justamente para quem quer começar agora e já ver evolução nas próximas semanas.
 
 São tratamentos realizados de forma personalizada, respeitando sua pele e seu objetivo.
 
-Se fizer sentido pra você, posso te explicar melhor e ver um horário para avaliação.</div>
+Se fizer sentido pra você, posso te explicar melhor e ver um horário para avaliação.</div></div>
         </div>
         <div class="msg-block">
           <div class="msg-label">Mensagem 02 — Explicação da Condição (Valor + Clareza)</div>
           <div class="msg-struct">Estrutura: Explicação + Benefício + CTA</div>
-          <div class="wa-msg">[Nome], vou te explicar como está funcionando essa condição especial:
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">[Nome], vou te explicar como está funcionando essa condição especial:
 
 Neste período, alguns protocolos estão com condições facilitadas, justamente para incentivar quem já vinha pensando em começar um tratamento.
 
 O principal ponto aqui não é só a condição, mas a possibilidade de iniciar um cuidado estruturado, com acompanhamento e foco em resultado real.
 
-Se quiser, posso te orientar na melhor opção para o seu caso e já verificar disponibilidade de horários.</div>
+Se quiser, posso te orientar na melhor opção para o seu caso e já verificar disponibilidade de horários.</div></div>
         </div>
         <div class="msg-block">
           <div class="msg-label">Mensagem 03 — Fechamento (Escassez + Segurança)</div>
           <div class="msg-struct">Estrutura: Escassez leve + Reforço + CTA</div>
-          <div class="wa-msg">[Nome], estou passando para te avisar que estamos nos últimos dias com essa condição especial na clínica.
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">[Nome], estou passando para te avisar que estamos nos últimos dias com essa condição especial na clínica.
 
 Como a agenda é limitada, alguns horários já foram preenchidos.
 
 Se você ainda está pensando em começar, esse pode ser um bom momento para garantir sua avaliação e entender exatamente o que faz mais sentido pra você.
 
-Quer que eu veja os horários disponíveis para essa semana?</div>
+Quer que eu veja os horários disponíveis para essa semana?</div></div>
         </div>
       </div>
     </div>
@@ -717,7 +722,7 @@ Quer que eu veja os horários disponíveis para essa semana?</div>
         <div class="msg-block">
           <div class="msg-label">Mensagem 01 — Protocolo (Autoridade + Educação)</div>
           <div class="msg-struct">Estrutura: Headline sazonal + Explicação + CTA</div>
-          <div class="wa-msg">Inverno: o melhor momento para tratar a sua pele
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Inverno: o melhor momento para tratar a sua pele
 
 [Nome], essa época do ano é ideal para iniciar tratamentos mais completos, principalmente para quem sofre com manchas, melasma ou textura irregular.
 
@@ -725,12 +730,12 @@ Pensando nisso, estruturamos aqui na clínica um protocolo exclusivo, combinando
 
 O objetivo não é apenas tratar superficialmente, mas melhorar a pele como um todo — com mais uniformidade, viço e naturalidade.
 
-Se fizer sentido pra você, posso te orientar melhor e já verificar um horário para avaliação.</div>
+Se fizer sentido pra você, posso te orientar melhor e já verificar um horário para avaliação.</div></div>
         </div>
         <div class="msg-block">
           <div class="msg-label">Mensagem 02 — Prova Social (Resultado + Credibilidade)</div>
           <div class="msg-struct">Estrutura: Headline + Caso real + CTA</div>
-          <div class="wa-msg">Resultados que vão além da superfície
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Resultados que vão além da superfície
 
 [Nome], atendi recentemente uma paciente com queixa de manchas mais profundas e aspecto irregular da pele.
 
@@ -738,12 +743,12 @@ Após algumas sessões dentro desse protocolo, já conseguimos uma melhora signi
 
 Cada caso é individual, mas quando existe um planejamento bem definido, os resultados tendem a ser muito consistentes.
 
-Se você também sente esse incômodo, posso te explicar como funcionaria no seu caso e ver disponibilidade para avaliação.</div>
+Se você também sente esse incômodo, posso te explicar como funcionaria no seu caso e ver disponibilidade para avaliação.</div></div>
         </div>
         <div class="msg-block">
           <div class="msg-label">Mensagem 03 — Fechamento (Escassez + Segurança)</div>
           <div class="msg-struct">Estrutura: Escassez + Reforço + CTA</div>
-          <div class="wa-msg">Últimos horários para início do protocolo neste mês
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Últimos horários para início do protocolo neste mês
 
 [Nome], estamos finalizando a agenda para início desse protocolo ainda neste período mais favorável para tratamento de pele.
 
@@ -751,7 +756,7 @@ Como trabalhamos com avaliação individual e acompanhamento próximo, a disponi
 
 Se você já vinha pensando em começar, esse é um bom momento para garantir seu horário e entender exatamente o que sua pele precisa.
 
-Quer que eu veja os horários disponíveis para você?</div>
+Quer que eu veja os horários disponíveis para você?</div></div>
         </div>
       </div>
     </div>
@@ -773,7 +778,7 @@ Quer que eu veja os horários disponíveis para você?</div>
         <div class="msgs-title">SEQUÊNCIA DE 3 MENSAGENS</div>
         <div class="msg-block">
           <div class="msg-label">Mensagem 01 — Protocolo (Autoridade + Conexão)</div>
-          <div class="wa-msg">Período ideal para cuidar da sua pele
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Período ideal para cuidar da sua pele
 
 [Nome], essa época do ano é uma das mais indicadas para iniciar tratamentos de pele, principalmente para quem convive com manchas, melasma ou textura irregular.
 
@@ -781,11 +786,11 @@ Pensando nisso, desenvolvemos aqui na clínica um protocolo exclusivo, combinand
 
 O objetivo é melhorar não só a mancha, mas a qualidade da pele como um todo — trazendo mais uniformidade, viço e naturalidade.
 
-Se fizer sentido pra você, posso te orientar melhor e já verificar um horário para sua avaliação.</div>
+Se fizer sentido pra você, posso te orientar melhor e já verificar um horário para sua avaliação.</div></div>
         </div>
         <div class="msg-block">
           <div class="msg-label">Mensagem 02 — Prova Social com Escassez Leve</div>
-          <div class="wa-msg">Evolução real de tratamento de pele
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Evolução real de tratamento de pele
 
 [Nome], recentemente atendemos uma paciente com queixa de manchas mais profundas e aspecto irregular da pele, algo que já impactava bastante a autoestima dela.
 
@@ -793,11 +798,11 @@ Com algumas sessões dentro desse protocolo, já foi possível observar uma melh
 
 Cada caso é único, mas quando existe um planejamento bem definido, os resultados tendem a ser consistentes e naturais.
 
-Se você também se identifica com esse tipo de incômodo, posso te explicar como funcionaria no seu caso e ver os próximos horários disponíveis.</div>
+Se você também se identifica com esse tipo de incômodo, posso te explicar como funcionaria no seu caso e ver os próximos horários disponíveis.</div></div>
         </div>
         <div class="msg-block">
           <div class="msg-label">Mensagem 03 — Fechamento (Escassez + Segurança)</div>
-          <div class="wa-msg">Últimos horários para início do tratamento neste período
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Últimos horários para início do tratamento neste período
 
 [Nome], estamos finalizando a agenda para início desse protocolo ainda dentro dessa época mais favorável para tratamentos de pele.
 
@@ -805,7 +810,7 @@ Como o atendimento é feito de forma individual e com acompanhamento próximo, a
 
 Se você já vinha pensando em começar, esse é um bom momento para garantir sua avaliação e entender exatamente o que sua pele precisa.
 
-Quer que eu veja os horários disponíveis para você?</div>
+Quer que eu veja os horários disponíveis para você?</div></div>
         </div>
       </div>
     </div>
@@ -827,7 +832,7 @@ Quer que eu veja os horários disponíveis para você?</div>
         <div class="msgs-title">SEQUÊNCIA DE 3 MENSAGENS</div>
         <div class="msg-block">
           <div class="msg-label">Mensagem 01 — Abertura (Natural + Estratégica)</div>
-          <div class="wa-msg">Posso te fazer uma pergunta rápida?
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Posso te fazer uma pergunta rápida?
 
 [Nome], você conhece alguém que anda se incomodando com o cabelo, pele ou algum aspecto estético, mas ainda não tomou uma decisão para cuidar disso?
 
@@ -835,11 +840,11 @@ Aqui na clínica, temos recebido muitos pacientes que chegam justamente por indi
 
 Por isso, criamos uma forma de valorizar quem indica pessoas próximas, com condições especiais dentro da clínica.
 
-Se quiser, posso te explicar melhor como funciona.</div>
+Se quiser, posso te explicar melhor como funciona.</div></div>
         </div>
         <div class="msg-block">
           <div class="msg-label">Mensagem 02 — Explicação da Campanha (Valor + Benefício)</div>
-          <div class="wa-msg">[Nome], funciona de forma bem simples:
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">[Nome], funciona de forma bem simples:
 
 Quando você indica alguém e essa pessoa inicia o tratamento aqui na clínica, você recebe um benefício que pode ser utilizado nos seus próprios cuidados.
 
@@ -847,15 +852,15 @@ A ideia é valorizar quem confia no nosso trabalho e compartilha isso com pessoa
 
 Além disso, quem vem por indicação normalmente já chega mais seguro, o que melhora toda a experiência.
 
-Se você tiver alguém em mente, posso te orientar como fazer essa indicação de forma simples.</div>
+Se você tiver alguém em mente, posso te orientar como fazer essa indicação de forma simples.</div></div>
         </div>
         <div class="msg-block">
           <div class="msg-label">Mensagem 03 — Fechamento (Urgência + Direcionamento)</div>
-          <div class="wa-msg">[Nome], estamos reforçando esse formato de indicação nesse período justamente para organizar melhor a agenda com pacientes que já chegam mais alinhados com o nosso perfil de atendimento.
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">[Nome], estamos reforçando esse formato de indicação nesse período justamente para organizar melhor a agenda com pacientes que já chegam mais alinhados com o nosso perfil de atendimento.
 
 Se você tiver alguém que possa se beneficiar, esse é um bom momento para indicar e aproveitar as condições disponíveis.
 
-Quer que eu te explique rapidamente como funciona na prática?</div>
+Quer que eu te explique rapidamente como funciona na prática?</div></div>
         </div>
       </div>
     </div>
@@ -878,7 +883,7 @@ Quer que eu te explique rapidamente como funciona na prática?</div>
         <div class="msg-block">
           <div class="msg-label">Mensagem 01 — Abertura (Antecipação + Prioridade)</div>
           <div class="msg-struct">Estrutura: Headline + Contexto + CTA</div>
-          <div class="wa-msg">Antecipe seu cuidado para esse período
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Antecipe seu cuidado para esse período
 
 [Nome], abrimos a agenda para as próximas semanas porque esse costuma ser um dos períodos com maior procura por atendimentos estéticos.
 
@@ -886,12 +891,12 @@ Como os horários são limitados e trabalhamos com planejamento individual, a ag
 
 Como você já é paciente da clínica, quis te avisar antes para conseguir organizar seu atendimento com mais tranquilidade.
 
-Quer que eu veja os melhores horários disponíveis para você?</div>
+Quer que eu veja os melhores horários disponíveis para você?</div></div>
         </div>
         <div class="msg-block">
           <div class="msg-label">Mensagem 02 — Urgência Inteligente + Decisão</div>
           <div class="msg-struct">Estrutura: Headline + Argumento lógico + CTA</div>
-          <div class="wa-msg">O que acontece quando você deixa para marcar em cima da hora?
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">O que acontece quando você deixa para marcar em cima da hora?
 
 • Dificuldade para encontrar horário compatível com sua rotina
 • Necessidade de ajustar sua agenda para encaixar atendimento
@@ -901,12 +906,12 @@ Em períodos de maior movimento, isso é ainda mais comum.
 
 Se você já pensa em realizar algum cuidado estético nas próximas semanas, o ideal é se antecipar e garantir um horário mais confortável.
 
-Quer que eu te mostre as disponibilidades?</div>
+Quer que eu te mostre as disponibilidades?</div></div>
         </div>
         <div class="msg-block">
           <div class="msg-label">Mensagem 03 — Fechamento (Escassez Real + Direcionamento)</div>
           <div class="msg-struct">Estrutura: Escassez + Reforço + CTA</div>
-          <div class="wa-msg">Últimos horários disponíveis para esse período
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Últimos horários disponíveis para esse período
 
 [Nome], estamos finalizando a agenda dos próximos dias e restam poucos horários disponíveis.
 
@@ -914,7 +919,7 @@ Como priorizamos atendimentos com planejamento e acompanhamento, não conseguimo
 
 Se você ainda pretende se organizar para esse período, esse é o momento de garantir seu horário.
 
-Quer que eu veja o que ainda temos disponível para você?</div>
+Quer que eu veja o que ainda temos disponível para você?</div></div>
         </div>
       </div>
     </div>
@@ -936,7 +941,7 @@ Quer que eu veja o que ainda temos disponível para você?</div>
         <div class="msg-block">
           <div class="msg-label">Opção 01 — Para Parceiros / Maridos / Namorados</div>
           <div class="msg-struct">Estrutura: Headline + Contexto + Benefício + CTA</div>
-          <div class="wa-msg">Um presente que realmente faz sentido
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Um presente que realmente faz sentido
 
 Oi, [Nome do parceiro].
 
@@ -951,12 +956,12 @@ São ajustes sutis, mas que fazem muita diferença no resultado final.
 
 Para esse período, organizamos uma condição especial para quem deseja presentear com esse tipo de cuidado — sempre com avaliação individual e segurança.
 
-Se fizer sentido pra você, posso te explicar como funciona e te orientar na melhor opção.</div>
+Se fizer sentido pra você, posso te explicar como funciona e te orientar na melhor opção.</div></div>
         </div>
         <div class="msg-block">
           <div class="msg-label">Opção 02 — Para Pacientes / Autocuidado</div>
           <div class="msg-struct">Estrutura: Headline + Conteúdo + Benefício + CTA</div>
-          <div class="wa-msg">Um cuidado que valoriza ainda mais sua beleza
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Um cuidado que valoriza ainda mais sua beleza
 
 Oi, [Nome].
 
@@ -971,7 +976,7 @@ O mais importante é que tudo é feito de forma personalizada, respeitando o seu
 
 Para esse período, estruturamos uma condição especial para quem deseja iniciar esse cuidado com mais tranquilidade.
 
-Se quiser, posso te explicar melhor e até avaliar o seu caso para te orientar com mais precisão.</div>
+Se quiser, posso te explicar melhor e até avaliar o seu caso para te orientar com mais precisão.</div></div>
         </div>
       </div>
     </div>
@@ -1014,7 +1019,7 @@ Se quiser, posso te explicar melhor e até avaliar o seu caso para te orientar c
         <div class="msgs-title">SEQUÊNCIA DE 3 MENSAGENS</div>
         <div class="msg-block">
           <div class="msg-label">Mensagem 01 — Abertura (Educação + Oportunidade)</div>
-          <div class="wa-msg">Resultados mais rápidos no tratamento da sua pele
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Resultados mais rápidos no tratamento da sua pele
 
 [Nome], queria te trazer uma informação importante sobre os tratamentos que você já fez ou vem considerando aqui na clínica.
 
@@ -1024,11 +1029,11 @@ Hoje, já existem associações de tratamento que potencializam esse processo, a
 
 Estamos aplicando essa estratégia em alguns casos selecionados aqui na clínica.
 
-Se fizer sentido pra você, posso te explicar melhor e ver um horário para avaliação.</div>
+Se fizer sentido pra você, posso te explicar melhor e ver um horário para avaliação.</div></div>
         </div>
         <div class="msg-block">
           <div class="msg-label">Mensagem 02 — Prova Social + Benefício</div>
-          <div class="wa-msg">Quando o tratamento é bem planejado, o resultado muda
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Quando o tratamento é bem planejado, o resultado muda
 
 [Nome], recentemente aplicamos essa combinação de tratamentos em pacientes que buscavam melhorar firmeza, textura e qualidade da pele.
 
@@ -1038,11 +1043,11 @@ Esse tipo de abordagem faz parte da estética regenerativa, que hoje é uma das 
 
 Neste período, estamos incluindo um cuidado complementar dentro desse protocolo, como forma de potencializar o tratamento.
 
-Se quiser, posso te explicar como isso funcionaria no seu caso.</div>
+Se quiser, posso te explicar como isso funcionaria no seu caso.</div></div>
         </div>
         <div class="msg-block">
           <div class="msg-label">Mensagem 03 — Escassez + Decisão</div>
-          <div class="wa-msg">Últimos dias para iniciar com esse protocolo
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Últimos dias para iniciar com esse protocolo
 
 [Nome], estamos finalizando a agenda para esse tipo de tratamento com associação de técnicas ainda neste período.
 
@@ -1052,7 +1057,7 @@ Além disso, as condições atuais — incluindo o benefício adicional — são
 
 Se você já vinha pensando em iniciar ou dar continuidade ao seu tratamento, esse é um bom momento para garantir sua avaliação.
 
-Quer que eu veja os horários disponíveis para você?</div>
+Quer que eu veja os horários disponíveis para você?</div></div>
         </div>
 
         <div class="callout callout-amber">
@@ -1107,7 +1112,7 @@ Quer que eu veja os horários disponíveis para você?</div>
         <div class="msg-block">
           <div class="msg-label">Mensagem 01 — Antecipação (Curiosidade + Conexão)</div>
           <div class="msg-struct">Estrutura: Headline + Antecipação + Pergunta</div>
-          <div class="wa-msg">Novidade chegando para quem quer melhorar a qualidade da pele
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Novidade chegando para quem quer melhorar a qualidade da pele
 
 Bom dia, [Nome].
 
@@ -1117,12 +1122,12 @@ A doutora pediu para te avisar que nos próximos dias vamos lançar aqui na clí
 
 Vamos liberar todos os detalhes assim que abrirmos a agenda.
 
-Me conta uma coisa: isso é algo que tem te incomodado no dia a dia?</div>
+Me conta uma coisa: isso é algo que tem te incomodado no dia a dia?</div></div>
         </div>
         <div class="msg-block">
           <div class="msg-label">Mensagem 02 — Abertura de Agenda + Conteúdo</div>
           <div class="msg-struct">Estrutura: Conteúdo + Autoridade + CTA</div>
-          <div class="wa-msg">Agenda aberta para o novo protocolo de pele
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Agenda aberta para o novo protocolo de pele
 
 Oi, [Nome].
 
@@ -1132,11 +1137,11 @@ A doutora inclusive preparou um conteúdo explicando como funciona o tratamento,
 
 Nesse início, estamos organizando os atendimentos com algumas condições especiais para quem já acompanha a clínica.
 
-Se fizer sentido pra você, posso te explicar como funciona a avaliação e ver os horários disponíveis.</div>
+Se fizer sentido pra você, posso te explicar como funciona a avaliação e ver os horários disponíveis.</div></div>
         </div>
         <div class="msg-block">
           <div class="msg-label">Mensagem 03 — Escassez (Decisão + Urgência Leve)</div>
-          <div class="wa-msg">Últimos horários para início desse protocolo
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Últimos horários para início desse protocolo
 
 [Nome], estou passando para te avisar que estamos finalizando os horários disponíveis para esse novo protocolo nos próximos dias.
 
@@ -1146,7 +1151,7 @@ Além disso, as condições de lançamento são válidas apenas para esse primei
 
 Se você ainda está considerando começar, esse é um bom momento para garantir sua avaliação.
 
-Quer que eu veja os horários disponíveis para você?</div>
+Quer que eu veja os horários disponíveis para você?</div></div>
         </div>
 
         <div class="guide-grid">
@@ -1195,7 +1200,7 @@ Quer que eu veja os horários disponíveis para você?</div>
           <div class="phase-title">FASE 01 — CONVITE PARA O GRUPO</div>
           <div class="msg-block">
             <div class="msg-label">Dia 1 — Anúncio</div>
-            <div class="wa-msg">Tratamento completo para rejuvenescimento facial
+            <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Tratamento completo para rejuvenescimento facial
 
 [Nome], nos próximos dias vamos abrir aqui na clínica um protocolo mais completo, voltado para quem deseja tratar o envelhecimento facial de forma estruturada.
 
@@ -1203,11 +1208,11 @@ A proposta é atuar em diferentes camadas da pele, buscando melhora de firmeza, 
 
 Criamos um grupo exclusivo no WhatsApp para explicar todos os detalhes, tirar dúvidas e organizar os atendimentos.
 
-Se fizer sentido pra você, posso te enviar o link.</div>
+Se fizer sentido pra você, posso te enviar o link.</div></div>
           </div>
           <div class="msg-block">
             <div class="msg-label">Dia 2 — Conteúdo</div>
-            <div class="wa-msg">Como funciona um tratamento completo de pele
+            <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Como funciona um tratamento completo de pele
 
 [Nome], a doutora gravou um conteúdo explicando como tratamos o envelhecimento de forma mais completa — indo além de procedimentos isolados.
 
@@ -1215,17 +1220,17 @@ Esse tipo de abordagem costuma trazer resultados mais consistentes e naturais.
 
 Nos próximos dias vamos abrir a agenda para esse protocolo e organizar tudo pelo grupo VIP.
 
-Se quiser participar, posso te enviar o acesso.</div>
+Se quiser participar, posso te enviar o acesso.</div></div>
           </div>
           <div class="msg-block">
             <div class="msg-label">Dia 3 — Escassez (último dia para entrar)</div>
-            <div class="wa-msg">Último dia para entrar no grupo
+            <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Último dia para entrar no grupo
 
 [Nome], hoje é o último dia para entrar no grupo onde vamos liberar todas as informações e condições desse protocolo.
 
 Amanhã já começamos a organizar os atendimentos e a agenda.
 
-Se você quer entender melhor e avaliar se faz sentido pra você, vale a pena entrar agora.</div>
+Se você quer entender melhor e avaliar se faz sentido pra você, vale a pena entrar agora.</div></div>
           </div>
         </div>
 
@@ -1233,7 +1238,7 @@ Se você quer entender melhor e avaliar se faz sentido pra você, vale a pena en
           <div class="phase-title">FASE 02 — AQUECIMENTO (DENTRO DO GRUPO)</div>
           <div class="msg-block">
             <div class="msg-label">Boas-vindas</div>
-            <div class="wa-msg">Bem-vindas ao grupo
+            <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Bem-vindas ao grupo
 
 Esse é um grupo exclusivo para explicar com mais profundidade como funciona esse protocolo e como ele pode ajudar na melhora da qualidade da pele.
 
@@ -1241,37 +1246,37 @@ Nos próximos dias vamos compartilhar:
 • Como funciona o tratamento
 • Para quem é indicado
 • Resultados reais
-• Como será a organização da agenda</div>
+• Como será a organização da agenda</div></div>
           </div>
           <div class="msg-block">
             <div class="msg-label">Prova Social</div>
-            <div class="wa-msg">Por que esse tipo de tratamento funciona
+            <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Por que esse tipo de tratamento funciona
 
 Atendemos recentemente uma paciente com queixas de flacidez, linhas e perda de viço.
 
 Após um planejamento estruturado, conseguimos uma melhora significativa na qualidade da pele e no aspecto geral do rosto.
 
-Isso acontece porque trabalhamos o tratamento de forma integrada, e não isolada.</div>
+Isso acontece porque trabalhamos o tratamento de forma integrada, e não isolada.</div></div>
           </div>
           <div class="msg-block">
             <div class="msg-label">Bastidores (Autoridade)</div>
-            <div class="wa-msg">Como funciona na prática
+            <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Como funciona na prática
 
 A doutora preparou um conteúdo mostrando como esse protocolo é realizado, desde a avaliação até a execução.
 
 A ideia é tratar a pele de dentro para fora, respeitando cada caso.
 
-Nos próximos dias vamos abrir a agenda com uma condição especial para quem estiver no grupo.</div>
+Nos próximos dias vamos abrir a agenda com uma condição especial para quem estiver no grupo.</div></div>
           </div>
           <div class="msg-block">
             <div class="msg-label">Preparação para Oferta</div>
-            <div class="wa-msg">Se prepare para a abertura
+            <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Se prepare para a abertura
 
 Amanhã vamos abrir alguns horários para início do protocolo.
 
 Como o atendimento é individual e exige acompanhamento, a quantidade de vagas será limitada.
 
-Se tiver dúvidas, pode falar com a gente antes — isso ajuda você a decidir com mais segurança.</div>
+Se tiver dúvidas, pode falar com a gente antes — isso ajuda você a decidir com mais segurança.</div></div>
           </div>
         </div>
 
@@ -1279,31 +1284,31 @@ Se tiver dúvidas, pode falar com a gente antes — isso ajuda você a decidir c
           <div class="phase-title">FASE 03 — ABERTURA E VENDAS</div>
           <div class="msg-block">
             <div class="msg-label">Abertura da Agenda</div>
-            <div class="wa-msg">Agenda aberta
+            <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Agenda aberta
 
 Abrimos agora os horários para início do protocolo.
 
 Esse é o momento para quem deseja iniciar um cuidado mais completo e estruturado com a pele.
 
-Se quiser garantir sua avaliação, podemos verificar os horários disponíveis.</div>
+Se quiser garantir sua avaliação, podemos verificar os horários disponíveis.</div></div>
           </div>
           <div class="msg-block">
             <div class="msg-label">Reforço</div>
-            <div class="wa-msg">Últimos horários sendo preenchidos
+            <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Últimos horários sendo preenchidos
 
 Estamos com boa procura e os horários já estão sendo preenchidos.
 
-Se você pretende iniciar, vale garantir sua avaliação agora para conseguir um horário mais adequado.</div>
+Se você pretende iniciar, vale garantir sua avaliação agora para conseguir um horário mais adequado.</div></div>
           </div>
           <div class="msg-block">
             <div class="msg-label">Escassez + Prova</div>
-            <div class="wa-msg">Últimas vagas
+            <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Últimas vagas
 
 Restam poucos horários disponíveis para início desse protocolo.
 
 Esse tipo de tratamento exige planejamento individual, por isso não conseguimos abrir muitos encaixes.
 
-Se fizer sentido pra você, esse é o momento de garantir sua avaliação.</div>
+Se fizer sentido pra você, esse é o momento de garantir sua avaliação.</div></div>
           </div>
         </div>
 
@@ -1311,19 +1316,19 @@ Se fizer sentido pra você, esse é o momento de garantir sua avaliação.</div>
           <div class="phase-title">FASE 04 — ENCERRAMENTO / REAPROVEITAMENTO</div>
           <div class="msg-block">
             <div class="msg-label">Encerramento</div>
-            <div class="wa-msg">Encerramento da ação
+            <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Encerramento da ação
 
 Encerramos a organização da agenda para esse protocolo neste momento.
 
-Se você não conseguiu participar, em breve abriremos novas oportunidades.</div>
+Se você não conseguiu participar, em breve abriremos novas oportunidades.</div></div>
           </div>
           <div class="msg-block">
             <div class="msg-label">Downsell (Alternativa)</div>
-            <div class="wa-msg">Nova possibilidade de cuidado
+            <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Nova possibilidade de cuidado
 
 Para quem não conseguiu entrar nesse protocolo, estamos com uma condição especial para tratamentos mais pontuais, como manutenção de pele e cuidados básicos.
 
-Se quiser, posso te orientar.</div>
+Se quiser, posso te orientar.</div></div>
           </div>
         </div>
       </div>
@@ -1352,7 +1357,7 @@ Se quiser, posso te orientar.</div>
         <div class="msg-block">
           <div class="msg-label">Cenário 01 — Protocolo Completo (paciente já tem procedimento marcado)</div>
           <div class="msg-struct">Estrutura: Headline + Contexto + Posicionamento + Conteúdo</div>
-          <div class="wa-msg">Informações importantes sobre o seu atendimento
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Informações importantes sobre o seu atendimento
 
 [Nome], bom dia.
 
@@ -1362,12 +1367,12 @@ Aqui na clínica, mesmo quando o paciente realiza um procedimento específico, �
 
 Isso porque, muitas vezes, o melhor resultado não vem de um procedimento isolado, mas de um planejamento mais completo e personalizado.
 
-A doutora vai te explicar isso no dia, mas se quiser entender melhor antes, posso te enviar um conteúdo rápido explicando como trabalhamos essa abordagem.</div>
+A doutora vai te explicar isso no dia, mas se quiser entender melhor antes, posso te enviar um conteúdo rápido explicando como trabalhamos essa abordagem.</div></div>
         </div>
         <div class="msg-block">
           <div class="msg-label">Cenário 02 — Sugestão de Upgrade sem Pressão</div>
           <div class="msg-struct">Estrutura: Headline + Contexto + Sugestão + Prova + CTA</div>
-          <div class="wa-msg">Aproveitando melhor o seu atendimento
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Aproveitando melhor o seu atendimento
 
 [Nome], bom dia.
 
@@ -1379,7 +1384,7 @@ Muitos pacientes aproveitam esse momento para associar um cuidado adicional, com
 
 Temos observado resultados muito interessantes quando fazemos esse tipo de associação.
 
-Se fizer sentido pra você, posso te explicar melhor e verificar a disponibilidade para incluir no seu atendimento.</div>
+Se fizer sentido pra você, posso te explicar melhor e verificar a disponibilidade para incluir no seu atendimento.</div></div>
         </div>
 
         <div class="callout callout-amber">
@@ -1432,7 +1437,7 @@ Se fizer sentido pra você, posso te explicar melhor e verificar a disponibilida
         <div class="msgs-title">2 CENÁRIOS</div>
         <div class="msg-block">
           <div class="msg-label">Cenário 01 — Para Profissionais (Cursos / Imersões)</div>
-          <div class="wa-msg">Imersão avançada em estética facial
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Imersão avançada em estética facial
 
 Oi, [Nome].
 
@@ -1447,11 +1452,11 @@ Será um encontro completo, com foco em:
 
 A proposta é trazer uma visão mais estratégica e segura para quem busca evoluir na área.
 
-Se quiser, posso te enviar todas as informações e detalhes da programação.</div>
+Se quiser, posso te enviar todas as informações e detalhes da programação.</div></div>
         </div>
         <div class="msg-block">
           <div class="msg-label">Cenário 02 — Para Pacientes (Open Day / Evento VIP)</div>
-          <div class="wa-msg">Um convite especial para você conhecer novas abordagens de cuidado com a pele
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Um convite especial para você conhecer novas abordagens de cuidado com a pele
 
 Oi, [Nome].
 
@@ -1465,7 +1470,7 @@ Será um momento para:
 
 A ideia é que você consiga entender, com mais clareza, o que faz sentido para o seu caso — sem pressão, apenas orientação.
 
-Se quiser participar, posso te passar os detalhes e verificar as vagas disponíveis.</div>
+Se quiser participar, posso te passar os detalhes e verificar as vagas disponíveis.</div></div>
         </div>
 
         <div class="guide-grid">
@@ -1522,7 +1527,7 @@ Se quiser participar, posso te passar os detalhes e verificar as vagas disponív
         <div class="msgs-title">SEQUÊNCIA DE 4 MENSAGENS</div>
         <div class="msg-block">
           <div class="msg-label">Mensagem 01 — Antecipação (15 dias antes)</div>
-          <div class="wa-msg">Seu mês chegou — e é o momento ideal para se cuidar
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Seu mês chegou — e é o momento ideal para se cuidar
 
 [Nome], seu aniversário está se aproximando e queremos aproveitar essa data para te oferecer uma experiência especial aqui na clínica.
 
@@ -1530,11 +1535,11 @@ Durante o seu mês, organizamos condições diferenciadas para você iniciar ou 
 
 Além disso, incluímos um cuidado complementar para potencializar o resultado dos tratamentos realizados.
 
-Aproveite esse período para se olhar com mais atenção e se priorizar.</div>
+Aproveite esse período para se olhar com mais atenção e se priorizar.</div></div>
         </div>
         <div class="msg-block">
           <div class="msg-label">Mensagem 02 — Lembrete + Direcionamento (5 dias antes)</div>
-          <div class="wa-msg">Um ótimo momento para cuidar da sua pele
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Um ótimo momento para cuidar da sua pele
 
 Oi, [Nome].
 
@@ -1542,27 +1547,27 @@ Seu aniversário já está chegando — e esse costuma ser um dos melhores momen
 
 Se você já vinha pensando em realizar algum tratamento, essa é uma boa oportunidade para fazer isso de forma planejada e com benefícios exclusivos desse período.
 
-Se quiser, posso te orientar no que faz mais sentido para o seu caso e já verificar horários disponíveis para avaliação.</div>
+Se quiser, posso te orientar no que faz mais sentido para o seu caso e já verificar horários disponíveis para avaliação.</div></div>
         </div>
         <div class="msg-block">
           <div class="msg-label">Mensagem 03 — Dia do Aniversário (Relacionamento Puro)</div>
-          <div class="wa-msg">Feliz aniversário, [Nome]! 🎉
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Feliz aniversário, [Nome]! 🎉
 
 Que seu novo ciclo seja leve, feliz e cheio de conquistas.
 
 Desejamos muita saúde, bem-estar e, claro, que você continue se sentindo bem consigo mesma todos os dias.
 
-Um abraço de toda a equipe da clínica.</div>
+Um abraço de toda a equipe da clínica.</div></div>
         </div>
         <div class="msg-block">
           <div class="msg-label">Mensagem 04 — Encerramento (último dia do mês)</div>
-          <div class="wa-msg">Últimos dias para aproveitar seu benefício de aniversário
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Últimos dias para aproveitar seu benefício de aniversário
 
 [Nome], seu mês está chegando ao fim e queremos te lembrar que ainda dá tempo de aproveitar as condições especiais preparadas para você.
 
 Caso ainda esteja considerando iniciar ou retomar seus cuidados, esse é o momento ideal para garantir sua avaliação e organizar isso com mais tranquilidade.
 
-Quer que eu veja os horários disponíveis para você?</div>
+Quer que eu veja os horários disponíveis para você?</div></div>
         </div>
 
         <div class="guide-grid">
@@ -1615,7 +1620,7 @@ Quer que eu veja os horários disponíveis para você?</div>
         <div class="msgs-title">SEQUÊNCIA DE 2 MENSAGENS</div>
         <div class="msg-block">
           <div class="msg-label">Mensagem 01 — Apresentação do Programa</div>
-          <div class="wa-msg">Você sabia que seus cuidados podem te trazer benefícios ao longo do tempo?
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Você sabia que seus cuidados podem te trazer benefícios ao longo do tempo?
 
 [Nome], aqui na clínica estruturamos um programa onde cada tratamento realizado gera pontos que podem ser utilizados em cuidados futuros.
 
@@ -1623,11 +1628,11 @@ A ideia é incentivar um acompanhamento contínuo, facilitando a manutenção do
 
 Esses pontos podem ser convertidos em tratamentos complementares e benefícios dentro da clínica.
 
-Se fizer sentido pra você, posso te explicar como funciona na prática.</div>
+Se fizer sentido pra você, posso te explicar como funciona na prática.</div></div>
         </div>
         <div class="msg-block">
           <div class="msg-label">Mensagem 02 — Reforço (Lembrete + Valor)</div>
-          <div class="wa-msg">[Nome], você ainda não está aproveitando nosso programa de pontos
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">[Nome], você ainda não está aproveitando nosso programa de pontos
 
 Esse programa foi pensado justamente para pacientes que já entenderam a importância de manter um cuidado contínuo com a pele.
 
@@ -1635,7 +1640,7 @@ Além de facilitar o acesso a tratamentos complementares, ele ajuda a organizar 
 
 Ou seja, você não faz apenas um procedimento — você mantém um plano de cuidado ao longo do tempo.
 
-Se quiser, posso te explicar melhor como funcionaria para você.</div>
+Se quiser, posso te explicar melhor como funcionaria para você.</div></div>
         </div>
 
         <div class="guide-grid">
@@ -1689,7 +1694,7 @@ Se quiser, posso te explicar melhor como funcionaria para você.</div>
         <div class="msgs-title">SEQUÊNCIA DE 2 MENSAGENS</div>
         <div class="msg-block">
           <div class="msg-label">Mensagem 01 — Apresentação (Educação + Quebra de Objeção)</div>
-          <div class="wa-msg">Cuidar da sua pele de forma contínua faz toda diferença no resultado
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Cuidar da sua pele de forma contínua faz toda diferença no resultado
 
 [Nome], aqui na clínica estruturamos um modelo de acompanhamento para pacientes que desejam manter seus resultados ao longo do tempo, sem precisar começar do zero a cada período.
 
@@ -1697,11 +1702,11 @@ Funciona como um planejamento contínuo: você organiza seus cuidados e garante 
 
 Além disso, esse formato facilita o pagamento e evita decisões de última hora.
 
-Se fizer sentido pra você, posso te explicar como funcionaria no seu caso.</div>
+Se fizer sentido pra você, posso te explicar como funcionaria no seu caso.</div></div>
         </div>
         <div class="msg-block">
           <div class="msg-label">Mensagem 02 — Escassez + Prova + Reforço</div>
-          <div class="wa-msg">Estamos finalizando as adesões para esse formato de acompanhamento
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Estamos finalizando as adesões para esse formato de acompanhamento
 
 [Nome], estamos organizando um grupo de pacientes que optaram por esse modelo contínuo de cuidado, justamente para garantir melhor acompanhamento e organização da agenda.
 
@@ -1711,7 +1716,7 @@ Funciona de forma simples, com pagamento distribuído e organização prévia do
 
 Se você já pensava em manter seus cuidados de forma mais consistente, esse modelo pode fazer bastante sentido.
 
-Quer que eu te explique melhor antes de encerrarmos essa fase?</div>
+Quer que eu te explique melhor antes de encerrarmos essa fase?</div></div>
         </div>
 
         <div class="guide-grid">
@@ -1759,7 +1764,7 @@ Quer que eu te explique melhor antes de encerrarmos essa fase?</div>
         <div class="msgs-title">SEQUÊNCIA DE 3 MENSAGENS</div>
         <div class="msg-block">
           <div class="msg-label">Mensagem 01 — Convite para Indicar (Natural + Estratégico)</div>
-          <div class="wa-msg">Posso te fazer uma pergunta rápida?
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Posso te fazer uma pergunta rápida?
 
 [Nome], você conhece alguém que anda incomodado com alguma questão estética — como flacidez, manchas ou aspecto de cansaço — mas ainda não começou a cuidar disso?
 
@@ -1767,11 +1772,11 @@ Aqui na clínica, muitos pacientes chegam por indicação, justamente por já te
 
 Por isso, criamos uma forma de valorizar quem indica pessoas próximas, oferecendo benefícios dentro da própria clínica para quem participa.
 
-Se tiver alguém em mente, posso te explicar como funciona de forma simples.</div>
+Se tiver alguém em mente, posso te explicar como funciona de forma simples.</div></div>
         </div>
         <div class="msg-block">
           <div class="msg-label">Mensagem 02 — Explicação do Programa (Valor + Benefício)</div>
-          <div class="wa-msg">[Nome], funciona assim:
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">[Nome], funciona assim:
 
 Quando você indica alguém e essa pessoa inicia o tratamento aqui na clínica, você recebe um benefício que pode ser utilizado nos seus próprios cuidados.
 
@@ -1779,17 +1784,17 @@ A ideia não é apenas oferecer uma vantagem, mas valorizar quem confia no nosso
 
 Além disso, quem vem por indicação costuma ter uma experiência ainda melhor, porque já chega mais alinhado com o que fazemos aqui.
 
-Se quiser, posso te orientar como fazer a indicação de forma rápida.</div>
+Se quiser, posso te orientar como fazer a indicação de forma rápida.</div></div>
         </div>
         <div class="msg-block">
           <div class="msg-label">Mensagem 03 — Fechamento (Oportunidade + Ação)</div>
-          <div class="wa-msg">[Nome], estamos reforçando esse programa nesse período justamente para atender mais pacientes que chegam por indicação.
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">[Nome], estamos reforçando esse programa nesse período justamente para atender mais pacientes que chegam por indicação.
 
 Se você tiver alguém que pode se beneficiar de um cuidado mais estruturado com a pele ou rosto, esse é um ótimo momento para indicar.
 
 Além de ajudar essa pessoa, você ainda aproveita os benefícios dentro da clínica.
 
-Quer que eu te explique como funciona na prática?</div>
+Quer que eu te explique como funciona na prática?</div></div>
         </div>
 
         <div class="guide-grid">
@@ -1836,7 +1841,7 @@ Quer que eu te explique como funciona na prática?</div>
         <div class="msgs-title">SEQUÊNCIA DE 3 MENSAGENS</div>
         <div class="msg-block">
           <div class="msg-label">Mensagem 01 — Lembrete Estratégico (Educação + Cuidado)</div>
-          <div class="wa-msg">Está chegando o momento ideal para manutenção do seu tratamento
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Está chegando o momento ideal para manutenção do seu tratamento
 
 [Nome], bom dia.
 
@@ -1846,11 +1851,11 @@ Quando a manutenção é feita no tempo correto, conseguimos manter a pele mais 
 
 Além disso, o acompanhamento contínuo permite resultados mais naturais e duradouros ao longo do tempo.
 
-Quer que eu veja os melhores horários para você na próxima semana?</div>
+Quer que eu veja os melhores horários para você na próxima semana?</div></div>
         </div>
         <div class="msg-block">
           <div class="msg-label">Mensagem 02 — Reforço (Continuidade + Planejamento)</div>
-          <div class="wa-msg">Manter o resultado é tão importante quanto o tratamento
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Manter o resultado é tão importante quanto o tratamento
 
 [Nome], já estamos dentro do período ideal para dar continuidade ao seu tratamento.
 
@@ -1858,11 +1863,11 @@ A manutenção nesse momento ajuda a manter a suavidade da pele e evita que seja
 
 Esse acompanhamento progressivo é o que garante resultados mais naturais e consistentes ao longo do tempo.
 
-Vamos agendar sua manutenção e seguir com esse cuidado?</div>
+Vamos agendar sua manutenção e seguir com esse cuidado?</div></div>
         </div>
         <div class="msg-block">
           <div class="msg-label">Mensagem 03 — Fato Novo (Escassez + Condição)</div>
-          <div class="wa-msg">Organizando a agenda com condições especiais para manutenção
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Organizando a agenda com condições especiais para manutenção
 
 Oi, [Nome]!
 
@@ -1870,7 +1875,7 @@ Estamos organizando a agenda desse período e abrimos algumas condições facili
 
 Se você já estava pensando em renovar, esse é um bom momento para garantir seu horário e manter seus resultados com mais tranquilidade.
 
-Quer que eu veja as disponibilidades para você?</div>
+Quer que eu veja as disponibilidades para você?</div></div>
         </div>
 
         <div class="guide-grid">
@@ -1919,7 +1924,7 @@ Quer que eu veja as disponibilidades para você?</div>
         <div class="msgs-title">SEQUÊNCIA DE 2 MENSAGENS</div>
         <div class="msg-block">
           <div class="msg-label">Mensagem 01 — Reativação (Consciência + Valor)</div>
-          <div class="wa-msg">Você tem mantido o cuidado com a sua pele?
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Você tem mantido o cuidado com a sua pele?
 
 Oi, [Nome].
 
@@ -1931,11 +1936,11 @@ Recentemente, temos trabalhado com abordagens mais completas, focadas em estéti
 
 Inclusive, a doutora gravou um conteúdo explicando essa evolução — posso te enviar para você entender melhor.
 
-Se fizer sentido pra você retomar seus cuidados, posso verificar um horário para avaliação.</div>
+Se fizer sentido pra você retomar seus cuidados, posso verificar um horário para avaliação.</div></div>
         </div>
         <div class="msg-block">
           <div class="msg-label">Mensagem 02 — Reativação com Condição (Decisão + Incentivo)</div>
-          <div class="wa-msg">Um bom momento para retomar seus cuidados
+          <div class="msg-wrap"><button class="copy-btn" onclick="copyMsg(this)">Copiar</button><div class="wa-msg">Um bom momento para retomar seus cuidados
 
 Oi, [Nome].
 
@@ -1949,7 +1954,7 @@ Inclusive, tivemos pacientes que retomaram recentemente e já apresentaram uma e
 
 Se você estava pensando em voltar, esse pode ser um bom momento para organizar isso.
 
-Quer que eu veja os horários disponíveis para você?</div>
+Quer que eu veja os horários disponíveis para você?</div></div>
         </div>
 
         <div class="guide-grid">
@@ -1993,6 +1998,18 @@ function toggleAcc(hdr) {
   const isOpen = body.classList.contains('open');
   body.classList.toggle('open', !isOpen);
   chevron.classList.toggle('open', !isOpen);
+}
+
+function copyMsg(btn) {
+  const text = btn.nextElementSibling.innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copiado!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = 'Copiar';
+      btn.classList.remove('copied');
+    }, 1800);
+  });
 }
 </script>
 </body>
