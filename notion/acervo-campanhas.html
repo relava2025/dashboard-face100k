@@ -1,0 +1,1999 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Acervo de Campanhas — System Digital</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F8F9FA;--surface:#FFFFFF;--border:#E5E7EB;--border-soft:#F3F4F6;
+  --text:#111827;--text-sec:#6B7280;--text-dim:#9CA3AF;
+  --amber:#D97706;--amber-bg:#FFFBEB;--amber-border:#FDE68A;
+  --green:#059669;--green-bg:#ECFDF5;--green-border:#A7F3D0;
+  --blue:#2563EB;--blue-bg:#EFF6FF;--blue-border:#BFDBFE;
+  --red:#DC2626;--red-bg:#FEF2F2;--red-border:#FECACA;
+  --purple:#7C3AED;--purple-bg:#F5F3FF;--purple-border:#DDD6FE;
+  --wa-bg:#F0FDF4;--wa-border:#D1FAE5;--wa-text:#065F46;
+}
+html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:17px;line-height:1.65}
+
+/* TOPBAR */
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:12px 32px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50}
+.logo{font-size:14px;font-weight:700;letter-spacing:.02em;flex-shrink:0}
+.logo span{color:var(--amber)}
+.breadcrumb{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text-sec);flex:1}
+.breadcrumb-sep{color:var(--text-dim)}
+.breadcrumb-current{color:var(--text);font-weight:500}
+.mod-badge{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:.04em;background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-border);white-space:nowrap}
+
+.page{max-width:1180px;margin:0 auto;padding:48px 48px 100px}
+
+/* HERO */
+.hero{margin-bottom:40px}
+.hero-eyebrow{font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--amber);margin-bottom:12px}
+.hero-title{font-size:34px;font-weight:700;line-height:1.2;margin-bottom:14px}
+.hero-title span{color:var(--amber)}
+.hero-desc{font-size:17px;color:var(--text-sec);line-height:1.7;margin-bottom:28px;max-width:760px}
+.hero-stats{display:flex;gap:0;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface)}
+.hstat{flex:1;padding:20px 24px;text-align:center;border-right:1px solid var(--border)}
+.hstat:last-child{border-right:none}
+.hstat-val{font-size:26px;font-weight:700;color:var(--amber);line-height:1;margin-bottom:5px}
+.hstat-lbl{font-size:13px;color:var(--text-sec)}
+
+/* NAV */
+.nav-pills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:36px;padding-bottom:28px;border-bottom:1px solid var(--border)}
+.nav-pill{padding:8px 18px;border-radius:7px;font-size:15px;font-weight:500;cursor:pointer;transition:all .12s;color:var(--text-sec);border:1px solid transparent;white-space:nowrap}
+.nav-pill:hover{background:var(--border-soft);color:var(--text)}
+.nav-pill.active{background:var(--text);color:#fff;border-color:var(--text)}
+
+/* SECTIONS */
+.section{display:none;animation:fadeIn .2s ease}
+.section.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.sec-title{font-size:21px;font-weight:700;margin-bottom:6px}
+.sec-desc{font-size:16px;color:var(--text-sec);margin-bottom:28px;line-height:1.7}
+
+/* ACCORDION */
+.accordion{margin-bottom:8px;border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--surface)}
+.acc-hdr{padding:16px 20px;cursor:pointer;display:flex;align-items:center;gap:14px;user-select:none;transition:background .1s}
+.acc-hdr:hover{background:var(--border-soft)}
+.acc-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.acc-info{flex:1}
+.acc-name{font-size:16px;font-weight:600;color:var(--text)}
+.acc-sub{font-size:13px;color:var(--text-sec);margin-top:2px}
+.acc-right{display:flex;align-items:center;gap:10px}
+.acc-badge{padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:.04em;white-space:nowrap}
+.badge-amber{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-border)}
+.badge-green{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
+.badge-blue{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-border)}
+.badge-purple{background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-border)}
+.badge-red{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}
+.acc-chevron{font-size:14px;color:var(--text-dim);transition:transform .2s;flex-shrink:0}
+.acc-chevron.open{transform:rotate(180deg)}
+.acc-body{display:none;padding:20px 20px 24px;border-top:1px solid var(--border);background:var(--bg)}
+.acc-body.open{display:block}
+
+/* CONCEPT BOX */
+.concept-box{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:20px}
+.concept-title{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px}
+.concept-text{font-size:15px;color:var(--text-sec);line-height:1.75}
+.concept-bullets{list-style:none;display:flex;flex-direction:column;gap:6px;margin-top:10px}
+.concept-bullets li{font-size:14px;color:var(--text-sec);padding-left:20px;position:relative;line-height:1.6}
+.concept-bullets li::before{content:'→';position:absolute;left:0;color:var(--amber);font-weight:700}
+.concept-rule{font-size:14px;font-weight:600;color:var(--amber);background:var(--amber-bg);border:1px solid var(--amber-border);border-radius:8px;padding:10px 14px;margin-top:12px;line-height:1.6}
+
+/* MESSAGES */
+.msgs-title{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim);margin-bottom:14px;margin-top:20px}
+.msg-block{margin-bottom:14px}
+.msg-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim);margin-bottom:4px}
+.msg-struct{font-size:12px;color:var(--text-dim);margin-bottom:8px;font-style:italic}
+.wa-msg{background:var(--wa-bg);border:1px solid var(--wa-border);border-left:3px solid var(--green);border-radius:0 10px 10px 10px;padding:14px 18px;font-size:14px;line-height:1.9;color:var(--wa-text);white-space:pre-wrap}
+
+/* GUIDELINES */
+.guide-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:20px}
+.guide-box{border-radius:10px;padding:16px 18px}
+.guide-avoid{background:var(--red-bg);border:1px solid var(--red-border)}
+.guide-prio{background:var(--green-bg);border:1px solid var(--green-border)}
+.guide-title{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px}
+.guide-avoid .guide-title{color:#991B1B}
+.guide-prio .guide-title{color:#065F46}
+.guide-items{list-style:none;display:flex;flex-direction:column;gap:5px}
+.guide-avoid .guide-items li{font-size:13px;color:#991B1B;line-height:1.6;padding-left:18px;position:relative}
+.guide-avoid .guide-items li::before{content:'✗';position:absolute;left:0;font-weight:700}
+.guide-prio .guide-items li{font-size:13px;color:#065F46;line-height:1.6;padding-left:18px;position:relative}
+.guide-prio .guide-items li::before{content:'✓';position:absolute;left:0;font-weight:700}
+
+/* PHASE BLOCKS (for Grupo VIP) */
+.phase-block{margin-bottom:20px}
+.phase-title{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--blue);background:var(--blue-bg);border:1px solid var(--blue-border);border-radius:8px;padding:8px 14px;margin-bottom:12px;display:inline-block}
+
+/* DIVIDER */
+.camp-divider{height:1px;background:var(--border);margin:24px 0}
+
+/* CALLOUT */
+.callout{border-radius:10px;padding:14px 18px;font-size:14px;line-height:1.7;margin-bottom:20px;display:flex;gap:12px}
+.callout-amber{background:var(--amber-bg);border:1px solid var(--amber-border);color:#92400E}
+.callout-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+
+/* RESPONSIVE */
+@media(max-width:900px){.page{padding:32px 24px 80px}}
+@media(max-width:680px){
+  .topbar{padding:10px 16px;gap:8px}
+  .breadcrumb>span:not(.breadcrumb-current):not(.breadcrumb-sep){display:none}
+  .breadcrumb .breadcrumb-sep:first-child{display:none}
+  .hero-title{font-size:24px}
+  .hero-stats{flex-wrap:wrap}
+  .hstat{min-width:50%;border-bottom:1px solid var(--border)}
+  .nav-pill{padding:6px 12px;font-size:13px}
+  .guide-grid{grid-template-columns:1fr}
+  .acc-badge{display:none}
+}
+@media(max-width:400px){
+  .hero-title{font-size:21px}
+  .hstat{min-width:100%}
+  .mod-badge{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">FACE <span>100K</span></div>
+  <div class="breadcrumb">
+    <span>Workspace</span>
+    <span class="breadcrumb-sep">/</span>
+    <span>Playbooks</span>
+    <span class="breadcrumb-sep">/</span>
+    <span class="breadcrumb-current">Acervo de Campanhas</span>
+  </div>
+  <span class="mod-badge">17 CAMPANHAS</span>
+</div>
+
+<div class="page">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-eyebrow">Playbook · SDR &amp; Relacionamento</div>
+    <h1 class="hero-title">Acervo de <span>Campanhas</span></h1>
+    <p class="hero-desc">Biblioteca completa de campanhas de WhatsApp para clínicas de estética facial. Cada campanha inclui conceito estratégico, sequência de mensagens prontas e diretrizes de posicionamento.</p>
+    <div class="hero-stats">
+      <div class="hstat"><div class="hstat-val">17</div><div class="hstat-lbl">Campanhas</div></div>
+      <div class="hstat"><div class="hstat-val">4</div><div class="hstat-lbl">Categorias</div></div>
+      <div class="hstat"><div class="hstat-val">60+</div><div class="hstat-lbl">Mensagens prontas</div></div>
+      <div class="hstat"><div class="hstat-val">WhatsApp</div><div class="hstat-lbl">Canal principal</div></div>
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <div class="nav-pills">
+    <div class="nav-pill active" onclick="showSection('captacao',this)">Captação</div>
+    <div class="nav-pill" onclick="showSection('sazonalidade',this)">Sazonalidade</div>
+    <div class="nav-pill" onclick="showSection('estrategia',this)">Estratégia</div>
+    <div class="nav-pill" onclick="showSection('fidelizacao',this)">Fidelização &amp; Retenção</div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- TAB 1 — CAPTAÇÃO -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <div id="captacao" class="section active">
+    <div class="sec-title">Captação e Awareness</div>
+    <p class="sec-desc">Campanhas que despertam interesse, educam o paciente e preparam o terreno antes de qualquer oferta direta. Use no início da jornada ou para aquecer leads frios.</p>
+
+    <!-- CURIOSIDADE -->
+    <div class="accordion">
+      <div class="acc-hdr" onclick="toggleAcc(this)">
+        <div class="acc-icon" style="background:#FEF9C3">🎯</div>
+        <div class="acc-info">
+          <div class="acc-name">Campanha Curiosidade</div>
+          <div class="acc-sub">Desperta interesse identificando uma dor estética — sem vender</div>
+        </div>
+        <div class="acc-right">
+          <span class="acc-badge badge-amber">Topo de Funil</span>
+          <span class="acc-chevron">▼</span>
+        </div>
+      </div>
+      <div class="acc-body">
+        <div class="concept-box">
+          <div class="concept-title">Conceito Estratégico</div>
+          <p class="concept-text">Chamar atenção, gerar identificação com uma dor estética e iniciar conversas. Não é venda direta — é o primeiro passo para despertar interesse.</p>
+          <ul class="concept-bullets">
+            <li>Chamar atenção com uma pergunta ou afirmação surpreendente</li>
+            <li>Gerar identificação com uma queixa real do paciente</li>
+            <li>Educar de forma leve e simples</li>
+            <li>Sempre terminar com pergunta aberta</li>
+          </ul>
+          <div class="concept-rule">👉 Não é venda direta — é o primeiro passo para despertar interesse</div>
+        </div>
+
+        <div class="msgs-title">MODELOS DE MENSAGEM</div>
+
+        <div class="msg-block">
+          <div class="msg-label">Exemplo 01 — Olhar Cansado</div>
+          <div class="msg-struct">Estrutura: Pergunta surpresa + Educação + Identificação</div>
+          <div class="wa-msg">Você sabia que o problema pode não ser a pele?
+
+Muitas pessoas acreditam que o olhar cansado está ligado apenas à pele, mas na maioria dos casos envolve perda de estrutura na região dos olhos.
+
+Isso faz com que a expressão fique mais pesada e envelhecida ao longo do tempo.
+
+Hoje já conseguimos tratar isso de forma natural e progressiva.
+
+Você sente que seu olhar parece mais cansado do que realmente está?</div>
+        </div>
+
+        <div class="msg-block">
+          <div class="msg-label">Exemplo 02 — Papada</div>
+          <div class="msg-struct">Estrutura: Afirmação surpresa + Educação + CTA pergunta</div>
+          <div class="wa-msg">Nem sempre a papada está relacionada ao peso
+
+Você sabia que a papada pode estar ligada à flacidez e à estrutura do rosto — e não apenas ao acúmulo de gordura?
+
+Por isso, em muitos casos, o tratamento não é só remover gordura, mas melhorar a sustentação da região.
+
+Esse é um dos pontos mais comuns de queixa hoje em dia.
+
+Isso é algo que te incomoda?</div>
+        </div>
+
+        <div class="msg-block">
+          <div class="msg-label">Exemplo 03 — Envelhecimento</div>
+          <div class="msg-struct">Estrutura: Mito + Realidade + Solução + Pergunta</div>
+          <div class="wa-msg">O envelhecimento não acontece só na pele
+
+A maioria das pessoas acha que envelhecer é apenas "perder firmeza da pele", mas na verdade envolve mudanças mais profundas, como perda de volume e sustentação.
+
+É por isso que tratamentos isolados muitas vezes não entregam o resultado esperado.
+
+Hoje trabalhamos com abordagens mais completas e naturais.
+
+Você já percebeu alguma mudança assim no seu rosto?</div>
+        </div>
+
+        <div class="guide-grid">
+          <div class="guide-box guide-avoid">
+            <div class="guide-title">❌ Evitar</div>
+            <ul class="guide-items">
+              <li>Texto longo demais</li>
+              <li>Explicação técnica ou médica</li>
+              <li>Tentar vender no mesmo momento</li>
+              <li>Não finalizar com pergunta</li>
+            </ul>
+          </div>
+          <div class="guide-box guide-prio">
+            <div class="guide-title">✅ Priorizar</div>
+            <ul class="guide-items">
+              <li>Linguagem simples e direta</li>
+              <li>Foco em dor real do paciente</li>
+              <li>Gerar identificação emocional</li>
+              <li>Sempre terminar com pergunta</li>
+              <li>Abrir espaço para conversa</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="callout callout-amber" style="margin-top:16px;margin-bottom:0">
+          <span class="callout-icon">💡</span>
+          <span>Ideal para: iniciar conversas no WhatsApp, responder stories, social selling (SDR), aquecer leads frios.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- AQUECIMENTO GERAL -->
+    <div class="accordion">
+      <div class="acc-hdr" onclick="toggleAcc(this)">
+        <div class="acc-icon" style="background:#EFF6FF">🔥</div>
+        <div class="acc-info">
+          <div class="acc-name">Campanha Aquecimento Geral</div>
+          <div class="acc-sub">Prepara o paciente antes de uma oferta — construção de desejo</div>
+        </div>
+        <div class="acc-right">
+          <span class="acc-badge badge-blue">Pré-oferta</span>
+          <span class="acc-chevron">▼</span>
+        </div>
+      </div>
+      <div class="acc-body">
+        <div class="concept-box">
+          <div class="concept-title">Conceito Estratégico</div>
+          <p class="concept-text">Preparar o paciente antes de uma oferta, aumentar o nível de consciência e aproximar o paciente da clínica. Não é venda — é construção de desejo.</p>
+          <ul class="concept-bullets">
+            <li>Headline chamativa sobre uma dor ou mito</li>
+            <li>Conteúdo educativo com autoridade da doutora</li>
+            <li>Prova social (resultado real ou antes/depois)</li>
+            <li>CTA indireto — convite para entender mais</li>
+          </ul>
+        </div>
+
+        <div class="msgs-title">MODELO PRINCIPAL + EXEMPLOS PRONTOS</div>
+
+        <div class="msg-block">
+          <div class="msg-label">Modelo Principal</div>
+          <div class="msg-struct">Estrutura: Headline + Conteúdo + Prova + CTA indireto</div>
+          <div class="wa-msg">Melhorar a qualidade da sua pele sem exageros
+
+Bom dia, [Nome].
+
+A doutora pediu para te enviar um conteúdo rápido explicando uma abordagem que temos utilizado aqui na clínica para melhorar a qualidade da pele de forma progressiva e natural.
+
+É um vídeo curto, onde ela mostra como trabalhamos o envelhecimento da pele indo além de procedimentos isolados, com foco em estrutura, colágeno e regeneração.
+
+Esse tipo de tratamento tem trazido resultados muito interessantes, principalmente para quem busca naturalidade.
+
+A imagem abaixo é um exemplo real de evolução.
+
+Se quiser, posso te enviar o vídeo para você entender melhor como funciona.</div>
+        </div>
+
+        <div class="msg-block">
+          <div class="msg-label">Exemplo 01 — Rejuvenescimento</div>
+          <div class="wa-msg">Rejuvenescer sem mudar seu rosto é possível
+
+Oi, [Nome].
+
+A doutora gravou um conteúdo explicando como conseguimos melhorar o aspecto do rosto sem exageros, respeitando a naturalidade.
+
+Hoje sabemos que o envelhecimento não está só na pele, e sim na estrutura do rosto como um todo.
+
+Por isso, trabalhamos com abordagens mais completas e progressivas.
+
+Temos visto resultados muito interessantes com esse tipo de estratégia.
+
+Quer que eu te envie o vídeo para você entender melhor?</div>
+        </div>
+
+        <div class="msg-block">
+          <div class="msg-label">Exemplo 02 — Manchas / Melasma</div>
+          <div class="wa-msg">Por que seu melasma volta mesmo após tratamento?
+
+Oi, [Nome].
+
+Muitas pessoas tratam o melasma, mas não entendem por que ele volta com o tempo.
+
+Isso acontece porque, na maioria dos casos, o tratamento não atua na causa, apenas na superfície da pele.
+
+Hoje já trabalhamos com abordagens que tratam a pele de forma mais profunda e estruturada.
+
+A doutora explicou isso em um conteúdo bem simples.
+
+Se quiser, posso te enviar.</div>
+        </div>
+
+        <div class="msg-block">
+          <div class="msg-label">Exemplo 03 — Flacidez</div>
+          <div class="wa-msg">Flacidez não é só falta de pele firme
+
+Oi, [Nome].
+
+A maioria das pessoas associa flacidez apenas à pele, mas ela está muito ligada à perda de colágeno e sustentação ao longo do tempo.
+
+Por isso, tratamentos isolados nem sempre resolvem o problema completamente.
+
+Hoje já utilizamos estratégias que atuam de forma mais completa.
+
+Temos visto uma evolução muito interessante nos pacientes.
+
+Se quiser entender melhor, posso te explicar.</div>
+        </div>
+
+        <div class="guide-grid">
+          <div class="guide-box guide-avoid">
+            <div class="guide-title">❌ Evitar</div>
+            <ul class="guide-items">
+              <li>Tentar vender direto</li>
+              <li>Texto muito técnico</li>
+              <li>Mensagem longa demais</li>
+              <li>Não gerar curiosidade</li>
+            </ul>
+          </div>
+          <div class="guide-box guide-prio">
+            <div class="guide-title">✅ Priorizar</div>
+            <ul class="guide-items">
+              <li>Gerar curiosidade</li>
+              <li>Usar linguagem simples</li>
+              <li>Mostrar autoridade da doutora</li>
+              <li>Incluir prova (antes/depois ou vídeo)</li>
+              <li>Terminar abrindo conversa</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- APRESENTAÇÃO -->
+    <div class="accordion">
+      <div class="acc-hdr" onclick="toggleAcc(this)">
+        <div class="acc-icon" style="background:#F5F3FF">📚</div>
+        <div class="acc-info">
+          <div class="acc-name">Campanha Apresentação</div>
+          <div class="acc-sub">Educação + Conversão — aumenta nível de consciência antes de vender</div>
+        </div>
+        <div class="acc-right">
+          <span class="acc-badge badge-purple">Educação</span>
+          <span class="acc-chevron">▼</span>
+        </div>
+      </div>
+      <div class="acc-body">
+        <div class="concept-box">
+          <div class="concept-title">Conceito Estratégico</div>
+          <p class="concept-text">Não vende direto. Primeiro explica — depois convida. Serve para aumentar nível de consciência do paciente, educar sobre o problema e preparar para agendamento.</p>
+          <div class="concept-rule">👉 Primeiro você explica &nbsp;→&nbsp; Depois você convida</div>
+        </div>
+
+        <div class="msgs-title">SEQUÊNCIA DE 3 MENSAGENS</div>
+
+        <div class="msg-block">
+          <div class="msg-label">Mensagem 01 — Educação + Curiosidade</div>
+          <div class="msg-struct">Estrutura: Headline + Conteúdo + CTA para assistir</div>
+          <div class="wa-msg">Entenda o que realmente está acontecendo com a sua pele
+
+Bom dia, [Nome].
+
+A doutora pediu para te enviar um conteúdo rápido explicando algo que muitos pacientes não sabem: o envelhecimento do rosto não está ligado apenas à pele, mas também à estrutura e ao colágeno ao longo do tempo.
+
+É um vídeo curto onde ela explica de forma simples como isso acontece e quais são as formas atuais de tratar, mantendo naturalidade.
+
+A imagem abaixo é um exemplo real de resultado (antes e depois).
+
+Aqui o link para você assistir: [link]</div>
+        </div>
+
+        <div class="msg-block">
+          <div class="msg-label">Mensagem 02 — Conteúdo + Direcionamento</div>
+          <div class="msg-struct">Estrutura: Conteúdo + Benefício + CTA para avaliação</div>
+          <div class="wa-msg">Como melhorar a qualidade da pele de forma estruturada
+
+Oi, [Nome].
+
+A doutora gravou um conteúdo explicando como conseguimos melhorar a firmeza, textura e qualidade da pele ao longo do tempo, sem precisar recorrer a mudanças exageradas.
+
+O principal ponto é entender que cada caso precisa de um planejamento — e não de procedimentos isolados.
+
+Vale a pena assistir para entender melhor como funciona. [link]
+
+A agenda para avaliação desse tipo de tratamento está aberta a partir desta semana.
+
+Se quiser, posso te explicar como funciona e ver um horário para você.</div>
+        </div>
+
+        <div class="msg-block">
+          <div class="msg-label">Mensagem 03 — Quebra de Objeção + Conversão</div>
+          <div class="msg-struct">Estrutura: Quebra de objeção + Prova + CTA</div>
+          <div class="wa-msg">Você não precisa fazer tudo de uma vez
+
+Bom dia, [Nome].
+
+Essa semana te enviei algumas informações sobre tratamentos de rejuvenescimento, e é comum que muitas pessoas pensem que precisam fazer tudo de uma vez só.
+
+Mas na prática, o tratamento é feito de forma progressiva, respeitando o tempo e o objetivo de cada paciente.
+
+A doutora inclusive gravou um áudio explicando como estruturamos esse processo ao longo do tempo, com etapas bem definidas.
+
+Esse é um exemplo de paciente que seguiu esse planejamento e teve uma evolução natural e consistente.
+
+Se fizer sentido pra você, podemos agendar uma avaliação para entender o melhor caminho no seu caso.</div>
+        </div>
+
+        <div class="guide-grid">
+          <div class="guide-box guide-avoid">
+            <div class="guide-title">❌ Evitar</div>
+            <ul class="guide-items">
+              <li>Vender logo na primeira mensagem</li>
+              <li>Falar de preço cedo</li>
+              <li>Linguagem comercial direta</li>
+            </ul>
+          </div>
+          <div class="guide-box guide-prio">
+            <div class="guide-title">✅ Priorizar</div>
+            <ul class="guide-items">
+              <li>Educação e informação</li>
+              <li>Autoridade da doutora</li>
+              <li>Explicação simples</li>
+              <li>Prova (antes/depois)</li>
+              <li>Condução para avaliação</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- POSICIONAMENTO -->
+    <div class="accordion">
+      <div class="acc-hdr" onclick="toggleAcc(this)">
+        <div class="acc-icon" style="background:#F0FDF4">🏆</div>
+        <div class="acc-info">
+          <div class="acc-name">Campanha Posicionamento</div>
+          <div class="acc-sub">Reforça autoridade, constrói percepção de valor e diferencia da concorrência</div>
+        </div>
+        <div class="acc-right">
+          <span class="acc-badge badge-green">Marca</span>
+          <span class="acc-chevron">▼</span>
+        </div>
+      </div>
+      <div class="acc-body">
+        <div class="concept-box">
+          <div class="concept-title">Conceito Estratégico</div>
+          <p class="concept-text">Não serve para vender diretamente. Serve para mostrar no que a clínica acredita, reforçar autoridade e diferenciar da concorrência. O paciente escolhe quem transmite confiança — não apenas quem oferece procedimento.</p>
+        </div>
+
+        <div class="msgs-title">SEQUÊNCIA DE 3 MENSAGENS</div>
+
+        <div class="msg-block">
+          <div class="msg-label">Mensagem 01 — Manifesto Emocional</div>
+          <div class="msg-struct">Estrutura: Headline + Manifesto + Assinatura</div>
+          <div class="wa-msg">Cuidar do seu rosto vai muito além de estética
+
+Nós acreditamos que cada rosto carrega história, identidade e expressão — e que qualquer tratamento deve respeitar isso acima de tudo.
+
+Desde o início da clínica, nosso compromisso sempre foi oferecer um cuidado individualizado, com foco em naturalidade, segurança e resultados que valorizem quem você já é.
+
+Hoje queremos te lembrar que você não precisa mudar seu rosto — apenas cuidar dele da forma certa.
+
+Com carinho,
+[Nome da Clínica / Doutora]</div>
+        </div>
+
+        <div class="msg-block">
+          <div class="msg-label">Mensagem 02 — Conteúdo + Posicionamento</div>
+          <div class="msg-struct">Estrutura: Explicação + Autoridade + CTA</div>
+          <div class="wa-msg">Oi, [Nome].
+
+Quando falamos em tratamentos estéticos, o mais importante não é apenas o procedimento, mas o planejamento por trás dele.
+
+Aqui na clínica, trabalhamos com uma abordagem que respeita a estrutura do rosto e busca resultados progressivos e naturais — evitando excessos e mantendo a harmonia.
+
+Isso faz toda diferença no resultado final e na sua satisfação ao longo do tempo.
+
+Se fizer sentido pra você, podemos marcar uma avaliação para entender o que realmente seria indicado no seu caso.</div>
+        </div>
+
+        <div class="msg-block">
+          <div class="msg-label">Mensagem 03 — Convite para Avaliação</div>
+          <div class="msg-struct">Estrutura: CTA direto</div>
+          <div class="wa-msg">Oi, [Nome].
+
+Queremos te convidar para uma avaliação aqui na clínica, onde conseguimos analisar com mais precisão suas necessidades e te orientar da melhor forma.
+
+Quer que eu veja os horários disponíveis para você?</div>
+        </div>
+
+        <div class="guide-grid">
+          <div class="guide-box guide-avoid">
+            <div class="guide-title">❌ Evitar</div>
+            <ul class="guide-items">
+              <li>Falar só de procedimento</li>
+              <li>Comunicação genérica</li>
+              <li>Focar apenas em promoção</li>
+              <li>Não mostrar diferencial</li>
+            </ul>
+          </div>
+          <div class="guide-box guide-prio">
+            <div class="guide-title">✅ Posicionamento Correto</div>
+            <ul class="guide-items">
+              <li>A clínica como especialista</li>
+              <li>Segura e ética</li>
+              <li>Foco em naturalidade</li>
+              <li>Abordagem estruturada</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /captacao -->
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- TAB 2 — SAZONALIDADE -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <div id="sazonalidade" class="section">
+    <div class="sec-title">Sazonalidade e Datas</div>
+    <p class="sec-desc">Campanhas ativadas em períodos de baixa demanda ou datas comemorativas. Cada modelo tem uma abordagem diferente — escolha conforme o contexto da clínica.</p>
+
+    <!-- BAIXA SAZONALIDADE: VALE PRESENTE -->
+    <div class="accordion">
+      <div class="acc-hdr" onclick="toggleAcc(this)">
+        <div class="acc-icon" style="background:#FFFBEB">🎁</div>
+        <div class="acc-info">
+          <div class="acc-name">Baixa Sazonalidade — Modelo 1: Vale Presente</div>
+          <div class="acc-sub">Para períodos de baixa demanda — foco em presentear com estética facial</div>
+        </div>
+        <div class="acc-right">
+          <span class="acc-badge badge-amber">Sazonalidade</span>
+          <span class="acc-chevron">▼</span>
+        </div>
+      </div>
+      <div class="acc-body">
+        <div class="msgs-title">SEQUÊNCIA DE 3 MENSAGENS</div>
+        <div class="msg-block">
+          <div class="msg-label">Mensagem 01 — Abertura (Conexão + Posicionamento)</div>
+          <div class="msg-struct">Estrutura: Headline + Contexto + Apresentação da solução</div>
+          <div class="wa-msg">[Nome], posso te fazer uma pergunta?
+
+Você já pensou em dar um presente que realmente impacta a autoestima de alguém?
+
+Muitas pessoas acabam optando por algo comum… mas quando o assunto é estética facial, o presente pode ir muito além.
+
+Pensando nisso, estruturamos aqui na clínica uma opção de vale-presente para tratamentos faciais, com protocolos personalizados e acompanhamento profissional.
+
+É uma forma diferente de presentear — com cuidado, segurança e resultado.</div>
+        </div>
+        <div class="msg-block">
+          <div class="msg-label">Mensagem 02 — Desejo + Benefício + Condução</div>
+          <div class="msg-struct">Estrutura: Conexão emocional + Benefício + Diferenciação + CTA</div>
+          <div class="wa-msg">Oi, [Nome].
+
+Pensa em alguém importante pra você…
+
+Agora imagina essa pessoa se olhando no espelho e se sentindo mais confiante, com um cuidado que realmente faz sentido pra ela.
+
+Aqui na clínica, todos os tratamentos são definidos de forma individual, respeitando o rosto e buscando naturalidade — não é algo genérico.
+
+Para esse período, liberamos uma condição especial para os vales-presente, com vantagens exclusivas para quem adquirir agora.
+
+Se fizer sentido pra você, posso te explicar como funciona e te orientar na melhor opção.</div>
+        </div>
+        <div class="msg-block">
+          <div class="msg-label">Mensagem 03 — Objeção + Segurança + Escassez</div>
+          <div class="msg-struct">Estrutura: Escassez + Quebra de objeção + Segurança + CTA</div>
+          <div class="wa-msg">Bom dia, [Nome].
+
+Estou passando para te avisar que estamos nos últimos dias para aquisição dos vales-presente com as condições especiais.
+
+Um ponto importante: antes de qualquer procedimento, sempre realizamos uma avaliação individual, justamente para garantir que o tratamento seja adequado e seguro para quem vai receber.
+
+Ou seja, não é apenas um presente — é um cuidado estruturado e personalizado.
+
+Se ainda estiver considerando, posso te explicar os detalhes e verificar as opções disponíveis.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODELO 2: CONDIÇÕES ESPECIAIS -->
+    <div class="accordion">
+      <div class="acc-hdr" onclick="toggleAcc(this)">
+        <div class="acc-icon" style="background:#FFFBEB">💰</div>
+        <div class="acc-info">
+          <div class="acc-name">Baixa Sazonalidade — Modelo 2: Condições Especiais</div>
+          <div class="acc-sub">Oferece condição facilitada sem focar em desconto — foco na oportunidade de começar</div>
+        </div>
+        <div class="acc-right">
+          <span class="acc-badge badge-amber">Sazonalidade</span>
+          <span class="acc-chevron">▼</span>
+        </div>
+      </div>
+      <div class="acc-body">
+        <div class="msgs-title">SEQUÊNCIA DE 3 MENSAGENS</div>
+        <div class="msg-block">
+          <div class="msg-label">Mensagem 01 — Abertura (Interesse + Oportunidade)</div>
+          <div class="msg-struct">Estrutura: Headline + Contexto + Direcionamento</div>
+          <div class="wa-msg">Cuidar da sua pele no momento certo faz toda diferença no resultado.
+
+[Nome], neste mês estamos com uma condição especial em alguns protocolos estéticos aqui na clínica, pensados justamente para quem quer começar agora e já ver evolução nas próximas semanas.
+
+São tratamentos realizados de forma personalizada, respeitando sua pele e seu objetivo.
+
+Se fizer sentido pra você, posso te explicar melhor e ver um horário para avaliação.</div>
+        </div>
+        <div class="msg-block">
+          <div class="msg-label">Mensagem 02 — Explicação da Condição (Valor + Clareza)</div>
+          <div class="msg-struct">Estrutura: Explicação + Benefício + CTA</div>
+          <div class="wa-msg">[Nome], vou te explicar como está funcionando essa condição especial:
+
+Neste período, alguns protocolos estão com condições facilitadas, justamente para incentivar quem já vinha pensando em começar um tratamento.
+
+O principal ponto aqui não é só a condição, mas a possibilidade de iniciar um cuidado estruturado, com acompanhamento e foco em resultado real.
+
+Se quiser, posso te orientar na melhor opção para o seu caso e já verificar disponibilidade de horários.</div>
+        </div>
+        <div class="msg-block">
+          <div class="msg-label">Mensagem 03 — Fechamento (Escassez + Segurança)</div>
+          <div class="msg-struct">Estrutura: Escassez leve + Reforço + CTA</div>
+          <div class="wa-msg">[Nome], estou passando para te avisar que estamos nos últimos dias com essa condição especial na clínica.
+
+Como a agenda é limitada, alguns horários já foram preenchidos.
+
+Se você ainda está pensando em começar, esse pode ser um bom momento para garantir sua avaliação e entender exatamente o que faz mais sentido pra você.
+
+Quer que eu veja os horários disponíveis para essa semana?</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODELO 3: PROTOCOLO EXCLUSIVO -->
+    <div class="accordion">
+      <div class="acc-hdr" onclick="toggleAcc(this)">
+        <div class="acc-icon" style="background:#FFFBEB">🧪</div>
+        <div class="acc-info">
+          <div class="acc-name">Baixa Sazonalidade — Modelo 3: Protocolo Exclusivo (Inverno)</div>
+          <div class="acc-sub">Autoridade + sazonalidade — posiciona o período como ideal para tratar</div>
+        </div>
+        <div class="acc-right">
+          <span class="acc-badge badge-amber">Sazonalidade</span>
+          <span class="acc-chevron">▼</span>
+        </div>
+      </div>
+      <div class="acc-body">
+        <div class="msgs-title">SEQUÊNCIA DE 3 MENSAGENS</div>
+        <div class="msg-block">
+          <div class="msg-label">Mensagem 01 — Protocolo (Autoridade + Educação)</div>
+          <div class="msg-struct">Estrutura: Headline sazonal + Explicação + CTA</div>
+          <div class="wa-msg">Inverno: o melhor momento para tratar a sua pele
+
+[Nome], essa época do ano é ideal para iniciar tratamentos mais completos, principalmente para quem sofre com manchas, melasma ou textura irregular.
+
+Pensando nisso, estruturamos aqui na clínica um protocolo exclusivo, combinando tecnologias e ativos que atuam na qualidade da pele de forma progressiva e segura.
+
+O objetivo não é apenas tratar superficialmente, mas melhorar a pele como um todo — com mais uniformidade, viço e naturalidade.
+
+Se fizer sentido pra você, posso te orientar melhor e já verificar um horário para avaliação.</div>
+        </div>
+        <div class="msg-block">
+          <div class="msg-label">Mensagem 02 — Prova Social (Resultado + Credibilidade)</div>
+          <div class="msg-struct">Estrutura: Headline + Caso real + CTA</div>
+          <div class="wa-msg">Resultados que vão além da superfície
+
+[Nome], atendi recentemente uma paciente com queixa de manchas mais profundas e aspecto irregular da pele.
+
+Após algumas sessões dentro desse protocolo, já conseguimos uma melhora significativa na uniformidade, textura e luminosidade da pele.
+
+Cada caso é individual, mas quando existe um planejamento bem definido, os resultados tendem a ser muito consistentes.
+
+Se você também sente esse incômodo, posso te explicar como funcionaria no seu caso e ver disponibilidade para avaliação.</div>
+        </div>
+        <div class="msg-block">
+          <div class="msg-label">Mensagem 03 — Fechamento (Escassez + Segurança)</div>
+          <div class="msg-struct">Estrutura: Escassez + Reforço + CTA</div>
+          <div class="wa-msg">Últimos horários para início do protocolo neste mês
+
+[Nome], estamos finalizando a agenda para início desse protocolo ainda neste período mais favorável para tratamento de pele.
+
+Como trabalhamos com avaliação individual e acompanhamento próximo, a disponibilidade é limitada.
+
+Se você já vinha pensando em começar, esse é um bom momento para garantir seu horário e entender exatamente o que sua pele precisa.
+
+Quer que eu veja os horários disponíveis para você?</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODELO 4: PROTOCOLO EXCLUSIVO v2 -->
+    <div class="accordion">
+      <div class="acc-hdr" onclick="toggleAcc(this)">
+        <div class="acc-icon" style="background:#FFFBEB">✨</div>
+        <div class="acc-info">
+          <div class="acc-name">Baixa Sazonalidade — Modelo 4: Protocolo Exclusivo (Variação)</div>
+          <div class="acc-sub">Versão alternativa com ênfase em prova social e caso real</div>
+        </div>
+        <div class="acc-right">
+          <span class="acc-badge badge-amber">Sazonalidade</span>
+          <span class="acc-chevron">▼</span>
+        </div>
+      </div>
+      <div class="acc-body">
+        <div class="msgs-title">SEQUÊNCIA DE 3 MENSAGENS</div>
+        <div class="msg-block">
+          <div class="msg-label">Mensagem 01 — Protocolo (Autoridade + Conexão)</div>
+          <div class="wa-msg">Período ideal para cuidar da sua pele
+
+[Nome], essa época do ano é uma das mais indicadas para iniciar tratamentos de pele, principalmente para quem convive com manchas, melasma ou textura irregular.
+
+Pensando nisso, desenvolvemos aqui na clínica um protocolo exclusivo, combinando técnicas e ativos que atuam na renovação da pele de forma progressiva e segura.
+
+O objetivo é melhorar não só a mancha, mas a qualidade da pele como um todo — trazendo mais uniformidade, viço e naturalidade.
+
+Se fizer sentido pra você, posso te orientar melhor e já verificar um horário para sua avaliação.</div>
+        </div>
+        <div class="msg-block">
+          <div class="msg-label">Mensagem 02 — Prova Social com Escassez Leve</div>
+          <div class="wa-msg">Evolução real de tratamento de pele
+
+[Nome], recentemente atendemos uma paciente com queixa de manchas mais profundas e aspecto irregular da pele, algo que já impactava bastante a autoestima dela.
+
+Com algumas sessões dentro desse protocolo, já foi possível observar uma melhora significativa na uniformidade, textura e luminosidade da pele.
+
+Cada caso é único, mas quando existe um planejamento bem definido, os resultados tendem a ser consistentes e naturais.
+
+Se você também se identifica com esse tipo de incômodo, posso te explicar como funcionaria no seu caso e ver os próximos horários disponíveis.</div>
+        </div>
+        <div class="msg-block">
+          <div class="msg-label">Mensagem 03 — Fechamento (Escassez + Segurança)</div>
+          <div class="wa-msg">Últimos horários para início do tratamento neste período
+
+[Nome], estamos finalizando a agenda para início desse protocolo ainda dentro dessa época mais favorável para tratamentos de pele.
+
+Como o atendimento é feito de forma individual e com acompanhamento próximo, a disponibilidade acaba sendo limitada.
+
+Se você já vinha pensando em começar, esse é um bom momento para garantir sua avaliação e entender exatamente o que sua pele precisa.
+
+Quer que eu veja os horários disponíveis para você?</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODELO 5: INDICAÇÃO -->
+    <div class="accordion">
+      <div class="acc-hdr" onclick="toggleAcc(this)">
+        <div class="acc-icon" style="background:#FFFBEB">🤝</div>
+        <div class="acc-info">
+          <div class="acc-name">Baixa Sazonalidade — Modelo 5: Campanha de Indicação</div>
+          <div class="acc-sub">Ativa pacientes existentes para indicar conhecidos durante períodos de baixa</div>
+        </div>
+        <div class="acc-right">
+          <span class="acc-badge badge-amber">Sazonalidade</span>
+          <span class="acc-chevron">▼</span>
+        </div>
+      </div>
+      <div class="acc-body">
+        <div class="msgs-title">SEQUÊNCIA DE 3 MENSAGENS</div>
+        <div class="msg-block">
+          <div class="msg-label">Mensagem 01 — Abertura (Natural + Estratégica)</div>
+          <div class="wa-msg">Posso te fazer uma pergunta rápida?
+
+[Nome], você conhece alguém que anda se incomodando com o cabelo, pele ou algum aspecto estético, mas ainda não tomou uma decisão para cuidar disso?
+
+Aqui na clínica, temos recebido muitos pacientes que chegam justamente por indicação — e isso faz toda diferença, porque já chegam com mais confiança no processo.
+
+Por isso, criamos uma forma de valorizar quem indica pessoas próximas, com condições especiais dentro da clínica.
+
+Se quiser, posso te explicar melhor como funciona.</div>
+        </div>
+        <div class="msg-block">
+          <div class="msg-label">Mensagem 02 — Explicação da Campanha (Valor + Benefício)</div>
+          <div class="wa-msg">[Nome], funciona de forma bem simples:
+
+Quando você indica alguém e essa pessoa inicia o tratamento aqui na clínica, você recebe um benefício que pode ser utilizado nos seus próprios cuidados.
+
+A ideia é valorizar quem confia no nosso trabalho e compartilha isso com pessoas próximas.
+
+Além disso, quem vem por indicação normalmente já chega mais seguro, o que melhora toda a experiência.
+
+Se você tiver alguém em mente, posso te orientar como fazer essa indicação de forma simples.</div>
+        </div>
+        <div class="msg-block">
+          <div class="msg-label">Mensagem 03 — Fechamento (Urgência + Direcionamento)</div>
+          <div class="wa-msg">[Nome], estamos reforçando esse formato de indicação nesse período justamente para organizar melhor a agenda com pacientes que já chegam mais alinhados com o nosso perfil de atendimento.
+
+Se você tiver alguém que possa se beneficiar, esse é um bom momento para indicar e aproveitar as condições disponíveis.
+
+Quer que eu te explique rapidamente como funciona na prática?</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DATAS COMEMORATIVAS -->
+    <div class="accordion">
+      <div class="acc-hdr" onclick="toggleAcc(this)">
+        <div class="acc-icon" style="background:#FDF2F8">📅</div>
+        <div class="acc-info">
+          <div class="acc-name">Datas Comemorativas (Natal, Páscoa, Mães, Pais…)</div>
+          <div class="acc-sub">Antecipa demanda antes que a agenda fique cheia em períodos de alta</div>
+        </div>
+        <div class="acc-right">
+          <span class="acc-badge badge-amber">Sazonal</span>
+          <span class="acc-chevron">▼</span>
+        </div>
+      </div>
+      <div class="acc-body">
+        <div class="msgs-title">SEQUÊNCIA DE 3 MENSAGENS</div>
+        <div class="msg-block">
+          <div class="msg-label">Mensagem 01 — Abertura (Antecipação + Prioridade)</div>
+          <div class="msg-struct">Estrutura: Headline + Contexto + CTA</div>
+          <div class="wa-msg">Antecipe seu cuidado para esse período
+
+[Nome], abrimos a agenda para as próximas semanas porque esse costuma ser um dos períodos com maior procura por atendimentos estéticos.
+
+Como os horários são limitados e trabalhamos com planejamento individual, a agenda tende a preencher rapidamente.
+
+Como você já é paciente da clínica, quis te avisar antes para conseguir organizar seu atendimento com mais tranquilidade.
+
+Quer que eu veja os melhores horários disponíveis para você?</div>
+        </div>
+        <div class="msg-block">
+          <div class="msg-label">Mensagem 02 — Urgência Inteligente + Decisão</div>
+          <div class="msg-struct">Estrutura: Headline + Argumento lógico + CTA</div>
+          <div class="wa-msg">O que acontece quando você deixa para marcar em cima da hora?
+
+• Dificuldade para encontrar horário compatível com sua rotina
+• Necessidade de ajustar sua agenda para encaixar atendimento
+• Ou até precisar adiar um cuidado que você já sabe que gostaria de fazer
+
+Em períodos de maior movimento, isso é ainda mais comum.
+
+Se você já pensa em realizar algum cuidado estético nas próximas semanas, o ideal é se antecipar e garantir um horário mais confortável.
+
+Quer que eu te mostre as disponibilidades?</div>
+        </div>
+        <div class="msg-block">
+          <div class="msg-label">Mensagem 03 — Fechamento (Escassez Real + Direcionamento)</div>
+          <div class="msg-struct">Estrutura: Escassez + Reforço + CTA</div>
+          <div class="wa-msg">Últimos horários disponíveis para esse período
+
+[Nome], estamos finalizando a agenda dos próximos dias e restam poucos horários disponíveis.
+
+Como priorizamos atendimentos com planejamento e acompanhamento, não conseguimos abrir muitos encaixes.
+
+Se você ainda pretende se organizar para esse período, esse é o momento de garantir seu horário.
+
+Quer que eu veja o que ainda temos disponível para você?</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DIA DOS NAMORADOS -->
+    <div class="accordion">
+      <div class="acc-hdr" onclick="toggleAcc(this)">
+        <div class="acc-icon" style="background:#FDF2F8">💕</div>
+        <div class="acc-info">
+          <div class="acc-name">Campanha Dia dos Namorados</div>
+          <div class="acc-sub">Duas abordagens: para parceiros (presente) e para pacientes (autocuidado)</div>
+        </div>
+        <div class="acc-right">
+          <span class="acc-badge badge-amber">Data Especial</span>
+          <span class="acc-chevron">▼</span>
+        </div>
+      </div>
+      <div class="acc-body">
+        <div class="msg-block">
+          <div class="msg-label">Opção 01 — Para Parceiros / Maridos / Namorados</div>
+          <div class="msg-struct">Estrutura: Headline + Contexto + Benefício + CTA</div>
+          <div class="wa-msg">Um presente que realmente faz sentido
+
+Oi, [Nome do parceiro].
+
+Quero te mostrar uma ideia de presente que vai além do comum — algo que impacta diretamente na autoestima e na forma como a pessoa se enxerga.
+
+Aqui na clínica, trabalhamos com um planejamento facial que atua em pontos estratégicos do rosto, trazendo mais harmonia e naturalidade:
+• Definição do contorno facial (queixo e linha da mandíbula)
+• Melhora da região dos olhos, reduzindo o aspecto de cansaço
+• Valorização dos traços com leveza e equilíbrio
+
+São ajustes sutis, mas que fazem muita diferença no resultado final.
+
+Para esse período, organizamos uma condição especial para quem deseja presentear com esse tipo de cuidado — sempre com avaliação individual e segurança.
+
+Se fizer sentido pra você, posso te explicar como funciona e te orientar na melhor opção.</div>
+        </div>
+        <div class="msg-block">
+          <div class="msg-label">Opção 02 — Para Pacientes / Autocuidado</div>
+          <div class="msg-struct">Estrutura: Headline + Conteúdo + Benefício + CTA</div>
+          <div class="wa-msg">Um cuidado que valoriza ainda mais sua beleza
+
+Oi, [Nome].
+
+Quero te mostrar um dos tratamentos que mais têm gerado resultados naturais aqui na clínica.
+
+Trabalhamos com pontos estratégicos do rosto que ajudam a:
+• Melhorar o contorno facial e o perfil
+• Suavizar sinais de cansaço na região dos olhos
+• Valorizar os traços mantendo naturalidade
+
+O mais importante é que tudo é feito de forma personalizada, respeitando o seu rosto e o resultado que você busca.
+
+Para esse período, estruturamos uma condição especial para quem deseja iniciar esse cuidado com mais tranquilidade.
+
+Se quiser, posso te explicar melhor e até avaliar o seu caso para te orientar com mais precisão.</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /sazonalidade -->
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- TAB 3 — ESTRATÉGIA -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <div id="estrategia" class="section">
+    <div class="sec-title">Estratégias Avançadas</div>
+    <p class="sec-desc">Campanhas que exigem mais planejamento e sequenciamento. Ideais para lançamentos, novos protocolos, upgrades de ticket e criação de demanda antecipada.</p>
+
+    <!-- VALOR AGREGADO -->
+    <div class="accordion">
+      <div class="acc-hdr" onclick="toggleAcc(this)">
+        <div class="acc-icon" style="background:#F0FDF4">💎</div>
+        <div class="acc-info">
+          <div class="acc-name">Estratégia de Valor Agregado</div>
+          <div class="acc-sub">Inclui benefício adicional sem reduzir o preço — aumenta percepção de valor</div>
+        </div>
+        <div class="acc-right">
+          <span class="acc-badge badge-green">Alta Conversão</span>
+          <span class="acc-chevron">▼</span>
+        </div>
+      </div>
+      <div class="acc-body">
+        <div class="concept-box">
+          <div class="concept-title">Conceito Estratégico</div>
+          <p class="concept-text">Oferecer um benefício adicional (upgrade, associação de tratamento ou cuidado complementar), sem reduzir diretamente o preço do procedimento principal. O desconto, quando utilizado, deve aparecer apenas na etapa final.</p>
+          <ul class="concept-bullets">
+            <li>Aumentar percepção de valor</li>
+            <li>Melhorar taxa de conversão</li>
+            <li>Evitar desvalorização do procedimento</li>
+            <li>Estimular decisão mais rápida</li>
+          </ul>
+          <div class="concept-rule">🧠 Você não está vendendo um procedimento. Você está posicionando um tratamento mais completo, com melhor resultado.</div>
+        </div>
+
+        <div class="msgs-title">SEQUÊNCIA DE 3 MENSAGENS</div>
+        <div class="msg-block">
+          <div class="msg-label">Mensagem 01 — Abertura (Educação + Oportunidade)</div>
+          <div class="wa-msg">Resultados mais rápidos no tratamento da sua pele
+
+[Nome], queria te trazer uma informação importante sobre os tratamentos que você já fez ou vem considerando aqui na clínica.
+
+Muitos procedimentos, como os bioestimuladores, têm um efeito progressivo — ou seja, os resultados aparecem ao longo dos meses.
+
+Hoje, já existem associações de tratamento que potencializam esse processo, acelerando a resposta da pele e melhorando a qualidade do resultado desde as primeiras semanas.
+
+Estamos aplicando essa estratégia em alguns casos selecionados aqui na clínica.
+
+Se fizer sentido pra você, posso te explicar melhor e ver um horário para avaliação.</div>
+        </div>
+        <div class="msg-block">
+          <div class="msg-label">Mensagem 02 — Prova Social + Benefício</div>
+          <div class="wa-msg">Quando o tratamento é bem planejado, o resultado muda
+
+[Nome], recentemente aplicamos essa combinação de tratamentos em pacientes que buscavam melhorar firmeza, textura e qualidade da pele.
+
+A principal diferença foi a velocidade de resposta — com melhora visível em poucos dias, além do resultado progressivo ao longo dos meses.
+
+Esse tipo de abordagem faz parte da estética regenerativa, que hoje é uma das linhas mais avançadas no cuidado com o envelhecimento.
+
+Neste período, estamos incluindo um cuidado complementar dentro desse protocolo, como forma de potencializar o tratamento.
+
+Se quiser, posso te explicar como isso funcionaria no seu caso.</div>
+        </div>
+        <div class="msg-block">
+          <div class="msg-label">Mensagem 03 — Escassez + Decisão</div>
+          <div class="wa-msg">Últimos dias para iniciar com esse protocolo
+
+[Nome], estamos finalizando a agenda para esse tipo de tratamento com associação de técnicas ainda neste período.
+
+Como o acompanhamento é feito de forma individual e com planejamento, a disponibilidade é limitada.
+
+Além disso, as condições atuais — incluindo o benefício adicional — são válidas apenas até o encerramento dessa fase.
+
+Se você já vinha pensando em iniciar ou dar continuidade ao seu tratamento, esse é um bom momento para garantir sua avaliação.
+
+Quer que eu veja os horários disponíveis para você?</div>
+        </div>
+
+        <div class="callout callout-amber">
+          <span class="callout-icon">💡</span>
+          <span><strong>Aplicações:</strong> Bioestimuladores + peelings · Laser + skinbooster · Rejuvenescimento completo · Protocolos faciais personalizados · Manutenção de pacientes antigos</span>
+        </div>
+
+        <div class="guide-grid">
+          <div class="guide-box guide-avoid">
+            <div class="guide-title">❌ Evitar</div>
+            <ul class="guide-items">
+              <li>Falar de desconto logo no início</li>
+              <li>Parecer "promoção simples"</li>
+              <li>Focar em preço ao invés de resultado</li>
+            </ul>
+          </div>
+          <div class="guide-box guide-prio">
+            <div class="guide-title">✅ Priorizar</div>
+            <ul class="guide-items">
+              <li>Melhora da pele e resultado</li>
+              <li>Resultado progressivo</li>
+              <li>Personalização</li>
+              <li>Tecnologia e segurança</li>
+              <li>Experiência do paciente</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ANTECIPAÇÃO MODELO 1 -->
+    <div class="accordion">
+      <div class="acc-hdr" onclick="toggleAcc(this)">
+        <div class="acc-icon" style="background:#EFF6FF">⏰</div>
+        <div class="acc-info">
+          <div class="acc-name">Estratégia de Antecipação — Modelo 1</div>
+          <div class="acc-sub">Gera curiosidade antes do lançamento — você não vende na primeira mensagem</div>
+        </div>
+        <div class="acc-right">
+          <span class="acc-badge badge-blue">Lançamento</span>
+          <span class="acc-chevron">▼</span>
+        </div>
+      </div>
+      <div class="acc-body">
+        <div class="concept-box">
+          <div class="concept-title">Conceito Estratégico</div>
+          <p class="concept-text">Serve para gerar curiosidade antes do lançamento, preparando o paciente para desejar o tratamento, se identificar com o problema e entrar em contato antes mesmo da oferta completa.</p>
+          <div class="concept-rule">👉 Você não vende na primeira mensagem — você cria expectativa</div>
+        </div>
+
+        <div class="msgs-title">SEQUÊNCIA DE 3 MENSAGENS</div>
+        <div class="msg-block">
+          <div class="msg-label">Mensagem 01 — Antecipação (Curiosidade + Conexão)</div>
+          <div class="msg-struct">Estrutura: Headline + Antecipação + Pergunta</div>
+          <div class="wa-msg">Novidade chegando para quem quer melhorar a qualidade da pele
+
+Bom dia, [Nome].
+
+A doutora pediu para te avisar que nos próximos dias vamos lançar aqui na clínica um novo protocolo voltado para pacientes que se incomodam com manchas, textura irregular ou pele mais sensível.
+
+É um tratamento pensado para melhorar a qualidade da pele de forma progressiva, mantendo naturalidade e segurança.
+
+Vamos liberar todos os detalhes assim que abrirmos a agenda.
+
+Me conta uma coisa: isso é algo que tem te incomodado no dia a dia?</div>
+        </div>
+        <div class="msg-block">
+          <div class="msg-label">Mensagem 02 — Abertura de Agenda + Conteúdo</div>
+          <div class="msg-struct">Estrutura: Conteúdo + Autoridade + CTA</div>
+          <div class="wa-msg">Agenda aberta para o novo protocolo de pele
+
+Oi, [Nome].
+
+Abrimos a agenda para esse novo protocolo que te comentei.
+
+A doutora inclusive preparou um conteúdo explicando como funciona o tratamento, quais casos são indicados e o tipo de resultado esperado — posso te enviar para você entender melhor.
+
+Nesse início, estamos organizando os atendimentos com algumas condições especiais para quem já acompanha a clínica.
+
+Se fizer sentido pra você, posso te explicar como funciona a avaliação e ver os horários disponíveis.</div>
+        </div>
+        <div class="msg-block">
+          <div class="msg-label">Mensagem 03 — Escassez (Decisão + Urgência Leve)</div>
+          <div class="wa-msg">Últimos horários para início desse protocolo
+
+[Nome], estou passando para te avisar que estamos finalizando os horários disponíveis para esse novo protocolo nos próximos dias.
+
+Como o atendimento é feito de forma individual e com planejamento, a disponibilidade acaba sendo limitada.
+
+Além disso, as condições de lançamento são válidas apenas para esse primeiro período.
+
+Se você ainda está considerando começar, esse é um bom momento para garantir sua avaliação.
+
+Quer que eu veja os horários disponíveis para você?</div>
+        </div>
+
+        <div class="guide-grid">
+          <div class="guide-box guide-avoid">
+            <div class="guide-title">❌ Evitar</div>
+            <ul class="guide-items">
+              <li>Falar preço na primeira mensagem</li>
+              <li>Parecer promoção comum</li>
+              <li>Entregar tudo de uma vez</li>
+            </ul>
+          </div>
+          <div class="guide-box guide-prio">
+            <div class="guide-title">✅ Priorizar</div>
+            <ul class="guide-items">
+              <li>Curiosidade e expectativa</li>
+              <li>Identificação com a dor</li>
+              <li>Autoridade da doutora</li>
+              <li>Condução para avaliação</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GRUPO VIP -->
+    <div class="accordion">
+      <div class="acc-hdr" onclick="toggleAcc(this)">
+        <div class="acc-icon" style="background:#EFF6FF">👑</div>
+        <div class="acc-info">
+          <div class="acc-name">Estratégia Grupo VIP (4 Fases)</div>
+          <div class="acc-sub">Aquecimento em grupo antes de lançamento — funil completo de 4 fases</div>
+        </div>
+        <div class="acc-right">
+          <span class="acc-badge badge-blue">Funil Avançado</span>
+          <span class="acc-chevron">▼</span>
+        </div>
+      </div>
+      <div class="acc-body">
+        <div class="concept-box">
+          <div class="concept-title">Conceito Estratégico</div>
+          <p class="concept-text">Aquecer pacientes antes de uma campanha, gerar expectativa, educar sobre o tratamento e concentrar demanda em um período específico. O objetivo não é só vender — é preparar o paciente para decidir.</p>
+          <div class="concept-rule">Clínicas que usam da forma errada fazem promoção. Clínicas que usam da forma certa constroem desejo + educam + direcionam.</div>
+        </div>
+
+        <div class="phase-block">
+          <div class="phase-title">FASE 01 — CONVITE PARA O GRUPO</div>
+          <div class="msg-block">
+            <div class="msg-label">Dia 1 — Anúncio</div>
+            <div class="wa-msg">Tratamento completo para rejuvenescimento facial
+
+[Nome], nos próximos dias vamos abrir aqui na clínica um protocolo mais completo, voltado para quem deseja tratar o envelhecimento facial de forma estruturada.
+
+A proposta é atuar em diferentes camadas da pele, buscando melhora de firmeza, qualidade e naturalidade no resultado.
+
+Criamos um grupo exclusivo no WhatsApp para explicar todos os detalhes, tirar dúvidas e organizar os atendimentos.
+
+Se fizer sentido pra você, posso te enviar o link.</div>
+          </div>
+          <div class="msg-block">
+            <div class="msg-label">Dia 2 — Conteúdo</div>
+            <div class="wa-msg">Como funciona um tratamento completo de pele
+
+[Nome], a doutora gravou um conteúdo explicando como tratamos o envelhecimento de forma mais completa — indo além de procedimentos isolados.
+
+Esse tipo de abordagem costuma trazer resultados mais consistentes e naturais.
+
+Nos próximos dias vamos abrir a agenda para esse protocolo e organizar tudo pelo grupo VIP.
+
+Se quiser participar, posso te enviar o acesso.</div>
+          </div>
+          <div class="msg-block">
+            <div class="msg-label">Dia 3 — Escassez (último dia para entrar)</div>
+            <div class="wa-msg">Último dia para entrar no grupo
+
+[Nome], hoje é o último dia para entrar no grupo onde vamos liberar todas as informações e condições desse protocolo.
+
+Amanhã já começamos a organizar os atendimentos e a agenda.
+
+Se você quer entender melhor e avaliar se faz sentido pra você, vale a pena entrar agora.</div>
+          </div>
+        </div>
+
+        <div class="phase-block">
+          <div class="phase-title">FASE 02 — AQUECIMENTO (DENTRO DO GRUPO)</div>
+          <div class="msg-block">
+            <div class="msg-label">Boas-vindas</div>
+            <div class="wa-msg">Bem-vindas ao grupo
+
+Esse é um grupo exclusivo para explicar com mais profundidade como funciona esse protocolo e como ele pode ajudar na melhora da qualidade da pele.
+
+Nos próximos dias vamos compartilhar:
+• Como funciona o tratamento
+• Para quem é indicado
+• Resultados reais
+• Como será a organização da agenda</div>
+          </div>
+          <div class="msg-block">
+            <div class="msg-label">Prova Social</div>
+            <div class="wa-msg">Por que esse tipo de tratamento funciona
+
+Atendemos recentemente uma paciente com queixas de flacidez, linhas e perda de viço.
+
+Após um planejamento estruturado, conseguimos uma melhora significativa na qualidade da pele e no aspecto geral do rosto.
+
+Isso acontece porque trabalhamos o tratamento de forma integrada, e não isolada.</div>
+          </div>
+          <div class="msg-block">
+            <div class="msg-label">Bastidores (Autoridade)</div>
+            <div class="wa-msg">Como funciona na prática
+
+A doutora preparou um conteúdo mostrando como esse protocolo é realizado, desde a avaliação até a execução.
+
+A ideia é tratar a pele de dentro para fora, respeitando cada caso.
+
+Nos próximos dias vamos abrir a agenda com uma condição especial para quem estiver no grupo.</div>
+          </div>
+          <div class="msg-block">
+            <div class="msg-label">Preparação para Oferta</div>
+            <div class="wa-msg">Se prepare para a abertura
+
+Amanhã vamos abrir alguns horários para início do protocolo.
+
+Como o atendimento é individual e exige acompanhamento, a quantidade de vagas será limitada.
+
+Se tiver dúvidas, pode falar com a gente antes — isso ajuda você a decidir com mais segurança.</div>
+          </div>
+        </div>
+
+        <div class="phase-block">
+          <div class="phase-title">FASE 03 — ABERTURA E VENDAS</div>
+          <div class="msg-block">
+            <div class="msg-label">Abertura da Agenda</div>
+            <div class="wa-msg">Agenda aberta
+
+Abrimos agora os horários para início do protocolo.
+
+Esse é o momento para quem deseja iniciar um cuidado mais completo e estruturado com a pele.
+
+Se quiser garantir sua avaliação, podemos verificar os horários disponíveis.</div>
+          </div>
+          <div class="msg-block">
+            <div class="msg-label">Reforço</div>
+            <div class="wa-msg">Últimos horários sendo preenchidos
+
+Estamos com boa procura e os horários já estão sendo preenchidos.
+
+Se você pretende iniciar, vale garantir sua avaliação agora para conseguir um horário mais adequado.</div>
+          </div>
+          <div class="msg-block">
+            <div class="msg-label">Escassez + Prova</div>
+            <div class="wa-msg">Últimas vagas
+
+Restam poucos horários disponíveis para início desse protocolo.
+
+Esse tipo de tratamento exige planejamento individual, por isso não conseguimos abrir muitos encaixes.
+
+Se fizer sentido pra você, esse é o momento de garantir sua avaliação.</div>
+          </div>
+        </div>
+
+        <div class="phase-block">
+          <div class="phase-title">FASE 04 — ENCERRAMENTO / REAPROVEITAMENTO</div>
+          <div class="msg-block">
+            <div class="msg-label">Encerramento</div>
+            <div class="wa-msg">Encerramento da ação
+
+Encerramos a organização da agenda para esse protocolo neste momento.
+
+Se você não conseguiu participar, em breve abriremos novas oportunidades.</div>
+          </div>
+          <div class="msg-block">
+            <div class="msg-label">Downsell (Alternativa)</div>
+            <div class="wa-msg">Nova possibilidade de cuidado
+
+Para quem não conseguiu entrar nesse protocolo, estamos com uma condição especial para tratamentos mais pontuais, como manutenção de pele e cuidados básicos.
+
+Se quiser, posso te orientar.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- UPGRADE -->
+    <div class="accordion">
+      <div class="acc-hdr" onclick="toggleAcc(this)">
+        <div class="acc-icon" style="background:#F5F3FF">📈</div>
+        <div class="acc-info">
+          <div class="acc-name">Campanha Upgrade — Aumento de Ticket</div>
+          <div class="acc-sub">Apresenta solução mais completa antes ou durante o atendimento</div>
+        </div>
+        <div class="acc-right">
+          <span class="acc-badge badge-purple">Ticket Médio</span>
+          <span class="acc-chevron">▼</span>
+        </div>
+      </div>
+      <div class="acc-body">
+        <div class="concept-box">
+          <div class="concept-title">Conceito Estratégico</div>
+          <p class="concept-text">Upgrade não é vender mais. É fazer o paciente entender que existe uma solução mais completa que gera um resultado melhor. Estimular o cliente a escolher soluções mais completas.</p>
+        </div>
+
+        <div class="msgs-title">2 CENÁRIOS DE APLICAÇÃO</div>
+        <div class="msg-block">
+          <div class="msg-label">Cenário 01 — Protocolo Completo (paciente já tem procedimento marcado)</div>
+          <div class="msg-struct">Estrutura: Headline + Contexto + Posicionamento + Conteúdo</div>
+          <div class="wa-msg">Informações importantes sobre o seu atendimento
+
+[Nome], bom dia.
+
+Seu horário está confirmado para [procedimento] na [data/horário].
+
+Aqui na clínica, mesmo quando o paciente realiza um procedimento específico, é padrão fazermos uma avaliação completa, considerando não só a área tratada, mas toda a estrutura facial e a qualidade da pele.
+
+Isso porque, muitas vezes, o melhor resultado não vem de um procedimento isolado, mas de um planejamento mais completo e personalizado.
+
+A doutora vai te explicar isso no dia, mas se quiser entender melhor antes, posso te enviar um conteúdo rápido explicando como trabalhamos essa abordagem.</div>
+        </div>
+        <div class="msg-block">
+          <div class="msg-label">Cenário 02 — Sugestão de Upgrade sem Pressão</div>
+          <div class="msg-struct">Estrutura: Headline + Contexto + Sugestão + Prova + CTA</div>
+          <div class="wa-msg">Aproveitando melhor o seu atendimento
+
+[Nome], bom dia.
+
+Seu horário para [procedimento] está confirmado para [data].
+
+Como já teremos esse tempo reservado para você, queria te sugerir uma possibilidade que pode complementar bastante o seu resultado.
+
+Muitos pacientes aproveitam esse momento para associar um cuidado adicional, como [ex: tratamento de pele / bioestimulador / hidratação profunda], justamente para potencializar o resultado final e manter a naturalidade.
+
+Temos observado resultados muito interessantes quando fazemos esse tipo de associação.
+
+Se fizer sentido pra você, posso te explicar melhor e verificar a disponibilidade para incluir no seu atendimento.</div>
+        </div>
+
+        <div class="callout callout-amber">
+          <span class="callout-icon">💡</span>
+          <span><strong>Ideal para:</strong> Botox + bioestimulador · Preenchimento + skinbooster · Laser + tratamento de pele · Cirurgias + protocolo de preparo/recuperação</span>
+        </div>
+
+        <div class="guide-grid">
+          <div class="guide-box guide-avoid">
+            <div class="guide-title">❌ Evitar</div>
+            <ul class="guide-items">
+              <li>Oferecer como "venda extra"</li>
+              <li>Falar direto de preço</li>
+              <li>Forçar decisão</li>
+              <li>Não explicar o porquê</li>
+            </ul>
+          </div>
+          <div class="guide-box guide-prio">
+            <div class="guide-title">✅ Posicionamento</div>
+            <ul class="guide-items">
+              <li>Melhoria de resultado</li>
+              <li>Planejamento mais completo</li>
+              <li>Cuidado personalizado</li>
+              <li>Orientação profissional</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EVENTO / IMERSÃO -->
+    <div class="accordion">
+      <div class="acc-hdr" onclick="toggleAcc(this)">
+        <div class="acc-icon" style="background:#EFF6FF">🎓</div>
+        <div class="acc-info">
+          <div class="acc-name">Campanha Aviso de Curso / Imersão / Evento</div>
+          <div class="acc-sub">Para profissionais (cursos) ou pacientes (open day / eventos VIP)</div>
+        </div>
+        <div class="acc-right">
+          <span class="acc-badge badge-blue">Evento</span>
+          <span class="acc-chevron">▼</span>
+        </div>
+      </div>
+      <div class="acc-body">
+        <div class="concept-box">
+          <div class="concept-title">Conceito Estratégico</div>
+          <p class="concept-text">Não é só um aviso. É posicionamento + oportunidade. Reforça autoridade da doutora e atrai público qualificado.</p>
+        </div>
+
+        <div class="msgs-title">2 CENÁRIOS</div>
+        <div class="msg-block">
+          <div class="msg-label">Cenário 01 — Para Profissionais (Cursos / Imersões)</div>
+          <div class="wa-msg">Imersão avançada em estética facial
+
+Oi, [Nome].
+
+No dia [data], teremos aqui na clínica uma imersão voltada para profissionais que desejam aprofundar o entendimento sobre pele e gerenciamento do envelhecimento — uma abordagem cada vez mais essencial na estética atual.
+
+Será um encontro completo, com foco em:
+• Estrutura e envelhecimento da pele
+• Planejamento de tratamentos mais completos
+• Estética regenerativa
+• Associação de tecnologias e ativos
+• Estratégias para melasma, flacidez, região dos olhos e rejuvenescimento
+
+A proposta é trazer uma visão mais estratégica e segura para quem busca evoluir na área.
+
+Se quiser, posso te enviar todas as informações e detalhes da programação.</div>
+        </div>
+        <div class="msg-block">
+          <div class="msg-label">Cenário 02 — Para Pacientes (Open Day / Evento VIP)</div>
+          <div class="wa-msg">Um convite especial para você conhecer novas abordagens de cuidado com a pele
+
+Oi, [Nome].
+
+Estamos organizando aqui na clínica um encontro especial para apresentar, de forma mais próxima, como trabalhamos o cuidado com a pele e o envelhecimento de forma estruturada.
+
+Será um momento para:
+• Entender melhor os tratamentos disponíveis
+• Tirar dúvidas diretamente com a doutora
+• Conhecer novas abordagens em estética facial
+• Ver exemplos reais de resultados
+
+A ideia é que você consiga entender, com mais clareza, o que faz sentido para o seu caso — sem pressão, apenas orientação.
+
+Se quiser participar, posso te passar os detalhes e verificar as vagas disponíveis.</div>
+        </div>
+
+        <div class="guide-grid">
+          <div class="guide-box guide-avoid">
+            <div class="guide-title">❌ Evitar</div>
+            <ul class="guide-items">
+              <li>Falar só data e horário</li>
+              <li>Não mostrar valor do evento</li>
+              <li>Parecer convite genérico</li>
+              <li>Não posicionar a doutora</li>
+            </ul>
+          </div>
+          <div class="guide-box guide-prio">
+            <div class="guide-title">✅ Priorizar</div>
+            <ul class="guide-items">
+              <li>Oportunidade de aprendizado</li>
+              <li>Acesso à doutora</li>
+              <li>Experiência diferenciada</li>
+              <li>Momento de decisão mais segura</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /estrategia -->
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- TAB 4 — FIDELIZAÇÃO & RETENÇÃO -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <div id="fidelizacao" class="section">
+    <div class="sec-title">Fidelização e Retenção</div>
+    <p class="sec-desc">Campanhas para manter pacientes ativos, estimular retorno e construir relacionamento de longo prazo. Reduzem o custo de aquisição e aumentam o LTV (valor por paciente).</p>
+
+    <!-- ANIVERSÁRIO -->
+    <div class="accordion">
+      <div class="acc-hdr" onclick="toggleAcc(this)">
+        <div class="acc-icon" style="background:#FDF2F8">🎂</div>
+        <div class="acc-info">
+          <div class="acc-name">Campanha Aniversário do Paciente</div>
+          <div class="acc-sub">4 mensagens ao longo do mês — relacionamento com potencial de conversão</div>
+        </div>
+        <div class="acc-right">
+          <span class="acc-badge badge-green">Relacionamento</span>
+          <span class="acc-chevron">▼</span>
+        </div>
+      </div>
+      <div class="acc-body">
+        <div class="concept-box">
+          <div class="concept-title">Conceito Estratégico</div>
+          <p class="concept-text">O aniversário é um dos momentos com maior potencial emocional para gerar conexão e estimular retorno. Não é uma "promoção" — é uma ação de relacionamento com potencial de conversão.</p>
+        </div>
+
+        <div class="msgs-title">SEQUÊNCIA DE 4 MENSAGENS</div>
+        <div class="msg-block">
+          <div class="msg-label">Mensagem 01 — Antecipação (15 dias antes)</div>
+          <div class="wa-msg">Seu mês chegou — e é o momento ideal para se cuidar
+
+[Nome], seu aniversário está se aproximando e queremos aproveitar essa data para te oferecer uma experiência especial aqui na clínica.
+
+Durante o seu mês, organizamos condições diferenciadas para você iniciar ou dar continuidade aos seus cuidados estéticos, sempre com avaliação personalizada.
+
+Além disso, incluímos um cuidado complementar para potencializar o resultado dos tratamentos realizados.
+
+Aproveite esse período para se olhar com mais atenção e se priorizar.</div>
+        </div>
+        <div class="msg-block">
+          <div class="msg-label">Mensagem 02 — Lembrete + Direcionamento (5 dias antes)</div>
+          <div class="wa-msg">Um ótimo momento para cuidar da sua pele
+
+Oi, [Nome].
+
+Seu aniversário já está chegando — e esse costuma ser um dos melhores momentos para organizar seus cuidados com a pele e com o rosto.
+
+Se você já vinha pensando em realizar algum tratamento, essa é uma boa oportunidade para fazer isso de forma planejada e com benefícios exclusivos desse período.
+
+Se quiser, posso te orientar no que faz mais sentido para o seu caso e já verificar horários disponíveis para avaliação.</div>
+        </div>
+        <div class="msg-block">
+          <div class="msg-label">Mensagem 03 — Dia do Aniversário (Relacionamento Puro)</div>
+          <div class="wa-msg">Feliz aniversário, [Nome]! 🎉
+
+Que seu novo ciclo seja leve, feliz e cheio de conquistas.
+
+Desejamos muita saúde, bem-estar e, claro, que você continue se sentindo bem consigo mesma todos os dias.
+
+Um abraço de toda a equipe da clínica.</div>
+        </div>
+        <div class="msg-block">
+          <div class="msg-label">Mensagem 04 — Encerramento (último dia do mês)</div>
+          <div class="wa-msg">Últimos dias para aproveitar seu benefício de aniversário
+
+[Nome], seu mês está chegando ao fim e queremos te lembrar que ainda dá tempo de aproveitar as condições especiais preparadas para você.
+
+Caso ainda esteja considerando iniciar ou retomar seus cuidados, esse é o momento ideal para garantir sua avaliação e organizar isso com mais tranquilidade.
+
+Quer que eu veja os horários disponíveis para você?</div>
+        </div>
+
+        <div class="guide-grid">
+          <div class="guide-box guide-avoid">
+            <div class="guide-title">❌ Evitar</div>
+            <ul class="guide-items">
+              <li>Parecer promoção genérica</li>
+              <li>Focar apenas em desconto</li>
+              <li>Comunicação fria ou automática</li>
+            </ul>
+          </div>
+          <div class="guide-box guide-prio">
+            <div class="guide-title">✅ Priorizar</div>
+            <ul class="guide-items">
+              <li>Cuidado e atenção com o paciente</li>
+              <li>Personalização e experiência</li>
+              <li>Valorização da data</li>
+              <li>Retorno para avaliação</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROGRAMA DE PONTOS -->
+    <div class="accordion">
+      <div class="acc-hdr" onclick="toggleAcc(this)">
+        <div class="acc-icon" style="background:#FFFBEB">⭐</div>
+        <div class="acc-info">
+          <div class="acc-name">Campanha Programa de Pontos — Fidelização</div>
+          <div class="acc-sub">Sistema que mantém o paciente ativo — cada real investido gera pontos</div>
+        </div>
+        <div class="acc-right">
+          <span class="acc-badge badge-amber">LTV</span>
+          <span class="acc-chevron">▼</span>
+        </div>
+      </div>
+      <div class="acc-body">
+        <div class="concept-box">
+          <div class="concept-title">Como Estruturar o Programa</div>
+          <p class="concept-text">O programa de pontos serve para aumentar frequência de retorno, estimular continuidade e fortalecer relacionamento. O paciente não deve voltar só quando "lembra" — ele volta porque existe um sistema que o mantém ativo.</p>
+          <ul class="concept-bullets">
+            <li>A cada R$1 investido → 1 ponto</li>
+            <li>1.500 pontos → sessão de cuidado complementar (ex: limpeza / hidratação)</li>
+            <li>2.000 pontos → tratamento de manutenção</li>
+            <li>3.000 pontos → benefício maior dentro da clínica</li>
+          </ul>
+        </div>
+
+        <div class="msgs-title">SEQUÊNCIA DE 2 MENSAGENS</div>
+        <div class="msg-block">
+          <div class="msg-label">Mensagem 01 — Apresentação do Programa</div>
+          <div class="wa-msg">Você sabia que seus cuidados podem te trazer benefícios ao longo do tempo?
+
+[Nome], aqui na clínica estruturamos um programa onde cada tratamento realizado gera pontos que podem ser utilizados em cuidados futuros.
+
+A ideia é incentivar um acompanhamento contínuo, facilitando a manutenção dos seus resultados ao longo do tempo.
+
+Esses pontos podem ser convertidos em tratamentos complementares e benefícios dentro da clínica.
+
+Se fizer sentido pra você, posso te explicar como funciona na prática.</div>
+        </div>
+        <div class="msg-block">
+          <div class="msg-label">Mensagem 02 — Reforço (Lembrete + Valor)</div>
+          <div class="wa-msg">[Nome], você ainda não está aproveitando nosso programa de pontos
+
+Esse programa foi pensado justamente para pacientes que já entenderam a importância de manter um cuidado contínuo com a pele.
+
+Além de facilitar o acesso a tratamentos complementares, ele ajuda a organizar melhor sua jornada dentro da clínica.
+
+Ou seja, você não faz apenas um procedimento — você mantém um plano de cuidado ao longo do tempo.
+
+Se quiser, posso te explicar melhor como funcionaria para você.</div>
+        </div>
+
+        <div class="guide-grid">
+          <div class="guide-box guide-avoid">
+            <div class="guide-title">❌ Evitar</div>
+            <ul class="guide-items">
+              <li>Posicionar como promoção simples</li>
+              <li>Falar só de desconto</li>
+              <li>Não conectar com resultado clínico</li>
+              <li>Não integrar com plano de tratamento</li>
+            </ul>
+          </div>
+          <div class="guide-box guide-prio">
+            <div class="guide-title">✅ Posicionamento</div>
+            <ul class="guide-items">
+              <li>Continuidade de cuidado</li>
+              <li>Planejamento de longo prazo</li>
+              <li>Incentivo à manutenção</li>
+              <li>Experiência diferenciada</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RECORRÊNCIA -->
+    <div class="accordion">
+      <div class="acc-hdr" onclick="toggleAcc(this)">
+        <div class="acc-icon" style="background:#F0FDF4">🔄</div>
+        <div class="acc-info">
+          <div class="acc-name">Campanha Recorrência — Assinatura de Tratamentos</div>
+          <div class="acc-sub">Modelo de assinatura mensal — previsibilidade de faturamento e retenção</div>
+        </div>
+        <div class="acc-right">
+          <span class="acc-badge badge-green">Retenção</span>
+          <span class="acc-chevron">▼</span>
+        </div>
+      </div>
+      <div class="acc-body">
+        <div class="concept-box">
+          <div class="concept-title">Conceito Estratégico</div>
+          <p class="concept-text">A recorrência não é um "plano com desconto". É uma estratégia para garantir continuidade de tratamento, aumentar retenção e criar previsibilidade de faturamento. O paciente não deve voltar só quando sente necessidade — ele deve estar inserido em um plano contínuo de cuidado.</p>
+          <ul class="concept-bullets">
+            <li>Botox recorrente (a cada 4–6 meses)</li>
+            <li>Bioestimuladores com planejamento anual</li>
+            <li>Limpeza de pele / manutenção mensal</li>
+            <li>Protocolos de rejuvenescimento e melasma</li>
+          </ul>
+        </div>
+
+        <div class="msgs-title">SEQUÊNCIA DE 2 MENSAGENS</div>
+        <div class="msg-block">
+          <div class="msg-label">Mensagem 01 — Apresentação (Educação + Quebra de Objeção)</div>
+          <div class="wa-msg">Cuidar da sua pele de forma contínua faz toda diferença no resultado
+
+[Nome], aqui na clínica estruturamos um modelo de acompanhamento para pacientes que desejam manter seus resultados ao longo do tempo, sem precisar começar do zero a cada período.
+
+Funciona como um planejamento contínuo: você organiza seus cuidados e garante seus atendimentos com mais previsibilidade e tranquilidade.
+
+Além disso, esse formato facilita o pagamento e evita decisões de última hora.
+
+Se fizer sentido pra você, posso te explicar como funcionaria no seu caso.</div>
+        </div>
+        <div class="msg-block">
+          <div class="msg-label">Mensagem 02 — Escassez + Prova + Reforço</div>
+          <div class="wa-msg">Estamos finalizando as adesões para esse formato de acompanhamento
+
+[Nome], estamos organizando um grupo de pacientes que optaram por esse modelo contínuo de cuidado, justamente para garantir melhor acompanhamento e organização da agenda.
+
+A principal vantagem é não precisar se preocupar com disponibilidade ou planejamento — tudo já fica estruturado ao longo do tempo.
+
+Funciona de forma simples, com pagamento distribuído e organização prévia dos atendimentos.
+
+Se você já pensava em manter seus cuidados de forma mais consistente, esse modelo pode fazer bastante sentido.
+
+Quer que eu te explique melhor antes de encerrarmos essa fase?</div>
+        </div>
+
+        <div class="guide-grid">
+          <div class="guide-box guide-avoid">
+            <div class="guide-title">❌ Evitar</div>
+            <ul class="guide-items">
+              <li>Vender como "pacote com desconto"</li>
+              <li>Focar só em preço</li>
+              <li>Não explicar continuidade do resultado</li>
+              <li>Não conectar com planejamento</li>
+            </ul>
+          </div>
+          <div class="guide-box guide-prio">
+            <div class="guide-title">✅ Posicionamento</div>
+            <ul class="guide-items">
+              <li>Planejamento de cuidado</li>
+              <li>Acompanhamento profissional</li>
+              <li>Organização da rotina estética</li>
+              <li>Segurança e previsibilidade</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROGRAMA DE INDICAÇÃO -->
+    <div class="accordion">
+      <div class="acc-hdr" onclick="toggleAcc(this)">
+        <div class="acc-icon" style="background:#F0FDF4">👥</div>
+        <div class="acc-info">
+          <div class="acc-name">Campanha Programa de Indicação</div>
+          <div class="acc-sub">Pacientes satisfeitos indicam novos pacientes — confiança transferida</div>
+        </div>
+        <div class="acc-right">
+          <span class="acc-badge badge-green">Aquisição Orgânica</span>
+          <span class="acc-chevron">▼</span>
+        </div>
+      </div>
+      <div class="acc-body">
+        <div class="concept-box">
+          <div class="concept-title">Conceito Estratégico</div>
+          <p class="concept-text">O programa de indicação serve para estimular pacientes satisfeitos a indicar, gerando novos leads mais qualificados e reduzindo custo de aquisição. Indicação não é sobre desconto — é sobre confiança transferida.</p>
+        </div>
+
+        <div class="msgs-title">SEQUÊNCIA DE 3 MENSAGENS</div>
+        <div class="msg-block">
+          <div class="msg-label">Mensagem 01 — Convite para Indicar (Natural + Estratégico)</div>
+          <div class="wa-msg">Posso te fazer uma pergunta rápida?
+
+[Nome], você conhece alguém que anda incomodado com alguma questão estética — como flacidez, manchas ou aspecto de cansaço — mas ainda não começou a cuidar disso?
+
+Aqui na clínica, muitos pacientes chegam por indicação, justamente por já terem mais segurança no processo.
+
+Por isso, criamos uma forma de valorizar quem indica pessoas próximas, oferecendo benefícios dentro da própria clínica para quem participa.
+
+Se tiver alguém em mente, posso te explicar como funciona de forma simples.</div>
+        </div>
+        <div class="msg-block">
+          <div class="msg-label">Mensagem 02 — Explicação do Programa (Valor + Benefício)</div>
+          <div class="wa-msg">[Nome], funciona assim:
+
+Quando você indica alguém e essa pessoa inicia o tratamento aqui na clínica, você recebe um benefício que pode ser utilizado nos seus próprios cuidados.
+
+A ideia não é apenas oferecer uma vantagem, mas valorizar quem confia no nosso trabalho e compartilha isso com pessoas próximas.
+
+Além disso, quem vem por indicação costuma ter uma experiência ainda melhor, porque já chega mais alinhado com o que fazemos aqui.
+
+Se quiser, posso te orientar como fazer a indicação de forma rápida.</div>
+        </div>
+        <div class="msg-block">
+          <div class="msg-label">Mensagem 03 — Fechamento (Oportunidade + Ação)</div>
+          <div class="wa-msg">[Nome], estamos reforçando esse programa nesse período justamente para atender mais pacientes que chegam por indicação.
+
+Se você tiver alguém que pode se beneficiar de um cuidado mais estruturado com a pele ou rosto, esse é um ótimo momento para indicar.
+
+Além de ajudar essa pessoa, você ainda aproveita os benefícios dentro da clínica.
+
+Quer que eu te explique como funciona na prática?</div>
+        </div>
+
+        <div class="guide-grid">
+          <div class="guide-box guide-avoid">
+            <div class="guide-title">❌ Evitar</div>
+            <ul class="guide-items">
+              <li>Focar só em desconto</li>
+              <li>Parecer "indique e ganhe dinheiro"</li>
+              <li>Não explicar o valor para o indicado</li>
+              <li>Abordagem genérica</li>
+            </ul>
+          </div>
+          <div class="guide-box guide-prio">
+            <div class="guide-title">✅ Posicionamento</div>
+            <ul class="guide-items">
+              <li>Confiança e cuidado compartilhado</li>
+              <li>Benefício inteligente</li>
+              <li>Experiência diferenciada</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RENOVAÇÃO ANTECIPADA -->
+    <div class="accordion">
+      <div class="acc-hdr" onclick="toggleAcc(this)">
+        <div class="acc-icon" style="background:#EFF6FF">⏱️</div>
+        <div class="acc-info">
+          <div class="acc-name">Campanha Renovação Antecipada</div>
+          <div class="acc-sub">Lembra o paciente no momento certo — evita regressão antes de acontecer</div>
+        </div>
+        <div class="acc-right">
+          <span class="acc-badge badge-blue">Manutenção</span>
+          <span class="acc-chevron">▼</span>
+        </div>
+      </div>
+      <div class="acc-body">
+        <div class="concept-box">
+          <div class="concept-title">Conceito Estratégico</div>
+          <p class="concept-text">O paciente não deve voltar quando "perde o resultado" — ele deve voltar antes disso. Serve para manter resultado contínuo, evitar regressão do tratamento e garantir agenda previsível.</p>
+        </div>
+
+        <div class="msgs-title">SEQUÊNCIA DE 3 MENSAGENS</div>
+        <div class="msg-block">
+          <div class="msg-label">Mensagem 01 — Lembrete Estratégico (Educação + Cuidado)</div>
+          <div class="wa-msg">Está chegando o momento ideal para manutenção do seu tratamento
+
+[Nome], bom dia.
+
+Já estamos próximos do período indicado para manutenção do seu tratamento, e esse é um ponto muito importante para preservar os resultados que você já conquistou.
+
+Quando a manutenção é feita no tempo correto, conseguimos manter a pele mais equilibrada e evitar que os sinais voltem de forma mais intensa.
+
+Além disso, o acompanhamento contínuo permite resultados mais naturais e duradouros ao longo do tempo.
+
+Quer que eu veja os melhores horários para você na próxima semana?</div>
+        </div>
+        <div class="msg-block">
+          <div class="msg-label">Mensagem 02 — Reforço (Continuidade + Planejamento)</div>
+          <div class="wa-msg">Manter o resultado é tão importante quanto o tratamento
+
+[Nome], já estamos dentro do período ideal para dar continuidade ao seu tratamento.
+
+A manutenção nesse momento ajuda a manter a suavidade da pele e evita que seja necessário intensificar procedimentos no futuro.
+
+Esse acompanhamento progressivo é o que garante resultados mais naturais e consistentes ao longo do tempo.
+
+Vamos agendar sua manutenção e seguir com esse cuidado?</div>
+        </div>
+        <div class="msg-block">
+          <div class="msg-label">Mensagem 03 — Fato Novo (Escassez + Condição)</div>
+          <div class="wa-msg">Organizando a agenda com condições especiais para manutenção
+
+Oi, [Nome]!
+
+Estamos organizando a agenda desse período e abrimos algumas condições facilitadas para pacientes que já estão em acompanhamento, justamente para incentivar a continuidade do tratamento no tempo correto.
+
+Se você já estava pensando em renovar, esse é um bom momento para garantir seu horário e manter seus resultados com mais tranquilidade.
+
+Quer que eu veja as disponibilidades para você?</div>
+        </div>
+
+        <div class="guide-grid">
+          <div class="guide-box guide-avoid">
+            <div class="guide-title">❌ Evitar</div>
+            <ul class="guide-items">
+              <li>Esperar o paciente reclamar para chamar</li>
+              <li>Abordagem fria ("precisa voltar")</li>
+              <li>Focar apenas em venda</li>
+              <li>Não educar sobre o tempo ideal</li>
+            </ul>
+          </div>
+          <div class="guide-box guide-prio">
+            <div class="guide-title">✅ Posicionamento</div>
+            <ul class="guide-items">
+              <li>Cuidado contínuo</li>
+              <li>Manutenção inteligente</li>
+              <li>Acompanhamento profissional</li>
+              <li>Prevenção, não correção tardia</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- REATIVAÇÃO -->
+    <div class="accordion">
+      <div class="acc-hdr" onclick="toggleAcc(this)">
+        <div class="acc-icon" style="background:#FEF2F2">💫</div>
+        <div class="acc-info">
+          <div class="acc-name">Campanha Reativação de Pacientes</div>
+          <div class="acc-sub">Para pacientes que sumiram (30, 60, 90 dias+) — sem "estamos com saudade"</div>
+        </div>
+        <div class="acc-right">
+          <span class="acc-badge badge-red">Reativação</span>
+          <span class="acc-chevron">▼</span>
+        </div>
+      </div>
+      <div class="acc-body">
+        <div class="concept-box">
+          <div class="concept-title">Conceito Estratégico</div>
+          <p class="concept-text">A reativação não é "sentir falta do paciente". É fazer ele perceber que está deixando de cuidar de algo importante e perdendo continuidade de resultado.</p>
+          <div class="concept-rule">⚠️ Não use "estamos com saudade" — mostre que o paciente está perdendo com a própria ausência</div>
+        </div>
+
+        <div class="msgs-title">SEQUÊNCIA DE 2 MENSAGENS</div>
+        <div class="msg-block">
+          <div class="msg-label">Mensagem 01 — Reativação (Consciência + Valor)</div>
+          <div class="wa-msg">Você tem mantido o cuidado com a sua pele?
+
+Oi, [Nome].
+
+Percebemos que já faz um tempo desde o seu último atendimento, e esse intervalo pode impactar diretamente na manutenção dos resultados que você já conquistou.
+
+Com o tempo, sem acompanhamento, a pele tende a perder equilíbrio, firmeza e qualidade — o que muitas vezes faz com que seja necessário recomeçar etapas que já haviam sido evoluídas.
+
+Recentemente, temos trabalhado com abordagens mais completas, focadas em estética regenerativa, que têm trazido resultados muito consistentes em nossos pacientes.
+
+Inclusive, a doutora gravou um conteúdo explicando essa evolução — posso te enviar para você entender melhor.
+
+Se fizer sentido pra você retomar seus cuidados, posso verificar um horário para avaliação.</div>
+        </div>
+        <div class="msg-block">
+          <div class="msg-label">Mensagem 02 — Reativação com Condição (Decisão + Incentivo)</div>
+          <div class="wa-msg">Um bom momento para retomar seus cuidados
+
+Oi, [Nome].
+
+Estamos organizando a agenda deste período com foco em pacientes que desejam retomar o cuidado com a pele de forma mais estruturada.
+
+Para isso, abrimos algumas condições facilitadas justamente para quem já conhece a clínica e deseja dar continuidade ao tratamento com mais tranquilidade.
+
+Hoje sabemos que o melhor resultado vem da constância — e não de ações isoladas.
+
+Inclusive, tivemos pacientes que retomaram recentemente e já apresentaram uma evolução significativa em poucas semanas.
+
+Se você estava pensando em voltar, esse pode ser um bom momento para organizar isso.
+
+Quer que eu veja os horários disponíveis para você?</div>
+        </div>
+
+        <div class="guide-grid">
+          <div class="guide-box guide-avoid">
+            <div class="guide-title">❌ Erros Graves</div>
+            <ul class="guide-items">
+              <li>"Estamos com saudade de você"</li>
+              <li>Mensagem genérica e fria</li>
+              <li>Foco só em desconto</li>
+              <li>Não gerar consciência de perda</li>
+            </ul>
+          </div>
+          <div class="guide-box guide-prio">
+            <div class="guide-title">✅ Posicionamento</div>
+            <ul class="guide-items">
+              <li>Cuidado com o resultado do paciente</li>
+              <li>Importância da continuidade</li>
+              <li>Evolução dos tratamentos</li>
+              <li>Oportunidade de retomada</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /fidelizacao -->
+
+</div><!-- /page -->
+
+<script>
+function showSection(id, pill) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-pill').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  pill.classList.add('active');
+}
+
+function toggleAcc(hdr) {
+  const body = hdr.nextElementSibling;
+  const chevron = hdr.querySelector('.acc-chevron');
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  chevron.classList.toggle('open', !isOpen);
+}
+</script>
+</body>
+</html>
