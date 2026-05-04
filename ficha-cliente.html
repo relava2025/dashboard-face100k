@@ -20,6 +20,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 let clients = [];
+let currentModo = "novo";
 
 async function loadClients() {
   try {
@@ -28,7 +29,7 @@ async function loadClients() {
     snap.forEach(d => clients.push({ id: d.id, ...d.data() }));
     clients.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
     const sel = document.getElementById("sel-cliente");
-    sel.innerHTML = '<option value="">— Selecionar cliente existente —</option><option value="__novo__">+ Novo cliente</option>';
+    sel.innerHTML = '<option value="">— Selecionar cliente —</option>';
     clients.forEach(c => {
       const o = document.createElement("option");
       o.value = c.id;
@@ -36,24 +37,25 @@ async function loadClients() {
       if (c.ficha) o.textContent += " ✓";
       sel.appendChild(o);
     });
-
-    // Pre-fill if ficha exists for selected client
-    sel.addEventListener("change", () => {
-      const val = sel.value;
-      document.getElementById("novo-nome-wrap").style.display = val === "__novo__" ? "flex" : "none";
-      if (val && val !== "__novo__") {
-        const c = clients.find(x => x.id === val);
-        if (c && c.ficha) prefillForm(c.ficha);
-        else clearForm();
-      } else {
-        clearForm();
-      }
-    });
   } catch(e) {
     console.error(e);
     document.getElementById("sel-cliente").innerHTML = '<option value="">Erro ao carregar clientes</option>';
   }
 }
+
+window.setModo = function(modo) {
+  currentModo = modo;
+  document.getElementById("card-novo").style.display = modo === "novo" ? "block" : "none";
+  document.getElementById("card-existente").style.display = modo === "editar" ? "block" : "none";
+  document.getElementById("btn-modo-novo").classList.toggle("active", modo === "novo");
+  document.getElementById("btn-modo-editar").classList.toggle("active", modo === "editar");
+  if (modo === "novo") {
+    clearForm();
+    document.getElementById("page-title-txt").textContent = "Nova Ficha de Cliente";
+  } else {
+    document.getElementById("page-title-txt").textContent = "Editar Ficha Existente";
+  }
+};
 
 function prefillForm(f) {
   setVal("inp-insta", f.insta);
@@ -180,11 +182,12 @@ async function salvar() {
   msg.textContent = "";
   msg.className = "save-msg";
 
-  const selVal = document.getElementById("sel-cliente").value;
   const novoNome = document.getElementById("inp-novo-nome").value.trim();
+  const selVal = document.getElementById("sel-cliente").value;
+  const isNovo = currentModo === "novo";
 
-  if (!selVal) { showMsg("Selecione ou informe o cliente.", "error"); return; }
-  if (selVal === "__novo__" && !novoNome) { showMsg("Informe o nome do novo cliente.", "error"); return; }
+  if (isNovo && !novoNome) { showMsg("Informe o nome do cliente.", "error"); return; }
+  if (!isNovo && !selVal) { showMsg("Selecione o cliente.", "error"); return; }
 
   const forma = document.querySelector("input[name='forma']:checked")?.value;
   if (!forma) { showMsg("Selecione a forma de pagamento.", "error"); return; }
@@ -220,7 +223,7 @@ async function salvar() {
   }
 
   // Check if pre-existing parcelas (keep recebido status)
-  if (selVal !== "__novo__") {
+  if (!isNovo) {
     const existing = clients.find(x => x.id === selVal);
     if (existing?.ficha?.negociacao?.parcelas?.length && negociacao.parcelas) {
       existing.ficha.negociacao.parcelas.forEach((p, i) => {
@@ -258,9 +261,8 @@ async function salvar() {
   btn.textContent = "Salvando...";
 
   try {
-    let clientId = selVal;
-    if (selVal === "__novo__") {
-      clientId = "c_" + Date.now();
+    let clientId = isNovo ? ("c_" + Date.now()) : selVal;
+    if (isNovo) {
       await setDoc(doc(db, "entrega", clientId), { name: novoNome, ficha }, { merge: true });
     } else {
       await setDoc(doc(db, "entrega", clientId), { ficha }, { merge: true });
@@ -268,9 +270,8 @@ async function salvar() {
     showMsg("Ficha salva com sucesso!", "success");
     btn.textContent = "Salvo!";
     setTimeout(() => { btn.textContent = "Salvar Ficha"; btn.disabled = false; }, 2000);
-    // Reload clients to update ✓ markers
     await loadClients();
-    document.getElementById("sel-cliente").value = clientId;
+    if (!isNovo) document.getElementById("sel-cliente").value = clientId;
   } catch(e) {
     showMsg("Erro ao salvar: " + e.message, "error");
     btn.textContent = "Salvar Ficha";
@@ -286,6 +287,14 @@ function showMsg(txt, type) {
 
 window.addEventListener("DOMContentLoaded", () => {
   loadClients();
+
+  document.getElementById("sel-cliente").addEventListener("change", () => {
+    const val = document.getElementById("sel-cliente").value;
+    if (!val) { clearForm(); return; }
+    const c = clients.find(x => x.id === val);
+    if (c?.ficha) prefillForm(c.ficha);
+    else clearForm();
+  });
 
   document.querySelectorAll("input[name='forma']").forEach(r => {
     r.addEventListener("change", () => {
@@ -336,10 +345,11 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .form-card-title{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--text-dim);margin-bottom:18px;display:flex;align-items:center;gap:8px}
 .form-card-title svg{flex-shrink:0}
 
-/* CLIENT SELECTOR */
-.client-row{display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap}
-.client-row .form-group{flex:1;min-width:200px}
-#novo-nome-wrap{display:none;flex:1;min-width:200px}
+/* MODE TOGGLE */
+.mode-toggle{display:flex;gap:8px;margin-bottom:20px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:6px}
+.mode-btn{flex:1;background:transparent;border:none;border-radius:6px;color:var(--text-sec);font-size:13px;font-weight:700;font-family:'Montserrat',sans-serif;padding:10px 16px;cursor:pointer;transition:all .18s;display:flex;align-items:center;justify-content:center;gap:8px}
+.mode-btn:hover{color:var(--text);background:var(--surface2)}
+.mode-btn.active{background:var(--amber);color:#000}
 
 /* FORM ELEMENTS */
 .form-group{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
@@ -417,27 +427,45 @@ option{background:#1A2025}
 
 <div class="wrap">
   <div class="page-header">
-    <div class="page-title">Nova Ficha de Cliente</div>
+    <div class="page-title" id="page-title-txt">Nova Ficha de Cliente</div>
     <div class="page-sub">Preenchida pelo closer logo após o fechamento da venda</div>
   </div>
 
-  <!-- CLIENTE -->
-  <div class="form-card">
+  <!-- MODO TOGGLE -->
+  <div class="mode-toggle">
+    <button class="mode-btn active" id="btn-modo-novo" onclick="setModo('novo')">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1.5v11M1.5 7h11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      Nova Ficha
+    </button>
+    <button class="mode-btn" id="btn-modo-editar" onclick="setModo('editar')">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9.5 2.5l2 2-7 7H2.5v-2l7-7z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+      Editar Existente
+    </button>
+  </div>
+
+  <!-- NOVO CLIENTE -->
+  <div class="form-card" id="card-novo">
     <div class="form-card-title">
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="5" r="2.5" stroke="currentColor" stroke-width="1.2"/><path d="M1.5 13c0-3 2.5-5 5.5-5s5.5 2 5.5 5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
-      Cliente
+      Novo Cliente
     </div>
-    <div class="client-row">
-      <div class="form-group" style="flex:2;min-width:220px">
-        <label class="f-label" for="sel-cliente">Selecionar cliente</label>
-        <select id="sel-cliente">
-          <option value="">Carregando...</option>
-        </select>
-      </div>
-      <div class="form-group" id="novo-nome-wrap">
-        <label class="f-label" for="inp-novo-nome">Nome do novo cliente</label>
-        <input type="text" id="inp-novo-nome" placeholder="Ex: Dr. João Silva">
-      </div>
+    <div class="form-group" style="margin-bottom:0">
+      <label class="f-label" for="inp-novo-nome">Nome do cliente</label>
+      <input type="text" id="inp-novo-nome" placeholder="Ex: Dr. João Silva">
+    </div>
+  </div>
+
+  <!-- CLIENTE EXISTENTE -->
+  <div class="form-card" id="card-existente" style="display:none">
+    <div class="form-card-title">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="5" r="2.5" stroke="currentColor" stroke-width="1.2"/><path d="M1.5 13c0-3 2.5-5 5.5-5s5.5 2 5.5 5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      Cliente Existente
+    </div>
+    <div class="form-group" style="margin-bottom:0">
+      <label class="f-label" for="sel-cliente">Selecionar cliente</label>
+      <select id="sel-cliente">
+        <option value="">Carregando...</option>
+      </select>
     </div>
   </div>
 
