@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel de Fichas — FACE 100K</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+import { getFirestore, collection, onSnapshot, enableNetwork } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+const firebaseConfig = {
+  apiKey:"AIzaSyAyupUdCsEb6pPVmTs2clhayS84-TUovGA",
+  authDomain:"dashboard-e465d.firebaseapp.com",
+  projectId:"dashboard-e465d",
+  storageBucket:"dashboard-e465d.firebasestorage.app",
+  messagingSenderId:"865986158280",
+  appId:"1:865986158280:web:1531d13630f9835a9f0ffd"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+let allClients = [];
+let expanded = {};
+
+function snapRetry(refFn, cb) {
+  let unsub, timer, tries = 0;
+  function sub() {
+    try {
+      if (unsub) { try { unsub(); } catch(e){} }
+      unsub = onSnapshot(refFn(),
+        s => { tries = 0; cb(s); setSyncStatus("ok"); },
+        e => {
+          if (timer) clearTimeout(timer);
+          tries++;
+          setSyncStatus("connecting");
+          timer = setTimeout(() => { enableNetwork(db).then(sub).catch(sub); }, Math.min(3000 * tries, 15000));
+        }
+      );
+    } catch(e) { timer = setTimeout(sub, 5000); }
+  }
+  sub();
+}
+
+function setSyncStatus(st) {
+  const dot = document.getElementById("sync-dot");
+  const txt = document.getElementById("sync-txt");
+  if (!dot) return;
+  dot.className = "sync-dot" + (st === "connecting" ? " saving" : st === "error" ? " error" : "");
+  txt.textContent = st === "ok" ? "Ao vivo" : st === "connecting" ? "Conectando..." : "Erro";
+}
+
+function fmt(v) {
+  return Number(v || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+}
+function fmtDate(s) {
+  if (!s) return "—";
+  const [y, m, d] = s.split("T")[0].split("-");
+  return `${d}/${m}/${y}`;
+}
+function formaLabel(f) {
+  return f === "avista" ? "À vista" : f === "parcelado" ? "Parcelado" : f === "entrada_parcelas" ? "Entrada + Parcelas" : "—";
+}
+function formaClass(f) {
+  return f === "avista" ? "tag-amber" : f === "parcelado" ? "tag-blue" : "tag-purple";
+}
+
+function getUniqueOptions(field) {
+  const vals = new Set();
+  allClients.forEach(c => {
+    const v = c.ficha?.[field];
+    if (v) vals.add(v.trim());
+  });
+  return [...vals].sort();
+}
+function getUniquePrograms() {
+  const vals = new Set();
+  allClients.forEach(c => {
+    const v = c.ficha?.programa;
+    if (v) vals.add(v.trim());
+  });
+  return [...vals].sort();
+}
+
+function buildFilters() {
+  // Closer filter
+  const closerSel = document.getElementById("fil-closer");
+  const sdrSel = document.getElementById("fil-sdr");
+  const progSel = document.getElementById("fil-programa");
+  const closers = getUniqueOptions("closer");
+  const sdrs = getUniqueOptions("sdr");
+  const progs = getUniquePrograms();
+  closerSel.innerHTML = '<option value="">Todos closers</option>' + closers.map(v => `<option value="${v}">${v}</option>`).join("");
+  sdrSel.innerHTML = '<option value="">Todos SDRs</option>' + sdrs.map(v => `<option value="${v}">${v}</option>`).join("");
+  progSel.innerHTML = '<option value="">Todos programas</option>' + progs.map(v => `<option value="${v}">${v}</option>`).join("");
+}
+
+function renderStats(clients) {
+  const total = clients.length;
+  const totalVal = clients.reduce((s, c) => s + (c.ficha?.negociacao?.valorTotal || 0), 0);
+
+  // Group by closer
+  const byCloser = {};
+  clients.forEach(c => {
+    const k = c.ficha?.closer || "—";
+    byCloser[k] = (byCloser[k] || 0) + 1;
+  });
+  const topCloser = Object.entries(byCloser).sort((a,b) => b[1]-a[1])[0];
+
+  // Group by SDR
+  const bySdr = {};
+  clients.forEach(c => {
+    const k = c.ficha?.sdr || "—";
+    bySdr[k] = (bySdr[k] || 0) + 1;
+  });
+  const topSdr = Object.entries(bySdr).sort((a,b) => b[1]-a[1])[0];
+
+  document.getElementById("stat-total").textContent = total;
+  document.getElementById("stat-val").textContent = fmt(totalVal);
+  document.getElementById("stat-closer").textContent = topCloser ? `${topCloser[0]} (${topCloser[1]})` : "—";
+  document.getElementById("stat-sdr").textContent = topSdr ? `${topSdr[0]} (${topSdr[1]})` : "—";
+}
+
+function renderList(clients) {
+  const search = document.getElementById("inp-search").value.toLowerCase();
+  const closer = document.getElementById("fil-closer").value;
+  const sdr = document.getElementById("fil-sdr").value;
+  const prog = document.getElementById("fil-programa").value;
+  const forma = document.getElementById("fil-forma").value;
+
+  let list = clients.filter(c => {
+    const f = c.ficha;
+    if (!f) return false;
+    const name = (c.name || c.id).toLowerCase();
+    if (search && !name.includes(search) && !(f.insta||"").toLowerCase().includes(search) && !(f.programa||"").toLowerCase().includes(search)) return false;
+    if (closer && f.closer !== closer) return false;
+    if (sdr && f.sdr !== sdr) return false;
+    if (prog && f.programa !== prog) return false;
+    if (forma && f.negociacao?.formaPagamento !== forma) return false;
+    return true;
+  });
+
+  // Sort newest first
+  list.sort((a, b) => {
+    const da = a.ficha?.createdAt || "";
+    const db2 = b.ficha?.createdAt || "";
+    return db2.localeCompare(da);
+  });
+
+  document.getElementById("result-count").textContent = list.length + " ficha" + (list.length !== 1 ? "s" : "");
+
+  const container = document.getElementById("fichas-list");
+  if (!list.length) {
+    container.innerHTML = `<div class="empty">Nenhuma ficha encontrada.</div>`;
+    return;
+  }
+  container.innerHTML = list.map(c => renderRow(c)).join("");
+}
+
+function renderRow(c) {
+  const f = c.ficha;
+  const n = f.negociacao || {};
+  const isExp = expanded[c.id];
+
+  const formaTag = n.formaPagamento
+    ? `<span class="tag ${formaClass(n.formaPagamento)}">${formaLabel(n.formaPagamento)}</span>`
+    : "";
+
+  const closerBadge = f.closer ? `<span class="person-badge">${f.closer}</span>` : `<span class="person-empty">—</span>`;
+  const sdrBadge = f.sdr ? `<span class="person-badge sdr-badge">${f.sdr}</span>` : `<span class="person-empty">—</span>`;
+
+  const nParcelas = n.parcelas?.length || 0;
+  const parcelasInfo = n.formaPagamento === "avista"
+    ? ""
+    : n.formaPagamento === "parcelado"
+    ? `<span class="sub-info">${nParcelas}x de ${fmt(n.valorParcela)}</span>`
+    : n.formaPagamento === "entrada_parcelas"
+    ? `<span class="sub-info">Ent. ${fmt(n.entrada?.valor)} + ${nParcelas}x ${fmt(n.valorParcela)}</span>`
+    : "";
+
+  let detail = "";
+  if (isExp) {
+    detail = `<div class="row-detail">
+      <div class="detail-grid">
+        <div class="detail-col">
+          <div class="detail-sec">Instagram & Programa</div>
+          <div class="detail-row"><span class="dl">Instagram</span><span class="dv">${f.insta || "—"}</span></div>
+          <div class="detail-row"><span class="dl">Programa</span><span class="dv">${f.programa || "—"}</span></div>
+        </div>
+        <div class="detail-col">
+          <div class="detail-sec">Estrutura</div>
+          <div class="detail-row"><span class="dl">Faturamento</span><span class="dv">${f.estrutura?.faturamento || "—"}</span></div>
+          <div class="detail-row"><span class="dl">Equipe</span><span class="dv">${f.estrutura?.equipe || "—"}</span></div>
+          <div class="detail-row"><span class="dl">Segmento</span><span class="dv">${f.estrutura?.segmento || "—"}</span></div>
+        </div>
+        <div class="detail-col">
+          <div class="detail-sec">Objetivo</div>
+          <div class="detail-row"><span class="dl">Meta</span><span class="dv">${f.objetivo?.meta || "—"}</span></div>
+          <div class="detail-row"><span class="dl">Prazo</span><span class="dv">${f.objetivo?.prazo || "—"}</span></div>
+        </div>
+        <div class="detail-col">
+          <div class="detail-sec">Negociação</div>
+          <div class="detail-row"><span class="dl">Valor total</span><span class="dv dv-amber">${fmt(n.valorTotal)}</span></div>
+          <div class="detail-row"><span class="dl">Forma</span><span class="dv">${formaLabel(n.formaPagamento)}</span></div>
+          ${n.formaPagamento === "avista" ? `<div class="detail-row"><span class="dl">Data</span><span class="dv">${fmtDate(n.dataAvista)}</span></div>` : ""}
+          ${n.formaPagamento !== "avista" && nParcelas ? `<div class="detail-row"><span class="dl">Parcelas</span><span class="dv">${nParcelas}x de ${fmt(n.valorParcela)}</span></div>` : ""}
+          ${n.entrada ? `<div class="detail-row"><span class="dl">Entrada</span><span class="dv">${fmt(n.entrada.valor)} em ${fmtDate(n.entrada.data)}</span></div>` : ""}
+          <div class="detail-row"><span class="dl">Closer</span><span class="dv">${f.closer || "—"}</span></div>
+          <div class="detail-row"><span class="dl">SDR</span><span class="dv">${f.sdr || "—"}</span></div>
+        </div>
+      </div>
+      ${f.obs ? `<div class="detail-obs"><span class="dl">Observação</span><p>${f.obs}</p></div>` : ""}
+      <div class="detail-actions">
+        <a href="ficha-cliente.html" class="btn-detail btn-edit" onclick="sessionStorage.setItem('editClientId','${c.id}')">Editar ficha →</a>
+        <a href="painel-carteira.html" class="btn-detail btn-carteira">Ver na carteira →</a>
+      </div>
+    </div>`;
+  }
+
+  return `<div class="ficha-row ${isExp ? "expanded" : ""}" id="fr-${c.id}">
+    <div class="row-main" onclick="toggleRow('${c.id}')">
+      <div class="row-name">
+        <div class="name-txt">${c.name || c.id}</div>
+        <div class="name-date">${fmtDate(f.createdAt)}</div>
+      </div>
+      <div class="row-programa">${f.programa || <span class="empty-cell">—</span>}</div>
+      <div class="row-forma">${formaTag} ${parcelasInfo}</div>
+      <div class="row-valor">${n.valorTotal ? fmt(n.valorTotal) : "—"}</div>
+      <div class="row-equipe">${closerBadge} ${sdrBadge}</div>
+      <div class="row-expand ${isExp ? "open" : ""}">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+    </div>
+    ${detail}
+  </div>`;
+}
+
+window.toggleRow = function(id) {
+  expanded[id] = !expanded[id];
+  renderList(allClients);
+};
+
+function wireFilters() {
+  ["inp-search","fil-closer","fil-sdr","fil-programa","fil-forma"].forEach(id => {
+    document.getElementById(id)?.addEventListener("input", () => renderList(allClients));
+    document.getElementById(id)?.addEventListener("change", () => renderList(allClients));
+  });
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  setSyncStatus("connecting");
+  wireFilters();
+
+  snapRetry(
+    () => collection(db, "entrega"),
+    snap => {
+      allClients = [];
+      snap.forEach(d => {
+        const data = d.data();
+        if (data.ficha) allClients.push({ id: d.id, ...data });
+      });
+      buildFilters();
+      renderStats(allClients);
+      renderList(allClients);
+    }
+  );
+});
+</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0D1117;--surface:#1A2025;--surface2:#212830;--surface3:#272F38;
+  --amber:#F5A623;--amber-dim:rgba(245,166,35,0.10);--amber-border:rgba(245,166,35,0.20);
+  --border:#3E4249;--text:#F0F0F0;--text-sec:#B8B8C0;--text-dim:rgba(255,255,255,0.25);
+  --green:#22C55E;--green-dim:rgba(34,197,94,0.10);--green-border:rgba(34,197,94,0.22);
+  --red:#EF4444;--red-dim:rgba(239,68,68,0.10);
+  --blue:#3B82F6;--blue-dim:rgba(59,130,246,0.10);--blue-border:rgba(59,130,246,0.22);
+  --purple:#A855F7;--purple-dim:rgba(168,85,247,0.10);--purple-border:rgba(168,85,247,0.22);
+}
+html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:15px;line-height:1.5}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(0deg,transparent 24%,rgba(245,166,35,0.03) 25%,rgba(245,166,35,0.03) 26%,transparent 27%),linear-gradient(90deg,transparent 24%,rgba(245,166,35,0.03) 25%,rgba(245,166,35,0.03) 26%,transparent 27%);background-size:50px 50px;pointer-events:none;z-index:0}
+
+/* TOPBAR */
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);height:52px;display:flex;align-items:center;padding:0 24px;gap:12px;position:sticky;top:0;z-index:50}
+.t-back{color:var(--text-sec);text-decoration:none;font-size:13px;display:flex;align-items:center;gap:6px;transition:color .15s}
+.t-back:hover{color:var(--amber)}
+.t-sep{width:1px;height:18px;background:var(--border)}
+.t-logo{font-family:'Montserrat',sans-serif;font-size:15px;font-weight:800}
+.t-logo span{color:var(--amber);font-style:italic}
+.t-title{font-size:13px;color:var(--text-sec)}
+.t-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.sync-dot{width:8px;height:8px;border-radius:50%;background:var(--green);transition:background .3s}
+.sync-dot.saving{background:#EAB308;animation:pulse .6s infinite alternate}
+.sync-dot.error{background:var(--red)}
+@keyframes pulse{from{opacity:.4}to{opacity:1}}
+.sync-txt{font-size:12px;color:var(--text-sec)}
+.btn-nova{background:var(--amber);color:#000;border:none;border-radius:6px;padding:7px 14px;font-size:13px;font-weight:700;font-family:'Montserrat',sans-serif;cursor:pointer;text-decoration:none;display:flex;align-items:center;gap:6px;transition:opacity .15s}
+.btn-nova:hover{opacity:.88}
+
+/* LAYOUT */
+.wrap{position:relative;z-index:1;max-width:1060px;margin:0 auto;padding:32px 24px 80px}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 18px}
+.stat-label{font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;text-transform:uppercase;letter-spacing:.1em;color:var(--text-dim);margin-bottom:6px}
+.stat-val{font-size:20px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stat-val.amber{color:var(--amber)}
+
+/* CONTROLS */
+.controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+.search-wrap{position:relative;flex:1;min-width:180px}
+.search-wrap svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text-dim);pointer-events:none}
+#inp-search{background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;padding:9px 12px 9px 32px;width:100%;outline:none;transition:border-color .15s}
+#inp-search:focus{border-color:var(--amber)}
+#inp-search::placeholder{color:var(--text-dim)}
+.filter-selects{display:flex;gap:8px;flex-wrap:wrap}
+.filter-selects select{background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text-sec);font-size:12px;font-weight:600;padding:8px 10px;outline:none;cursor:pointer;transition:border-color .15s;font-family:'Montserrat',sans-serif}
+.filter-selects select:focus{border-color:var(--amber)}
+option{background:#1A2025}
+.result-count{font-size:12px;color:var(--text-dim);margin-bottom:10px}
+
+/* TABLE HEADER */
+.table-head{display:grid;grid-template-columns:2fr 2fr 2fr 1.2fr 2fr 28px;gap:12px;padding:8px 18px;margin-bottom:4px}
+.th{font-size:10px;font-weight:700;font-family:'Montserrat',sans-serif;text-transform:uppercase;letter-spacing:.12em;color:var(--text-dim)}
+
+/* ROWS */
+.ficha-row{background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:8px;overflow:hidden;transition:border-color .15s}
+.ficha-row.expanded{border-color:var(--amber-border)}
+.row-main{display:grid;grid-template-columns:2fr 2fr 2fr 1.2fr 2fr 28px;gap:12px;align-items:center;padding:14px 18px;cursor:pointer;user-select:none;transition:background .12s}
+.row-main:hover{background:rgba(255,255,255,0.02)}
+.name-txt{font-size:14px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.name-date{font-size:11px;color:var(--text-dim);margin-top:1px}
+.row-programa{font-size:12px;color:var(--text-sec);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row-forma{display:flex;align-items:center;flex-wrap:wrap;gap:5px}
+.row-valor{font-size:14px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--amber)}
+.row-equipe{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.row-expand{color:var(--text-dim);transition:transform .2s;display:flex;align-items:center;justify-content:center}
+.row-expand.open{transform:rotate(180deg)}
+.empty-cell{color:var(--text-dim);font-size:12px}
+
+/* TAGS */
+.tag{font-size:9px;font-weight:700;font-family:'Montserrat',sans-serif;padding:2px 7px;border-radius:4px;text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}
+.tag-amber{background:var(--amber-dim);color:var(--amber);border:0.5px solid var(--amber-border)}
+.tag-blue{background:var(--blue-dim);color:var(--blue);border:0.5px solid var(--blue-border)}
+.tag-purple{background:var(--purple-dim);color:var(--purple);border:0.5px solid var(--purple-border)}
+.sub-info{font-size:11px;color:var(--text-sec)}
+
+/* PERSON BADGES */
+.person-badge{font-size:11px;font-weight:600;background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 8px;color:var(--text-sec);white-space:nowrap}
+.sdr-badge{color:var(--blue);border-color:var(--blue-border);background:var(--blue-dim)}
+.person-empty{color:var(--text-dim);font-size:12px}
+
+/* DETAIL */
+.row-detail{border-top:1px solid var(--border);padding:20px 18px;background:rgba(0,0,0,0.15)}
+.detail-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-bottom:16px}
+.detail-sec{font-size:10px;font-weight:700;font-family:'Montserrat',sans-serif;text-transform:uppercase;letter-spacing:.12em;color:var(--text-dim);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.detail-row{display:flex;justify-content:space-between;gap:8px;margin-bottom:6px}
+.dl{font-size:11px;color:var(--text-dim);flex-shrink:0}
+.dv{font-size:12px;font-weight:600;color:var(--text);text-align:right}
+.dv-amber{color:var(--amber)}
+.detail-obs{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-bottom:14px}
+.detail-obs .dl{display:block;font-size:10px;font-weight:700;font-family:'Montserrat',sans-serif;text-transform:uppercase;letter-spacing:.1em;color:var(--text-dim);margin-bottom:6px}
+.detail-obs p{font-size:13px;color:var(--text-sec);line-height:1.5}
+.detail-actions{display:flex;gap:8px}
+.btn-detail{font-size:12px;font-weight:700;font-family:'Montserrat',sans-serif;padding:7px 14px;border-radius:6px;text-decoration:none;transition:opacity .15s}
+.btn-detail:hover{opacity:.8}
+.btn-edit{background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border)}
+.btn-carteira{background:var(--green-dim);color:var(--green);border:1px solid var(--green-border)}
+
+.empty{text-align:center;padding:48px;color:var(--text-dim);font-size:14px}
+
+@media(max-width:860px){
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .table-head{display:none}
+  .row-main{grid-template-columns:1fr auto 28px;grid-template-rows:auto auto;gap:6px}
+  .row-programa{grid-column:1/2;grid-row:2}
+  .row-forma{grid-column:1/2;grid-row:3}
+  .row-valor{grid-column:2/3;grid-row:1;text-align:right}
+  .row-equipe{grid-column:2/3;grid-row:2}
+  .row-expand{grid-column:3/4;grid-row:1/3;align-self:center}
+  .detail-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:560px){
+  .wrap{padding:24px 16px 60px}
+  .detail-grid{grid-template-columns:1fr}
+  .filter-selects{flex-direction:column}
+}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a href="index.html" class="t-back">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Voltar
+  </a>
+  <div class="t-sep"></div>
+  <div class="t-logo">FACE <span>100K</span></div>
+  <div class="t-sep"></div>
+  <div class="t-title">Painel de Fichas</div>
+  <div class="t-right">
+    <div class="sync-dot" id="sync-dot"></div>
+    <span class="sync-txt" id="sync-txt">Conectando...</span>
+    <a href="ficha-cliente.html" class="btn-nova">
+      <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 1.5v10M1.5 6.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      Nova ficha
+    </a>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- STATS -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">Total de fichas</div>
+      <div class="stat-val" id="stat-total">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Volume de contratos</div>
+      <div class="stat-val amber" id="stat-val">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Top closer</div>
+      <div class="stat-val" id="stat-closer" style="font-size:15px">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Top SDR</div>
+      <div class="stat-val" id="stat-sdr" style="font-size:15px">—</div>
+    </div>
+  </div>
+
+  <!-- CONTROLS -->
+  <div class="controls">
+    <div class="search-wrap">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="6" cy="6" r="4.5" stroke="currentColor" stroke-width="1.2"/><path d="M9.5 9.5l3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      <input type="text" id="inp-search" placeholder="Buscar por nome, Instagram ou programa...">
+    </div>
+    <div class="filter-selects">
+      <select id="fil-closer"><option value="">Todos closers</option></select>
+      <select id="fil-sdr"><option value="">Todos SDRs</option></select>
+      <select id="fil-programa"><option value="">Todos programas</option></select>
+      <select id="fil-forma">
+        <option value="">Todas as formas</option>
+        <option value="avista">À vista</option>
+        <option value="parcelado">Parcelado</option>
+        <option value="entrada_parcelas">Entrada + Parcelas</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="result-count" id="result-count"></div>
+
+  <!-- TABLE HEADER -->
+  <div class="table-head">
+    <div class="th">Cliente</div>
+    <div class="th">Programa</div>
+    <div class="th">Forma / Parcelas</div>
+    <div class="th">Valor</div>
+    <div class="th">Closer / SDR</div>
+    <div class="th"></div>
+  </div>
+
+  <!-- LIST -->
+  <div id="fichas-list">
+    <div class="empty">Carregando fichas...</div>
+  </div>
+
+</div>
+</body>
+</html>
