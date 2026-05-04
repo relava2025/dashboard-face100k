@@ -92,6 +92,11 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .stat-sub{font-size:12px;color:var(--text-dim)}
 
 /* TABS */
+.regras-box{background:var(--amber-dim);border:1px solid var(--amber-border);border-radius:10px;padding:14px 18px;margin-bottom:24px;display:flex;gap:14px;align-items:flex-start}
+.regras-title{font-size:12px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--amber);display:flex;align-items:center;gap:6px;white-space:nowrap;margin-top:1px}
+.regras-list{list-style:none;display:flex;flex-wrap:wrap;gap:6px 24px;flex:1}
+.regras-list li{font-size:12px;color:var(--text-sec);display:flex;align-items:center;gap:5px}
+.regras-list li::before{content:'·';color:var(--amber);font-size:16px;line-height:1}
 .tabs{display:flex;gap:4px;margin-bottom:24px;border-bottom:1px solid var(--border);padding-bottom:0}
 .tab-btn{padding:10px 18px;font-size:13px;font-weight:600;font-family:'Montserrat',sans-serif;cursor:pointer;background:transparent;border:none;color:var(--text-sec);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s}
 .tab-btn:hover{color:var(--text)}
@@ -266,6 +271,20 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
     </div>
   </div>
 
+  <!-- REGRAS -->
+  <div class="regras-box">
+    <div class="regras-title">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.2"/><path d="M7 4v4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="7" cy="10" r=".8" fill="currentColor"/></svg>
+      Regras de bonificação
+    </div>
+    <ul class="regras-list">
+      <li>Cada marco é pago <strong>uma única vez</strong> por cliente</li>
+      <li>O bônus é validado apenas com <strong>registro e comprovação</strong></li>
+      <li><strong>Cliente inadimplente</strong> não gera bonificação</li>
+      <li>O valor do marco é um <strong>bônus da equipe de entrega</strong></li>
+    </ul>
+  </div>
+
   <!-- TABS -->
   <div class="tabs">
     <button class="tab-btn active" onclick="switchTab('controle',this)">Controle de Pagamentos</button>
@@ -316,10 +335,10 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 
 <script>
 const MARCOS_DEF = [
-  {id:1, title:'Primeira venda',          vendas:'1 venda',     bonus:200},
-  {id:2, title:'Validação da metodologia',vendas:'3–5 vendas',  bonus:300},
-  {id:3, title:'Previsibilidade',          vendas:'6–9 vendas',  bonus:400},
-  {id:4, title:'Escala',                   vendas:'10–15 vendas',bonus:500},
+  {id:1, title:'Primeira venda',                        vendas:'1 venda',     criterio:'Cliente realizou a primeira venda utilizando a metodologia e a esteira de produtos.',bonus:200},
+  {id:2, title:'Validação da metodologia (Checkpoint 2)',vendas:'3–5 vendas',  criterio:'Cliente realizou de 3 a 5 vendas, com resultado comprovado e utilizando a metodologia e a esteira de produtos.',bonus:300},
+  {id:3, title:'Previsibilidade (Checkpoint 3)',          vendas:'15–20 vendas',criterio:'Cliente realizou de 15 a 20 vendas, com faturamento crescente, processo comercial funcionando com constância e utilização da metodologia e da esteira de produtos.',bonus:400},
+  {id:4, title:'Escala (Checkpoint 4)',                   vendas:'20–30 vendas',criterio:'Cliente realizou de 20 a 30 vendas, com faturamento consolidado, operação rodando com previsibilidade e uso da metodologia e da esteira de produtos.',bonus:500},
 ];
 const BONUS_MAP = {1:200,2:300,3:400,4:500};
 

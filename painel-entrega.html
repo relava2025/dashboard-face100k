@@ -789,10 +789,10 @@ function setSyncStatus(state){
 
 // ── MODAL MARCOS PAGAMENTO ─────────────────────────────────────────────────
 const MARCOS_DEF=[
-  {id:1,title:'Primeira venda',vendas:'1 venda',bonus:200},
-  {id:2,title:'Validação da metodologia',vendas:'3–5 vendas',bonus:300},
-  {id:3,title:'Previsibilidade',vendas:'6–9 vendas',bonus:400},
-  {id:4,title:'Escala',vendas:'10–15 vendas',bonus:500},
+  {id:1,title:'Primeira venda',vendas:'1 venda',criterio:'Cliente realizou a primeira venda utilizando a metodologia e a esteira de produtos.',bonus:200},
+  {id:2,title:'Validação da metodologia (Checkpoint 2)',vendas:'3–5 vendas',criterio:'Cliente realizou de 3 a 5 vendas, com resultado comprovado e utilizando a metodologia e a esteira de produtos.',bonus:300},
+  {id:3,title:'Previsibilidade (Checkpoint 3)',vendas:'15–20 vendas',criterio:'Cliente realizou de 15 a 20 vendas, com faturamento crescente, processo comercial funcionando com constância e utilização da metodologia e da esteira de produtos.',bonus:400},
+  {id:4,title:'Escala (Checkpoint 4)',vendas:'20–30 vendas',criterio:'Cliente realizou de 20 a 30 vendas, com faturamento consolidado, operação rodando com previsibilidade e uso da metodologia e da esteira de produtos.',bonus:500},
 ];
 let _mmClientId=null;
 

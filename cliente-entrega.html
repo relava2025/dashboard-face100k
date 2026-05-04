@@ -2188,7 +2188,7 @@ function renderMarcosPreview(){
   const sub=document.getElementById('cron-prev-sub');
   if(!body) return;
   const ms=S.marcos||{};
-  const MARCOS_DEF=[{id:1,title:'Primeira venda',bonus:200},{id:2,title:'Validação da metodologia',bonus:300},{id:3,title:'Previsibilidade',bonus:400},{id:4,title:'Escala',bonus:500}];
+  const MARCOS_DEF=[{id:1,title:'Primeira venda',bonus:200},{id:2,title:'Validação da metodologia (Checkpoint 2)',bonus:300},{id:3,title:'Previsibilidade (Checkpoint 3)',bonus:400},{id:4,title:'Escala (Checkpoint 4)',bonus:500}];
   const achieved=MARCOS_DEF.filter(m=>ms[m.id]?.achieved);
   const totalBonus=achieved.reduce((s,m)=>s+m.bonus,0);
   if(sub) sub.textContent=`${achieved.length} de 4 marcos atingidos`;
@@ -2531,10 +2531,10 @@ function renderOnboarding(){
 <script>
 // ── MARCOS DE RESULTADO ────────────────────────────────────────────────
 const MARCOS = [
-  {id:1, title:'Primeira venda',         vendas:'1 venda',    criterio:'Cliente realizou a primeira venda utilizando a metodologia e a esteira de produtos.', bonus:200},
-  {id:2, title:'Validação da metodologia',vendas:'3–5 vendas', criterio:'Cliente realizou de 3 a 5 vendas, com resultado comprovado e utilizando a metodologia e a esteira de produtos.', bonus:300},
-  {id:3, title:'Previsibilidade',         vendas:'6–9 vendas', criterio:'Cliente realizou de 6 a 9 vendas, com faturamento crescente, processo comercial funcionando com constância e utilização da metodologia e da esteira de produtos.', bonus:400},
-  {id:4, title:'Escala',                  vendas:'10–15 vendas',criterio:'Cliente realizou de 10 a 15 vendas, com faturamento consolidado, operação rodando com previsibilidade e uso da metodologia e da esteira de produtos.', bonus:500},
+  {id:1, title:'Primeira venda',                        vendas:'1 venda',     criterio:'Cliente realizou a primeira venda utilizando a metodologia e a esteira de produtos.', bonus:200},
+  {id:2, title:'Validação da metodologia (Checkpoint 2)',vendas:'3–5 vendas',  criterio:'Cliente realizou de 3 a 5 vendas, com resultado comprovado e utilizando a metodologia e a esteira de produtos.', bonus:300},
+  {id:3, title:'Previsibilidade (Checkpoint 3)',          vendas:'15–20 vendas',criterio:'Cliente realizou de 15 a 20 vendas, com faturamento crescente, processo comercial funcionando com constância e utilização da metodologia e da esteira de produtos.', bonus:400},
+  {id:4, title:'Escala (Checkpoint 4)',                   vendas:'20–30 vendas',criterio:'Cliente realizou de 20 a 30 vendas, com faturamento consolidado, operação rodando com previsibilidade e uso da metodologia e da esteira de produtos.', bonus:500},
 ];
 
 function renderMarcos(){
