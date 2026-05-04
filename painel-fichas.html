@@ -183,7 +183,7 @@ function renderRow(c) {
       <div class="detail-grid">
         <div class="detail-col">
           <div class="detail-sec">Instagram & Programa</div>
-          <div class="detail-row"><span class="dl">Instagram</span><span class="dv">${f.insta || "—"}</span></div>
+          <div class="detail-row"><span class="dl">Instagram</span><span class="dv">${f.insta ? `<a href="${f.insta}" target="_blank" style="color:var(--blue);text-decoration:none">${f.insta.replace("https://instagram.com/","@").replace("https://www.instagram.com/","@")}</a>` : "—"}</span></div>
           <div class="detail-row"><span class="dl">Programa</span><span class="dv">${f.programa || "—"}</span></div>
         </div>
         <div class="detail-col">
