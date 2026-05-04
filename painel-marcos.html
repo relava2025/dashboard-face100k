@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel de Marcos — System Digital</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+  import { getFirestore, collection, onSnapshot, doc, setDoc, enableNetwork } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+  const firebaseConfig = {
+    apiKey:"AIzaSyAyupUdCsEb6pPVmTs2clhayS84-TUovGA",
+    authDomain:"dashboard-e465d.firebaseapp.com",
+    projectId:"dashboard-e465d",
+    storageBucket:"dashboard-e465d.firebasestorage.app",
+    messagingSenderId:"865986158280",
+    appId:"1:865986158280:web:1531d13630f9835a9f0ffd"
+  };
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  function snapRetry(refFn,cb){
+    let unsub,timer,tries=0;
+    function sub(){
+      try{
+        if(unsub){try{unsub();}catch(e){}}
+        unsub=onSnapshot(refFn(),
+          s=>{tries=0;cb(s);},
+          e=>{console.warn('fb err',e);if(timer)clearTimeout(timer);tries++;setSyncStatus('connecting');timer=setTimeout(()=>{enableNetwork(db).then(sub).catch(sub);},Math.min(3000*tries,15000));}
+        );
+      }catch(e){console.warn('fb sub err',e);timer=setTimeout(sub,5000);}
+    }
+    sub();
+    return()=>{if(unsub)unsub();if(timer)clearTimeout(timer);};
+  }
+  window._fb = {
+    listenClients(cb){ return snapRetry(()=>collection(db,"entrega"), snap=>{ const l=[]; snap.forEach(d=>l.push({id:d.id,...d.data()})); cb(l); }); },
+    async save(id,data){ await setDoc(doc(db,"entrega",id),data,{merge:true}); }
+  };
+  window.dispatchEvent(new Event("fb-ready"));
+</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0D1117;--surface:#1A2025;--surface2:#212830;--surface3:#272F38;
+  --amber:#F5A623;--amber-dim:rgba(245,166,35,0.10);--amber-border:rgba(245,166,35,0.20);
+  --border:#3E4249;--border-light:rgba(62,66,73,0.5);
+  --text:#F0F0F0;--text-sec:#B8B8C0;--text-dim:rgba(255,255,255,0.25);
+  --green:#22C55E;--green-dim:rgba(34,197,94,0.10);--green-border:rgba(34,197,94,0.22);
+  --red:#EF4444;--red-dim:rgba(239,68,68,0.10);--red-border:rgba(239,68,68,0.22);
+  --blue:#3B82F6;--blue-dim:rgba(59,130,246,0.10);--blue-border:rgba(59,130,246,0.22);
+}
+html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:15px;line-height:1.5}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(0deg,transparent 24%,rgba(245,166,35,0.03) 25%,rgba(245,166,35,0.03) 26%,transparent 27%),linear-gradient(90deg,transparent 24%,rgba(245,166,35,0.03) 25%,rgba(245,166,35,0.03) 26%,transparent 27%);background-size:50px 50px;pointer-events:none;z-index:0}
+
+/* TOPBAR */
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);height:56px;display:flex;align-items:center;padding:0 28px;gap:14px;position:sticky;top:0;z-index:50}
+.t-logo{font-family:'Montserrat',sans-serif;font-size:16px;font-weight:800;color:var(--text)}
+.t-logo span{color:var(--amber);font-style:italic}
+.t-sep{width:1px;height:18px;background:var(--border)}
+.t-sub{font-size:13px;color:var(--text-sec)}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:var(--green);margin-left:auto;flex-shrink:0;transition:background .3s}
+.sync-dot.saving{background:var(--amber);animation:pulse 1s infinite}
+.sync-dot.connecting{background:var(--amber);animation:pulse .6s infinite}
+.sync-dot.error{background:var(--red)}
+.sync-txt{font-size:11px;color:var(--text-dim)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* MAIN */
+.main{max-width:1200px;margin:0 auto;padding:32px 28px 80px;position:relative;z-index:1}
+
+/* PAGE HEADER */
+.page-hdr{margin-bottom:28px}
+.page-eyebrow{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin-bottom:8px}
+.page-title{font-size:26px;font-weight:800;font-family:'Montserrat',sans-serif;line-height:1.2;margin-bottom:6px}
+.page-title span{color:var(--amber)}
+.page-sub{font-size:14px;color:var(--text-sec)}
+
+/* STAT CARDS */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px 20px;position:relative;overflow:hidden}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--border)}
+.stat-card.amber::before{background:var(--amber)}
+.stat-card.green::before{background:var(--green)}
+.stat-card.red::before{background:var(--red)}
+.stat-card.blue::before{background:var(--blue)}
+.stat-lbl{font-size:11px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+.stat-val{font-size:24px;font-weight:800;font-family:'Montserrat',sans-serif;line-height:1;margin-bottom:4px}
+.stat-card.amber .stat-val{color:var(--amber)}
+.stat-card.green .stat-val{color:var(--green)}
+.stat-card.red .stat-val{color:var(--red)}
+.stat-card.blue .stat-val{color:var(--blue)}
+.stat-sub{font-size:12px;color:var(--text-dim)}
+
+/* TABS */
+.tabs{display:flex;gap:4px;margin-bottom:24px;border-bottom:1px solid var(--border);padding-bottom:0}
+.tab-btn{padding:10px 18px;font-size:13px;font-weight:600;font-family:'Montserrat',sans-serif;cursor:pointer;background:transparent;border:none;color:var(--text-sec);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s}
+.tab-btn:hover{color:var(--text)}
+.tab-btn.active{color:var(--amber);border-bottom-color:var(--amber)}
+
+/* FILTER BAR */
+.filter-bar{display:flex;align-items:center;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+.filter-chip{padding:5px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--text-sec);transition:all .15s}
+.filter-chip:hover{border-color:var(--amber);color:var(--amber)}
+.filter-chip.active{background:var(--amber-dim);border-color:var(--amber-border);color:var(--amber)}
+.search-input{flex:1;max-width:260px;background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:7px 12px;font-size:13px;color:var(--text);outline:none;transition:border-color .15s}
+.search-input:focus{border-color:var(--amber)}
+.search-input::placeholder{color:var(--text-dim)}
+
+/* SECTION */
+.section{display:none}
+.section.active{display:block}
+
+/* CLIENT ROWS — CONTROLE */
+.client-list{display:flex;flex-direction:column;gap:8px}
+.client-row{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 20px;display:flex;align-items:center;gap:16px;transition:border-color .15s}
+.client-row:hover{border-color:rgba(245,166,35,0.25)}
+.client-row.has-pending{border-color:var(--amber-border)}
+.cr-info{flex:1;min-width:0}
+.cr-name{font-size:15px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:3px}
+.cr-spec{font-size:12px;color:var(--text-sec)}
+.cr-marcos{display:flex;gap:6px;align-items:center}
+.m-badge{width:30px;height:30px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;font-family:'Montserrat',sans-serif;flex-shrink:0;border:1px solid}
+.m-badge.none{background:var(--surface3);color:var(--text-dim);border-color:var(--border)}
+.m-badge.achieved{background:var(--amber-dim);color:var(--amber);border-color:var(--amber-border)}
+.m-badge.paid{background:var(--green-dim);color:var(--green);border-color:var(--green-border)}
+.cr-total{text-align:right;flex-shrink:0}
+.cr-total-val{font-size:16px;font-weight:800;font-family:'Montserrat',sans-serif}
+.cr-total-lbl{font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.06em;margin-top:2px}
+.cr-actions{flex-shrink:0}
+.btn-gerenciar{padding:7px 16px;border-radius:6px;font-size:12px;font-weight:700;font-family:'Montserrat',sans-serif;cursor:pointer;border:1px solid var(--amber-border);background:var(--amber-dim);color:var(--amber);transition:all .15s;white-space:nowrap}
+.btn-gerenciar:hover{background:var(--amber);color:#000}
+.btn-gerenciar.all-paid{border-color:var(--green-border);background:var(--green-dim);color:var(--green)}
+.btn-gerenciar.all-paid:hover{background:var(--green);color:#000}
+.empty-state{text-align:center;padding:60px 20px;color:var(--text-dim);font-size:14px}
+
+/* PERSON CARDS — EQUIPE */
+.person-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+.person-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.person-hdr{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
+.person-avatar{width:38px;height:38px;border-radius:50%;background:var(--amber-dim);border:1.5px solid var(--amber-border);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;font-family:'Montserrat',sans-serif;color:var(--amber);flex-shrink:0}
+.person-info{flex:1}
+.person-name{font-size:14px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--text)}
+.person-role{font-size:11px;color:var(--text-sec);margin-top:2px}
+.person-bonus-total{text-align:right}
+.person-bonus-val{font-size:18px;font-weight:800;font-family:'Montserrat',sans-serif;color:var(--amber);line-height:1}
+.person-bonus-lbl{font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.06em}
+.person-stats{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border)}
+.pstat{padding:12px 16px;text-align:center;border-right:1px solid var(--border)}
+.pstat:last-child{border-right:none}
+.pstat-val{font-size:16px;font-weight:800;font-family:'Montserrat',sans-serif;line-height:1;margin-bottom:3px}
+.pstat-lbl{font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.06em}
+.person-clients{padding:12px 16px;display:flex;flex-direction:column;gap:8px;max-height:220px;overflow-y:auto}
+.pc-row{display:flex;align-items:center;gap:10px}
+.pc-name{font-size:13px;color:var(--text-sec);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc-marcos{display:flex;gap:4px}
+.pc-m{width:22px;height:22px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;font-family:'Montserrat',sans-serif;border:1px solid}
+.pc-m.none{background:var(--surface3);color:var(--text-dim);border-color:var(--border)}
+.pc-m.achieved{background:var(--amber-dim);color:var(--amber);border-color:var(--amber-border)}
+.pc-m.paid{background:var(--green-dim);color:var(--green);border-color:var(--green-border)}
+.pc-val{font-size:12px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--text-sec);min-width:48px;text-align:right}
+
+/* LEGEND */
+.legend{display:flex;gap:16px;margin-bottom:16px;flex-wrap:wrap}
+.leg-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-sec)}
+.leg-dot{width:10px;height:10px;border-radius:2px;border:1px solid}
+.leg-none{background:var(--surface3);border-color:var(--border)}
+.leg-achieved{background:var(--amber-dim);border-color:var(--amber-border)}
+.leg-paid{background:var(--green-dim);border-color:var(--green-border)}
+
+/* MARCO MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:200;align-items:center;justify-content:center;padding:16px}
+.modal-overlay.open{display:flex}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:12px;width:500px;max-width:100%;padding:28px;max-height:90vh;overflow-y:auto}
+.modal-title{font-size:18px;font-weight:800;font-family:'Montserrat',sans-serif;color:var(--text);margin-bottom:4px}
+.modal-sub{font-size:12px;color:var(--text-sec);margin-bottom:20px}
+.mm-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-bottom:22px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.mm-stat{padding:14px 16px;text-align:center;border-right:1px solid var(--border)}
+.mm-stat:last-child{border-right:none}
+.mm-stat-val{font-size:18px;font-weight:800;font-family:'Montserrat',sans-serif;line-height:1;margin-bottom:3px}
+.mm-stat-lbl{font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.06em}
+.marco-item{display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--surface2);border-radius:8px;margin-bottom:8px;border:1px solid var(--border);transition:border-color .2s}
+.marco-item.achieved{border-color:var(--amber-border)}
+.marco-item.paid{border-color:var(--green-border)}
+.mi-num{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;font-family:'Montserrat',sans-serif;flex-shrink:0;border:1.5px solid}
+.mi-num.none{background:var(--surface3);color:var(--text-dim);border-color:var(--border)}
+.mi-num.achieved{background:var(--amber-dim);color:var(--amber);border-color:var(--amber-border)}
+.mi-num.paid{background:var(--green-dim);color:var(--green);border-color:var(--green-border)}
+.mi-info{flex:1}
+.mi-title{font-size:13px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--text);margin-bottom:4px}
+.mi-status{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.mi-tag{font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;border:1px solid}
+.tag-none{background:var(--surface3);color:var(--text-dim);border-color:var(--border)}
+.tag-achieved{background:var(--amber-dim);color:var(--amber);border-color:var(--amber-border)}
+.tag-paid{background:var(--green-dim);color:var(--green);border-color:var(--green-border)}
+.mi-right{text-align:right;flex-shrink:0}
+.mi-bonus{font-size:16px;font-weight:800;font-family:'Montserrat',sans-serif;line-height:1;margin-bottom:6px}
+.mi-bonus.none{color:var(--text-dim)}
+.mi-bonus.achieved{color:var(--amber)}
+.mi-bonus.paid{color:var(--green)}
+.btn-pay{padding:5px 13px;border-radius:5px;font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;cursor:pointer;border:1px solid var(--green-border);background:var(--green-dim);color:var(--green);transition:all .15s}
+.btn-pay:hover{background:var(--green);color:#000}
+.btn-unpay{font-size:10px;color:var(--text-dim);background:transparent;border:none;cursor:pointer;padding:3px 7px;border-radius:4px;transition:color .15s}
+.btn-unpay:hover{color:var(--red)}
+.modal-footer{margin-top:22px;display:flex;justify-content:flex-end}
+.btn-close{padding:8px 20px;border-radius:6px;font-size:13px;font-weight:600;font-family:'Montserrat',sans-serif;cursor:pointer;background:var(--surface2);color:var(--text-sec);border:1px solid var(--border);transition:all .15s}
+.btn-close:hover{border-color:var(--text-sec);color:var(--text)}
+
+/* TOAST */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 20px;font-size:13px;font-weight:600;color:var(--text);opacity:0;transition:all .3s;pointer-events:none;z-index:300;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.success{border-color:var(--green-border);color:var(--green)}
+.toast.error{border-color:var(--red-border);color:var(--red)}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .stats-row{grid-template-columns:repeat(2,1fr)}
+  .main{padding:24px 16px 60px}
+}
+@media(max-width:600px){
+  .stats-row{grid-template-columns:repeat(2,1fr)}
+  .cr-marcos{display:none}
+  .person-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="t-logo">FACE <span>100K</span></div>
+  <div class="t-sep"></div>
+  <div class="t-sub">Painel de Marcos &amp; Bônus</div>
+  <div class="sync-dot" id="sync-dot" style="margin-left:auto"></div>
+  <div class="sync-txt" id="sync-txt">Conectando...</div>
+</div>
+
+<div class="main">
+
+  <!-- HEADER -->
+  <div class="page-hdr">
+    <div class="page-eyebrow">Controle de Bônus</div>
+    <div class="page-title">Marcos de <span>Resultado</span></div>
+    <div class="page-sub">Acompanhe os bônus conquistados e o status de pagamento por cliente e por responsável</div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-card amber">
+      <div class="stat-lbl">Total desbloqueado</div>
+      <div class="stat-val" id="st-total">R$ 0</div>
+      <div class="stat-sub" id="st-total-sub">0 marcos atingidos</div>
+    </div>
+    <div class="stat-card green">
+      <div class="stat-lbl">Total pago</div>
+      <div class="stat-val" id="st-pago">R$ 0</div>
+      <div class="stat-sub" id="st-pago-sub">0 marcos pagos</div>
+    </div>
+    <div class="stat-card red">
+      <div class="stat-lbl">A pagar</div>
+      <div class="stat-val" id="st-apagar">R$ 0</div>
+      <div class="stat-sub" id="st-apagar-sub">0 marcos pendentes</div>
+    </div>
+    <div class="stat-card blue">
+      <div class="stat-lbl">Clientes com pendência</div>
+      <div class="stat-val" id="st-pendentes">0</div>
+      <div class="stat-sub" id="st-pendentes-sub">clientes com bônus a pagar</div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('controle',this)">Controle de Pagamentos</button>
+    <button class="tab-btn" onclick="switchTab('equipe',this)">Visão por Responsável</button>
+  </div>
+
+  <!-- ── TAB: CONTROLE ── -->
+  <div id="tab-controle" class="section active">
+    <div class="filter-bar">
+      <button class="filter-chip active" onclick="setFilter('todos',this)">Todos</button>
+      <button class="filter-chip" onclick="setFilter('pendente',this)">A pagar</button>
+      <button class="filter-chip" onclick="setFilter('pago',this)">Pagos</button>
+      <button class="filter-chip" onclick="setFilter('sem',this)">Sem marcos</button>
+      <input class="search-input" id="search-input" type="text" placeholder="Buscar cliente…" oninput="renderControle()">
+    </div>
+    <div class="legend">
+      <div class="leg-item"><div class="leg-dot leg-none"></div>Não atingido</div>
+      <div class="leg-item"><div class="leg-dot leg-achieved"></div>Atingido — a pagar</div>
+      <div class="leg-item"><div class="leg-dot leg-paid"></div>Pago</div>
+    </div>
+    <div class="client-list" id="controle-list"></div>
+  </div>
+
+  <!-- ── TAB: EQUIPE ── -->
+  <div id="tab-equipe" class="section">
+    <div class="person-grid" id="equipe-grid"></div>
+  </div>
+
+</div>
+
+<!-- MODAL MARCOS -->
+<div class="modal-overlay" id="marco-modal" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:4px">
+      <div class="modal-title" id="mm-title">Marcos</div>
+      <button onclick="closeModal()" style="background:transparent;border:none;cursor:pointer;color:var(--text-dim);font-size:22px;line-height:1;margin-top:-2px">×</button>
+    </div>
+    <div class="modal-sub" id="mm-sub"></div>
+    <div class="mm-summary" id="mm-summary"></div>
+    <div id="mm-list"></div>
+    <div class="modal-footer">
+      <button class="btn-close" onclick="closeModal()">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const MARCOS_DEF = [
+  {id:1, title:'Primeira venda',          vendas:'1 venda',     bonus:200},
+  {id:2, title:'Validação da metodologia',vendas:'3–5 vendas',  bonus:300},
+  {id:3, title:'Previsibilidade',          vendas:'6–9 vendas',  bonus:400},
+  {id:4, title:'Escala',                   vendas:'10–15 vendas',bonus:500},
+];
+const BONUS_MAP = {1:200,2:300,3:400,4:500};
+
+let allClients = [];
+let currentFilter = 'todos';
+let _modalClientId = null;
+
+// ── SYNC STATUS ──────────────────────────────────────────
+function setSyncStatus(s){
+  const dot=document.getElementById('sync-dot');
+  const txt=document.getElementById('sync-txt');
+  dot.className='sync-dot'+(s==='saving'?' saving':s==='error'?' error':s==='connecting'?' connecting':'');
+  txt.textContent=s==='saving'?'Salvando…':s==='error'?'Erro de conexão':s==='connecting'?'Conectando…':'Sincronizado';
+}
+
+// ── INIT ────────────────────────────────────────────────
+function init(){
+  window._fb.listenClients(clients=>{
+    allClients = clients.sort((a,b)=>(a.name||'').localeCompare(b.name||''));
+    setSyncStatus('ok');
+    updateStats();
+    renderControle();
+    renderEquipe();
+    if(_modalClientId){
+      const c=allClients.find(x=>x.id===_modalClientId);
+      if(c) renderModalContent(c);
+    }
+  });
+}
+
+if(window._fb) init();
+else window.addEventListener('fb-ready', init);
+
+// ── STATS ────────────────────────────────────────────────
+function updateStats(){
+  let total=0, totalPago=0, totalAPagar=0, countAchieved=0, countPago=0, countPendente=0, clientesPendentes=0;
+  allClients.forEach(c=>{
+    const ms=c.marcos||{};
+    let clientePendente=false;
+    MARCOS_DEF.forEach(m=>{
+      const state=ms[m.id]||{};
+      if(state.achieved){
+        total+=m.bonus; countAchieved++;
+        if(state.paid){ totalPago+=m.bonus; countPago++; }
+        else { totalAPagar+=m.bonus; countPendente++; clientePendente=true; }
+      }
+    });
+    if(clientePendente) clientesPendentes++;
+  });
+
+  document.getElementById('st-total').textContent='R$ '+total.toLocaleString('pt-BR');
+  document.getElementById('st-total-sub').textContent=countAchieved+' marco'+(countAchieved!==1?'s':'')+' atingido'+(countAchieved!==1?'s':'');
+  document.getElementById('st-pago').textContent='R$ '+totalPago.toLocaleString('pt-BR');
+  document.getElementById('st-pago-sub').textContent=countPago+' marco'+(countPago!==1?'s':'')+' pago'+(countPago!==1?'s':'');
+  document.getElementById('st-apagar').textContent='R$ '+totalAPagar.toLocaleString('pt-BR');
+  document.getElementById('st-apagar-sub').textContent=countPendente+' marco'+(countPendente!==1?'s':'')+' pendente'+(countPendente!==1?'s':'');
+  document.getElementById('st-pendentes').textContent=clientesPendentes;
+  document.getElementById('st-pendentes-sub').textContent='cliente'+(clientesPendentes!==1?'s':'')+' com bônus a pagar';
+}
+
+// ── CONTROLE ─────────────────────────────────────────────
+function renderControle(){
+  const search=(document.getElementById('search-input').value||'').toLowerCase();
+  const list=document.getElementById('controle-list');
+  let filtered=allClients.filter(c=>{
+    if(search && !(c.name||'').toLowerCase().includes(search)) return false;
+    const ms=c.marcos||{};
+    const hasAchieved=MARCOS_DEF.some(m=>ms[m.id]?.achieved);
+    const hasPending=MARCOS_DEF.some(m=>ms[m.id]?.achieved && !ms[m.id]?.paid);
+    const allPaid=hasAchieved && MARCOS_DEF.filter(m=>ms[m.id]?.achieved).every(m=>ms[m.id]?.paid);
+    if(currentFilter==='pendente') return hasPending;
+    if(currentFilter==='pago') return allPaid;
+    if(currentFilter==='sem') return !hasAchieved;
+    return true;
+  });
+
+  if(!filtered.length){
+    list.innerHTML=`<div class="empty-state">Nenhum cliente encontrado para esse filtro.</div>`;
+    return;
+  }
+
+  list.innerHTML=filtered.map(c=>{
+    const ms=c.marcos||{};
+    let aPagar=0, pago=0;
+    MARCOS_DEF.forEach(m=>{
+      const state=ms[m.id]||{};
+      if(state.achieved){ if(state.paid) pago+=m.bonus; else aPagar+=m.bonus; }
+    });
+    const hasPending=aPagar>0;
+    const hasAny=MARCOS_DEF.some(m=>ms[m.id]?.achieved);
+
+    const badges=MARCOS_DEF.map(m=>{
+      const state=ms[m.id]||{};
+      const cls=state.paid?'paid':state.achieved?'achieved':'none';
+      return`<div class="m-badge ${cls}" title="Marco ${m.id} — ${m.title}">M${m.id}</div>`;
+    }).join('');
+
+    const totalColor=hasPending?'color:var(--amber)':hasAny?'color:var(--green)':'color:var(--text-dim)';
+    const totalLabel=hasPending?'a pagar':hasAny?'pago':'—';
+
+    return`<div class="client-row${hasPending?' has-pending':''}">
+      <div class="cr-info">
+        <div class="cr-name">${c.name||'—'}</div>
+        <div class="cr-spec">${c.spec||''}</div>
+      </div>
+      <div class="cr-marcos">${badges}</div>
+      <div class="cr-total">
+        <div class="cr-total-val" style="${totalColor}">${hasPending?'R$ '+aPagar.toLocaleString('pt-BR'):hasAny?'R$ '+pago.toLocaleString('pt-BR'):'—'}</div>
+        <div class="cr-total-lbl">${totalLabel}</div>
+      </div>
+      <div class="cr-actions">
+        ${hasAny
+          ? `<button class="btn-gerenciar${!hasPending?' all-paid':''}" onclick="openModal('${c.id}')">${hasPending?'Gerenciar pagamento':'Ver detalhes'}</button>`
+          : `<button class="btn-gerenciar" style="opacity:.4;cursor:default" disabled>Sem marcos</button>`
+        }
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── EQUIPE ───────────────────────────────────────────────
+function renderEquipe(){
+  const grid=document.getElementById('equipe-grid');
+  const pessoas={};
+
+  allClients.forEach(c=>{
+    const ms=c.marcos||{};
+    const roles=[
+      {nome:c.cs1,role:'CS1'},{nome:c.cs2,role:'CS2'},{nome:c.cs3,role:'CS3'},
+      {nome:c.traffic,role:'Tráfego'}
+    ];
+    roles.forEach(({nome,role})=>{
+      if(!nome||!nome.trim()) return;
+      const key=nome.trim().toLowerCase();
+      if(!pessoas[key]) pessoas[key]={nome:nome.trim(),roles:new Set(),clientes:[],earned:0,pago:0};
+      pessoas[key].roles.add(role);
+      let clientEarned=0, clientPago=0;
+      MARCOS_DEF.forEach(m=>{
+        const state=ms[m.id]||{};
+        if(state.achieved){ clientEarned+=m.bonus; if(state.paid) clientPago+=m.bonus; }
+      });
+      if(!pessoas[key].clientes.find(x=>x.id===c.id)){
+        pessoas[key].clientes.push({id:c.id,name:c.name||'—',marcos:ms,earned:clientEarned,pago:clientPago});
+        pessoas[key].earned+=clientEarned;
+        pessoas[key].pago+=clientPago;
+      }
+    });
+  });
+
+  const sorted=Object.values(pessoas).sort((a,b)=>(b.earned-b.pago)-(a.earned-a.pago));
+
+  if(!sorted.length){
+    grid.innerHTML=`<div class="empty-state" style="grid-column:1/-1">Nenhum responsável cadastrado nos clientes.</div>`;
+    return;
+  }
+
+  grid.innerHTML=sorted.map(p=>{
+    const aReceber=p.earned-p.pago;
+    const inicial=p.nome.charAt(0).toUpperCase();
+    const rolesStr=[...p.roles].join(' · ');
+
+    const clientRows=p.clientes.map(c=>{
+      const badges=MARCOS_DEF.map(m=>{
+        const state=c.marcos[m.id]||{};
+        const cls=state.paid?'paid':state.achieved?'achieved':'none';
+        return`<div class="pc-m ${cls}">M${m.id}</div>`;
+      }).join('');
+      const val=c.earned>0?'R$ '+(c.earned-c.pago).toLocaleString('pt-BR'):'—';
+      const valColor=c.earned>c.pago?'color:var(--amber)':c.earned>0?'color:var(--green)':'color:var(--text-dim)';
+      return`<div class="pc-row">
+        <div class="pc-name" title="${c.name}">${c.name}</div>
+        <div class="pc-marcos">${badges}</div>
+        <div class="pc-val" style="${valColor}">${val}</div>
+      </div>`;
+    }).join('');
+
+    return`<div class="person-card">
+      <div class="person-hdr">
+        <div class="person-avatar">${inicial}</div>
+        <div class="person-info">
+          <div class="person-name">${p.nome}</div>
+          <div class="person-role">${rolesStr}</div>
+        </div>
+        <div class="person-bonus-total">
+          <div class="person-bonus-val" style="${aReceber>0?'color:var(--amber)':'color:var(--green)'}">${aReceber>0?'R$ '+aReceber.toLocaleString('pt-BR'):'Tudo pago'}</div>
+          <div class="person-bonus-lbl">${aReceber>0?'a receber':'✓'}</div>
+        </div>
+      </div>
+      <div class="person-stats">
+        <div class="pstat">
+          <div class="pstat-val" style="color:var(--amber)">R$ ${p.earned.toLocaleString('pt-BR')}</div>
+          <div class="pstat-lbl">Conquistado</div>
+        </div>
+        <div class="pstat">
+          <div class="pstat-val" style="color:var(--green)">R$ ${p.pago.toLocaleString('pt-BR')}</div>
+          <div class="pstat-lbl">Recebido</div>
+        </div>
+      </div>
+      <div class="person-clients">${clientRows||'<div style="font-size:12px;color:var(--text-dim)">Sem clientes com marcos</div>'}</div>
+    </div>`;
+  }).join('');
+}
+
+// ── MODAL ────────────────────────────────────────────────
+function openModal(id){
+  _modalClientId=id;
+  const c=allClients.find(x=>x.id===id);
+  if(!c) return;
+  document.getElementById('mm-title').textContent=c.name||'Marcos';
+  document.getElementById('mm-sub').textContent=(c.spec||'')+' · Clique em "Marcar como pago" para registrar o pagamento';
+  renderModalContent(c);
+  document.getElementById('marco-modal').classList.add('open');
+}
+
+function renderModalContent(c){
+  const ms=c.marcos||{};
+  const achieved=MARCOS_DEF.filter(m=>ms[m.id]?.achieved);
+  const paid=MARCOS_DEF.filter(m=>ms[m.id]?.paid);
+  const total=achieved.reduce((s,m)=>s+m.bonus,0);
+  const totalPago=paid.reduce((s,m)=>s+m.bonus,0);
+  const totalAPagar=total-totalPago;
+
+  document.getElementById('mm-summary').innerHTML=`
+    <div class="mm-stat">
+      <div class="mm-stat-val" style="color:var(--amber)">R$ ${total.toLocaleString('pt-BR')}</div>
+      <div class="mm-stat-lbl">Desbloqueado</div>
+    </div>
+    <div class="mm-stat">
+      <div class="mm-stat-val" style="color:var(--green)">R$ ${totalPago.toLocaleString('pt-BR')}</div>
+      <div class="mm-stat-lbl">Pago</div>
+    </div>
+    <div class="mm-stat">
+      <div class="mm-stat-val" style="${totalAPagar>0?'color:var(--amber)':'color:var(--text-dim)'}">R$ ${totalAPagar.toLocaleString('pt-BR')}</div>
+      <div class="mm-stat-lbl">A pagar</div>
+    </div>`;
+
+  document.getElementById('mm-list').innerHTML=MARCOS_DEF.map(m=>{
+    const state=ms[m.id]||{};
+    const isAchieved=!!state.achieved;
+    const isPaid=!!state.paid;
+    const cls=isPaid?'paid':isAchieved?'achieved':'none';
+    const dateA=state.date?new Date(state.date).toLocaleDateString('pt-BR'):'';
+    const dateP=state.paidDate?new Date(state.paidDate).toLocaleDateString('pt-BR'):'';
+
+    let statusHtml='';
+    let actionHtml='';
+    if(!isAchieved){
+      statusHtml=`<span class="mi-tag tag-none">Não atingido</span>`;
+    } else if(!isPaid){
+      statusHtml=`<span class="mi-tag tag-achieved">Atingido ${dateA?'em '+dateA:''}</span>`;
+      actionHtml=`<button class="btn-pay" onclick="togglePago('${c.id}',${m.id},true)">Marcar como pago</button>`;
+    } else {
+      statusHtml=`<span class="mi-tag tag-achieved">Atingido</span><span class="mi-tag tag-paid">✓ Pago em ${dateP}</span>`;
+      actionHtml=`<button class="btn-unpay" onclick="togglePago('${c.id}',${m.id},false)">Desfazer pagamento</button>`;
+    }
+
+    return`<div class="marco-item ${cls}">
+      <div class="mi-num ${cls}">${m.id}</div>
+      <div class="mi-info">
+        <div class="mi-title">Marco ${m.id} — ${m.title}</div>
+        <div class="mi-status">${statusHtml}</div>
+      </div>
+      <div class="mi-right">
+        <div class="mi-bonus ${cls}">R$ ${m.bonus}</div>
+        ${actionHtml}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function closeModal(){
+  document.getElementById('marco-modal').classList.remove('open');
+  _modalClientId=null;
+}
+function closeModalOutside(e){ if(e.target.id==='marco-modal') closeModal(); }
+
+async function togglePago(clientId, marcoId, setAsPaid){
+  const c=allClients.find(x=>x.id===clientId);
+  if(!c||!c.marcos?.[marcoId]?.achieved) return;
+  const marcos=JSON.parse(JSON.stringify(c.marcos||{}));
+  if(setAsPaid){
+    marcos[marcoId].paid=true;
+    marcos[marcoId].paidDate=new Date().toISOString();
+  } else {
+    delete marcos[marcoId].paid;
+    delete marcos[marcoId].paidDate;
+  }
+  setSyncStatus('saving');
+  try{
+    await window._fb.save(clientId,{marcos});
+    c.marcos=marcos;
+    renderModalContent(c);
+    updateStats();
+    renderControle();
+    renderEquipe();
+    showToast(setAsPaid?'Bônus marcado como pago!':'Pagamento desfeito.',setAsPaid?'success':'');
+  } catch(e){ showToast('Erro ao salvar','error'); setSyncStatus('error'); }
+}
+
+// ── HELPERS ──────────────────────────────────────────────
+function switchTab(id, btn){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+
+function setFilter(f, btn){
+  currentFilter=f;
+  document.querySelectorAll('.filter-chip').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderControle();
+}
+
+function showToast(msg,type=''){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.className='toast'+(type==='success'?' success':type==='error'?' error':'');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+</script>
+</body>
+</html>
