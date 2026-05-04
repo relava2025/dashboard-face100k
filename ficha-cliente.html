@@ -67,6 +67,7 @@ function prefillForm(f) {
   setVal("inp-prazo", f.objetivo?.prazo);
   setVal("inp-valor-total", f.negociacao?.valorTotal);
   setVal("inp-closer", f.closer);
+  setVal("inp-sdr", f.sdr);
   setVal("inp-obs", f.obs);
 
   const forma = f.negociacao?.formaPagamento;
@@ -94,7 +95,7 @@ function prefillForm(f) {
 
 function clearForm() {
   ["inp-insta","inp-programa","inp-faturamento","inp-equipe","inp-segmento",
-   "inp-meta","inp-prazo","inp-valor-total","inp-closer","inp-obs",
+   "inp-meta","inp-prazo","inp-valor-total","inp-closer","inp-sdr","inp-obs",
    "inp-avista-data","inp-nparcelas","inp-vparcela","inp-data1",
    "inp-entrada-valor","inp-entrada-data","inp-nparcelas-e","inp-vparcela-e","inp-data1-e"
   ].forEach(id => setVal(id, ""));
@@ -253,6 +254,7 @@ async function salvar() {
     },
     negociacao,
     closer: document.getElementById("inp-closer").value.trim(),
+    sdr: document.getElementById("inp-sdr").value.trim(),
     obs: document.getElementById("inp-obs").value.trim(),
     createdAt: new Date().toISOString()
   };
@@ -627,9 +629,15 @@ option{background:#1A2025}
     <div id="preview-parcelas"></div>
 
     <div class="sec-divider"></div>
-    <div class="form-group" style="margin-bottom:0">
-      <label class="f-label" for="inp-closer">Responsável pela venda (closer)</label>
-      <input type="text" id="inp-closer" placeholder="Nome do closer">
+    <div class="form-row" style="margin-bottom:0">
+      <div class="form-group" style="margin-bottom:0">
+        <label class="f-label" for="inp-closer">Closer</label>
+        <input type="text" id="inp-closer" placeholder="Nome do closer">
+      </div>
+      <div class="form-group" style="margin-bottom:0">
+        <label class="f-label" for="inp-sdr">SDR</label>
+        <input type="text" id="inp-sdr" placeholder="Nome do SDR">
+      </div>
     </div>
   </div>
 
