@@ -342,6 +342,13 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .btn-atingido{padding:8px 18px;border-radius:6px;font-size:13px;font-weight:700;font-family:'Montserrat',sans-serif;background:var(--green-dim);color:var(--green);border:1px solid var(--green-border);display:flex;align-items:center;gap:6px;cursor:default}
 .btn-desfazer{font-size:11px;color:var(--text-dim);background:transparent;border:none;cursor:pointer;padding:4px 8px;border-radius:4px;transition:color .15s}
 .btn-desfazer:hover{color:var(--red)}
+.btn-marcar-pago{padding:7px 16px;border-radius:6px;font-size:13px;font-weight:700;font-family:'Montserrat',sans-serif;cursor:pointer;transition:all .18s;border:1px solid var(--green-border);background:var(--green-dim);color:var(--green)}
+.btn-marcar-pago:hover{background:var(--green);color:#fff;border-color:var(--green)}
+.btn-pago{padding:8px 18px;border-radius:6px;font-size:13px;font-weight:700;font-family:'Montserrat',sans-serif;background:#D1FAE5;color:#065F46;border:1px solid #6EE7B7;display:flex;align-items:center;gap:6px;cursor:default}
+.btn-desfazer-pag{font-size:11px;color:var(--text-dim);background:transparent;border:none;cursor:pointer;padding:4px 8px;border-radius:4px;transition:color .15s;margin-left:auto}
+.btn-desfazer-pag:hover{color:var(--red)}
+.marco-card.paid{border-color:#6EE7B7}
+.marco-card.paid::before{background:linear-gradient(90deg,var(--green),rgba(5,150,105,0.15))!important}
 /* CRONOGRAMA */
 .cron-flow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 18px;margin-bottom:20px}
 .cron-flow-tag{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);font-weight:700;margin-right:10px;white-space:nowrap;font-family:'Montserrat',sans-serif}
@@ -2541,14 +2548,28 @@ function renderMarcos(){
   const checkSvg=`<svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="#000" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
   const checkSvgGreen=`<svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="var(--green)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 
+  const paid=MARCOS.filter(m=>ms[m.id]?.paid);
+  const totalPago=paid.reduce((s,m)=>s+m.bonus,0);
+  const totalAPagar=totalBonus-totalPago;
+
   const summaryHtml=`
     <div class="marcos-summary">
       <div>
         <div class="ms-total-bonus">R$ ${totalBonus.toLocaleString('pt-BR')}</div>
         <div class="ms-total-lbl">Bônus desbloqueado</div>
       </div>
+      <div style="display:flex;flex-direction:column;gap:4px;padding:0 8px;border-left:1px solid var(--border)">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font-size:11px;font-weight:600;color:#065F46;background:#D1FAE5;border:1px solid #6EE7B7;border-radius:4px;padding:2px 8px">Pago</span>
+          <span style="font-size:16px;font-weight:800;font-family:'Montserrat',sans-serif;color:#065F46">R$ ${totalPago.toLocaleString('pt-BR')}</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font-size:11px;font-weight:600;color:var(--amber);background:var(--amber-dim);border:1px solid var(--amber-border);border-radius:4px;padding:2px 8px">A pagar</span>
+          <span style="font-size:16px;font-weight:800;font-family:'Montserrat',sans-serif;color:var(--amber)">R$ ${totalAPagar.toLocaleString('pt-BR')}</span>
+        </div>
+      </div>
       <div class="ms-progress">
-        <div class="ms-prog-text">${achieved.length} de ${MARCOS.length} marcos atingidos</div>
+        <div class="ms-prog-text">${achieved.length} de ${MARCOS.length} marcos atingidos · ${paid.length} pago${paid.length!==1?'s':''}</div>
         <div class="ms-prog-bar"><div class="ms-prog-fill" style="width:${pct}%"></div></div>
         <div style="display:flex;justify-content:space-between;margin-top:5px">
           <span style="font-size:10px;color:var(--text-dim)">Início</span>
@@ -2560,8 +2581,12 @@ function renderMarcos(){
   const marcosHtml=MARCOS.map(m=>{
     const state=ms[m.id]||{};
     const isAchieved=!!state.achieved;
+    const isPaid=!!state.paid;
     const dateStr=state.date?new Date(state.date).toLocaleDateString('pt-BR'):'';
-    return`<div class="marco-card${isAchieved?' achieved':''}">
+    const paidDateStr=state.paidDate?new Date(state.paidDate).toLocaleDateString('pt-BR'):'';
+    const cardClass=`marco-card${isAchieved?(isPaid?' achieved paid':' achieved'):''}`;
+    const moneyIcon=`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v12M9 9h4.5a1.5 1.5 0 0 1 0 3H10.5a1.5 1.5 0 0 0 0 3H15"/></svg>`;
+    return`<div class="${cardClass}">
       <div class="marco-top">
         <div class="marco-num">${isAchieved?checkSvg:m.id}</div>
         <div class="marco-info">
@@ -2582,9 +2607,14 @@ function renderMarcos(){
       </div>` : ''}
       <div class="marco-footer">
         ${isAchieved
-          ?`<div class="btn-atingido">${checkSvgGreen} Atingido em ${dateStr}</div>
-            <button class="btn-desfazer" onclick="desfazerMarco(${m.id})">Desfazer</button>`
-          :`<button class="btn-atingir" onclick="atingirMarco(${m.id})">Marcar como atingido</button>`
+          ? isPaid
+            ? `<div class="btn-atingido">${checkSvgGreen} Atingido em ${dateStr}</div>
+               <div class="btn-pago">${moneyIcon} Pago em ${paidDateStr}</div>
+               <button class="btn-desfazer-pag" onclick="desfazerPagamento(${m.id})">Desfazer pagamento</button>`
+            : `<div class="btn-atingido">${checkSvgGreen} Atingido em ${dateStr}</div>
+               <button class="btn-marcar-pago" onclick="marcarComoPago(${m.id})">Marcar como pago</button>
+               <button class="btn-desfazer" onclick="desfazerMarco(${m.id})">Desfazer</button>`
+          : `<button class="btn-atingir" onclick="atingirMarco(${m.id})">Marcar como atingido</button>`
         }
       </div>
     </div>`;
@@ -2646,6 +2676,27 @@ async function desfazerMarco(id){
   renderMarcos();
   renderMarcosPreview();
   showToast('Marco desfeito.','');
+}
+
+async function marcarComoPago(id){
+  if(!S.marcos?.[id]?.achieved) return;
+  S.marcos[id].paid = true;
+  S.marcos[id].paidDate = new Date().toISOString();
+  await save({marcos:S.marcos});
+  renderMarcos();
+  renderMarcosPreview();
+  const m = MARCOS.find(x=>x.id===id);
+  showToast(`Bônus R$ ${m?.bonus} marcado como pago!`,'success');
+}
+
+async function desfazerPagamento(id){
+  if(!S.marcos?.[id]) return;
+  delete S.marcos[id].paid;
+  delete S.marcos[id].paidDate;
+  await save({marcos:S.marcos});
+  renderMarcos();
+  renderMarcosPreview();
+  showToast('Pagamento desfeito.','');
 }
 </script>
 <script>if("serviceWorker" in navigator){window.addEventListener("load",()=>{navigator.serviceWorker.register("/sw.js").then(()=>console.log("SW ok")).catch(e=>console.log("SW err",e));});}</script>
