@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ficha de Cliente — FACE 100K</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+import { getFirestore, collection, getDocs, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+const firebaseConfig = {
+  apiKey:"AIzaSyAyupUdCsEb6pPVmTs2clhayS84-TUovGA",
+  authDomain:"dashboard-e465d.firebaseapp.com",
+  projectId:"dashboard-e465d",
+  storageBucket:"dashboard-e465d.firebasestorage.app",
+  messagingSenderId:"865986158280",
+  appId:"1:865986158280:web:1531d13630f9835a9f0ffd"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+let clients = [];
+
+async function loadClients() {
+  try {
+    const snap = await getDocs(collection(db, "entrega"));
+    clients = [];
+    snap.forEach(d => clients.push({ id: d.id, ...d.data() }));
+    clients.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+    const sel = document.getElementById("sel-cliente");
+    sel.innerHTML = '<option value="">— Selecionar cliente existente —</option><option value="__novo__">+ Novo cliente</option>';
+    clients.forEach(c => {
+      const o = document.createElement("option");
+      o.value = c.id;
+      o.textContent = c.name || c.id;
+      if (c.ficha) o.textContent += " ✓";
+      sel.appendChild(o);
+    });
+
+    // Pre-fill if ficha exists for selected client
+    sel.addEventListener("change", () => {
+      const val = sel.value;
+      document.getElementById("novo-nome-wrap").style.display = val === "__novo__" ? "flex" : "none";
+      if (val && val !== "__novo__") {
+        const c = clients.find(x => x.id === val);
+        if (c && c.ficha) prefillForm(c.ficha);
+        else clearForm();
+      } else {
+        clearForm();
+      }
+    });
+  } catch(e) {
+    console.error(e);
+    document.getElementById("sel-cliente").innerHTML = '<option value="">Erro ao carregar clientes</option>';
+  }
+}
+
+function prefillForm(f) {
+  setVal("inp-insta", f.insta);
+  setVal("inp-programa", f.programa);
+  setVal("inp-faturamento", f.estrutura?.faturamento);
+  setVal("inp-equipe", f.estrutura?.equipe);
+  setVal("inp-segmento", f.estrutura?.segmento);
+  setVal("inp-meta", f.objetivo?.meta);
+  setVal("inp-prazo", f.objetivo?.prazo);
+  setVal("inp-valor-total", f.negociacao?.valorTotal);
+  setVal("inp-closer", f.closer);
+  setVal("inp-obs", f.obs);
+
+  const forma = f.negociacao?.formaPagamento;
+  if (forma) {
+    const r = document.querySelector(`input[name="forma"][value="${forma}"]`);
+    if (r) { r.checked = true; showCampos(forma); }
+    const n = f.negociacao;
+    if (forma === "avista") {
+      setVal("inp-avista-data", n.dataAvista);
+    } else if (forma === "parcelado") {
+      setVal("inp-nparcelas", n.nParcelas);
+      setVal("inp-vparcela", n.valorParcela);
+      setVal("inp-data1", n.data1Parcela);
+      atualizarPreview();
+    } else if (forma === "entrada_parcelas") {
+      setVal("inp-entrada-valor", n.entrada?.valor);
+      setVal("inp-entrada-data", n.entrada?.data);
+      setVal("inp-nparcelas-e", n.nParcelas);
+      setVal("inp-vparcela-e", n.valorParcela);
+      setVal("inp-data1-e", n.data1Parcela);
+      atualizarPreview();
+    }
+  }
+}
+
+function clearForm() {
+  ["inp-insta","inp-programa","inp-faturamento","inp-equipe","inp-segmento",
+   "inp-meta","inp-prazo","inp-valor-total","inp-closer","inp-obs",
+   "inp-avista-data","inp-nparcelas","inp-vparcela","inp-data1",
+   "inp-entrada-valor","inp-entrada-data","inp-nparcelas-e","inp-vparcela-e","inp-data1-e"
+  ].forEach(id => setVal(id, ""));
+  document.querySelectorAll("input[name='forma']").forEach(r => r.checked = false);
+  showCampos(null);
+  document.getElementById("preview-parcelas").innerHTML = "";
+}
+
+function setVal(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.value = val ?? "";
+}
+
+function showCampos(forma) {
+  ["campos-avista","campos-parcelado","campos-entrada"].forEach(id => {
+    document.getElementById(id).style.display = "none";
+  });
+  if (forma === "avista") document.getElementById("campos-avista").style.display = "block";
+  else if (forma === "parcelado") document.getElementById("campos-parcelado").style.display = "block";
+  else if (forma === "entrada_parcelas") document.getElementById("campos-entrada").style.display = "block";
+}
+
+function gerarParcelas(nParcelas, valorParcela, data1Str) {
+  const parcelas = [];
+  if (!nParcelas || !valorParcela || !data1Str) return parcelas;
+  const [y, m, d] = data1Str.split("-").map(Number);
+  for (let i = 0; i < nParcelas; i++) {
+    const dt = new Date(y, m - 1 + i, d);
+    parcelas.push({
+      n: i + 1,
+      valor: Number(valorParcela),
+      dataVenc: dt.toISOString().split("T")[0],
+      recebido: false
+    });
+  }
+  return parcelas;
+}
+
+function atualizarPreview() {
+  const forma = document.querySelector("input[name='forma']:checked")?.value;
+  const preview = document.getElementById("preview-parcelas");
+  if (forma === "parcelado") {
+    const n = Number(document.getElementById("inp-nparcelas").value);
+    const v = Number(document.getElementById("inp-vparcela").value);
+    const d = document.getElementById("inp-data1").value;
+    renderPreview(gerarParcelas(n, v, d), null);
+  } else if (forma === "entrada_parcelas") {
+    const entradaV = Number(document.getElementById("inp-entrada-valor").value);
+    const entradaD = document.getElementById("inp-entrada-data").value;
+    const n = Number(document.getElementById("inp-nparcelas-e").value);
+    const v = Number(document.getElementById("inp-vparcela-e").value);
+    const d = document.getElementById("inp-data1-e").value;
+    renderPreview(gerarParcelas(n, v, d), entradaV && entradaD ? { valor: entradaV, data: entradaD } : null);
+  } else {
+    preview.innerHTML = "";
+  }
+}
+
+function renderPreview(parcelas, entrada) {
+  const preview = document.getElementById("preview-parcelas");
+  if (!parcelas.length && !entrada) { preview.innerHTML = ""; return; }
+  let html = '<div class="preview-label">Prévia das parcelas</div><div class="preview-list">';
+  if (entrada) {
+    html += `<div class="prev-item prev-entrada"><span class="prev-badge">Entrada</span><span class="prev-val">${fmt(entrada.valor)}</span><span class="prev-dt">${fmtDate(entrada.data)}</span></div>`;
+  }
+  parcelas.forEach(p => {
+    html += `<div class="prev-item"><span class="prev-badge">${p.n}/${parcelas.length}</span><span class="prev-val">${fmt(p.valor)}</span><span class="prev-dt">${fmtDate(p.dataVenc)}</span></div>`;
+  });
+  html += "</div>";
+  preview.innerHTML = html;
+}
+
+function fmt(v) {
+  return Number(v).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+}
+function fmtDate(s) {
+  if (!s) return "";
+  const [y, m, d] = s.split("-");
+  return `${d}/${m}/${y}`;
+}
+
+async function salvar() {
+  const btn = document.getElementById("btn-salvar");
+  const msg = document.getElementById("save-msg");
+  msg.textContent = "";
+  msg.className = "save-msg";
+
+  const selVal = document.getElementById("sel-cliente").value;
+  const novoNome = document.getElementById("inp-novo-nome").value.trim();
+
+  if (!selVal) { showMsg("Selecione ou informe o cliente.", "error"); return; }
+  if (selVal === "__novo__" && !novoNome) { showMsg("Informe o nome do novo cliente.", "error"); return; }
+
+  const forma = document.querySelector("input[name='forma']:checked")?.value;
+  if (!forma) { showMsg("Selecione a forma de pagamento.", "error"); return; }
+
+  const valorTotal = Number(document.getElementById("inp-valor-total").value);
+  if (!valorTotal) { showMsg("Informe o valor total do contrato.", "error"); return; }
+
+  let negociacao = { valorTotal, formaPagamento: forma };
+  if (forma === "avista") {
+    negociacao.dataAvista = document.getElementById("inp-avista-data").value;
+    negociacao.parcelas = [];
+  } else if (forma === "parcelado") {
+    const n = Number(document.getElementById("inp-nparcelas").value);
+    const v = Number(document.getElementById("inp-vparcela").value);
+    const d = document.getElementById("inp-data1").value;
+    if (!n || !v || !d) { showMsg("Preencha todas as informações de parcelamento.", "error"); return; }
+    negociacao.nParcelas = n;
+    negociacao.valorParcela = v;
+    negociacao.data1Parcela = d;
+    negociacao.parcelas = gerarParcelas(n, v, d);
+  } else if (forma === "entrada_parcelas") {
+    const entV = Number(document.getElementById("inp-entrada-valor").value);
+    const entD = document.getElementById("inp-entrada-data").value;
+    const n = Number(document.getElementById("inp-nparcelas-e").value);
+    const v = Number(document.getElementById("inp-vparcela-e").value);
+    const d = document.getElementById("inp-data1-e").value;
+    if (!entV || !entD || !n || !v || !d) { showMsg("Preencha todas as informações de entrada e parcelas.", "error"); return; }
+    negociacao.entrada = { valor: entV, data: entD, recebido: false };
+    negociacao.nParcelas = n;
+    negociacao.valorParcela = v;
+    negociacao.data1Parcela = d;
+    negociacao.parcelas = gerarParcelas(n, v, d);
+  }
+
+  // Check if pre-existing parcelas (keep recebido status)
+  if (selVal !== "__novo__") {
+    const existing = clients.find(x => x.id === selVal);
+    if (existing?.ficha?.negociacao?.parcelas?.length && negociacao.parcelas) {
+      existing.ficha.negociacao.parcelas.forEach((p, i) => {
+        if (negociacao.parcelas[i] && p.recebido) {
+          negociacao.parcelas[i].recebido = p.recebido;
+          negociacao.parcelas[i].dataRecebimento = p.dataRecebimento;
+        }
+      });
+    }
+    if (existing?.ficha?.negociacao?.entrada && negociacao.entrada) {
+      negociacao.entrada.recebido = existing.ficha.negociacao.entrada.recebido || false;
+      negociacao.entrada.dataRecebimento = existing.ficha.negociacao.entrada.dataRecebimento;
+    }
+  }
+
+  const ficha = {
+    insta: document.getElementById("inp-insta").value.trim(),
+    programa: document.getElementById("inp-programa").value.trim(),
+    estrutura: {
+      faturamento: document.getElementById("inp-faturamento").value.trim(),
+      equipe: document.getElementById("inp-equipe").value.trim(),
+      segmento: document.getElementById("inp-segmento").value.trim()
+    },
+    objetivo: {
+      meta: document.getElementById("inp-meta").value.trim(),
+      prazo: document.getElementById("inp-prazo").value.trim()
+    },
+    negociacao,
+    closer: document.getElementById("inp-closer").value.trim(),
+    obs: document.getElementById("inp-obs").value.trim(),
+    createdAt: new Date().toISOString()
+  };
+
+  btn.disabled = true;
+  btn.textContent = "Salvando...";
+
+  try {
+    let clientId = selVal;
+    if (selVal === "__novo__") {
+      clientId = "c_" + Date.now();
+      await setDoc(doc(db, "entrega", clientId), { name: novoNome, ficha }, { merge: true });
+    } else {
+      await setDoc(doc(db, "entrega", clientId), { ficha }, { merge: true });
+    }
+    showMsg("Ficha salva com sucesso!", "success");
+    btn.textContent = "Salvo!";
+    setTimeout(() => { btn.textContent = "Salvar Ficha"; btn.disabled = false; }, 2000);
+    // Reload clients to update ✓ markers
+    await loadClients();
+    document.getElementById("sel-cliente").value = clientId;
+  } catch(e) {
+    showMsg("Erro ao salvar: " + e.message, "error");
+    btn.textContent = "Salvar Ficha";
+    btn.disabled = false;
+  }
+}
+
+function showMsg(txt, type) {
+  const msg = document.getElementById("save-msg");
+  msg.textContent = txt;
+  msg.className = "save-msg " + type;
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  loadClients();
+
+  document.querySelectorAll("input[name='forma']").forEach(r => {
+    r.addEventListener("change", () => {
+      showCampos(r.value);
+      atualizarPreview();
+    });
+  });
+
+  ["inp-nparcelas","inp-vparcela","inp-data1",
+   "inp-nparcelas-e","inp-vparcela-e","inp-data1-e",
+   "inp-entrada-valor","inp-entrada-data"].forEach(id => {
+    document.getElementById(id)?.addEventListener("input", atualizarPreview);
+  });
+
+  document.getElementById("btn-salvar").addEventListener("click", salvar);
+});
+</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0D1117;--surface:#1A2025;--surface2:#212830;--surface3:#272F38;
+  --amber:#F5A623;--amber-dim:rgba(245,166,35,0.10);--amber-border:rgba(245,166,35,0.20);
+  --border:#3E4249;--text:#F0F0F0;--text-sec:#B8B8C0;--text-dim:rgba(255,255,255,0.25);
+  --green:#22C55E;--green-dim:rgba(34,197,94,0.10);--green-border:rgba(34,197,94,0.22);
+  --red:#EF4444;--red-dim:rgba(239,68,68,0.10);--red-border:rgba(239,68,68,0.22);
+  --blue:#3B82F6;
+}
+html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:15px;line-height:1.5}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(0deg,transparent 24%,rgba(245,166,35,0.025) 25%,rgba(245,166,35,0.025) 26%,transparent 27%),linear-gradient(90deg,transparent 24%,rgba(245,166,35,0.025) 25%,rgba(245,166,35,0.025) 26%,transparent 27%);background-size:50px 50px;pointer-events:none;z-index:0}
+
+/* TOPBAR */
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);height:52px;display:flex;align-items:center;padding:0 24px;gap:12px;position:sticky;top:0;z-index:50}
+.t-back{color:var(--text-sec);text-decoration:none;font-size:13px;display:flex;align-items:center;gap:6px;transition:color .15s}
+.t-back:hover{color:var(--amber)}
+.t-sep{width:1px;height:18px;background:var(--border)}
+.t-logo{font-family:'Montserrat',sans-serif;font-size:15px;font-weight:800;color:var(--text)}
+.t-logo span{color:var(--amber);font-style:italic}
+.t-title{font-size:13px;color:var(--text-sec)}
+
+/* LAYOUT */
+.wrap{position:relative;z-index:1;max-width:720px;margin:0 auto;padding:40px 24px 80px}
+.page-header{margin-bottom:32px}
+.page-title{font-family:'Montserrat',sans-serif;font-size:24px;font-weight:800;color:var(--text);margin-bottom:4px}
+.page-sub{font-size:13px;color:var(--text-sec)}
+
+/* FORM CARD */
+.form-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:16px}
+.form-card-title{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--text-dim);margin-bottom:18px;display:flex;align-items:center;gap:8px}
+.form-card-title svg{flex-shrink:0}
+
+/* CLIENT SELECTOR */
+.client-row{display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap}
+.client-row .form-group{flex:1;min-width:200px}
+#novo-nome-wrap{display:none;flex:1;min-width:200px}
+
+/* FORM ELEMENTS */
+.form-group{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+label.f-label{font-size:12px;font-weight:600;font-family:'Montserrat',sans-serif;color:var(--text-sec);text-transform:uppercase;letter-spacing:.08em}
+input[type=text],input[type=number],input[type=date],select,textarea{
+  background:var(--surface2);border:1px solid var(--border);border-radius:8px;
+  color:var(--text);font-family:'Inter',sans-serif;font-size:14px;
+  padding:10px 12px;outline:none;transition:border-color .15s;width:100%
+}
+input[type=text]:focus,input[type=number]:focus,input[type=date]:focus,select:focus,textarea:focus{border-color:var(--amber)}
+input[type=number]{-moz-appearance:textfield}
+input::placeholder,textarea::placeholder{color:var(--text-dim)}
+textarea{resize:vertical;min-height:80px}
+select{cursor:pointer}
+option{background:#1A2025}
+
+/* RADIO GROUP */
+.radio-group{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.radio-opt{position:relative}
+.radio-opt input[type=radio]{position:absolute;opacity:0;width:0;height:0}
+.radio-opt label{display:flex;align-items:center;gap:8px;padding:10px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;color:var(--text-sec);transition:all .15s;font-family:'Montserrat',sans-serif}
+.radio-opt input[type=radio]:checked + label{background:var(--amber-dim);border-color:var(--amber);color:var(--amber)}
+.radio-opt label:hover{border-color:var(--amber-border);color:var(--text)}
+
+/* CONDITIONAL FIELDS */
+.cond-section{display:none;background:var(--surface3);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:14px}
+
+/* PREVIEW PARCELAS */
+#preview-parcelas{margin-top:4px}
+.preview-label{font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;text-transform:uppercase;letter-spacing:.1em;color:var(--text-dim);margin-bottom:8px}
+.preview-list{display:flex;flex-wrap:wrap;gap:6px}
+.prev-item{display:flex;align-items:center;gap:6px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:6px 10px}
+.prev-item.prev-entrada{border-color:var(--amber-border);background:var(--amber-dim)}
+.prev-badge{font-size:10px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--text-dim)}
+.prev-val{font-size:12px;font-weight:600;color:var(--text)}
+.prev-dt{font-size:11px;color:var(--text-sec)}
+
+/* VALOR TOTAL DESTAQUE */
+.valor-destaque{position:relative}
+.valor-destaque::before{content:'R$';position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:13px;color:var(--text-sec);font-weight:600;pointer-events:none}
+.valor-destaque input{padding-left:34px;font-size:18px;font-weight:700;color:var(--amber)}
+
+/* SAVE BUTTON */
+.save-row{display:flex;align-items:center;gap:16px;margin-top:8px}
+#btn-salvar{background:var(--amber);color:#000;border:none;border-radius:8px;padding:14px 32px;font-size:15px;font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:.04em;cursor:pointer;transition:opacity .15s}
+#btn-salvar:hover{opacity:.88}
+#btn-salvar:disabled{opacity:.5;cursor:not-allowed}
+.save-msg{font-size:13px;font-weight:600}
+.save-msg.success{color:var(--green)}
+.save-msg.error{color:var(--red)}
+
+/* SECTION DIVIDER */
+.sec-divider{height:1px;background:var(--border);margin:4px 0 18px}
+
+@media(max-width:560px){
+  .wrap{padding:24px 16px 60px}
+  .form-row{grid-template-columns:1fr}
+  .radio-group{flex-direction:column}
+  .client-row{flex-direction:column}
+}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a href="index.html" class="t-back">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Voltar
+  </a>
+  <div class="t-sep"></div>
+  <div class="t-logo">FACE <span>100K</span></div>
+  <div class="t-sep"></div>
+  <div class="t-title">Ficha de Cliente</div>
+</div>
+
+<div class="wrap">
+  <div class="page-header">
+    <div class="page-title">Nova Ficha de Cliente</div>
+    <div class="page-sub">Preenchida pelo closer logo após o fechamento da venda</div>
+  </div>
+
+  <!-- CLIENTE -->
+  <div class="form-card">
+    <div class="form-card-title">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="5" r="2.5" stroke="currentColor" stroke-width="1.2"/><path d="M1.5 13c0-3 2.5-5 5.5-5s5.5 2 5.5 5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      Cliente
+    </div>
+    <div class="client-row">
+      <div class="form-group" style="flex:2;min-width:220px">
+        <label class="f-label" for="sel-cliente">Selecionar cliente</label>
+        <select id="sel-cliente">
+          <option value="">Carregando...</option>
+        </select>
+      </div>
+      <div class="form-group" id="novo-nome-wrap">
+        <label class="f-label" for="inp-novo-nome">Nome do novo cliente</label>
+        <input type="text" id="inp-novo-nome" placeholder="Ex: Dr. João Silva">
+      </div>
+    </div>
+  </div>
+
+  <!-- INSTA + PROGRAMA -->
+  <div class="form-card">
+    <div class="form-card-title">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="2" y="2" width="10" height="10" rx="3" stroke="currentColor" stroke-width="1.2"/><circle cx="7" cy="7" r="2" stroke="currentColor" stroke-width="1.2"/><circle cx="10.2" cy="3.8" r=".7" fill="currentColor"/></svg>
+      Instagram & Programa
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="f-label" for="inp-insta">Instagram</label>
+        <input type="text" id="inp-insta" placeholder="@perfil">
+      </div>
+      <div class="form-group">
+        <label class="f-label" for="inp-programa">Programa vendido</label>
+        <input type="text" id="inp-programa" placeholder="Ex: Aceleração 6 meses">
+      </div>
+    </div>
+  </div>
+
+  <!-- ESTRUTURA -->
+  <div class="form-card">
+    <div class="form-card-title">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="7" width="4" height="6" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="5" y="4" width="4" height="9" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="9" y="1" width="4" height="12" rx="1" stroke="currentColor" stroke-width="1.2"/></svg>
+      Estrutura
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="f-label" for="inp-faturamento">Faturamento atual</label>
+        <input type="text" id="inp-faturamento" placeholder="Ex: R$ 30k/mês">
+      </div>
+      <div class="form-group">
+        <label class="f-label" for="inp-segmento">Segmento / Especialidade</label>
+        <input type="text" id="inp-segmento" placeholder="Ex: Bucomaxilo, Implante">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="f-label" for="inp-equipe">Equipe</label>
+      <input type="text" id="inp-equipe" placeholder="Ex: Solo, 2 funcionários, consultório próprio">
+    </div>
+  </div>
+
+  <!-- OBJETIVO -->
+  <div class="form-card">
+    <div class="form-card-title">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.2"/><circle cx="7" cy="7" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M7 1.5V3M7 11v1.5M1.5 7H3M11 7h1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      Objetivo
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="f-label" for="inp-meta">Meta de faturamento</label>
+        <input type="text" id="inp-meta" placeholder="Ex: R$ 100k/mês">
+      </div>
+      <div class="form-group">
+        <label class="f-label" for="inp-prazo">Prazo</label>
+        <input type="text" id="inp-prazo" placeholder="Ex: 6 meses">
+      </div>
+    </div>
+  </div>
+
+  <!-- NEGOCIAÇÃO -->
+  <div class="form-card">
+    <div class="form-card-title">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 10V5a1 1 0 011-1h8a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1z" stroke="currentColor" stroke-width="1.2"/><path d="M5 4V3a1 1 0 011-1h2a1 1 0 011 1v1" stroke="currentColor" stroke-width="1.2"/><path d="M7 7v2M5 7h4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      Negociação
+    </div>
+
+    <div class="form-group valor-destaque">
+      <label class="f-label" for="inp-valor-total">Valor total do contrato</label>
+      <input type="number" id="inp-valor-total" placeholder="0,00" step="0.01" min="0">
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <div class="form-card-title" style="margin-bottom:12px">Forma de pagamento</div>
+    <div class="radio-group">
+      <div class="radio-opt">
+        <input type="radio" name="forma" id="r-avista" value="avista">
+        <label for="r-avista">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.2"/><path d="M7 4v3l2 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+          À vista
+        </label>
+      </div>
+      <div class="radio-opt">
+        <input type="radio" name="forma" id="r-parcelado" value="parcelado">
+        <label for="r-parcelado">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1.5" y="3" width="11" height="8" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M4.5 7h5M6.5 9h3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+          Parcelado
+        </label>
+      </div>
+      <div class="radio-opt">
+        <input type="radio" name="forma" id="r-entrada" value="entrada_parcelas">
+        <label for="r-entrada">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 8l3-3 3 3 4-5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Entrada + Parcelas
+        </label>
+      </div>
+    </div>
+
+    <!-- À VISTA -->
+    <div id="campos-avista" class="cond-section">
+      <div class="form-group" style="margin-bottom:0">
+        <label class="f-label" for="inp-avista-data">Data prevista do pagamento</label>
+        <input type="date" id="inp-avista-data">
+      </div>
+    </div>
+
+    <!-- PARCELADO -->
+    <div id="campos-parcelado" class="cond-section">
+      <div class="form-row" style="margin-bottom:12px">
+        <div class="form-group">
+          <label class="f-label" for="inp-nparcelas">Número de parcelas</label>
+          <input type="number" id="inp-nparcelas" placeholder="Ex: 6" min="1" max="60">
+        </div>
+        <div class="form-group">
+          <label class="f-label" for="inp-vparcela">Valor por parcela (R$)</label>
+          <input type="number" id="inp-vparcela" placeholder="0,00" min="0" step="0.01">
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom:12px">
+        <label class="f-label" for="inp-data1">Data da 1ª parcela</label>
+        <input type="date" id="inp-data1">
+      </div>
+      <div id="preview-parcelas-parcelado"></div>
+    </div>
+
+    <!-- ENTRADA + PARCELAS -->
+    <div id="campos-entrada" class="cond-section">
+      <div class="form-card-title" style="margin-bottom:10px;font-size:11px">Entrada</div>
+      <div class="form-row" style="margin-bottom:12px">
+        <div class="form-group">
+          <label class="f-label" for="inp-entrada-valor">Valor da entrada (R$)</label>
+          <input type="number" id="inp-entrada-valor" placeholder="0,00" min="0" step="0.01">
+        </div>
+        <div class="form-group">
+          <label class="f-label" for="inp-entrada-data">Data da entrada</label>
+          <input type="date" id="inp-entrada-data">
+        </div>
+      </div>
+      <div class="sec-divider" style="margin:0 0 12px"></div>
+      <div class="form-card-title" style="margin-bottom:10px;font-size:11px">Parcelas restantes</div>
+      <div class="form-row" style="margin-bottom:12px">
+        <div class="form-group">
+          <label class="f-label" for="inp-nparcelas-e">Número de parcelas</label>
+          <input type="number" id="inp-nparcelas-e" placeholder="Ex: 5" min="1" max="60">
+        </div>
+        <div class="form-group">
+          <label class="f-label" for="inp-vparcela-e">Valor por parcela (R$)</label>
+          <input type="number" id="inp-vparcela-e" placeholder="0,00" min="0" step="0.01">
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom:12px">
+        <label class="f-label" for="inp-data1-e">Data da 1ª parcela</label>
+        <input type="date" id="inp-data1-e">
+      </div>
+    </div>
+
+    <div id="preview-parcelas"></div>
+
+    <div class="sec-divider"></div>
+    <div class="form-group" style="margin-bottom:0">
+      <label class="f-label" for="inp-closer">Responsável pela venda (closer)</label>
+      <input type="text" id="inp-closer" placeholder="Nome do closer">
+    </div>
+  </div>
+
+  <!-- OBSERVAÇÃO -->
+  <div class="form-card">
+    <div class="form-card-title">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 2h10v8H8l-2 2-2-2H2V2z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M4 5h6M4 7h4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      Observação
+    </div>
+    <div class="form-group" style="margin-bottom:0">
+      <textarea id="inp-obs" placeholder="Notas adicionais sobre a negociação, perfil do cliente, pontos de atenção..."></textarea>
+    </div>
+  </div>
+
+  <div class="save-row">
+    <button id="btn-salvar">Salvar Ficha</button>
+    <span id="save-msg" class="save-msg"></span>
+  </div>
+</div>
+</body>
+</html>

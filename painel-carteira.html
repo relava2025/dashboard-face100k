@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carteira — FACE 100K</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+import { getFirestore, collection, onSnapshot, doc, setDoc, enableNetwork } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+const firebaseConfig = {
+  apiKey:"AIzaSyAyupUdCsEb6pPVmTs2clhayS84-TUovGA",
+  authDomain:"dashboard-e465d.firebaseapp.com",
+  projectId:"dashboard-e465d",
+  storageBucket:"dashboard-e465d.firebasestorage.app",
+  messagingSenderId:"865986158280",
+  appId:"1:865986158280:web:1531d13630f9835a9f0ffd"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+let allClients = [];
+let expanded = {};
+
+function snapRetry(refFn, cb) {
+  let unsub, timer, tries = 0;
+  function sub() {
+    try {
+      if (unsub) { try { unsub(); } catch(e) {} }
+      unsub = onSnapshot(refFn(),
+        s => { tries = 0; cb(s); setSyncStatus("ok"); },
+        e => {
+          console.warn("fb err", e);
+          if (timer) clearTimeout(timer);
+          tries++;
+          setSyncStatus("connecting");
+          timer = setTimeout(() => { enableNetwork(db).then(sub).catch(sub); }, Math.min(3000 * tries, 15000));
+        }
+      );
+    } catch(e) { console.warn(e); timer = setTimeout(sub, 5000); }
+  }
+  sub();
+  return () => { if (unsub) unsub(); if (timer) clearTimeout(timer); };
+}
+
+function setSyncStatus(st) {
+  const dot = document.getElementById("sync-dot");
+  const txt = document.getElementById("sync-txt");
+  if (!dot) return;
+  dot.className = "sync-dot" + (st === "connecting" ? " saving" : st === "error" ? " error" : "");
+  txt.textContent = st === "ok" ? "Ao vivo" : st === "connecting" ? "Conectando..." : "Erro";
+}
+
+function fmt(v) {
+  return Number(v || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+}
+function fmtDate(s) {
+  if (!s) return "-";
+  const [y, m, d] = s.split("-");
+  return `${d}/${m}/${y}`;
+}
+const today = new Date().toISOString().split("T")[0];
+
+function getParcelaStats(c) {
+  const n = c.ficha?.negociacao;
+  if (!n) return { total: 0, recebido: 0, pendente: 0, vencido: 0, items: [] };
+
+  let total = n.valorTotal || 0;
+  let recebido = 0;
+  let vencido = 0;
+  const items = [];
+
+  if (n.formaPagamento === "avista") {
+    const rec = n.dataAvista && n.dataAvista < today && !n.recebidoAvista ? false : n.recebidoAvista || false;
+    if (rec) recebido = total;
+    else if (n.dataAvista && n.dataAvista < today) vencido = total;
+    items.push({ tipo: "avista", valor: total, data: n.dataAvista, recebido: n.recebidoAvista || false });
+  } else {
+    if (n.entrada) {
+      if (n.entrada.recebido) recebido += n.entrada.valor || 0;
+      else if (n.entrada.data && n.entrada.data < today) vencido += n.entrada.valor || 0;
+      items.push({ tipo: "entrada", valor: n.entrada.valor || 0, data: n.entrada.data, recebido: n.entrada.recebido || false, idx: -1 });
+    }
+    (n.parcelas || []).forEach((p, i) => {
+      if (p.recebido) recebido += p.valor || 0;
+      else if (p.dataVenc && p.dataVenc < today) vencido += p.valor || 0;
+      items.push({ tipo: "parcela", n: p.n, total: (n.parcelas || []).length, valor: p.valor || 0, data: p.dataVenc, recebido: p.recebido || false, idx: i });
+    });
+  }
+
+  return { total, recebido, pendente: total - recebido, vencido, items };
+}
+
+function renderStats(clients) {
+  let totalCart = 0, totalRec = 0, totalPend = 0, totalVenc = 0;
+  clients.forEach(c => {
+    const s = getParcelaStats(c);
+    totalCart += s.total;
+    totalRec += s.recebido;
+    totalPend += s.pendente;
+    totalVenc += s.vencido;
+  });
+  document.getElementById("stat-total").textContent = fmt(totalCart);
+  document.getElementById("stat-rec").textContent = fmt(totalRec);
+  document.getElementById("stat-pend").textContent = fmt(totalPend);
+  document.getElementById("stat-venc").textContent = fmt(totalVenc);
+  document.getElementById("stat-count").textContent = clients.length + " contrato" + (clients.length !== 1 ? "s" : "");
+}
+
+function renderClients(clients) {
+  const search = document.getElementById("inp-search").value.toLowerCase();
+  const filter = document.querySelector(".filter-btn.active")?.dataset.filter || "todos";
+
+  let list = clients.filter(c => {
+    const name = (c.name || c.id).toLowerCase();
+    if (search && !name.includes(search)) return false;
+    const s = getParcelaStats(c);
+    if (filter === "pendentes") return s.pendente > 0 && s.vencido === 0;
+    if (filter === "vencidas") return s.vencido > 0;
+    if (filter === "quitados") return s.pendente <= 0 && s.recebido > 0;
+    return true;
+  });
+
+  const container = document.getElementById("clients-list");
+
+  if (!list.length) {
+    container.innerHTML = `<div class="empty">Nenhum contrato encontrado.</div>`;
+    return;
+  }
+
+  // Sort: vencidos first, then pendentes, then quitados
+  list.sort((a, b) => {
+    const sa = getParcelaStats(a), sb = getParcelaStats(b);
+    if (sb.vencido !== sa.vencido) return sb.vencido - sa.vencido;
+    if (sb.pendente !== sa.pendente) return sb.pendente - sa.pendente;
+    return (a.name || "").localeCompare(b.name || "");
+  });
+
+  container.innerHTML = list.map(c => renderClientCard(c)).join("");
+}
+
+function renderClientCard(c) {
+  const s = getParcelaStats(c);
+  const pct = s.total > 0 ? Math.round((s.recebido / s.total) * 100) : 0;
+  const prog_color = pct >= 100 ? "var(--green)" : s.vencido > 0 ? "var(--red)" : "var(--amber)";
+  const prog_bg = pct >= 100 ? "var(--green-dim)" : s.vencido > 0 ? "var(--red-dim)" : "var(--amber-dim)";
+  const isExp = expanded[c.id];
+  const programa = c.ficha?.programa || "";
+  const forma = c.ficha?.negociacao?.formaPagamento;
+  const formaLabel = forma === "avista" ? "À vista" : forma === "parcelado" ? "Parcelado" : forma === "entrada_parcelas" ? "Entrada + Parcelas" : "";
+
+  let statusBadge = "";
+  if (pct >= 100) statusBadge = `<span class="c-badge c-badge-green">Quitado</span>`;
+  else if (s.vencido > 0) statusBadge = `<span class="c-badge c-badge-red">Vencido</span>`;
+  else if (s.pendente > 0) statusBadge = `<span class="c-badge c-badge-amber">Em aberto</span>`;
+
+  let itemsHtml = "";
+  if (isExp) {
+    itemsHtml = `<div class="parcelas-list">${s.items.map(item => renderParcelaItem(c.id, item)).join("")}</div>`;
+  }
+
+  return `
+  <div class="client-card ${isExp ? "expanded" : ""}" id="cc-${c.id}">
+    <div class="client-head" onclick="toggleExpand('${c.id}')">
+      <div class="client-info">
+        <div class="client-name">${c.name || c.id}</div>
+        <div class="client-meta">
+          ${programa ? `<span class="meta-item">${programa}</span>` : ""}
+          ${formaLabel ? `<span class="meta-item meta-sep">${formaLabel}</span>` : ""}
+          ${statusBadge}
+        </div>
+      </div>
+      <div class="client-financ">
+        <div class="financ-row">
+          <span class="financ-rec">${fmt(s.recebido)}</span>
+          <span class="financ-sep">/</span>
+          <span class="financ-total">${fmt(s.total)}</span>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-track">
+            <div class="progress-fill" style="width:${pct}%;background:${prog_color}"></div>
+          </div>
+          <span class="pct-label" style="color:${prog_color}">${pct}%</span>
+        </div>
+        ${s.vencido > 0 ? `<div class="venc-warn">${fmt(s.vencido)} vencido</div>` : ""}
+      </div>
+      <div class="expand-arrow ${isExp ? "open" : ""}">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+    </div>
+    ${itemsHtml}
+  </div>`;
+}
+
+function renderParcelaItem(clientId, item) {
+  const isVencida = !item.recebido && item.data && item.data < today;
+  const statusClass = item.recebido ? "pitem-rec" : isVencida ? "pitem-venc" : "pitem-pend";
+  const statusIcon = item.recebido
+    ? `<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" fill="var(--green-dim)" stroke="var(--green)" stroke-width="1.2"/><path d="M4.5 7l2 2 3-3" stroke="var(--green)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+    : isVencida
+    ? `<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" fill="var(--red-dim)" stroke="var(--red)" stroke-width="1.2"/><path d="M5 5l4 4M9 5l-4 4" stroke="var(--red)" stroke-width="1.4" stroke-linecap="round"/></svg>`
+    : `<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" fill="var(--surface3)" stroke="var(--border)" stroke-width="1.2"/><circle cx="7" cy="7" r="2" fill="var(--border)"/></svg>`;
+
+  const label = item.tipo === "entrada" ? "Entrada" : item.tipo === "avista" ? "À vista" : `${item.n}/${item.total}`;
+  const btnAction = item.recebido
+    ? `<button class="btn-pitem btn-unrec" onclick="event.stopPropagation();toggleParcela('${clientId}', '${item.tipo}', ${item.idx}, false)">Desfazer</button>`
+    : `<button class="btn-pitem btn-rec" onclick="event.stopPropagation();toggleParcela('${clientId}', '${item.tipo}', ${item.idx}, true)">Recebido</button>`;
+
+  const recDate = item.recebido && item.dataRecebimento ? `<span class="pitem-recdate">rec. ${fmtDate(item.dataRecebimento)}</span>` : "";
+
+  return `
+  <div class="pitem ${statusClass}">
+    <div class="pitem-icon">${statusIcon}</div>
+    <div class="pitem-label">${label}</div>
+    <div class="pitem-val">${fmt(item.valor)}</div>
+    <div class="pitem-date">${fmtDate(item.data)}</div>
+    ${recDate}
+    <div class="pitem-action">${btnAction}</div>
+  </div>`;
+}
+
+window.toggleExpand = function(id) {
+  expanded[id] = !expanded[id];
+  renderClients(allClients);
+};
+
+window.toggleParcela = async function(clientId, tipo, idx, receber) {
+  const c = allClients.find(x => x.id === clientId);
+  if (!c || !c.ficha) return;
+
+  const n = JSON.parse(JSON.stringify(c.ficha.negociacao));
+  const now = new Date().toISOString().split("T")[0];
+
+  if (tipo === "avista") {
+    n.recebidoAvista = receber;
+    n.dataRecebimentoAvista = receber ? now : null;
+  } else if (tipo === "entrada" && n.entrada) {
+    n.entrada.recebido = receber;
+    n.entrada.dataRecebimento = receber ? now : null;
+  } else if (tipo === "parcela" && n.parcelas?.[idx] != null) {
+    n.parcelas[idx].recebido = receber;
+    n.parcelas[idx].dataRecebimento = receber ? now : null;
+  }
+
+  try {
+    await setDoc(doc(db, "entrega", clientId), { ficha: { negociacao: n } }, { merge: true });
+    // optimistic update
+    c.ficha.negociacao = n;
+    expanded[clientId] = true;
+    renderStats(allClients);
+    renderClients(allClients);
+  } catch(e) {
+    console.error(e);
+    alert("Erro ao salvar: " + e.message);
+  }
+};
+
+window.addEventListener("DOMContentLoaded", () => {
+  setSyncStatus("connecting");
+
+  snapRetry(
+    () => collection(db, "entrega"),
+    snap => {
+      allClients = [];
+      snap.forEach(d => {
+        const data = d.data();
+        if (data.ficha) allClients.push({ id: d.id, ...data });
+      });
+      allClients.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+      renderStats(allClients);
+      renderClients(allClients);
+    }
+  );
+
+  document.getElementById("inp-search").addEventListener("input", () => renderClients(allClients));
+  document.querySelectorAll(".filter-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      renderClients(allClients);
+    });
+  });
+});
+</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0D1117;--surface:#1A2025;--surface2:#212830;--surface3:#272F38;
+  --amber:#F5A623;--amber-dim:rgba(245,166,35,0.10);--amber-border:rgba(245,166,35,0.20);
+  --border:#3E4249;--text:#F0F0F0;--text-sec:#B8B8C0;--text-dim:rgba(255,255,255,0.25);
+  --green:#22C55E;--green-dim:rgba(34,197,94,0.10);--green-border:rgba(34,197,94,0.22);
+  --red:#EF4444;--red-dim:rgba(239,68,68,0.10);--red-border:rgba(239,68,68,0.22);
+  --blue:#3B82F6;
+}
+html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:15px;line-height:1.5}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(0deg,transparent 24%,rgba(245,166,35,0.03) 25%,rgba(245,166,35,0.03) 26%,transparent 27%),linear-gradient(90deg,transparent 24%,rgba(245,166,35,0.03) 25%,rgba(245,166,35,0.03) 26%,transparent 27%);background-size:50px 50px;pointer-events:none;z-index:0}
+
+/* TOPBAR */
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);height:52px;display:flex;align-items:center;padding:0 24px;gap:12px;position:sticky;top:0;z-index:50}
+.t-back{color:var(--text-sec);text-decoration:none;font-size:13px;display:flex;align-items:center;gap:6px;transition:color .15s}
+.t-back:hover{color:var(--amber)}
+.t-sep{width:1px;height:18px;background:var(--border)}
+.t-logo{font-family:'Montserrat',sans-serif;font-size:15px;font-weight:800;color:var(--text)}
+.t-logo span{color:var(--amber);font-style:italic}
+.t-title{font-size:13px;color:var(--text-sec)}
+.t-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.sync-dot{width:8px;height:8px;border-radius:50%;background:var(--green);transition:background .3s}
+.sync-dot.saving{background:#EAB308;animation:pulse .6s infinite alternate}
+.sync-dot.error{background:var(--red)}
+@keyframes pulse{from{opacity:.4}to{opacity:1}}
+.sync-txt{font-size:12px;color:var(--text-sec)}
+.btn-nova-ficha{background:var(--amber);color:#000;border:none;border-radius:6px;padding:7px 14px;font-size:13px;font-weight:700;font-family:'Montserrat',sans-serif;cursor:pointer;text-decoration:none;display:flex;align-items:center;gap:6px;transition:opacity .15s}
+.btn-nova-ficha:hover{opacity:.88}
+
+/* CONTENT */
+.wrap{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:32px 24px 80px}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 18px}
+.stat-label{font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;text-transform:uppercase;letter-spacing:.1em;color:var(--text-dim);margin-bottom:6px}
+.stat-val{font-size:20px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--text)}
+.stat-val.green{color:var(--green)}
+.stat-val.amber{color:var(--amber)}
+.stat-val.red{color:var(--red)}
+.stat-sub{font-size:11px;color:var(--text-dim);margin-top:2px}
+
+/* CONTROLS */
+.controls-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:20px}
+.search-wrap{position:relative;flex:1;min-width:180px}
+.search-wrap svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text-dim);pointer-events:none}
+#inp-search{background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;padding:9px 12px 9px 32px;width:100%;outline:none;transition:border-color .15s}
+#inp-search:focus{border-color:var(--amber)}
+#inp-search::placeholder{color:var(--text-dim)}
+.filter-chips{display:flex;gap:6px;flex-wrap:wrap}
+.filter-btn{background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text-sec);font-size:12px;font-weight:600;font-family:'Montserrat',sans-serif;padding:7px 12px;cursor:pointer;transition:all .15s}
+.filter-btn:hover{border-color:var(--amber-border);color:var(--text)}
+.filter-btn.active{background:var(--amber-dim);border-color:var(--amber);color:var(--amber)}
+
+/* CLIENT CARDS */
+.client-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:10px;overflow:hidden;transition:border-color .15s}
+.client-card.expanded{border-color:var(--amber-border)}
+.client-card:hover{border-color:rgba(62,66,73,0.9)}
+.client-head{display:flex;align-items:center;gap:16px;padding:16px 18px;cursor:pointer;user-select:none}
+.client-head:hover{background:rgba(255,255,255,0.015)}
+.client-info{flex:1;min-width:0}
+.client-name{font-size:15px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.client-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:4px}
+.meta-item{font-size:11px;color:var(--text-sec)}
+.meta-sep::before{content:"·";margin-right:6px;color:var(--text-dim)}
+.c-badge{font-size:9px;font-weight:700;font-family:'Montserrat',sans-serif;padding:2px 7px;border-radius:4px;text-transform:uppercase;letter-spacing:.06em}
+.c-badge-green{background:var(--green-dim);color:var(--green);border:0.5px solid var(--green-border)}
+.c-badge-amber{background:var(--amber-dim);color:var(--amber);border:0.5px solid var(--amber-border)}
+.c-badge-red{background:var(--red-dim);color:var(--red);border:0.5px solid var(--red-border)}
+.client-financ{text-align:right;flex-shrink:0;min-width:140px}
+.financ-row{display:flex;align-items:baseline;justify-content:flex-end;gap:4px;margin-bottom:4px}
+.financ-rec{font-size:16px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--green)}
+.financ-sep{font-size:12px;color:var(--text-dim)}
+.financ-total{font-size:13px;color:var(--text-sec)}
+.progress-wrap{display:flex;align-items:center;gap:6px;justify-content:flex-end}
+.progress-track{width:80px;height:4px;background:var(--surface3);border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;border-radius:2px;transition:width .3s}
+.pct-label{font-size:11px;font-weight:700;min-width:30px;text-align:right}
+.venc-warn{font-size:11px;color:var(--red);font-weight:600;margin-top:3px}
+.expand-arrow{color:var(--text-dim);transition:transform .2s;flex-shrink:0}
+.expand-arrow.open{transform:rotate(180deg)}
+
+/* PARCELAS LIST */
+.parcelas-list{border-top:1px solid var(--border);padding:12px 18px;display:flex;flex-direction:column;gap:4px}
+.pitem{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:7px;background:var(--surface2)}
+.pitem-rec{background:rgba(34,197,94,0.05)}
+.pitem-venc{background:rgba(239,68,68,0.05)}
+.pitem-pend{background:var(--surface2)}
+.pitem-icon{flex-shrink:0}
+.pitem-label{font-size:12px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--text-sec);min-width:52px}
+.pitem-val{font-size:13px;font-weight:600;color:var(--text);min-width:90px}
+.pitem-date{font-size:12px;color:var(--text-sec);min-width:72px}
+.pitem-recdate{font-size:11px;color:var(--green);flex:1}
+.pitem-action{margin-left:auto;flex-shrink:0}
+.btn-pitem{border:none;border-radius:5px;padding:5px 12px;font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;cursor:pointer;transition:opacity .15s}
+.btn-pitem:hover{opacity:.8}
+.btn-rec{background:var(--green-dim);color:var(--green);border:1px solid var(--green-border)}
+.btn-unrec{background:var(--surface3);color:var(--text-dim);border:1px solid var(--border)}
+
+.empty{text-align:center;padding:48px;color:var(--text-dim);font-size:14px}
+
+@media(max-width:680px){
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .client-head{flex-wrap:wrap;gap:10px}
+  .client-financ{min-width:0;width:100%;text-align:left}
+  .financ-row{justify-content:flex-start}
+  .progress-wrap{justify-content:flex-start}
+  .pitem{flex-wrap:wrap;gap:6px}
+  .pitem-recdate{order:5;width:100%;margin-left:24px}
+}
+@media(max-width:400px){
+  .stats-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a href="index.html" class="t-back">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Voltar
+  </a>
+  <div class="t-sep"></div>
+  <div class="t-logo">FACE <span>100K</span></div>
+  <div class="t-sep"></div>
+  <div class="t-title">Carteira</div>
+  <div class="t-right">
+    <div class="sync-dot" id="sync-dot"></div>
+    <span class="sync-txt" id="sync-txt">Conectando...</span>
+    <a href="ficha-cliente.html" class="btn-nova-ficha">
+      <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 1.5v10M1.5 6.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      Nova ficha
+    </a>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- STATS -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">Total carteira</div>
+      <div class="stat-val amber" id="stat-total">—</div>
+      <div class="stat-sub" id="stat-count"></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Total recebido</div>
+      <div class="stat-val green" id="stat-rec">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">A receber</div>
+      <div class="stat-val" id="stat-pend">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Vencido</div>
+      <div class="stat-val red" id="stat-venc">—</div>
+    </div>
+  </div>
+
+  <!-- CONTROLS -->
+  <div class="controls-row">
+    <div class="search-wrap">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="6" cy="6" r="4.5" stroke="currentColor" stroke-width="1.2"/><path d="M9.5 9.5l3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      <input type="text" id="inp-search" placeholder="Buscar cliente...">
+    </div>
+    <div class="filter-chips">
+      <button class="filter-btn active" data-filter="todos">Todos</button>
+      <button class="filter-btn" data-filter="vencidas">Vencidos</button>
+      <button class="filter-btn" data-filter="pendentes">Em aberto</button>
+      <button class="filter-btn" data-filter="quitados">Quitados</button>
+    </div>
+  </div>
+
+  <!-- LIST -->
+  <div id="clients-list">
+    <div class="empty">Carregando contratos...</div>
+  </div>
+
+</div>
+</body>
+</html>
