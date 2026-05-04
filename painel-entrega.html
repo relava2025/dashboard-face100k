@@ -178,7 +178,9 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .c-actions{display:flex;gap:7px;padding:10px 18px 14px}
 .btn-open-dash{flex:1;padding:8px;border-radius:5px;font-size:13px;font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:.04em;background:var(--amber);color:#000;border:none;cursor:pointer;transition:opacity .15s;text-align:center}
 .btn-open-dash:hover{opacity:.88}
-.btn-view-client{padding:8px 12px;border-radius:5px;font-size:13px;font-weight:700;font-family:'Montserrat',sans-serif;background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border);cursor:pointer;transition:all .15s;white-space:nowrap}.btn-view-client:hover{background:var(--amber);color:#000}.btn-edit-client{padding:8px 14px;border-radius:5px;font-size:13px;font-weight:600;font-family:'Montserrat',sans-serif;background:var(--surface2);color:var(--text-sec);border:1px solid var(--border);cursor:pointer;transition:all .15s}
+.btn-view-client{padding:8px 12px;border-radius:5px;font-size:13px;font-weight:700;font-family:'Montserrat',sans-serif;background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border);cursor:pointer;transition:all .15s;white-space:nowrap}.btn-view-client:hover{background:var(--amber);color:#000}.btn-bonus-client{padding:8px 12px;border-radius:5px;font-size:13px;font-weight:600;font-family:'Montserrat',sans-serif;background:var(--green-dim);color:var(--green);border:1px solid var(--green-border);cursor:pointer;transition:all .15s;white-space:nowrap}
+.btn-bonus-client:hover{background:var(--green);color:#000}
+.btn-edit-client{padding:8px 14px;border-radius:5px;font-size:13px;font-weight:600;font-family:'Montserrat',sans-serif;background:var(--surface2);color:var(--text-sec);border:1px solid var(--border);cursor:pointer;transition:all .15s}
 .btn-edit-client:hover{border-color:var(--amber);color:var(--amber)}
 .btn-del-client{padding:8px 12px;border-radius:5px;background:var(--surface2);color:var(--text-dim);border:1px solid var(--border);cursor:pointer;transition:all .15s;font-size:14px}
 .btn-del-client:hover{border-color:var(--red-border);color:var(--red);background:var(--red-dim)}
@@ -427,6 +429,22 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
   </div>
 </div>
 
+<!-- MODAL MARCOS PAGAMENTO -->
+<div class="modal-overlay" id="marcos-modal" onclick="closeMarcosModalOutside(event)">
+  <div class="modal" style="width:480px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+      <div class="modal-title" style="margin:0" id="mm-client-name">Marcos</div>
+      <button onclick="closeMarcosModal()" style="background:transparent;border:none;cursor:pointer;color:var(--text-dim);font-size:20px;line-height:1">×</button>
+    </div>
+    <div style="font-size:12px;color:var(--text-sec);margin-bottom:20px">Controle de pagamento de bônus da equipe</div>
+    <div id="mm-summary" style="display:flex;gap:16px;margin-bottom:20px;padding:14px 16px;background:var(--surface2);border-radius:8px;border:1px solid var(--border)"></div>
+    <div id="mm-list" style="display:flex;flex-direction:column;gap:10px"></div>
+    <div style="margin-top:20px;display:flex;justify-content:flex-end">
+      <button class="btn-cancel" onclick="closeMarcosModal()">Fechar</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -657,6 +675,7 @@ function renderClients(){
       <div class="c-actions" onclick="event.stopPropagation()">
         <button class="btn-open-dash" onclick="event.stopPropagation();openDashboard('${c.id}')">Abrir dashboard</button>
         <button class="btn-view-client" onclick="event.stopPropagation();openClientView('${c.id}')">Visão cliente</button>
+        <button class="btn-bonus-client" onclick="event.stopPropagation();openMarcosModal('${c.id}')">Bônus</button>
         <button class="btn-edit-client" onclick="openModal('${c.id}')">Editar</button>
         <button class="btn-del-client" onclick="confirmDelete('${c.id}','${(c.name||'').replace(/'/g,'')}') " title="Excluir">✕</button>
       </div>
@@ -766,6 +785,104 @@ function setSyncStatus(state){
   const txt=document.getElementById('sync-txt');
   dot.className='sync-dot'+(state==='saving'?' saving':state==='error'?' error':'');
   txt.textContent=state==='saving'?'Salvando...':state==='error'?'Erro de conexão':state==='connecting'?'Conectando...':'Sincronizado';
+}
+
+// ── MODAL MARCOS PAGAMENTO ─────────────────────────────────────────────────
+const MARCOS_DEF=[
+  {id:1,title:'Primeira venda',vendas:'1 venda',bonus:200},
+  {id:2,title:'Validação da metodologia',vendas:'3–5 vendas',bonus:300},
+  {id:3,title:'Previsibilidade',vendas:'6–9 vendas',bonus:400},
+  {id:4,title:'Escala',vendas:'10–15 vendas',bonus:500},
+];
+let _mmClientId=null;
+
+async function openMarcosModal(id){
+  _mmClientId=id;
+  const c=allClients.find(x=>x.id===id)||{};
+  document.getElementById('mm-client-name').textContent=c.name||'Marcos';
+  renderMarcosModal(c.marcos||{});
+  document.getElementById('marcos-modal').classList.add('open');
+}
+
+function closeMarcosModal(){
+  document.getElementById('marcos-modal').classList.remove('open');
+  _mmClientId=null;
+}
+function closeMarcosModalOutside(e){ if(e.target.id==='marcos-modal') closeMarcosModal(); }
+
+function renderMarcosModal(ms){
+  const achieved=MARCOS_DEF.filter(m=>ms[m.id]?.achieved);
+  const paid=MARCOS_DEF.filter(m=>ms[m.id]?.paid);
+  const totalBonus=achieved.reduce((s,m)=>s+m.bonus,0);
+  const totalPago=paid.reduce((s,m)=>s+m.bonus,0);
+  const totalAPagar=totalBonus-totalPago;
+
+  document.getElementById('mm-summary').innerHTML=`
+    <div style="flex:1">
+      <div style="font-size:11px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px">Desbloqueado</div>
+      <div style="font-size:20px;font-weight:800;font-family:'Montserrat',sans-serif;color:var(--amber)">R$ ${totalBonus.toLocaleString('pt-BR')}</div>
+    </div>
+    <div style="flex:1;border-left:1px solid var(--border);padding-left:16px">
+      <div style="font-size:11px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px">Pago</div>
+      <div style="font-size:20px;font-weight:800;font-family:'Montserrat',sans-serif;color:var(--green)">R$ ${totalPago.toLocaleString('pt-BR')}</div>
+    </div>
+    <div style="flex:1;border-left:1px solid var(--border);padding-left:16px">
+      <div style="font-size:11px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px">A pagar</div>
+      <div style="font-size:20px;font-weight:800;font-family:'Montserrat',sans-serif;color:${totalAPagar>0?'var(--amber)':'var(--text-dim)'}">R$ ${totalAPagar.toLocaleString('pt-BR')}</div>
+    </div>`;
+
+  document.getElementById('mm-list').innerHTML=MARCOS_DEF.map(m=>{
+    const state=ms[m.id]||{};
+    const isAchieved=!!state.achieved;
+    const isPaid=!!state.paid;
+    const dateAchieved=state.date?new Date(state.date).toLocaleDateString('pt-BR'):'';
+    const datePaid=state.paidDate?new Date(state.paidDate).toLocaleDateString('pt-BR'):'';
+
+    let statusHtml='';
+    let actionHtml='';
+    if(!isAchieved){
+      statusHtml=`<span style="font-size:11px;color:var(--text-dim);background:var(--surface3);border:1px solid var(--border);border-radius:4px;padding:2px 8px">Não atingido</span>`;
+      actionHtml='';
+    } else if(!isPaid){
+      statusHtml=`<span style="font-size:11px;font-weight:600;color:var(--amber);background:var(--amber-dim);border:1px solid var(--amber-border);border-radius:4px;padding:2px 8px">Atingido ${dateAchieved?'em '+dateAchieved:''}</span>`;
+      actionHtml=`<button onclick="toggleMarcoPago('${_mmClientId}',${m.id},true)" style="padding:5px 14px;border-radius:5px;font-size:12px;font-weight:700;font-family:'Montserrat',sans-serif;background:var(--green-dim);color:var(--green);border:1px solid var(--green-border);cursor:pointer;transition:all .15s">Marcar como pago</button>`;
+    } else {
+      statusHtml=`<span style="font-size:11px;font-weight:600;color:var(--green);background:var(--green-dim);border:1px solid var(--green-border);border-radius:4px;padding:2px 8px">✓ Pago em ${datePaid}</span>`;
+      actionHtml=`<button onclick="toggleMarcoPago('${_mmClientId}',${m.id},false)" style="font-size:11px;color:var(--text-dim);background:transparent;border:none;cursor:pointer;padding:4px 8px;border-radius:4px;transition:color .15s" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--text-dim)'">Desfazer</button>`;
+    }
+
+    return`<div style="display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--surface2);border:1px solid ${isPaid?'var(--green-border)':isAchieved?'var(--amber-border)':'var(--border)'};border-radius:8px">
+      <div style="width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;font-family:'Montserrat',sans-serif;flex-shrink:0;background:${isPaid?'var(--green-dim)':isAchieved?'var(--amber-dim)':'var(--surface3)'};color:${isPaid?'var(--green)':isAchieved?'var(--amber)':'var(--text-dim)'};border:1.5px solid ${isPaid?'var(--green-border)':isAchieved?'var(--amber-border)':'var(--border)'}">${m.id}</div>
+      <div style="flex:1">
+        <div style="font-size:14px;font-weight:600;font-family:'Montserrat',sans-serif;color:${isAchieved?'var(--text)':'var(--text-sec)'};margin-bottom:3px">Marco ${m.id} — ${m.title}</div>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">${statusHtml}</div>
+      </div>
+      <div style="text-align:right;flex-shrink:0">
+        <div style="font-size:16px;font-weight:800;font-family:'Montserrat',sans-serif;color:${isPaid?'var(--green)':isAchieved?'var(--amber)':'var(--text-dim)'}">R$ ${m.bonus}</div>
+        ${actionHtml}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function toggleMarcoPago(clientId, marcoId, setAsPaid){
+  const c=allClients.find(x=>x.id===clientId);
+  if(!c) return;
+  const marcos=JSON.parse(JSON.stringify(c.marcos||{}));
+  if(!marcos[marcoId]) return;
+  if(setAsPaid){
+    marcos[marcoId].paid=true;
+    marcos[marcoId].paidDate=new Date().toISOString();
+  } else {
+    delete marcos[marcoId].paid;
+    delete marcos[marcoId].paidDate;
+  }
+  try{
+    await window._fb.save(clientId,{marcos});
+    c.marcos=marcos;
+    renderMarcosModal(marcos);
+    showToast(setAsPaid?'Bônus marcado como pago!':'Pagamento desfeito.', setAsPaid?'success':'');
+  } catch(e){ showToast('Erro ao salvar','error'); }
 }
 
 function showToast(msg,type=''){
