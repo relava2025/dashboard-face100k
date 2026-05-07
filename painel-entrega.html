@@ -493,6 +493,24 @@ function getClientAlerts(c){
   return alerts.filter(a=>!a.resolved);
 }
 
+function getContractStatus(c){
+  if(!c.startDate) return null;
+  const prog = c.program||'aceleracao';
+  if(prog==='mentoria') return null;
+  const months = prog==='ativacao' ? 3 : 6;
+  const start = new Date(c.startDate);
+  const end = new Date(start);
+  end.setMonth(end.getMonth() + months);
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  end.setHours(0,0,0,0);
+  const daysLeft = Math.round((end - today) / 86400000);
+  let status = 'ok';
+  if(daysLeft < 0) status = 'expired';
+  else if(daysLeft <= 30) status = 'expiring';
+  return { endDate: end, daysLeft, status };
+}
+
 function calcStats(){
   const tots = {alert:0,attention:0,healthy:0};
   allClients.forEach(c=>{
@@ -623,6 +641,13 @@ function renderClients(){
     const pct = Math.min(100,Math.max(0,c.progress||0));
     const ini = (c.name||'?').split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase();
     const startDate = c.startDate ? new Date(c.startDate).toLocaleDateString('pt-BR') : '—';
+    const contractSt = getContractStatus(c);
+    const endDateStr = contractSt ? contractSt.endDate.toLocaleDateString('pt-BR') : null;
+    const contractBanner = contractSt && contractSt.status !== 'ok'
+      ? contractSt.status === 'expired'
+        ? `<div class="c-alert-banner" style="background:rgba(239,68,68,0.08);border-top:.5px solid rgba(239,68,68,0.2)"><div class="cab-dot" style="background:#EF4444"></div><span class="cab-txt" style="color:#EF4444">Contrato encerrado em ${endDateStr}</span></div>`
+        : `<div class="c-alert-banner" style="background:rgba(245,166,35,0.08);border-top:.5px solid rgba(245,166,35,0.2)"><div class="cab-dot" style="background:#F5A623;animation:none"></div><span class="cab-txt" style="color:#F5A623">Contrato vence em ${contractSt.daysLeft}d — ${endDateStr}</span></div>`
+      : '';
     const progLabel = prog==='ativacao'?'Ativação':prog==='mentoria'?'Mentoria':'Aceleração';
     const progBadgeCls = prog==='ativacao'?'prog-badge-ativ':prog==='mentoria'?'prog-badge-ment':'prog-badge-acel';
     const alertBanner = hasAlert
@@ -656,6 +681,7 @@ function renderClients(){
           <div class="c-meta-item"><strong>S${c.currentWeek||'?'} / ${c.program==='ativacao'?'12':'24'}</strong>semana</div>
           <div class="c-meta-item"><strong><span class="cp-badge">CP${c.checkpoint||1}</span></strong>checkpoint</div>
           <div class="c-meta-item"><strong>${startDate}</strong>início</div>
+          ${endDateStr?`<div class="c-meta-item"><strong style="color:${contractSt.status==='expired'?'#EF4444':contractSt.status==='expiring'?'#F5A623':'var(--text)'}">${endDateStr}</strong>término</div>`:''}
         </div>
         <div class="health-chip"><div class="h-dot" style="background:${h.dotColor}"></div>Health Score: ${score}</div>
         ${(c.metaBase||c.metaAlvo||c.metaSuper)?`<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">${c.metaBase?`<div style="font-size:11px;color:var(--text-sec)">Meta Base <strong style="color:var(--text);font-family:'JetBrains Mono',monospace">R$ ${Number(c.metaBase).toLocaleString('pt-BR')}</strong></div>`:''}${c.metaAlvo?`<div style="font-size:11px;color:var(--text-sec)">Meta Alvo <strong style="color:var(--amber);font-family:'JetBrains Mono',monospace">R$ ${Number(c.metaAlvo).toLocaleString('pt-BR')}</strong></div>`:''}${c.metaSuper?`<div style="font-size:11px;color:var(--text-sec)">Super Meta <strong style="color:var(--green);font-family:'JetBrains Mono',monospace">R$ ${Number(c.metaSuper).toLocaleString('pt-BR')}</strong></div>`:''}</div>`: ''}
@@ -671,6 +697,7 @@ function renderClients(){
         })()}
       </div>
       ${alertBanner}
+      ${contractBanner}
       ${fbBanner}
       <div class="c-actions" onclick="event.stopPropagation()">
         <button class="btn-open-dash" onclick="event.stopPropagation();openDashboard('${c.id}')">Abrir dashboard</button>
