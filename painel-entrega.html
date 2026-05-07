@@ -138,7 +138,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .section-divider{grid-column:1/-1;display:flex;align-items:center;gap:12px;padding:4px 0}
 .sd-label{font-size:13px;font-weight:700;font-family:'Montserrat',sans-serif;text-transform:uppercase;letter-spacing:.1em;white-space:nowrap}
 .sd-line{flex:1;height:1px;background:var(--border)}
-.c-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color .2s,transform .2s;cursor:pointer;display:flex;flex-direction:column}
+.c-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color .2s,transform .2s;cursor:pointer;display:flex;flex-direction:column;position:relative}
 .c-card:hover{border-color:var(--amber-border);transform:translateY(-2px)}
 .c-card.has-alert{border-color:rgba(239,68,68,0.35)}
 .c-card.has-alert:hover{border-color:var(--red)}
@@ -182,7 +182,8 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .btn-bonus-client:hover{background:var(--green);color:#000}
 .btn-edit-client{padding:8px 14px;border-radius:5px;font-size:13px;font-weight:600;font-family:'Montserrat',sans-serif;background:var(--surface2);color:var(--text-sec);border:1px solid var(--border);cursor:pointer;transition:all .15s}
 .btn-edit-client:hover{border-color:var(--amber);color:var(--amber)}
-.btn-del-client{padding:8px 12px;border-radius:5px;background:var(--surface2);color:var(--text-dim);border:1px solid var(--border);cursor:pointer;transition:all .15s;font-size:14px}
+.btn-del-client{position:absolute;top:8px;right:8px;width:24px;height:24px;padding:0;border-radius:5px;background:transparent;color:var(--text-dim);border:1px solid transparent;cursor:pointer;transition:all .15s;font-size:13px;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none}
+.c-card:hover .btn-del-client{opacity:1;pointer-events:auto}
 .btn-del-client:hover{border-color:var(--red-border);color:var(--red);background:var(--red-dim)}
 /* EMPTY */
 .empty-state{text-align:center;padding:64px 24px;color:var(--text-sec);grid-column:1/-1}
@@ -699,12 +700,12 @@ function renderClients(){
       ${alertBanner}
       ${contractBanner}
       ${fbBanner}
+      <button class="btn-del-client" onclick="event.stopPropagation();confirmDelete('${c.id}','${(c.name||'').replace(/'/g,'')}') " title="Excluir">✕</button>
       <div class="c-actions" onclick="event.stopPropagation()">
         <button class="btn-open-dash" onclick="event.stopPropagation();openDashboard('${c.id}')">Abrir dashboard</button>
         <button class="btn-view-client" onclick="event.stopPropagation();openClientView('${c.id}')">Visão cliente</button>
         <button class="btn-bonus-client" onclick="event.stopPropagation();openMarcosModal('${c.id}')">Bônus</button>
         <button class="btn-edit-client" onclick="openModal('${c.id}')">Editar</button>
-        <button class="btn-del-client" onclick="confirmDelete('${c.id}','${(c.name||'').replace(/'/g,'')}') " title="Excluir">✕</button>
       </div>
     </div>`;
   });
