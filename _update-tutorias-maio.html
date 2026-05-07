@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Atualizar Tutorias — Maio 2026</title>
+<style>
+body{font-family:sans-serif;background:#0D1117;color:#F0F0F0;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}
+.box{background:#1A2025;border:1px solid #3E4249;border-radius:12px;padding:32px 40px;text-align:center;max-width:400px}
+h2{font-size:18px;margin-bottom:8px}
+p{font-size:13px;color:#B8B8C0;margin-bottom:24px}
+.status{font-size:15px;font-weight:700;padding:12px 20px;border-radius:8px;margin-top:16px}
+.ok{background:rgba(34,197,94,0.15);color:#22C55E;border:1px solid rgba(34,197,94,0.3)}
+.err{background:rgba(239,68,68,0.15);color:#EF4444;border:1px solid rgba(239,68,68,0.3)}
+.loading{color:#F5A623}
+</style>
+</head>
+<body>
+<div class="box">
+  <h2>Tutorias — Maio 2026</h2>
+  <p>Abrindo esta página as tutorias são salvas automaticamente no Firebase para todos os clientes.</p>
+  <div class="status loading" id="status">Salvando...</div>
+</div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+const app = initializeApp({
+  apiKey:"AIzaSyAyupUdCsEb6pPVmTs2clhayS84-TUovGA",
+  authDomain:"dashboard-e465d.firebaseapp.com",
+  projectId:"dashboard-e465d"
+});
+const db = getFirestore(app);
+
+const tutorias = {
+  mes: "Maio 2026",
+  sessoes: [
+    { dia:"04", hora:"11h", periodo:"MANHÃ",  tipo:"Pré-Vendas", tema:"Hot Set",                                    com:"" },
+    { dia:"05", hora:"19h", periodo:"NOITE",  tipo:"Donos",      tema:"Vide se tá",                                 com:"Milly" },
+    { dia:"11", hora:"11h", periodo:"MANHÃ",  tipo:"Pré-Vendas", tema:"Regras do BANT",                             com:"" },
+    { dia:"12", hora:"19h", periodo:"NOITE",  tipo:"Donos",      tema:"Público Ideal",                              com:"Matheus e Pedro" },
+    { dia:"18", hora:"11h", periodo:"MANHÃ",  tipo:"Pré-Vendas", tema:"Social Selling",                             com:"Carol ou Laís" },
+    { dia:"19", hora:"19h", periodo:"NOITE",  tipo:"Donos",      tema:"Vendas / Caixa Coletado",                    com:"" },
+    { dia:"25", hora:"11h", periodo:"MANHÃ",  tipo:"Pré-Vendas", tema:"Hot Set de Fechamento / Ações de Vendas",    com:"" },
+    { dia:"26", hora:"19h", periodo:"NOITE",  tipo:"Donos",      tema:"Mentoria",                                   com:"Pastor Paulo" },
+  ]
+};
+
+try {
+  await setDoc(doc(db, "config", "tutorias"), tutorias);
+  document.getElementById("status").textContent = "✓ Tutorias de Maio 2026 salvas com sucesso!";
+  document.getElementById("status").className = "status ok";
+} catch(e) {
+  document.getElementById("status").textContent = "Erro: " + e.message;
+  document.getElementById("status").className = "status err";
+}
+</script>
+</body>
+</html>
