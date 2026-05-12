@@ -38,7 +38,6 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .logo{font-family:'Montserrat',sans-serif;font-size:14px;font-weight:800;letter-spacing:.04em;white-space:nowrap}
 .logo span{color:var(--amber);font-style:italic}
 .logo-sub{font-size:11px;color:var(--text-sec);font-weight:400;font-family:'Inter',sans-serif}
-.tb-sep{width:1px;height:16px;background:var(--border);flex-shrink:0}
 .tabs{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;padding:0 24px;border-top:1px solid var(--border)}
 .tabs::-webkit-scrollbar{display:none}
 .tab{display:flex;align-items:center;gap:6px;padding:10px 16px;font-size:12px;font-weight:600;font-family:'Montserrat',sans-serif;color:var(--text-sec);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:color .15s,border-color .15s;-webkit-tap-highlight-color:transparent;user-select:none}
@@ -67,10 +66,10 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .btn-icon{padding:6px;border-radius:6px}
 
 /* STATS ROW */
-.stats-row{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:20px}
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
 .stat-mini{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 16px;position:relative;overflow:hidden}
 .stat-mini::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
-.sm-amber::before{background:var(--amber)}.sm-green::before{background:var(--green)}.sm-yellow::before{background:var(--yellow)}.sm-red::before{background:var(--red)}.sm-gray::before{background:var(--border)}
+.sm-amber::before{background:var(--amber)}.sm-green::before{background:var(--green)}.sm-gray::before{background:var(--border)}
 .sm-label{font-size:9px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.14em;font-family:'Montserrat',sans-serif;font-weight:600;margin-bottom:6px}
 .sm-val{font-size:22px;font-weight:800;font-family:'Montserrat',sans-serif;line-height:1}
 
@@ -90,13 +89,15 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .cart-table tr:last-child td{border-bottom:none}
 .cart-table tr:hover td{background:rgba(255,255,255,0.02)}
 .metric-val{font-family:'Montserrat',sans-serif;font-weight:700;font-size:12px}
-.metric-dim{color:var(--text-dim);font-size:11px}
+.cliente-link{cursor:pointer;font-weight:600;transition:color .15s}
+.cliente-link:hover{color:var(--amber);text-decoration:underline}
 
 /* MOBILE CARDS */
 .cart-cards{display:none;flex-direction:column;gap:10px}
 .cart-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
 .cc-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:8px}
-.cc-name{font-weight:700;font-family:'Montserrat',sans-serif;font-size:13px}
+.cc-name{font-weight:700;font-family:'Montserrat',sans-serif;font-size:13px;cursor:pointer}
+.cc-name:hover{color:var(--amber)}
 .cc-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .cc-metric{background:var(--surface2);border-radius:7px;padding:8px 10px}
 .cc-metric-label{font-size:9px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.1em;font-family:'Montserrat',sans-serif;font-weight:600;margin-bottom:3px}
@@ -106,57 +107,53 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 /* STATUS BADGES */
 .badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:8px;font-size:9px;font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:.06em;white-space:nowrap}
 .b-rodando{background:var(--green-dim);color:var(--green);border:.5px solid var(--green-border)}
-.b-otimizar{background:var(--yellow-dim);color:var(--yellow);border:.5px solid var(--yellow-border)}
-.b-atencao{background:var(--red-dim);color:var(--red);border:.5px solid var(--red-border)}
 .b-parado{background:rgba(255,255,255,0.05);color:var(--text-sec);border:.5px solid var(--border)}
-.b-aguardando{background:var(--blue-dim);color:var(--blue);border:.5px solid var(--blue-border)}
-.b-planejada{background:var(--blue-dim);color:var(--blue);border:.5px solid var(--blue-border)}
-.b-executada{background:var(--amber-dim);color:var(--amber);border:.5px solid var(--amber-border)}
-.b-em_analise{background:var(--yellow-dim);color:var(--yellow);border:.5px solid var(--yellow-border)}
-.b-validada{background:var(--green-dim);color:var(--green);border:.5px solid var(--green-border)}
-.b-descartada{background:rgba(255,255,255,0.05);color:var(--text-sec);border:.5px solid var(--border)}
-.b-aguardando_gravacao{background:var(--blue-dim);color:var(--blue);border:.5px solid var(--blue-border)}
-.b-gravado{background:var(--amber-dim);color:var(--amber);border:.5px solid var(--amber-border)}
-.b-publicado{background:var(--green-dim);color:var(--green);border:.5px solid var(--green-border)}
+
+/* HEALTH PICKER */
+.health-picker{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:4px}
+.hp-btn{padding:7px 14px;border-radius:7px;font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;border:1.5px solid var(--border);background:var(--surface2);color:var(--text-sec);cursor:pointer;transition:all .15s;letter-spacing:.04em}
+.hp-c1{color:var(--red);border-color:var(--red-border)}.hp-c1.sel{background:var(--red-dim)}
+.hp-c2{color:var(--amber);border-color:var(--amber-border)}.hp-c2.sel{background:var(--amber-dim)}
+.hp-c3{color:var(--yellow);border-color:var(--yellow-border)}.hp-c3.sel{background:var(--yellow-dim)}
+.hp-c4{color:var(--blue);border-color:var(--blue-border)}.hp-c4.sel{background:var(--blue-dim)}
+.hp-c5{color:var(--green);border-color:var(--green-border)}.hp-c5.sel{background:var(--green-dim)}
 
 /* BOARD */
 .board-wrap{overflow-x:auto;padding-bottom:8px}
 .board{display:flex;gap:12px;min-width:max-content;align-items:flex-start}
-.board-col{width:264px;background:var(--surface2);border-radius:10px;border:.5px solid var(--border);flex-shrink:0}
-.board-col-hdr{padding:12px 14px;border-bottom:.5px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.board-col{width:280px;background:var(--surface2);border-radius:10px;border:.5px solid var(--border);flex-shrink:0}
+.board-col-hdr{padding:12px 14px;border-bottom:.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:8px}
 .board-col-title{font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;display:flex;align-items:center;gap:6px}
 .board-col-count{font-size:10px;color:var(--text-sec);background:rgba(255,255,255,0.06);padding:2px 8px;border-radius:10px}
 .board-col-body{padding:10px;display:flex;flex-direction:column;gap:8px;min-height:80px}
-.board-card{background:var(--surface);border:.5px solid var(--border);border-radius:8px;padding:12px;cursor:pointer;transition:border-color .15s;-webkit-tap-highlight-color:transparent}
-.board-card:hover{border-color:var(--amber-border)}
-.bc-tipo{font-size:9px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.12em;font-family:'Montserrat',sans-serif;font-weight:600;margin-bottom:6px}
-.bc-cliente{font-size:12px;font-weight:600;margin-bottom:4px}
-.bc-motivo{font-size:11px;color:var(--text-sec);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.bc-footer{display:flex;align-items:center;justify-content:space-between;margin-top:8px}
-.bc-date{font-size:10px;color:var(--text-dim)}
+.board-card{background:var(--surface);border:.5px solid var(--border);border-radius:8px;padding:12px;transition:border-color .15s}
+.board-card:hover{border-color:rgba(255,255,255,0.12)}
+.bc-cliente{font-size:12px;font-weight:600}
 .bc-gestor{font-size:10px;color:var(--text-sec)}
 .board-empty{font-size:11px;color:var(--text-dim);text-align:center;padding:16px 8px}
 
 /* ROTEIROS */
-.roteiros-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.roteiros-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
 .rot-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;cursor:pointer;transition:border-color .15s}
 .rot-card:hover{border-color:var(--amber-border)}
-.rot-hdr{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px}
-.rot-title{font-size:13px;font-weight:600;font-family:'Montserrat',sans-serif;line-height:1.3}
-.rot-gancho{font-size:11px;color:var(--text-sec);line-height:1.6;margin-bottom:10px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.rot-title{font-size:13px;font-weight:600;font-family:'Montserrat',sans-serif;line-height:1.3;margin-bottom:8px}
 .rot-footer{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
-.rot-meta{font-size:10px;color:var(--text-dim)}
+
+/* COPY BOARD */
+.copy-card{background:var(--surface);border:.5px solid var(--border);border-radius:8px;padding:12px;cursor:pointer;transition:border-color .15s}
+.copy-card:hover{border-color:var(--amber-border)}
+.copy-card-titulo{font-size:12px;font-weight:600;margin-bottom:5px;color:var(--text)}
+.copy-card-preview{font-size:11px;color:var(--text-sec);line-height:1.5;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 
 /* ROTINA */
 .rotina-selectors{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;align-items:center}
 .rotina-date{font-size:12px;color:var(--text-sec);background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:6px 12px}
 .gestor-tabs{display:flex;gap:6px;flex-wrap:wrap}
-.gestor-tab{padding:6px 14px;border-radius:7px;font-size:11px;font-weight:600;font-family:'Montserrat',sans-serif;cursor:pointer;border:1px solid var(--border);color:var(--text-sec);background:transparent;transition:all .15s;-webkit-tap-highlight-color:transparent}
+.gestor-tab{padding:6px 14px;border-radius:7px;font-size:11px;font-weight:600;font-family:'Montserrat',sans-serif;cursor:pointer;border:1px solid var(--border);color:var(--text-sec);background:transparent;transition:all .15s}
 .gestor-tab.active{background:var(--amber-dim);color:var(--amber);border-color:var(--amber-border)}
 .rotina-checklist{display:flex;flex-direction:column;gap:8px;max-width:600px}
-.rotina-item{display:flex;align-items:center;gap:12px;background:var(--surface);border:.5px solid var(--border);border-radius:8px;padding:12px 14px;cursor:pointer;transition:border-color .15s;-webkit-tap-highlight-color:transparent}
+.rotina-item{display:flex;align-items:center;gap:12px;background:var(--surface);border:.5px solid var(--border);border-radius:8px;padding:12px 14px;cursor:pointer;transition:border-color .15s}
 .rotina-item:hover{border-color:var(--amber-border)}
-.rotina-item.done{opacity:.6}
 .rotina-check{width:20px;height:20px;border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;border:2px solid rgba(245,166,35,0.4);transition:all .2s}
 .rotina-check.checked{background:var(--green);border-color:var(--green)}
 .rotina-label{font-size:12px;flex:1}
@@ -171,20 +168,6 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .rp-bar-fill.full{background:var(--green)}
 .rp-pct{font-size:28px;font-weight:800;font-family:'Montserrat',sans-serif;color:var(--amber);min-width:52px;text-align:right}
 .rp-pct.full{color:var(--green)}
-
-/* AGENDA */
-.agenda-table-wrap{overflow-x:auto;border-radius:10px;border:1px solid var(--border)}
-.agenda-table{width:100%;border-collapse:collapse;background:var(--surface)}
-.agenda-table th{background:var(--surface2);padding:10px 14px;text-align:center;font-size:9px;font-weight:700;font-family:'Montserrat',sans-serif;text-transform:uppercase;letter-spacing:.1em;color:var(--text-sec);border-bottom:1px solid var(--border);white-space:nowrap}
-.agenda-table th:first-child{text-align:left}
-.agenda-table td{padding:10px 14px;border-bottom:.5px solid rgba(62,66,73,0.5);text-align:center;vertical-align:middle}
-.agenda-table td:first-child{text-align:left;font-weight:500;white-space:nowrap}
-.agenda-table tr:last-child td{border-bottom:none}
-.agenda-table tr:hover td{background:rgba(255,255,255,0.02)}
-.day-btn{width:28px;height:28px;border-radius:6px;border:1.5px solid var(--border);background:transparent;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:all .15s;-webkit-tap-highlight-color:transparent}
-.day-btn.on{background:var(--amber-dim);border-color:var(--amber-border)}
-.day-btn.on::after{content:'✓';font-size:11px;color:var(--amber);font-weight:700}
-.day-btn:not(.on):hover{border-color:var(--amber-border)}
 
 /* MODAL */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:500;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(2px)}
@@ -211,9 +194,8 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .detail-field{margin-bottom:12px}
 .detail-label{font-size:9px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.12em;font-family:'Montserrat',sans-serif;font-weight:600;margin-bottom:4px}
 .detail-val{font-size:13px;color:var(--text);line-height:1.6}
-.detail-val.big{font-size:22px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--amber)}
 
-/* EMPTY STATE */
+/* EMPTY */
 .empty{text-align:center;padding:48px 20px;color:var(--text-sec)}
 .empty-icon{font-size:32px;margin-bottom:10px;opacity:.4}
 .empty-title{font-size:14px;font-weight:600;font-family:'Montserrat',sans-serif;margin-bottom:6px}
@@ -227,29 +209,21 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .fb-conv{font-size:11px;font-weight:600;font-family:'Montserrat',sans-serif}
 .fb-conv.high{color:var(--green)}.fb-conv.mid{color:var(--yellow)}.fb-conv.low{color:var(--red)}
 
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 18px;font-size:13px;color:var(--text);z-index:999;transform:translateY(80px);opacity:0;transition:all .3s;border-left:3px solid var(--amber);pointer-events:none}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.success{border-left-color:var(--green)}
+.toast.error{border-left-color:var(--red)}
+
 /* RESPONSIVE */
-@media(max-width:900px){
-  .stats-row{grid-template-columns:repeat(3,1fr)}
-  .section{padding:16px}
-  .topbar-row{padding:10px 16px}
-  .tabs{padding:0 16px}
-}
-@media(max-width:700px){
-  .stats-row{grid-template-columns:repeat(2,1fr)}
-  .table-wrap{display:none}
-  .cart-cards{display:flex}
-  .form-row{grid-template-columns:1fr}
-  .roteiros-grid{grid-template-columns:1fr}
-  .modal-box{max-width:100%;border-radius:12px}
-  .page-hdr{flex-direction:column;align-items:flex-start}
-}
-@media(max-width:480px){
-  .stats-row{grid-template-columns:repeat(2,1fr)}
-  .tab{padding:8px 12px;font-size:11px}
-}
+@media(max-width:900px){.stats-row{grid-template-columns:repeat(3,1fr)}.section{padding:16px}.topbar-row{padding:10px 16px}.tabs{padding:0 16px}}
+@media(max-width:700px){.table-wrap{display:none}.cart-cards{display:flex}.form-row{grid-template-columns:1fr}.roteiros-grid{grid-template-columns:1fr}.modal-box{max-width:100%;border-radius:12px}.page-hdr{flex-direction:column;align-items:flex-start}}
+@media(max-width:480px){.stats-row{grid-template-columns:repeat(2,1fr)}.tab{padding:8px 12px;font-size:11px}}
 </style>
 </head>
 <body>
+
+<div id="toast" class="toast"></div>
 
 <!-- MODAL GESTORES -->
 <div class="modal-overlay" id="modal-gestores-overlay" onclick="closeGestoresModal(event)">
@@ -271,13 +245,11 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
         </div>
       </div>
     </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeGestoresModal()">Fechar</button>
-    </div>
+    <div class="modal-footer"><button class="btn btn-ghost" onclick="closeGestoresModal()">Fechar</button></div>
   </div>
 </div>
 
-<!-- MODAL -->
+<!-- MODAL PRINCIPAL -->
 <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
   <div class="modal-box" id="modal-box">
     <div class="modal-hdr">
@@ -306,7 +278,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
       </div>
       <div class="tab" onclick="showTab('board')">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="3.5" height="12" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="5.25" y="1" width="3.5" height="8" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="9.5" y="1" width="3.5" height="10" rx="1" stroke="currentColor" stroke-width="1.3"/></svg>
-        Otimizações
+        Otimização Diária
       </div>
       <div class="tab" onclick="showTab('roteiros')">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="2" width="12" height="10" rx="2" stroke="currentColor" stroke-width="1.3"/><path d="M5.5 5l3.5 2-3.5 2V5z" fill="currentColor"/></svg>
@@ -317,8 +289,8 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
         Rotina
       </div>
       <div class="tab" onclick="showTab('agenda')">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="2" width="12" height="11" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M4 1v2M10 1v2M1 6h12" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="4.5" cy="9.5" r="1" fill="currentColor"/><circle cx="7" cy="9.5" r="1" fill="currentColor"/><circle cx="9.5" cy="9.5" r="1" fill="currentColor"/></svg>
-        Agenda
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 4h10M4 1v2M10 1v2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><rect x="1" y="2" width="12" height="11" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M4 8h2M8 8h2M4 10.5h2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        Banco de Copy
       </div>
       <div class="tab" onclick="showTab('flashboard')">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 10L4.5 6.5L7 9L10 5L13 7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M1 13h12" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
@@ -342,50 +314,40 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
     <div class="stats-row" id="stats-carteira">
       <div class="stat-mini sm-amber"><div class="sm-label">Total</div><div class="sm-val" style="color:var(--amber)" id="st-total">—</div></div>
       <div class="stat-mini sm-green"><div class="sm-label">Rodando</div><div class="sm-val" style="color:var(--green)" id="st-rodando">—</div></div>
-      <div class="stat-mini sm-yellow"><div class="sm-label">Otimizar</div><div class="sm-val" style="color:var(--yellow)" id="st-otimizar">—</div></div>
-      <div class="stat-mini sm-red"><div class="sm-label">Atenção</div><div class="sm-val" style="color:var(--red)" id="st-atencao">—</div></div>
-      <div class="stat-mini" style="border-top:2px solid var(--purple)"><div class="sm-label">Aguardando</div><div class="sm-val" style="color:var(--purple)" id="st-aguardando">—</div></div>
+      <div class="stat-mini sm-gray"><div class="sm-label">Parado</div><div class="sm-val" style="color:var(--text-sec)" id="st-parado">—</div></div>
     </div>
     <div class="filters">
       <input class="search-input" id="search-cart" placeholder="Buscar cliente..." oninput="renderCarteira()">
       <select class="filter-select" id="filter-gestor" onchange="renderCarteira()">
         <option value="">Todos os gestores</option>
-        <option>Pedro</option><option>Gestor 1</option><option>Gestor 2</option>
       </select>
       <select class="filter-select" id="filter-status-cart" onchange="renderCarteira()">
         <option value="">Todos os status</option>
-        <option value="rodando">Rodando</option><option value="otimizar">Otimizar</option>
-        <option value="atencao">Atenção</option><option value="parado">Parado</option><option value="aguardando">Aguardando</option>
+        <option value="rodando">Rodando</option>
+        <option value="parado">Parado</option>
       </select>
     </div>
-    <!-- Desktop table -->
     <div class="table-wrap">
       <table class="cart-table">
         <thead>
           <tr>
             <th>Cliente</th><th>Gestor</th><th>Implementação</th><th>Status</th>
-            <th>Leads</th><th>CPL</th><th>WhatsApp</th><th>Vendas</th>
-            <th>ROAS</th><th>Health</th><th></th>
+            <th>Leads</th><th>CPL</th><th>Vendas</th><th>ROAS</th><th>Health</th><th></th>
           </tr>
         </thead>
-        <tbody id="cart-tbody"><tr><td colspan="11" class="loading-row">Carregando...</td></tr></tbody>
+        <tbody id="cart-tbody"><tr><td colspan="10" class="loading-row">Carregando...</td></tr></tbody>
       </table>
     </div>
-    <!-- Mobile cards -->
     <div class="cart-cards" id="cart-cards"><div class="loading-row">Carregando...</div></div>
   </div>
 
-  <!-- BOARD -->
+  <!-- OTIMIZAÇÃO DIÁRIA -->
   <div class="section" id="sec-board">
     <div class="page-hdr">
       <div>
-        <div class="page-title">Board de Otimizações</div>
-        <div class="page-sub">planejamento e acompanhamento de testes</div>
+        <div class="page-title">Otimização Diária</div>
+        <div class="page-sub" id="ot-diaria-date">—</div>
       </div>
-      <button class="btn btn-primary" onclick="openAddOtimizacaoModal()">
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-        Nova otimização
-      </button>
     </div>
     <div class="board-wrap">
       <div class="board" id="board-kanban"></div>
@@ -407,12 +369,6 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
     <div class="filters">
       <select class="filter-select" id="filter-rot-cliente" onchange="renderRoteiros()">
         <option value="">Todos os clientes</option>
-      </select>
-      <select class="filter-select" id="filter-rot-status" onchange="renderRoteiros()">
-        <option value="">Todos os status</option>
-        <option value="aguardando_gravacao">Aguardando gravação</option>
-        <option value="gravado">Gravado</option>
-        <option value="publicado">Publicado</option>
       </select>
     </div>
     <div class="roteiros-grid" id="roteiros-grid"><div class="loading-row">Carregando...</div></div>
@@ -440,6 +396,50 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
     <div class="rotina-checklist" id="rotina-checklist"></div>
   </div>
 
+  <!-- BANCO DE COPY -->
+  <div class="section" id="sec-agenda">
+    <div class="page-hdr">
+      <div>
+        <div class="page-title">Banco de Copy</div>
+        <div class="page-sub">comunicação semanal com os clientes</div>
+      </div>
+    </div>
+    <div class="board-wrap">
+      <div class="board" id="copy-board">
+        <div class="board-col">
+          <div class="board-col-hdr">
+            <span class="board-col-title"><span style="width:8px;height:8px;border-radius:50%;background:var(--blue);display:inline-block"></span>Segunda</span>
+            <div style="display:flex;align-items:center;gap:6px">
+              <span class="board-col-count" id="copy-count-segunda">0</span>
+              <button class="btn btn-primary btn-sm" style="padding:3px 10px;font-size:11px" onclick="openAddCopyModal('segunda')">+</button>
+            </div>
+          </div>
+          <div class="board-col-body" id="copy-col-segunda"><div class="board-empty">Nenhuma copy</div></div>
+        </div>
+        <div class="board-col">
+          <div class="board-col-hdr">
+            <span class="board-col-title"><span style="width:8px;height:8px;border-radius:50%;background:var(--amber);display:inline-block"></span>Quarta</span>
+            <div style="display:flex;align-items:center;gap:6px">
+              <span class="board-col-count" id="copy-count-quarta">0</span>
+              <button class="btn btn-primary btn-sm" style="padding:3px 10px;font-size:11px" onclick="openAddCopyModal('quarta')">+</button>
+            </div>
+          </div>
+          <div class="board-col-body" id="copy-col-quarta"><div class="board-empty">Nenhuma copy</div></div>
+        </div>
+        <div class="board-col">
+          <div class="board-col-hdr">
+            <span class="board-col-title"><span style="width:8px;height:8px;border-radius:50%;background:var(--purple);display:inline-block"></span>Sexta</span>
+            <div style="display:flex;align-items:center;gap:6px">
+              <span class="board-col-count" id="copy-count-sexta">0</span>
+              <button class="btn btn-primary btn-sm" style="padding:3px 10px;font-size:11px" onclick="openAddCopyModal('sexta')">+</button>
+            </div>
+          </div>
+          <div class="board-col-body" id="copy-col-sexta"><div class="board-empty">Nenhuma copy</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- FLASHBOARD -->
   <div class="section" id="sec-flashboard">
     <div class="page-hdr">
@@ -454,9 +454,9 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
     </div>
     <div class="stats-row" style="grid-template-columns:repeat(4,1fr)">
       <div class="stat-mini sm-amber"><div class="sm-label">Total Leads/mês</div><div class="sm-val" style="color:var(--amber)" id="fb-st-leads">—</div></div>
-      <div class="stat-mini"><div class="sm-label" style="color:var(--blue)">Total MQL (Agend.)</div><div class="sm-val" style="color:var(--blue)" id="fb-st-mql">—</div></div>
+      <div class="stat-mini"><div class="sm-label" style="color:var(--blue)">Total MQL</div><div class="sm-val" style="color:var(--blue)" id="fb-st-mql">—</div></div>
       <div class="stat-mini sm-green"><div class="sm-label">Total Vendas</div><div class="sm-val" style="color:var(--green)" id="fb-st-vendas">—</div></div>
-      <div class="stat-mini sm-red"><div class="sm-label">Alertas (sem preencher)</div><div class="sm-val" style="color:var(--red)" id="fb-st-alertas">—</div></div>
+      <div class="stat-mini"><div class="sm-label" style="color:var(--red)">Alertas</div><div class="sm-val" style="color:var(--red)" id="fb-st-alertas">—</div></div>
     </div>
     <div class="filters">
       <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-sec);cursor:pointer;padding:6px 0">
@@ -464,45 +464,24 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
       </label>
       <select class="filter-select" id="fb-filter-status" onchange="renderFlashboardTab()">
         <option value="">Todos os status</option>
-        <option value="rodando">Rodando</option><option value="atencao">Atenção</option>
-        <option value="parado">Parado</option><option value="aguardando">Aguardando</option>
+        <option value="rodando">Rodando</option>
+        <option value="parado">Parado</option>
       </select>
     </div>
     <div class="table-wrap">
       <table class="cart-table">
         <thead>
           <tr>
-            <th>Cliente</th><th>Tráfego</th>
+            <th>Cliente</th><th>Status</th>
             <th>Leads/mês</th><th>MQL (Agend.)</th><th>Compareceu</th><th>Vendas</th>
             <th>Lead→MQL</th><th>MQL→Venda</th>
             <th>Última atualiz.</th><th>Alerta</th>
           </tr>
         </thead>
-        <tbody id="fb-tbody"><tr><td colspan="10" class="loading-row">Clique em "Atualizar" para carregar dados do Flashboard</td></tr></tbody>
+        <tbody id="fb-tbody"><tr><td colspan="10" class="loading-row">Clique em "Atualizar" para carregar dados</td></tr></tbody>
       </table>
     </div>
     <div class="cart-cards" id="fb-cards"><div class="loading-row">Clique em "Atualizar" para carregar dados</div></div>
-  </div>
-
-  <!-- AGENDA -->
-  <div class="section" id="sec-agenda">
-    <div class="page-hdr">
-      <div>
-        <div class="page-title">Agenda de comunicação</div>
-        <div class="page-sub">dias de envio de WhatsApp por cliente</div>
-      </div>
-    </div>
-    <div class="agenda-table-wrap">
-      <table class="agenda-table">
-        <thead>
-          <tr>
-            <th>Cliente</th>
-            <th>Seg</th><th>Ter</th><th>Qua</th><th>Qui</th><th>Sex</th><th>Sáb</th><th>Dom</th>
-          </tr>
-        </thead>
-        <tbody id="agenda-tbody"><tr><td colspan="8" class="loading-row">Carregando...</td></tr></tbody>
-      </table>
-    </div>
   </div>
 
 </div>
@@ -510,23 +489,11 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 <script>
 const STATUS_TR={
   rodando:{label:'Rodando',cls:'b-rodando'},
-  otimizar:{label:'Otimizar',cls:'b-otimizar'},
-  atencao:{label:'Atenção',cls:'b-atencao'},
   parado:{label:'Parado',cls:'b-parado'},
-  aguardando:{label:'Aguardando',cls:'b-aguardando'},
 };
-const IMPL={parcial:'Impl. Parcial',completa:'Impl. Completa'};
-const TIPOS_OT=['criativo','segmentação','orçamento','copy','landing page','outro'];
-const STATUS_OT_LABELS={planejada:'Planejada',executada:'Executada',em_analise:'Em análise',validada:'Validada',descartada:'Descartada'};
-const BOARD_COLS=[
-  {id:'planejada',color:'var(--blue)'},
-  {id:'executada',color:'var(--amber)'},
-  {id:'em_analise',color:'var(--yellow)'},
-  {id:'validada',color:'var(--green)'},
-  {id:'descartada',color:'var(--text-sec)'},
-];
-const DIAS_SEMANA=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
-const DIAS_IDX={0:'Dom',1:'Seg',2:'Ter',3:'Qua',4:'Qui',5:'Sex',6:'Sáb'};
+const HEALTH_LABELS={5:'Ótimo',4:'Bom',3:'Regular',2:'Atenção',1:'Crítico'};
+const HEALTH_BGS={5:'background:var(--green-dim);color:var(--green);border:.5px solid var(--green-border)',4:'background:var(--blue-dim);color:var(--blue);border:.5px solid var(--blue-border)',3:'background:var(--yellow-dim);color:var(--yellow);border:.5px solid var(--yellow-border)',2:'background:var(--amber-dim);color:var(--amber);border:.5px solid var(--amber-border)',1:'background:var(--red-dim);color:var(--red);border:.5px solid var(--red-border)'};
+const DIAS_COPY_LABELS={segunda:'Segunda',quarta:'Quarta',sexta:'Sexta'};
 const ROTINA_TASKS_DEFAULT=[
   {id:'t1',label:'Verificar campanhas ativas no Meta Ads'},
   {id:'t2',label:'Executar otimizações planejadas'},
@@ -535,38 +502,37 @@ const ROTINA_TASKS_DEFAULT=[
   {id:'t5',label:'Registrar comunicações WhatsApp do dia'},
   {id:'t6',label:'Reportar resultado ao coordenador'},
 ];
-function getRotinaTasksForGestor(g){return ROTINA_TASKS_DEFAULT;}
-function renderRotinaTabs(){
-  const container=document.getElementById('gestor-tabs-container');
-  if(!container)return;
-  if(!allGestores.length){container.innerHTML='<span style="font-size:12px;color:var(--text-dim)">Nenhum gestor cadastrado</span>';return;}
-  if(!rotinaGestor||!allGestores.find(g=>g.name===rotinaGestor)){
-    rotinaGestor=allGestores[0].name;
-  }
-  container.innerHTML=allGestores.map(g=>`<button class="gestor-tab${g.name===rotinaGestor?' active':''}" onclick="setGestor('${g.name.replace(/'/g,"\\'")}',this)">${g.name}</button>`).join('');
-}
-
+const TAB_ORDER=['carteira','board','roteiros','rotina','agenda','flashboard'];
 const SB_URL='https://svgaztetrufiqxptqqvs.supabase.co';
 const SB_KEY='sb_publishable_LPTf0Psj_cbLbK3KA9tAwQ_t4ZdqoAD';
 
-let S={trafego:{},otimizacoes:{},roteiros:{}};
-let allGestores=[];
+let S={trafego:{},roteiros:{}};
+let allGestores=[],bancoCopy=[];
 let rotinaGestor='',rotinaData={tasks:{}};
-let fbData=[];
-let entregaMap={};
-let rotinaUnsub=null;
+let fbData=[],entregaMap={};
+let rotinaUnsub=null,otDiariaUnsub=null,otDiariaDate='';
+let otimizacaoDiaria={cards:{}};
 let currentTab='carteira';
+let toastTimer;
 
 function todayStr(){return new Date().toISOString().split('T')[0]}
 function fmtDate(s){if(!s)return'—';const d=new Date(s+'T00:00:00');return d.toLocaleDateString('pt-BR')}
 function fmtNum(v){if(v===null||v===undefined||v==='')return'—';return Number(v).toLocaleString('pt-BR')}
 function fmtCur(v){if(!v&&v!==0)return'—';return'R$'+Number(v).toLocaleString('pt-BR')}
-function slugify(s){return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')}
+function slugify(s){return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')}
 function getTrafego(){return Object.values(S.trafego)}
 function getClienteNames(){return getTrafego().map(c=>c.name).sort()}
+function escapeHtml(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;')}
+function healthBadge(h){if(!h)return'<span style="color:var(--text-dim)">—</span>';const style=HEALTH_BGS[h]||'';return`<span class="badge" style="${style}">${HEALTH_LABELS[h]||h}</span>`}
+function gestorOptions(sel=''){return'<option value="">Selecionar...</option>'+allGestores.map(g=>`<option value="${g.name}"${g.name===sel?' selected':''}>${g.name}</option>`).join('')}
 
-// NAV
-const TAB_ORDER=['carteira','board','roteiros','rotina','agenda','flashboard'];
+function showToast(msg,type=''){
+  const t=document.getElementById('toast');if(!t)return;
+  t.textContent=msg;t.className='toast show'+(type?' '+type:'');
+  clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+// ─── NAV ──────────────────────────────────────────
 function showTab(tab){
   currentTab=tab;
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
@@ -575,14 +541,14 @@ function showTab(tab){
   const idx=TAB_ORDER.indexOf(tab);
   if(idx>=0)document.querySelectorAll('.tab')[idx].classList.add('active');
   if(tab==='carteira')renderCarteira();
-  if(tab==='board')renderBoard();
+  if(tab==='board'){setupOtDiariaListener();renderOtimizacaoDiaria();}
   if(tab==='roteiros')renderRoteiros();
   if(tab==='rotina'){setupRotinaListener();renderRotina();}
-  if(tab==='agenda')renderAgenda();
+  if(tab==='agenda')renderBancoCopy();
   if(tab==='flashboard')loadFlashboardTab();
 }
 
-// MODAL
+// ─── MODAL ────────────────────────────────────────
 function openModal(title,html){
   document.getElementById('modal-title').textContent=title;
   document.getElementById('modal-content').innerHTML=html;
@@ -592,7 +558,7 @@ function closeModal(e){
   if(e&&e.target!==document.getElementById('modal-overlay')&&e.type==='click')return;
   document.getElementById('modal-overlay').classList.remove('show');
 }
-document.addEventListener('keydown',e=>{if(e.key==='Escape')document.getElementById('modal-overlay').classList.remove('show')});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.getElementById('modal-overlay').classList.remove('show');document.getElementById('modal-gestores-overlay').classList.remove('show');}});
 
 // ─── CARTEIRA ─────────────────────────────────────
 function renderCarteira(){
@@ -606,58 +572,45 @@ function renderCarteira(){
     if(status&&c.status!==status)return false;
     return true;
   });
-  // Stats
   document.getElementById('st-total').textContent=items.length;
-  ['rodando','otimizar','atencao'].forEach(s=>{
-    document.getElementById('st-'+s).textContent=items.filter(c=>c.status===s).length;
-  });
-  document.getElementById('st-aguardando').textContent=items.filter(c=>c.status==='aguardando').length;
-  // Populate gestor filter dynamically
+  document.getElementById('st-rodando').textContent=items.filter(c=>c.status==='rodando').length;
+  document.getElementById('st-parado').textContent=items.filter(c=>c.status==='parado').length;
   const gestorSel=document.getElementById('filter-gestor');
-  if(gestorSel){
-    const cur=gestorSel.value;
-    gestorSel.innerHTML='<option value="">Todos os gestores</option>'+allGestores.map(g=>`<option value="${g.name}">${g.name}</option>`).join('');
-    if(cur)gestorSel.value=cur;
-  }
-  // Table (desktop)
+  if(gestorSel){const cur=gestorSel.value;gestorSel.innerHTML='<option value="">Todos os gestores</option>'+allGestores.map(g=>`<option value="${g.name}">${g.name}</option>`).join('');if(cur)gestorSel.value=cur;}
   const tbody=document.getElementById('cart-tbody');
   if(!filtered.length){
-    tbody.innerHTML='<tr><td colspan="11"><div class="empty"><div class="empty-icon">📋</div><div class="empty-title">Nenhum cliente encontrado</div></div></td></tr>';
+    tbody.innerHTML='<tr><td colspan="10"><div class="empty"><div class="empty-icon">📋</div><div class="empty-title">Nenhum cliente encontrado</div></div></td></tr>';
   } else {
     tbody.innerHTML=filtered.map(c=>{
-      const st=STATUS_TR[c.status]||STATUS_TR.aguardando;
-      const hColor=c.healthScore>=80?'var(--green)':c.healthScore>=60?'var(--yellow)':'var(--red)';
+      const st=STATUS_TR[c.status]||STATUS_TR.parado;
       return`<tr>
-        <td><strong>${c.name||'—'}</strong></td>
-        <td style="color:var(--text-sec)">${c.gestor||'—'}</td>
+        <td><span class="cliente-link" onclick="openClienteDetailModal('${c._id}')">${escapeHtml(c.name||'—')}</span></td>
+        <td style="color:var(--text-sec)">${escapeHtml(c.gestor||'—')}</td>
         <td>${c.impl==='parcial'?`<span class="badge" style="background:var(--blue-dim);color:var(--blue);border:.5px solid var(--blue-border)">Impl. Parcial</span>`:c.impl==='completa'?`<span class="badge" style="background:var(--green-dim);color:var(--green);border:.5px solid var(--green-border)">Impl. Completa</span>`:'<span style="color:var(--text-dim)">—</span>'}</td>
         <td><span class="badge ${st.cls}">${st.label}</span></td>
         <td><span class="metric-val">${fmtNum(c.leads)}</span></td>
         <td><span class="metric-val">${c.cpl?fmtCur(c.cpl):'—'}</span></td>
-        <td><span class="metric-val">${fmtNum(c.whatsapp)}</span></td>
         <td><span class="metric-val">${fmtNum(c.vendas)}</span></td>
         <td><span class="metric-val">${c.roas?Number(c.roas).toFixed(1)+'x':'—'}</span></td>
-        <td><span class="metric-val" style="color:${c.healthScore?hColor:'var(--text-dim)'}">${c.healthScore||'—'}</span></td>
+        <td>${healthBadge(c.healthScore)}</td>
         <td>
           <div style="display:flex;gap:6px">
             <button class="btn btn-ghost btn-sm" onclick="openMetricasModal('${c._id}')">Métricas</button>
-            <button class="btn btn-ghost btn-sm" onclick="openFaturamentoModal('${c._id}')">Faturamento</button>
             <button class="btn btn-ghost btn-sm" onclick="openEditClienteModal('${c._id}')">Editar</button>
           </div>
         </td>
       </tr>`;
     }).join('');
   }
-  // Cards (mobile)
   const cards=document.getElementById('cart-cards');
   if(!filtered.length){
     cards.innerHTML='<div class="empty"><div class="empty-icon">📋</div><div class="empty-title">Nenhum cliente encontrado</div></div>';
   } else {
     cards.innerHTML=filtered.map(c=>{
-      const st=STATUS_TR[c.status]||STATUS_TR.aguardando;
+      const st=STATUS_TR[c.status]||STATUS_TR.parado;
       return`<div class="cart-card">
         <div class="cc-hdr">
-          <span class="cc-name">${c.name||'—'}</span>
+          <span class="cc-name" onclick="openClienteDetailModal('${c._id}')">${escapeHtml(c.name||'—')}</span>
           <span class="badge ${st.cls}">${st.label}</span>
         </div>
         <div class="cc-metrics">
@@ -665,21 +618,15 @@ function renderCarteira(){
           <div class="cc-metric"><div class="cc-metric-label">Vendas</div><div class="cc-metric-val">${fmtNum(c.vendas)}</div></div>
           <div class="cc-metric"><div class="cc-metric-label">ROAS</div><div class="cc-metric-val">${c.roas?Number(c.roas).toFixed(1)+'x':'—'}</div></div>
           <div class="cc-metric"><div class="cc-metric-label">CPL</div><div class="cc-metric-val" style="font-size:11px">${c.cpl?fmtCur(c.cpl):'—'}</div></div>
-          <div class="cc-metric"><div class="cc-metric-label">WhatsApp</div><div class="cc-metric-val">${fmtNum(c.whatsapp)}</div></div>
-          <div class="cc-metric"><div class="cc-metric-label">Health</div><div class="cc-metric-val">${c.healthScore||'—'}</div></div>
+          <div class="cc-metric"><div class="cc-metric-label">Health</div><div class="cc-metric-val" style="font-size:11px">${c.healthScore?HEALTH_LABELS[c.healthScore]||c.healthScore:'—'}</div></div>
         </div>
         <div class="cc-actions">
           <button class="btn btn-ghost btn-sm" onclick="openMetricasModal('${c._id}')">Métricas</button>
-          <button class="btn btn-ghost btn-sm" onclick="openFaturamentoModal('${c._id}')">Faturamento</button>
           <button class="btn btn-ghost btn-sm" onclick="openEditClienteModal('${c._id}')">Editar</button>
         </div>
       </div>`;
     }).join('');
   }
-}
-
-function gestorOptions(sel=''){
-  return'<option value="">Selecionar...</option>'+allGestores.map(g=>`<option value="${g.name}"${g.name===sel?' selected':''}>${g.name}</option>`).join('');
 }
 
 function openAddClienteModal(){
@@ -689,14 +636,12 @@ function openAddClienteModal(){
         <div class="form-group"><label class="form-label">Nome do cliente *</label><input class="form-input" name="name" required placeholder="Ex: Elane Lima"></div>
         <div class="form-row">
           <div class="form-group"><label class="form-label">Gestor *</label>
-            <select class="form-select" name="gestor" required>
-              ${gestorOptions()}
-            </select>
+            <select class="form-select" name="gestor" required>${gestorOptions()}</select>
           </div>
           <div class="form-group"><label class="form-label">Status</label>
             <select class="form-select" name="status">
-              <option value="aguardando">Aguardando</option><option value="rodando">Rodando</option>
-              <option value="otimizar">Otimizar</option><option value="atencao">Atenção</option><option value="parado">Parado</option>
+              <option value="rodando">Rodando</option>
+              <option value="parado">Parado</option>
             </select>
           </div>
         </div>
@@ -707,7 +652,6 @@ function openAddClienteModal(){
             <option value="completa">Implementação Completa</option>
           </select>
         </div>
-        <div class="form-group"><label class="form-label">Objetivo</label><input class="form-input" name="objetivo" placeholder="Ex: Captação de leads qualificados"></div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-ghost" onclick="closeModal()">Cancelar</button>
@@ -721,16 +665,15 @@ function openEditClienteModal(id){
   openModal('Editar cliente',`
     <form onsubmit="submitEditClienteForm(event,'${id}')">
       <div class="modal-body">
-        <div class="form-group"><label class="form-label">Nome</label><input class="form-input" name="name" value="${c.name||''}" required></div>
+        <div class="form-group"><label class="form-label">Nome</label><input class="form-input" name="name" value="${escapeHtml(c.name||'')}" required></div>
         <div class="form-row">
           <div class="form-group"><label class="form-label">Gestor</label>
-            <select class="form-select" name="gestor">
-              ${gestorOptions(c.gestor||'')}
-            </select>
+            <select class="form-select" name="gestor">${gestorOptions(c.gestor||'')}</select>
           </div>
           <div class="form-group"><label class="form-label">Status</label>
             <select class="form-select" name="status">
-              ${Object.entries(STATUS_TR).map(([k,v])=>`<option value="${k}" ${c.status===k?'selected':''}>${v.label}</option>`).join('')}
+              <option value="rodando"${c.status==='rodando'?' selected':''}>Rodando</option>
+              <option value="parado"${c.status==='parado'?' selected':''}>Parado</option>
             </select>
           </div>
         </div>
@@ -741,8 +684,6 @@ function openEditClienteModal(id){
             <option value="completa"${c.impl==='completa'?' selected':''}>Implementação Completa</option>
           </select>
         </div>
-        <div class="form-group"><label class="form-label">Objetivo</label><input class="form-input" name="objetivo" value="${c.objetivo||''}"></div>
-        <div class="form-group"><label class="form-label">Gargalo atual</label><input class="form-input" name="gargalo" value="${c.gargalo||''}"></div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-danger btn-sm" onclick="deleteCliente('${id}')">Excluir</button>
@@ -754,40 +695,78 @@ function openEditClienteModal(id){
 
 function openMetricasModal(id){
   const c=S.trafego[id];if(!c)return;
-  openModal('Atualizar métricas — '+c.name,`
+  openModal('Métricas — '+escapeHtml(c.name),`
     <form onsubmit="submitMetricasForm(event,'${id}')">
       <div class="modal-body">
-        <div class="form-section-label">Funil</div>
         <div class="form-row">
           <div class="form-group"><label class="form-label">Leads</label><input class="form-input" name="leads" type="number" min="0" value="${c.leads||''}"></div>
-          <div class="form-group"><label class="form-label">WhatsApp</label><input class="form-input" name="whatsapp" type="number" min="0" value="${c.whatsapp||''}"></div>
+          <div class="form-group"><label class="form-label">CPL (R$)</label><input class="form-input" name="cpl" type="number" min="0" step="0.01" value="${c.cpl||''}"></div>
         </div>
         <div class="form-row">
-          <div class="form-group"><label class="form-label">Agendamentos</label><input class="form-input" name="agendamentos" type="number" min="0" value="${c.agendamentos||''}"></div>
           <div class="form-group"><label class="form-label">Comparecimentos</label><input class="form-input" name="comparecimentos" type="number" min="0" value="${c.comparecimentos||''}"></div>
+          <div class="form-group"><label class="form-label">Vendas</label><input class="form-input" name="vendas" type="number" min="0" value="${c.vendas||''}"></div>
         </div>
-        <div class="form-group"><label class="form-label">Vendas</label><input class="form-input" name="vendas" type="number" min="0" value="${c.vendas||''}"></div>
-        <div class="form-section-label">Financeiro</div>
-        <div class="form-row">
-          <div class="form-group"><label class="form-label">Investimento (R$)</label><input class="form-input" name="investimento" type="number" min="0" step="0.01" value="${c.investimento||''}"></div>
-          <div class="form-group"><label class="form-label">CPL (R$)</label><input class="form-input" name="cpl" type="number" min="0" step="0.01" value="${c.cpl||''}"><div class="form-hint">Calculado automaticamente se vazio</div></div>
+        <div class="form-group"><label class="form-label">ROAS</label><input class="form-input" name="roas" type="number" min="0" step="0.01" value="${c.roas||''}"></div>
+        <div class="form-section-label">Health</div>
+        <div class="health-picker">
+          <button type="button" class="hp-btn hp-c1" onclick="pickHealth(1)">Crítico</button>
+          <button type="button" class="hp-btn hp-c2" onclick="pickHealth(2)">Atenção</button>
+          <button type="button" class="hp-btn hp-c3" onclick="pickHealth(3)">Regular</button>
+          <button type="button" class="hp-btn hp-c4" onclick="pickHealth(4)">Bom</button>
+          <button type="button" class="hp-btn hp-c5" onclick="pickHealth(5)">Ótimo</button>
         </div>
-        <div class="form-row">
-          <div class="form-group"><label class="form-label">CPA (R$)</label><input class="form-input" name="cpa" type="number" min="0" step="0.01" value="${c.cpa||''}"></div>
-          <div class="form-group"><label class="form-label">ROAS</label><input class="form-input" name="roas" type="number" min="0" step="0.01" value="${c.roas||''}"></div>
-        </div>
-        <div class="form-section-label">Saúde</div>
-        <div class="form-row">
-          <div class="form-group"><label class="form-label">Health Score (0–100)</label><input class="form-input" name="healthScore" type="number" min="0" max="100" value="${c.healthScore||''}"></div>
-          <div class="form-group"><label class="form-label">NPS</label><input class="form-input" name="nps" type="number" min="0" max="10" step="0.1" value="${c.nps||''}"></div>
-        </div>
-        <div class="form-group"><label class="form-label">Gargalo identificado</label><input class="form-input" name="gargalo" value="${c.gargalo||''}" placeholder="Ex: CTR baixo no criativo"></div>
+        <input type="hidden" name="healthScore" id="hp-val" value="${c.healthScore||''}">
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-ghost" onclick="closeModal()">Cancelar</button>
-        <button type="submit" class="btn btn-primary">Salvar métricas</button>
+        <button type="submit" class="btn btn-primary">Salvar</button>
       </div>
     </form>`);
+  if(c.healthScore)pickHealth(c.healthScore);
+}
+
+function openClienteDetailModal(id){
+  const c=S.trafego[id];if(!c)return;
+  const st=STATUS_TR[c.status]||{label:'—',cls:'b-parado'};
+  const obs=(c.observacoes||[]).slice().reverse().slice(0,5);
+  openModal(escapeHtml(c.name),`
+    <div class="modal-body">
+      <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center">
+        <span class="badge ${st.cls}">${st.label}</span>
+        ${healthBadge(c.healthScore)}
+        <span style="font-size:12px;color:var(--text-sec)">${escapeHtml(c.gestor||'—')}</span>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Alertas / Observações</label>
+        <textarea class="form-textarea" id="alertas-input" style="min-height:90px" onblur="saveClienteAlertas('${id}')" placeholder="Registre alertas ou observações sobre esta conta...">${escapeHtml(c.alertas||'')}</textarea>
+        <div class="form-hint">Salva automaticamente ao sair do campo</div>
+      </div>
+      ${obs.length?`
+        <div class="form-section-label">Histórico de observações</div>
+        ${obs.map(o=>`
+          <div style="margin-bottom:8px;padding:10px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:7px">
+            <div style="font-size:10px;color:var(--text-dim);margin-bottom:4px">${o.data||'—'}${o.gestor?' · '+escapeHtml(o.gestor):''}</div>
+            <div style="font-size:12px;line-height:1.6">${escapeHtml(o.obs)}</div>
+          </div>
+        `).join('')}
+      `:''}
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal()">Fechar</button>
+      <button class="btn btn-primary" onclick="saveClienteAlertas('${id}');showToast('Salvo!','success');closeModal()">Salvar e fechar</button>
+    </div>`);
+}
+
+async function saveClienteAlertas(id){
+  const val=document.getElementById('alertas-input')?.value;
+  if(val===undefined)return;
+  try{await window._fs.updateDoc(window._fs.doc(window._db,'trafego',id),{alertas:val,updatedAt:new Date().toISOString()});}
+  catch(e){console.warn(e);}
+}
+
+function pickHealth(v){
+  document.getElementById('hp-val').value=v;
+  document.querySelectorAll('.hp-btn').forEach((b,i)=>b.classList.toggle('sel',i+1===v));
 }
 
 async function submitClienteForm(e){
@@ -795,7 +774,7 @@ async function submitClienteForm(e){
   const f=new FormData(e.target);
   const name=f.get('name').trim();
   const id=slugify(name);
-  const data={name,gestor:f.get('gestor'),status:f.get('status'),impl:f.get('impl')||'',objetivo:f.get('objetivo')||'',leads:0,whatsapp:0,agendamentos:0,comparecimentos:0,vendas:0,investimento:0,cpl:0,cpa:0,roas:0,healthScore:0,nps:0,gargalo:'',comunicacao:[],updatedAt:new Date().toISOString()};
+  const data={name,gestor:f.get('gestor'),status:f.get('status'),impl:f.get('impl')||'',leads:0,cpl:0,comparecimentos:0,vendas:0,roas:0,healthScore:0,alertas:'',observacoes:[],ultimaAtualizacao:'',updatedAt:new Date().toISOString()};
   try{await window._fs.setDoc(window._fs.doc(window._db,'trafego',id),data);closeModal();}
   catch(err){alert('Erro ao salvar: '+err.message);}
 }
@@ -803,7 +782,7 @@ async function submitClienteForm(e){
 async function submitEditClienteForm(e,id){
   e.preventDefault();
   const f=new FormData(e.target);
-  const data={name:f.get('name').trim(),gestor:f.get('gestor'),status:f.get('status'),impl:f.get('impl')||'',objetivo:f.get('objetivo')||'',gargalo:f.get('gargalo')||'',updatedAt:new Date().toISOString()};
+  const data={name:f.get('name').trim(),gestor:f.get('gestor'),status:f.get('status'),impl:f.get('impl')||'',updatedAt:new Date().toISOString()};
   try{await window._fs.updateDoc(window._fs.doc(window._db,'trafego',id),data);closeModal();}
   catch(err){alert('Erro: '+err.message);}
 }
@@ -811,254 +790,169 @@ async function submitEditClienteForm(e,id){
 async function submitMetricasForm(e,id){
   e.preventDefault();
   const f=new FormData(e.target);
-  const leads=Number(f.get('leads')||0),investimento=Number(f.get('investimento')||0);
-  const cplManual=f.get('cpl');
-  const cpl=cplManual?Number(cplManual):(leads>0&&investimento>0?investimento/leads:0);
-  const data={leads,whatsapp:Number(f.get('whatsapp')||0),agendamentos:Number(f.get('agendamentos')||0),comparecimentos:Number(f.get('comparecimentos')||0),vendas:Number(f.get('vendas')||0),investimento,cpl:Math.round(cpl*100)/100,cpa:Number(f.get('cpa')||0),roas:Number(f.get('roas')||0),healthScore:Number(f.get('healthScore')||0),nps:Number(f.get('nps')||0),gargalo:f.get('gargalo')||'',ultimaAtualizacao:todayStr(),updatedAt:new Date().toISOString()};
+  const data={leads:Number(f.get('leads')||0),cpl:Number(f.get('cpl')||0),comparecimentos:Number(f.get('comparecimentos')||0),vendas:Number(f.get('vendas')||0),roas:Number(f.get('roas')||0),healthScore:Number(f.get('healthScore')||0),ultimaAtualizacao:todayStr(),updatedAt:new Date().toISOString()};
   try{await window._fs.updateDoc(window._fs.doc(window._db,'trafego',id),data);closeModal();}
   catch(err){alert('Erro: '+err.message);}
 }
 
 async function deleteCliente(id){
-  if(!confirm('Excluir este cliente? Esta ação não pode ser desfeita.'))return;
+  if(!confirm('Excluir este cliente?'))return;
   try{await window._fs.deleteDoc(window._fs.doc(window._db,'trafego',id));closeModal();}
   catch(err){alert('Erro: '+err.message);}
 }
 
-function fmtMes(k){const[y,m]=k.split('-');const n=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];return n[Number(m)-1]+'/'+y.slice(2)}
-
-async function openFaturamentoModal(id){
-  const c=S.trafego[id];if(!c)return;
-  let fatInicial=0,faturamento={};
-  try{
-    const snap=await window._fs.getDoc(window._fs.doc(window._db,'entrega',id));
-    if(snap.exists()){const d=snap.data();fatInicial=d.faturamentoInicial||0;faturamento=d.faturamento||{};}
-  }catch(e){}
-  const meses=Object.entries(faturamento).sort(([a],[b])=>a.localeCompare(b));
-  const hoje=new Date().toISOString().slice(0,7);
-  const mesesHtml=meses.length?meses.map(([k,v])=>`
-    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
-      <span>${fmtMes(k)}</span>
-      <div style="display:flex;align-items:center;gap:10px">
-        <span style="color:var(--amber);font-weight:600">R$ ${Number(v).toLocaleString('pt-BR')}</span>
-        <button type="button" class="btn btn-ghost btn-sm" style="padding:2px 8px;color:var(--red)" onclick="deletarMesFat('${id}','${k}')">✕</button>
-      </div>
-    </div>`).join(''):`<div style="color:var(--text-sec);font-size:12px;padding:8px 0">Nenhum mês registrado ainda.</div>`;
-  openModal('Faturamento — '+c.name,`
-    <form onsubmit="submitFaturamentoModal(event,'${id}')">
-      <div class="modal-body">
-        <div class="form-section-label">Faturamento anterior ao programa</div>
-        <div class="form-group">
-          <label class="form-label">Faturamento mensal antes de entrar (R$)</label>
-          <input class="form-input" name="fatInicial" type="number" min="0" step="100" value="${fatInicial||''}" placeholder="Ex: 30000">
-          <div class="form-hint">Linha de base para medir o crescimento no programa</div>
-        </div>
-        <div class="form-section-label">Histórico mensal</div>
-        <div style="margin-bottom:16px">${mesesHtml}</div>
-        <div class="form-section-label">Registrar novo mês</div>
-        <div class="form-row">
-          <div class="form-group"><label class="form-label">Mês</label><input class="form-input" name="mes" type="month" value="${hoje}"></div>
-          <div class="form-group"><label class="form-label">Valor faturado (R$)</label><input class="form-input" name="valor" type="number" min="0" step="100" placeholder="Ex: 45000"></div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-ghost" onclick="closeModal()">Fechar</button>
-        <button type="submit" class="btn btn-primary">Salvar</button>
-      </div>
-    </form>`);
+// ─── OTIMIZAÇÃO DIÁRIA ────────────────────────────
+function setupOtDiariaListener(){
+  const today=todayStr();
+  if(otDiariaDate===today&&otDiariaUnsub)return;
+  if(otDiariaUnsub)otDiariaUnsub();
+  otDiariaDate=today;
+  otDiariaUnsub=window._fs.onSnapshot(window._fs.doc(window._db,'otimizacao_diaria',today),snap=>{
+    otimizacaoDiaria=snap.exists()?snap.data():{data:today,cards:{}};
+    if(currentTab==='board')renderOtimizacaoDiaria();
+  });
 }
 
-async function submitFaturamentoModal(e,id){
-  e.preventDefault();
-  const f=new FormData(e.target);
-  const fatInicial=Number(f.get('fatInicial')||0);
-  const mes=f.get('mes');
-  const valor=Number(f.get('valor')||0);
-  let faturamento={};
-  try{
-    const snap=await window._fs.getDoc(window._fs.doc(window._db,'entrega',id));
-    if(snap.exists())faturamento={...snap.data().faturamento||{}};
-  }catch(e){}
-  if(mes&&valor>0)faturamento[mes]=valor;
-  const update={faturamentoInicial:fatInicial,faturamento,updatedAt:new Date().toISOString()};
-  try{await window._fs.updateDoc(window._fs.doc(window._db,'entrega',id),update);closeModal();}
-  catch(err){alert('Erro: '+err.message);}
-}
+function renderOtimizacaoDiaria(){
+  const dias=['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+  const today=new Date();
+  const dateEl=document.getElementById('ot-diaria-date');
+  if(dateEl)dateEl.textContent=`${dias[today.getDay()]}, ${today.toLocaleDateString('pt-BR')} · renova à meia-noite`;
 
-async function deletarMesFat(id,mes){
-  if(!confirm(`Remover faturamento de ${fmtMes(mes)}?`))return;
-  let faturamento={};
-  try{
-    const snap=await window._fs.getDoc(window._fs.doc(window._db,'entrega',id));
-    if(snap.exists())faturamento={...snap.data().faturamento||{}};
-  }catch(e){}
-  delete faturamento[mes];
-  try{
-    await window._fs.updateDoc(window._fs.doc(window._db,'entrega',id),{faturamento,updatedAt:new Date().toISOString()});
-    openFaturamentoModal(id);
-  }catch(err){alert('Erro: '+err.message);}
-}
+  const clients=getTrafego().sort((a,b)=>(a.name||'').localeCompare(b.name||''));
+  const cards=otimizacaoDiaria?.cards||{};
+  const byCol={clientes:[],otimizado:[],parado:[]};
+  clients.forEach(c=>{
+    const st=cards[c._id]?.status||'clientes';
+    byCol[st].push(c);
+  });
 
-// ─── BOARD ────────────────────────────────────────
-function renderBoard(){
-  const items=Object.values(S.otimizacoes);
+  const colDefs=[
+    {id:'clientes',label:'Clientes',color:'var(--text-sec)'},
+    {id:'otimizado',label:'Otimizado',color:'var(--green)'},
+    {id:'parado',label:'Parado',color:'var(--red)'},
+  ];
   const board=document.getElementById('board-kanban');
-  board.innerHTML=BOARD_COLS.map(col=>{
-    const cards=items.filter(o=>o.status===col.id).sort((a,b)=>(b.criadoEm||'').localeCompare(a.criadoEm||''));
+  board.innerHTML=colDefs.map(col=>{
+    const colClients=byCol[col.id]||[];
     return`<div class="board-col">
       <div class="board-col-hdr">
-        <span class="board-col-title"><span style="width:8px;height:8px;border-radius:50%;background:${col.color};display:inline-block;flex-shrink:0"></span>${STATUS_OT_LABELS[col.id]}</span>
-        <span class="board-col-count">${cards.length}</span>
+        <span class="board-col-title"><span style="width:8px;height:8px;border-radius:50%;background:${col.color};display:inline-block;flex-shrink:0"></span>${col.label}</span>
+        <span class="board-col-count">${colClients.length}</span>
       </div>
       <div class="board-col-body">
-        ${cards.length?cards.map(o=>`
-          <div class="board-card" onclick="openOtimizacaoModal('${o._id}')">
-            <div class="bc-tipo">${o.tipo||'—'}</div>
-            <div class="bc-cliente">${o.clienteNome||o.clienteId||'—'}</div>
-            <div class="bc-motivo">${o.motivo||'—'}</div>
-            <div class="bc-footer">
-              <span class="bc-date">${fmtDate(o.data)}</span>
-              <span class="bc-gestor">${o.gestor||''}</span>
+        ${colClients.length?colClients.map(c=>{
+          const ini=(c.name||'?').split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();
+          const cardObs=cards[c._id]?.obs;
+          return`<div class="board-card">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+              <div style="width:28px;height:28px;border-radius:50%;background:var(--amber-dim);border:1px solid var(--amber-border);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--amber);font-family:'Montserrat',sans-serif;flex-shrink:0">${ini}</div>
+              <div>
+                <div class="bc-cliente">${escapeHtml(c.name)}</div>
+                <div class="bc-gestor">${escapeHtml(c.gestor||'—')}</div>
+              </div>
             </div>
-          </div>`).join(''):'<div class="board-empty">Nenhuma</div>'}
+            ${c.healthScore?`<div style="margin-bottom:8px">${healthBadge(c.healthScore)}</div>`:''}
+            ${cardObs?`<div style="font-size:10px;color:var(--text-sec);background:var(--surface2);padding:6px 8px;border-radius:5px;margin-bottom:8px;line-height:1.5">${escapeHtml(cardObs)}</div>`:''}
+            <div style="display:flex;gap:5px;flex-wrap:wrap">
+              ${col.id!=='otimizado'?`<button class="btn btn-ghost btn-sm" style="color:var(--green);border-color:var(--green-border);font-size:10px;padding:3px 10px" onclick="moverOtimizado('${c._id}')">✓ Otimizado</button>`:''}
+              ${col.id!=='parado'?`<button class="btn btn-ghost btn-sm" style="color:var(--red);border-color:var(--red-border);font-size:10px;padding:3px 10px" onclick="confirmMoverParado('${c._id}')">✗ Parado</button>`:''}
+              ${col.id!=='clientes'?`<button class="btn btn-ghost btn-sm" style="font-size:10px;padding:3px 10px" onclick="moverClientes('${c._id}')">↩</button>`:''}
+            </div>
+          </div>`;
+        }).join(''):'<div class="board-empty">Nenhum</div>'}
       </div>
     </div>`;
   }).join('');
 }
 
-function openAddOtimizacaoModal(){
-  const clienteOpts=getClienteNames().map(n=>`<option value="${slugify(n)}">${n}</option>`).join('');
-  openModal('Nova otimização',`
-    <form onsubmit="submitOtimizacaoForm(event)">
-      <div class="modal-body">
-        <div class="form-row">
-          <div class="form-group"><label class="form-label">Cliente *</label>
-            <select class="form-select" name="clienteId" required onchange="updateClienteNome(this)">
-              <option value="">Selecionar...</option>${clienteOpts}
-            </select>
-            <input type="hidden" name="clienteNome" id="ot-cliente-nome">
-          </div>
-          <div class="form-group"><label class="form-label">Gestor *</label>
-            <select class="form-select" name="gestor" required>
-              ${gestorOptions()}
-            </select>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group"><label class="form-label">Tipo *</label>
-            <select class="form-select" name="tipo" required>
-              <option value="">Selecionar...</option>${TIPOS_OT.map(t=>`<option>${t}</option>`).join('')}
-            </select>
-          </div>
-          <div class="form-group"><label class="form-label">Data</label>
-            <input class="form-input" name="data" type="date" value="${todayStr()}">
-          </div>
-        </div>
-        <div class="form-group"><label class="form-label">Motivo / problema *</label><textarea class="form-textarea" name="motivo" required placeholder="Ex: CTR caiu 40% — fadiga criativa"></textarea></div>
-        <div class="form-group"><label class="form-label">Hipótese</label><textarea class="form-textarea" name="hipotese" placeholder="Ex: Novo vídeo antes/depois vai recuperar CTR"></textarea></div>
-        <div class="form-group"><label class="form-label">Resultado esperado</label><input class="form-input" name="resultadoEsperado" placeholder="Ex: CTR voltar para >2%"></div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-ghost" onclick="closeModal()">Cancelar</button>
-        <button type="submit" class="btn btn-primary">Criar otimização</button>
-      </div>
-    </form>`);
+async function moverOtimizado(clienteId){
+  const today=todayStr();
+  try{
+    await window._fs.setDoc(window._fs.doc(window._db,'otimizacao_diaria',today),
+      {data:today,cards:{[clienteId]:{status:'otimizado',obs:'',updatedAt:new Date().toISOString()}}},
+      {merge:true});
+  }catch(e){alert('Erro: '+e.message);}
 }
 
-function updateClienteNome(sel){
-  const opt=sel.options[sel.selectedIndex];
-  document.getElementById('ot-cliente-nome').value=opt.text;
-}
-
-function openOtimizacaoModal(id){
-  const o=S.otimizacoes[id];if(!o)return;
-  const statusOpts=Object.entries(STATUS_OT_LABELS).map(([k,v])=>`<option value="${k}" ${o.status===k?'selected':''}>${v}</option>`).join('');
-  openModal('Otimização — '+o.clienteNome,`
+function confirmMoverParado(clienteId){
+  const c=S.trafego[clienteId];if(!c)return;
+  openModal('Parado — '+escapeHtml(c.name),`
     <div class="modal-body">
-      <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
-        <span class="badge b-${o.status}">${STATUS_OT_LABELS[o.status]||o.status}</span>
-        <span class="badge" style="background:rgba(255,255,255,0.06);color:var(--text-sec)">${o.tipo||'—'}</span>
+      <div class="form-group">
+        <label class="form-label">Motivo (opcional)</label>
+        <textarea class="form-textarea" id="parado-obs" placeholder="Ex: Aguardando criativo, reunião pendente..." style="min-height:80px"></textarea>
       </div>
-      <div class="detail-field"><div class="detail-label">Cliente</div><div class="detail-val">${o.clienteNome||o.clienteId}</div></div>
-      <div class="detail-field"><div class="detail-label">Gestor</div><div class="detail-val">${o.gestor||'—'}</div></div>
-      <div class="detail-field"><div class="detail-label">Data</div><div class="detail-val">${fmtDate(o.data)}</div></div>
-      <div class="detail-field"><div class="detail-label">Motivo</div><div class="detail-val">${o.motivo||'—'}</div></div>
-      <div class="detail-field"><div class="detail-label">Hipótese</div><div class="detail-val">${o.hipotese||'—'}</div></div>
-      <div class="detail-field"><div class="detail-label">Resultado esperado</div><div class="detail-val">${o.resultadoEsperado||'—'}</div></div>
-      <div class="form-group" style="margin-top:16px"><label class="form-label">Observação pós-execução</label>
-        <textarea class="form-textarea" id="ot-obs" placeholder="Resultado observado...">${o.observacaoPós||''}</textarea>
-      </div>
-      <div class="form-group"><label class="form-label">Mover para</label>
-        <select class="form-select" id="ot-status-sel">${statusOpts}</select>
+      <div class="form-group">
+        <label class="form-label">Gestor</label>
+        <select class="form-select" id="parado-gestor">
+          <option value="">Selecionar...</option>
+          ${allGestores.map(g=>`<option>${escapeHtml(g.name)}</option>`).join('')}
+        </select>
       </div>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-danger btn-sm" onclick="deleteOtimizacao('${id}')">Excluir</button>
-      <button class="btn btn-ghost" onclick="closeModal()">Fechar</button>
-      <button class="btn btn-primary" onclick="saveOtimizacao('${id}')">Salvar</button>
+      <button class="btn btn-ghost" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-danger" onclick="saveMoverParado('${clienteId}')">Confirmar</button>
     </div>`);
 }
 
-async function submitOtimizacaoForm(e){
-  e.preventDefault();
-  const f=new FormData(e.target);
-  const data={clienteId:f.get('clienteId'),clienteNome:f.get('clienteNome'),gestor:f.get('gestor'),tipo:f.get('tipo'),motivo:f.get('motivo'),hipotese:f.get('hipotese')||'',resultadoEsperado:f.get('resultadoEsperado')||'',status:'planejada',observacaoPós:'',data:f.get('data')||todayStr(),criadoEm:new Date().toISOString()};
-  try{await window._fs.addDoc(window._fs.collection(window._db,'otimizacoes'),data);closeModal();}
-  catch(err){alert('Erro: '+err.message);}
+async function saveMoverParado(clienteId){
+  const today=todayStr();
+  const obs=document.getElementById('parado-obs')?.value||'';
+  const gestor=document.getElementById('parado-gestor')?.value||'';
+  try{
+    await window._fs.setDoc(window._fs.doc(window._db,'otimizacao_diaria',today),
+      {data:today,cards:{[clienteId]:{status:'parado',obs,gestor,updatedAt:new Date().toISOString()}}},
+      {merge:true});
+    if(obs){
+      const c=S.trafego[clienteId];
+      if(c){
+        const observacoes=[...(c.observacoes||[]),{data:today,obs,gestor}];
+        await window._fs.updateDoc(window._fs.doc(window._db,'trafego',clienteId),{observacoes});
+      }
+    }
+    closeModal();
+  }catch(e){alert('Erro: '+e.message);}
 }
 
-async function saveOtimizacao(id){
-  const obs=document.getElementById('ot-obs')?.value||'';
-  const status=document.getElementById('ot-status-sel')?.value;
-  try{await window._fs.updateDoc(window._fs.doc(window._db,'otimizacoes',id),{observacaoPós:obs,status,updatedAt:new Date().toISOString()});closeModal();}
-  catch(err){alert('Erro: '+err.message);}
-}
-
-async function deleteOtimizacao(id){
-  if(!confirm('Excluir esta otimização?'))return;
-  try{await window._fs.deleteDoc(window._fs.doc(window._db,'otimizacoes',id));closeModal();}
-  catch(err){alert('Erro: '+err.message);}
+async function moverClientes(clienteId){
+  const today=todayStr();
+  try{
+    const snap=await window._fs.getDoc(window._fs.doc(window._db,'otimizacao_diaria',today));
+    if(snap.exists()){
+      const data=snap.data();
+      if(data.cards)delete data.cards[clienteId];
+      await window._fs.setDoc(window._fs.doc(window._db,'otimizacao_diaria',today),data);
+    }
+  }catch(e){alert('Erro: '+e.message);}
 }
 
 // ─── ROTEIROS ─────────────────────────────────────
 function renderRoteiros(){
   const items=Object.values(S.roteiros);
   const clienteF=document.getElementById('filter-rot-cliente')?.value||'';
-  const statusF=document.getElementById('filter-rot-status')?.value||'';
-  // Update cliente filter options
   const sel=document.getElementById('filter-rot-cliente');
-  if(sel){
-    const cur=sel.value;
-    sel.innerHTML='<option value="">Todos os clientes</option>'+getClienteNames().map(n=>`<option value="${slugify(n)}">${n}</option>`).join('');
-    sel.value=cur;
-  }
-  const filtered=items.filter(r=>{
-    if(clienteF&&r.clienteId!==clienteF)return false;
-    if(statusF&&r.status!==statusF)return false;
-    return true;
-  }).sort((a,b)=>(b.criadoEm||'').localeCompare(a.criadoEm||''));
+  if(sel){const cur=sel.value;sel.innerHTML='<option value="">Todos os clientes</option>'+getClienteNames().map(n=>`<option value="${slugify(n)}">${escapeHtml(n)}</option>`).join('');sel.value=cur;}
+  const filtered=items.filter(r=>!clienteF||r.clienteId===clienteF).sort((a,b)=>(b.criadoEm||'').localeCompare(a.criadoEm||''));
   const grid=document.getElementById('roteiros-grid');
   if(!filtered.length){
-    grid.innerHTML='<div class="empty" style="grid-column:1/-1"><div class="empty-icon">🎬</div><div class="empty-title">Nenhum roteiro encontrado</div><div class="empty-sub">Crie o primeiro roteiro para um cliente.</div><button class="btn btn-primary" onclick="openAddRoteiroModal()">Novo roteiro</button></div>';
+    grid.innerHTML='<div class="empty" style="grid-column:1/-1"><div class="empty-icon">🎬</div><div class="empty-title">Nenhum roteiro encontrado</div><button class="btn btn-primary" style="margin-top:12px" onclick="openAddRoteiroModal()">Novo roteiro</button></div>';
     return;
   }
-  const SLABELS={aguardando_gravacao:'Aguardando gravação',gravado:'Gravado',publicado:'Publicado'};
   grid.innerHTML=filtered.map(r=>`
     <div class="rot-card" onclick="openRoteiroModal('${r._id}')">
-      <div class="rot-hdr">
-        <div class="rot-title">${r.titulo||'Sem título'}</div>
-        <span class="badge b-${r.status}">${SLABELS[r.status]||r.status}</span>
+      <div class="rot-title">${escapeHtml(r.titulo||'Sem título')}</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+        <span class="badge" style="background:rgba(255,255,255,0.06);color:var(--text-sec)">${escapeHtml(r.clienteNome||r.clienteId||'—')}</span>
+        <span style="font-size:10px;color:var(--text-dim)">${escapeHtml(r.gestor||'')}</span>
       </div>
-      <div class="rot-gancho">${r.gancho||'—'}</div>
-      <div class="rot-footer">
-        <span class="badge" style="background:rgba(255,255,255,0.06);color:var(--text-sec);font-size:9px">${r.clienteNome||r.clienteId||'—'}</span>
-        <span class="rot-meta">${r.gestor||''} · ${fmtDate(r.criadoEm?.split('T')[0])}</span>
-      </div>
+      ${r.link?`<a href="${escapeHtml(r.link)}" target="_blank" rel="noopener" class="btn btn-ghost btn-sm" onclick="event.stopPropagation()" style="font-size:11px">Abrir Google Docs →</a>`:'<span style="font-size:11px;color:var(--text-dim)">Sem link</span>'}
     </div>`).join('');
 }
 
 function openAddRoteiroModal(){
-  const clienteOpts=getClienteNames().map(n=>`<option value="${slugify(n)}">${n}</option>`).join('');
+  const clienteOpts=getClienteNames().map(n=>`<option value="${slugify(n)}">${escapeHtml(n)}</option>`).join('');
   openModal('Novo roteiro',`
     <form onsubmit="submitRoteiroForm(event)">
       <div class="modal-body">
@@ -1070,15 +964,15 @@ function openAddRoteiroModal(){
             <input type="hidden" name="clienteNome" id="rot-cliente-nome">
           </div>
           <div class="form-group"><label class="form-label">Gestor *</label>
-            <select class="form-select" name="gestor" required>
-              ${gestorOptions()}
-            </select>
+            <select class="form-select" name="gestor" required>${gestorOptions()}</select>
           </div>
         </div>
-        <div class="form-group"><label class="form-label">Título *</label><input class="form-input" name="titulo" required placeholder="Ex: Captação de leads — Harmonização facial"></div>
-        <div class="form-group"><label class="form-label">Gancho (abertura) *</label><textarea class="form-textarea" name="gancho" required placeholder="Ex: Se você já pensou em fazer harmonização..."></textarea></div>
-        <div class="form-group"><label class="form-label">Desenvolvimento</label><textarea class="form-textarea" name="desenvolvimento" placeholder="Corpo do roteiro..."></textarea></div>
-        <div class="form-group"><label class="form-label">CTA (chamada para ação) *</label><textarea class="form-textarea" name="cta" required placeholder="Ex: Clica no link e agenda sua avaliação gratuita."></textarea></div>
+        <div class="form-group"><label class="form-label">Título *</label>
+          <input class="form-input" name="titulo" required placeholder="Ex: Captação de leads — Harmonização facial">
+        </div>
+        <div class="form-group"><label class="form-label">Link do Google Docs</label>
+          <input class="form-input" name="link" type="url" placeholder="https://docs.google.com/...">
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-ghost" onclick="closeModal()">Cancelar</button>
@@ -1087,50 +981,35 @@ function openAddRoteiroModal(){
     </form>`);
 }
 
-function updateRoteiroCliente(sel){
-  const opt=sel.options[sel.selectedIndex];
-  document.getElementById('rot-cliente-nome').value=opt.text;
-}
-
 function openRoteiroModal(id){
   const r=S.roteiros[id];if(!r)return;
-  const SLABELS={aguardando_gravacao:'Aguardando gravação',gravado:'Gravado',publicado:'Publicado'};
-  openModal('Roteiro — '+r.titulo,`
+  openModal(escapeHtml(r.titulo||'Roteiro'),`
     <div class="modal-body">
       <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
-        <span class="badge b-${r.status}">${SLABELS[r.status]||r.status}</span>
-        <span class="badge" style="background:rgba(255,255,255,0.06);color:var(--text-sec)">${r.clienteNome||r.clienteId}</span>
-        <span class="badge" style="background:rgba(255,255,255,0.06);color:var(--text-sec)">${r.gestor||''}</span>
+        <span class="badge" style="background:rgba(255,255,255,0.06);color:var(--text-sec)">${escapeHtml(r.clienteNome||r.clienteId)}</span>
+        <span class="badge" style="background:rgba(255,255,255,0.06);color:var(--text-sec)">${escapeHtml(r.gestor||'')}</span>
       </div>
-      <div class="detail-field"><div class="detail-label">Gancho</div><div class="detail-val">${r.gancho||'—'}</div></div>
-      <div class="detail-field"><div class="detail-label">Desenvolvimento</div><div class="detail-val" style="white-space:pre-wrap">${r.desenvolvimento||'—'}</div></div>
-      <div class="detail-field"><div class="detail-label">CTA</div><div class="detail-val">${r.cta||'—'}</div></div>
-      <div class="form-group" style="margin-top:16px"><label class="form-label">Atualizar status</label>
-        <select class="form-select" id="rot-status-sel">
-          <option value="aguardando_gravacao" ${r.status==='aguardando_gravacao'?'selected':''}>Aguardando gravação</option>
-          <option value="gravado" ${r.status==='gravado'?'selected':''}>Gravado</option>
-          <option value="publicado" ${r.status==='publicado'?'selected':''}>Publicado</option>
-        </select>
+      <div class="detail-field">
+        <div class="detail-label">Link do documento</div>
+        ${r.link?`<a href="${escapeHtml(r.link)}" target="_blank" rel="noopener" class="btn btn-primary btn-sm" style="margin-top:6px;display:inline-flex">Abrir no Google Docs →</a>`:'<div class="detail-val" style="color:var(--text-dim);margin-top:4px">Nenhum link adicionado</div>'}
       </div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-danger btn-sm" onclick="deleteRoteiro('${id}')">Excluir</button>
       <button class="btn btn-ghost" onclick="closeModal()">Fechar</button>
-      <button class="btn btn-primary" onclick="saveRoteiroStatus('${id}')">Salvar status</button>
     </div>`);
+}
+
+function updateRoteiroCliente(sel){
+  const opt=sel.options[sel.selectedIndex];
+  document.getElementById('rot-cliente-nome').value=opt.text;
 }
 
 async function submitRoteiroForm(e){
   e.preventDefault();
   const f=new FormData(e.target);
-  const data={clienteId:f.get('clienteId'),clienteNome:f.get('clienteNome'),titulo:f.get('titulo'),gancho:f.get('gancho'),desenvolvimento:f.get('desenvolvimento')||'',cta:f.get('cta'),gestor:f.get('gestor'),status:'aguardando_gravacao',criadoEm:new Date().toISOString()};
+  const data={clienteId:f.get('clienteId'),clienteNome:f.get('clienteNome'),titulo:f.get('titulo'),link:f.get('link')||'',gestor:f.get('gestor'),criadoEm:new Date().toISOString()};
   try{await window._fs.addDoc(window._fs.collection(window._db,'roteiros'),data);closeModal();}
-  catch(err){alert('Erro: '+err.message);}
-}
-
-async function saveRoteiroStatus(id){
-  const status=document.getElementById('rot-status-sel')?.value;
-  try{await window._fs.updateDoc(window._fs.doc(window._db,'roteiros',id),{status,updatedAt:new Date().toISOString()});closeModal();}
   catch(err){alert('Erro: '+err.message);}
 }
 
@@ -1141,35 +1020,30 @@ async function deleteRoteiro(id){
 }
 
 // ─── ROTINA ───────────────────────────────────────
-function setGestor(g,el){
-  rotinaGestor=g;
-  document.querySelectorAll('.gestor-tab').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
-  setupRotinaListener();
+function getRotinaTasksForGestor(){return ROTINA_TASKS_DEFAULT;}
+function renderRotinaTabs(){
+  const container=document.getElementById('gestor-tabs-container');if(!container)return;
+  if(!allGestores.length){container.innerHTML='<span style="font-size:12px;color:var(--text-dim)">Nenhum gestor cadastrado</span>';return;}
+  if(!rotinaGestor||!allGestores.find(g=>g.name===rotinaGestor))rotinaGestor=allGestores[0].name;
+  container.innerHTML=allGestores.map(g=>`<button class="gestor-tab${g.name===rotinaGestor?' active':''}" onclick="setGestor('${g.name.replace(/'/g,"\\'")}',this)">${escapeHtml(g.name)}</button>`).join('');
 }
-
+function setGestor(g,el){rotinaGestor=g;document.querySelectorAll('.gestor-tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');setupRotinaListener();}
 function setupRotinaListener(){
   if(rotinaUnsub)rotinaUnsub();
   const key=`${todayStr()}_${rotinaGestor}`;
-  rotinaUnsub=window._fs.onSnapshot(window._fs.doc(window._db,'rotina',key),snap=>{
-    rotinaData=snap.exists()?snap.data():{tasks:{}};
-    renderRotina();
-  });
+  rotinaUnsub=window._fs.onSnapshot(window._fs.doc(window._db,'rotina',key),snap=>{rotinaData=snap.exists()?snap.data():{tasks:{}};renderRotina();});
 }
-
 function renderRotina(){
   const today=new Date();
   const dias=['domingo','segunda','terça','quarta','quinta','sexta','sábado'];
   document.getElementById('rotina-date-lbl').textContent=`${dias[today.getDay()]}, ${today.toLocaleDateString('pt-BR')}`;
-  const tasks=getRotinaTasksForGestor(rotinaGestor);
+  const tasks=getRotinaTasksForGestor();
   const done=tasks.filter(t=>rotinaData.tasks?.[t.id]).length;
   const pct=tasks.length?Math.round(done/tasks.length*100):0;
   document.getElementById('rp-count').textContent=`${done}/${tasks.length}`;
   document.getElementById('rp-fill').style.width=pct+'%';
   document.getElementById('rp-fill').className='rp-bar-fill'+(pct===100?' full':'');
-  const pctEl=document.getElementById('rp-pct');
-  pctEl.textContent=pct+'%';
-  pctEl.className='rp-pct'+(pct===100?' full':'');
+  const pctEl=document.getElementById('rp-pct');pctEl.textContent=pct+'%';pctEl.className='rp-pct'+(pct===100?' full':'');
   document.getElementById('rotina-checklist').innerHTML=tasks.map(t=>{
     const isDone=!!rotinaData.tasks?.[t.id];
     return`<div class="rotina-item${isDone?' done':''}" onclick="toggleRotinaTask('${t.id}')">
@@ -1178,69 +1052,124 @@ function renderRotina(){
     </div>`;
   }).join('');
 }
-
 async function toggleRotinaTask(taskId){
   const key=`${todayStr()}_${rotinaGestor}`;
   const cur=rotinaData.tasks?.[taskId]||false;
   const newTasks={...(rotinaData.tasks||{}),[taskId]:!cur};
-  try{
-    await window._fs.setDoc(window._fs.doc(window._db,'rotina',key),{gestor:rotinaGestor,data:todayStr(),tasks:newTasks},{merge:true});
-  }catch(err){console.warn(err);}
+  try{await window._fs.setDoc(window._fs.doc(window._db,'rotina',key),{gestor:rotinaGestor,data:todayStr(),tasks:newTasks},{merge:true});}
+  catch(err){console.warn(err);}
+}
+
+// ─── BANCO DE COPY ────────────────────────────────
+function renderBancoCopy(){
+  ['segunda','quarta','sexta'].forEach(dia=>{
+    const col=document.getElementById('copy-col-'+dia);
+    const countEl=document.getElementById('copy-count-'+dia);
+    if(!col)return;
+    const cards=bancoCopy.filter(c=>c.dia===dia);
+    if(countEl)countEl.textContent=cards.length;
+    col.innerHTML=cards.length?cards.map(c=>`
+      <div class="copy-card" onclick="openCopyModal('${c.id}')">
+        <div class="copy-card-titulo">${escapeHtml(c.titulo)}</div>
+        <div class="copy-card-preview">${escapeHtml(c.copy.slice(0,120))}${c.copy.length>120?'...':''}</div>
+      </div>`).join(''):'<div class="board-empty">Nenhuma copy</div>';
+  });
+}
+
+function openAddCopyModal(dia){
+  openModal('Nova copy — '+DIAS_COPY_LABELS[dia],`
+    <form onsubmit="submitCopyForm(event,'${dia}')">
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Título *</label>
+          <input class="form-input" name="titulo" required placeholder="Ex: Lembrete de consulta — segunda">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Texto da copy *</label>
+          <textarea class="form-textarea" name="copy" required style="min-height:140px" placeholder="Olá [nome]! Passando para lembrar..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" onclick="closeModal()">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Salvar copy</button>
+      </div>
+    </form>`);
+}
+
+async function submitCopyForm(e,dia){
+  e.preventDefault();
+  const f=new FormData(e.target);
+  const data={dia,titulo:f.get('titulo').trim(),copy:f.get('copy').trim(),criadoEm:new Date().toISOString()};
+  try{await window._fs.addDoc(window._fs.collection(window._db,'banco_copy'),data);closeModal();}
+  catch(err){alert('Erro: '+err.message);}
+}
+
+function openCopyModal(id){
+  const c=bancoCopy.find(x=>x.id===id);if(!c)return;
+  openModal(escapeHtml(c.titulo),`
+    <div class="modal-body">
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:16px;white-space:pre-wrap;font-size:13px;line-height:1.8;color:var(--text)" id="copy-full-text">${escapeHtml(c.copy)}</div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-danger btn-sm" onclick="deleteCopy('${id}')">Excluir</button>
+      <button class="btn btn-ghost" onclick="closeModal()">Fechar</button>
+      <button class="btn btn-primary" onclick="copiarTexto()">Copiar texto</button>
+    </div>`);
+}
+
+async function deleteCopy(id){
+  if(!confirm('Excluir esta copy?'))return;
+  try{await window._fs.deleteDoc(window._fs.doc(window._db,'banco_copy',id));closeModal();}
+  catch(err){alert('Erro: '+err.message);}
+}
+
+function copiarTexto(){
+  const text=document.getElementById('copy-full-text')?.innerText||'';
+  navigator.clipboard.writeText(text).then(()=>showToast('Copy copiado!','success')).catch(()=>{
+    const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);showToast('Copy copiado!','success');
+  });
 }
 
 // ─── FLASHBOARD ───────────────────────────────────
 async function loadFlashboardTab(){
   const tbody=document.getElementById('fb-tbody');
   const cards=document.getElementById('fb-cards');
-  if(tbody)tbody.innerHTML='<tr><td colspan="10" class="loading-row">Buscando dados do Flashboard...</td></tr>';
+  if(tbody)tbody.innerHTML='<tr><td colspan="10" class="loading-row">Buscando dados...</td></tr>';
   if(cards)cards.innerHTML='<div class="loading-row">Carregando...</div>';
   try{
-    // 1. Carregar mapa entrega (slug → contaId) via Firestore
     if(!Object.keys(entregaMap).length){
       const snap=await window._fs.getDocs(window._fs.collection(window._db,'entrega'));
-      snap.forEach(d=>{ entregaMap[d.id]={flashboardContaId:d.data().flashboardContaId||''}; });
+      snap.forEach(d=>{entregaMap[d.id]={flashboardContaId:d.data().flashboardContaId||''};});
     }
-    // 2. Buscar todos os registros do mês atual no Supabase
     const hoje=new Date();
     const mesInicio=`${hoje.getFullYear()}-${String(hoje.getMonth()+1).padStart(2,'0')}-01`;
     const url=`${SB_URL}/rest/v1/registros_diarios?data=gte.${mesInicio}&select=conta_id,data,leads,agendamentos,comparecimentos,vendas&order=data.desc&limit=5000`;
     const res=await fetch(url,{headers:{'Authorization':'Bearer '+SB_KEY,'apikey':SB_KEY}});
     if(!res.ok)throw new Error('Supabase HTTP '+res.status);
     const rows=await res.json();
-    // 3. Agrupar por conta_id
     const byConta={};
     rows.forEach(r=>{
       if(!byConta[r.conta_id])byConta[r.conta_id]={leads:0,mql:0,compar:0,vendas:0,ultima:null};
       const g=byConta[r.conta_id];
-      g.leads+=r.leads||0; g.mql+=r.agendamentos||0;
-      g.compar+=r.comparecimentos||0; g.vendas+=r.vendas||0;
+      g.leads+=r.leads||0;g.mql+=r.agendamentos||0;g.compar+=r.comparecimentos||0;g.vendas+=r.vendas||0;
       if(!g.ultima||r.data>g.ultima)g.ultima=r.data;
     });
-    // 4. Montar fbData cruzando trafego + entrega + supabase
     fbData=getTrafego().map(c=>{
       const contaId=entregaMap[c._id]?.flashboardContaId||'';
       const sb=contaId?byConta[contaId]:null;
       const dias=sb?.ultima?Math.floor((hoje-new Date(sb.ultima+'T12:00:00'))/86400000):null;
-      return{slug:c._id,name:c.name||c._id,status:c.status||'',contaId,
-        leads:sb?.leads||0,mql:sb?.mql||0,compar:sb?.compar||0,vendas:sb?.vendas||0,
-        ultima:sb?.ultima||null,dias};
+      return{slug:c._id,name:c.name||c._id,status:c.status||'',contaId,leads:sb?.leads||0,mql:sb?.mql||0,compar:sb?.compar||0,vendas:sb?.vendas||0,ultima:sb?.ultima||null,dias};
     }).sort((a,b)=>b.leads-a.leads);
-    // 5. Atualizar stats
-    const tLeads=fbData.reduce((s,c)=>s+c.leads,0);
-    const tMql=fbData.reduce((s,c)=>s+c.mql,0);
-    const tVendas=fbData.reduce((s,c)=>s+c.vendas,0);
-    const alertas=fbData.filter(c=>c.contaId&&(c.dias===null||c.dias>3)).length;
-    document.getElementById('fb-st-leads').textContent=tLeads;
-    document.getElementById('fb-st-mql').textContent=tMql;
-    document.getElementById('fb-st-vendas').textContent=tVendas;
-    document.getElementById('fb-st-alertas').textContent=alertas;
+    document.getElementById('fb-st-leads').textContent=fbData.reduce((s,c)=>s+c.leads,0);
+    document.getElementById('fb-st-mql').textContent=fbData.reduce((s,c)=>s+c.mql,0);
+    document.getElementById('fb-st-vendas').textContent=fbData.reduce((s,c)=>s+c.vendas,0);
+    document.getElementById('fb-st-alertas').textContent=fbData.filter(c=>c.contaId&&(c.dias===null||c.dias>3)).length;
     const mes=hoje.toLocaleString('pt-BR',{month:'long',year:'numeric'});
-    const sub=document.getElementById('fb-tab-sub');
-    if(sub)sub.textContent=`${mes} · ${rows.length} registros carregados`;
+    const sub=document.getElementById('fb-tab-sub');if(sub)sub.textContent=`${mes} · ${rows.length} registros carregados`;
     renderFlashboardTab();
   }catch(err){
-    if(tbody)tbody.innerHTML=`<tr><td colspan="10" class="loading-row" style="color:var(--red)">Erro ao carregar: ${err.message}</td></tr>`;
-    console.error('Flashboard tab',err);
+    if(tbody)tbody.innerHTML=`<tr><td colspan="10" class="loading-row" style="color:var(--red)">Erro: ${err.message}</td></tr>`;
+    console.error(err);
   }
 }
 
@@ -1253,28 +1182,23 @@ function renderFlashboardTab(){
     return true;
   });
   function alertHtml(c){
-    if(!c.contaId)return'<span class="fb-no-chip">Sem conta vinculada</span>';
+    if(!c.contaId)return'<span class="fb-no-chip">Sem conta</span>';
     if(c.dias===null)return'<span class="fb-alert-chip">Nunca preencheu</span>';
     if(c.dias>3)return`<span class="fb-alert-chip">${c.dias}d sem preencher</span>`;
-    return`<span class="badge fb-ok-chip">OK · ${c.dias === 0?'hoje':c.dias+'d'}</span>`;
+    return`<span class="badge fb-ok-chip">OK · ${c.dias===0?'hoje':c.dias+'d'}</span>`;
   }
-  function pctHtml(a,b){
-    if(!b)return'<span class="fb-conv">—</span>';
-    const v=Math.round(a/b*100);
-    const cls=v>=50?'high':v>=25?'mid':'low';
-    return`<span class="fb-conv ${cls}">${v}%</span>`;
-  }
+  function pctHtml(a,b){if(!b)return'<span class="fb-conv">—</span>';const v=Math.round(a/b*100);const cls=v>=50?'high':v>=25?'mid':'low';return`<span class="fb-conv ${cls}">${v}%</span>`;}
   function fmtD(d){if(!d)return'—';const[,m,dd]=d.split('-');return`${dd}/${m}`;}
-  const st=c=>STATUS_TR[c.status]||{label:c.status||'—',cls:'b-aguardando'};
+  const st=c=>{const s=STATUS_TR[c.status];return s||{label:c.status||'—',cls:'b-parado'};};
   const tbody=document.getElementById('fb-tbody');
   const cards=document.getElementById('fb-cards');
   if(!filtered.length){
-    if(tbody)tbody.innerHTML='<tr><td colspan="10"><div class="empty"><div class="empty-title">Nenhum cliente encontrado</div></div></td></tr>';
-    if(cards)cards.innerHTML='<div class="empty"><div class="empty-title">Nenhum cliente encontrado</div></div>';
+    if(tbody)tbody.innerHTML='<tr><td colspan="10"><div class="empty"><div class="empty-title">Nenhum cliente</div></div></td></tr>';
+    if(cards)cards.innerHTML='<div class="empty"><div class="empty-title">Nenhum cliente</div></div>';
     return;
   }
   if(tbody)tbody.innerHTML=filtered.map(c=>`<tr>
-    <td><strong>${c.name}</strong></td>
+    <td><strong>${escapeHtml(c.name)}</strong></td>
     <td><span class="badge ${st(c).cls}">${st(c).label}</span></td>
     <td><span class="metric-val" style="color:var(--amber)">${c.leads||'0'}</span></td>
     <td><span class="metric-val" style="color:var(--blue)">${c.mql||'0'}</span></td>
@@ -1288,7 +1212,7 @@ function renderFlashboardTab(){
   if(cards)cards.innerHTML=filtered.map(c=>`
     <div class="cart-card">
       <div class="cc-hdr">
-        <span class="cc-name">${c.name}</span>
+        <span class="cc-name">${escapeHtml(c.name)}</span>
         <span class="badge ${st(c).cls}">${st(c).label}</span>
       </div>
       <div class="cc-metrics">
@@ -1296,38 +1220,9 @@ function renderFlashboardTab(){
         <div class="cc-metric"><div class="cc-metric-label">MQL</div><div class="cc-metric-val" style="color:var(--blue)">${c.mql||'0'}</div></div>
         <div class="cc-metric"><div class="cc-metric-label">Vendas</div><div class="cc-metric-val" style="color:var(--green)">${c.vendas||'0'}</div></div>
         <div class="cc-metric"><div class="cc-metric-label">Lead→MQL</div>${pctHtml(c.mql,c.leads)}</div>
-        <div class="cc-metric"><div class="cc-metric-label">Última atualiz.</div><div class="cc-metric-val" style="font-size:11px">${fmtD(c.ultima)}</div></div>
         <div class="cc-metric"><div class="cc-metric-label">Alerta</div>${alertHtml(c)}</div>
       </div>
     </div>`).join('');
-}
-
-// ─── AGENDA ───────────────────────────────────────
-function renderAgenda(){
-  const clientes=getTrafego().sort((a,b)=>(a.name||'').localeCompare(b.name||''));
-  const tbody=document.getElementById('agenda-tbody');
-  if(!clientes.length){
-    tbody.innerHTML='<tr><td colspan="8"><div class="empty"><div class="empty-title">Nenhum cliente cadastrado</div></div></td></tr>';
-    return;
-  }
-  // Dias: Seg=1, Ter=2, Qua=3, Qui=4, Sex=5, Sáb=6, Dom=0
-  const ORDER=[1,2,3,4,5,6,0];
-  tbody.innerHTML=clientes.map(c=>{
-    const com=c.comunicacao||[];
-    const cells=ORDER.map(d=>`
-      <td><button class="day-btn${com.includes(d)?' on':''}" onclick="toggleAgendaDia('${c._id}',${d})"></button></td>`).join('');
-    return`<tr><td><strong>${c.name}</strong><br><span style="font-size:10px;color:var(--text-sec)">${c.gestor||'—'}</span></td>${cells}</tr>`;
-  }).join('');
-}
-
-async function toggleAgendaDia(clienteId,dia){
-  const c=S.trafego[clienteId];if(!c)return;
-  const com=[...(c.comunicacao||[])];
-  const idx=com.indexOf(dia);
-  if(idx>=0)com.splice(idx,1);else com.push(dia);
-  try{
-    await window._fs.updateDoc(window._fs.doc(window._db,'trafego',clienteId),{comunicacao:com});
-  }catch(err){console.warn(err);}
 }
 
 // ─── GESTORES ─────────────────────────────────────
@@ -1338,40 +1233,26 @@ function renderGestorList(){
     const ini=g.name.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase();
     return`<div style="display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:10px 14px">
       <div style="width:32px;height:32px;border-radius:50%;background:var(--purple-dim);border:1px solid var(--purple-border);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--purple);font-family:'Montserrat',sans-serif;flex-shrink:0">${ini}</div>
-      <div style="flex:1;min-width:0">
-        <div style="font-size:13px;font-weight:600">${g.name}</div>
-        <div style="font-size:11px;color:var(--text-sec)">${g.cargo||'Sem cargo'}</div>
-      </div>
+      <div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:600">${escapeHtml(g.name)}</div><div style="font-size:11px;color:var(--text-sec)">${escapeHtml(g.cargo||'Sem cargo')}</div></div>
       <button class="btn btn-ghost btn-sm" style="color:var(--red);border-color:var(--red-border)" onclick="deleteGestorItem('${g.id}','${(g.name||'').replace(/'/g,"\\'")}')">Remover</button>
     </div>`;
   }).join('');
 }
-
-function openGestoresModal(){
-  renderGestorList();
-  document.getElementById('modal-gestores-overlay').classList.add('show');
-  setTimeout(()=>document.getElementById('g-name')?.focus(),100);
-}
-
+function openGestoresModal(){renderGestorList();document.getElementById('modal-gestores-overlay').classList.add('show');setTimeout(()=>document.getElementById('g-name')?.focus(),100);}
 function closeGestoresModal(e){
   if(e&&e.target!==document.getElementById('modal-gestores-overlay')&&e.type==='click')return;
   document.getElementById('modal-gestores-overlay').classList.remove('show');
   if(document.getElementById('g-name'))document.getElementById('g-name').value='';
   if(document.getElementById('g-cargo'))document.getElementById('g-cargo').value='';
 }
-
 async function saveGestorModal(){
   const name=document.getElementById('g-name')?.value.trim();
   if(!name){alert('Informe o nome do gestor');return;}
   const id=slugify(name)+'-'+Date.now().toString(36);
   const data={name,cargo:document.getElementById('g-cargo')?.value.trim()||''};
-  try{
-    await window._fs.setDoc(window._fs.doc(window._db,'gestores',id),data);
-    document.getElementById('g-name').value='';
-    document.getElementById('g-cargo').value='';
-  }catch(err){alert('Erro ao salvar: '+err.message);}
+  try{await window._fs.setDoc(window._fs.doc(window._db,'gestores',id),data);document.getElementById('g-name').value='';document.getElementById('g-cargo').value='';}
+  catch(err){alert('Erro: '+err.message);}
 }
-
 async function deleteGestorItem(id,name){
   if(!confirm(`Remover gestor "${name}"?`))return;
   try{await window._fs.deleteDoc(window._fs.doc(window._db,'gestores',id));}
@@ -1381,71 +1262,53 @@ async function deleteGestorItem(id,name){
 // ─── FIREBASE ─────────────────────────────────────
 window.addEventListener('db-ready',()=>{
   const db=window._db,fs=window._fs;
-
   fs.onSnapshot(fs.collection(db,'trafego'),snap=>{
     S.trafego={};
     snap.forEach(d=>{S.trafego[d.id]={...d.data(),_id:d.id}});
     if(currentTab==='carteira')renderCarteira();
-    if(currentTab==='agenda')renderAgenda();
   });
-
-  fs.onSnapshot(fs.collection(db,'otimizacoes'),snap=>{
-    S.otimizacoes={};
-    snap.forEach(d=>{S.otimizacoes[d.id]={...d.data(),_id:d.id}});
-    if(currentTab==='board')renderBoard();
-  });
-
   fs.onSnapshot(fs.collection(db,'roteiros'),snap=>{
     S.roteiros={};
     snap.forEach(d=>{S.roteiros[d.id]={...d.data(),_id:d.id}});
     if(currentTab==='roteiros')renderRoteiros();
   });
-
   fs.onSnapshot(fs.collection(db,'gestores'),snap=>{
     allGestores=[];
     snap.forEach(d=>allGestores.push({id:d.id,...d.data()}));
     allGestores.sort((a,b)=>a.name.localeCompare(b.name));
-    renderGestorList();
-    renderRotinaTabs();
+    renderGestorList();renderRotinaTabs();
     if(currentTab==='rotina')setupRotinaListener();
   });
-
+  fs.onSnapshot(fs.collection(db,'banco_copy'),snap=>{
+    bancoCopy=[];
+    snap.forEach(d=>bancoCopy.push({id:d.id,...d.data()}));
+    bancoCopy.sort((a,b)=>(b.criadoEm||'').localeCompare(a.criadoEm||''));
+    if(currentTab==='agenda')renderBancoCopy();
+  });
+  setupOtDiariaListener();
   setupRotinaListener();
 });
 
-// expose globals for inline handlers
-window.showTab=showTab;
-window.closeModal=closeModal;
-window.openAddClienteModal=openAddClienteModal;
-window.openEditClienteModal=openEditClienteModal;
-window.openMetricasModal=openMetricasModal;
-window.submitClienteForm=submitClienteForm;
-window.submitEditClienteForm=submitEditClienteForm;
-window.submitMetricasForm=submitMetricasForm;
-window.deleteCliente=deleteCliente;
-window.openAddOtimizacaoModal=openAddOtimizacaoModal;
-window.openOtimizacaoModal=openOtimizacaoModal;
-window.submitOtimizacaoForm=submitOtimizacaoForm;
-window.saveOtimizacao=saveOtimizacao;
-window.deleteOtimizacao=deleteOtimizacao;
-window.openAddRoteiroModal=openAddRoteiroModal;
-window.openRoteiroModal=openRoteiroModal;
-window.submitRoteiroForm=submitRoteiroForm;
-window.saveRoteiroStatus=saveRoteiroStatus;
-window.deleteRoteiro=deleteRoteiro;
-window.setGestor=setGestor;
-window.toggleRotinaTask=toggleRotinaTask;
-window.toggleAgendaDia=toggleAgendaDia;
-window.updateClienteNome=updateClienteNome;
-window.updateRoteiroCliente=updateRoteiroCliente;
+// globals
+window.showTab=showTab;window.closeModal=closeModal;
+window.openAddClienteModal=openAddClienteModal;window.openEditClienteModal=openEditClienteModal;
+window.openMetricasModal=openMetricasModal;window.openClienteDetailModal=openClienteDetailModal;
+window.saveClienteAlertas=saveClienteAlertas;window.pickHealth=pickHealth;
+window.submitClienteForm=submitClienteForm;window.submitEditClienteForm=submitEditClienteForm;
+window.submitMetricasForm=submitMetricasForm;window.deleteCliente=deleteCliente;
 window.renderCarteira=renderCarteira;
-window.renderRoteiros=renderRoteiros;
-window.loadFlashboardTab=loadFlashboardTab;
-window.renderFlashboardTab=renderFlashboardTab;
-window.openGestoresModal=openGestoresModal;
-window.closeGestoresModal=closeGestoresModal;
-window.saveGestorModal=saveGestorModal;
-window.deleteGestorItem=deleteGestorItem;
+window.moverOtimizado=moverOtimizado;window.confirmMoverParado=confirmMoverParado;
+window.saveMoverParado=saveMoverParado;window.moverClientes=moverClientes;
+window.openAddRoteiroModal=openAddRoteiroModal;window.openRoteiroModal=openRoteiroModal;
+window.submitRoteiroForm=submitRoteiroForm;window.deleteRoteiro=deleteRoteiro;
+window.updateRoteiroCliente=updateRoteiroCliente;window.renderRoteiros=renderRoteiros;
+window.setGestor=setGestor;window.toggleRotinaTask=toggleRotinaTask;
+window.openAddCopyModal=openAddCopyModal;window.submitCopyForm=submitCopyForm;
+window.openCopyModal=openCopyModal;window.deleteCopy=deleteCopy;window.copiarTexto=copiarTexto;
+window.loadFlashboardTab=loadFlashboardTab;window.renderFlashboardTab=renderFlashboardTab;
+window.openGestoresModal=openGestoresModal;window.closeGestoresModal=closeGestoresModal;
+window.saveGestorModal=saveGestorModal;window.deleteGestorItem=deleteGestorItem;
+window.showToast=showToast;
 </script>
 </body>
 </html>
