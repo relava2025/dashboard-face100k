@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Instagrams dos Clientes — FACE 100K</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+  import { getFirestore, collection, onSnapshot }
+    from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey:            "AIzaSyAyupUdCsEb6pPVmTs2clhayS84-TUovGA",
+    authDomain:        "dashboard-e465d.firebaseapp.com",
+    projectId:         "dashboard-e465d",
+    storageBucket:     "dashboard-e465d.firebasestorage.app",
+    messagingSenderId: "865986158280",
+    appId:             "1:865986158280:web:1531d13630f9835a9f0ffd"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db  = getFirestore(app);
+
+  let allClients = [];
+
+  function handle(text) {
+    try {
+      const url = new URL(text);
+      const parts = url.pathname.split('/').filter(Boolean);
+      return parts.length ? '@' + parts[0] : text;
+    } catch {
+      return text.startsWith('@') ? text : '@' + text;
+    }
+  }
+
+  function render(list) {
+    const grid = document.getElementById('ig-grid');
+    const empty = document.getElementById('empty-state');
+    const stTotal = document.getElementById('st-total');
+    const stSem = document.getElementById('st-sem');
+
+    const withIg = list.filter(c => c.ig && c.ig.trim());
+    const withoutIg = list.filter(c => !c.ig || !c.ig.trim());
+
+    stTotal.textContent = withIg.length;
+    stSem.textContent = withoutIg.length;
+
+    if (!withIg.length) {
+      grid.innerHTML = '';
+      empty.style.display = 'block';
+      return;
+    }
+    empty.style.display = 'none';
+
+    grid.innerHTML = withIg.map(c => {
+      const hdl = handle(c.ig);
+      const url = c.ig.startsWith('http') ? c.ig : 'https://instagram.com/' + c.ig.replace('@','');
+      const initials = (c.nome||'?').split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();
+      return `
+      <div class="ig-card">
+        <div class="ig-card-top">
+          <div class="ig-avatar">${initials}</div>
+          <div class="ig-info">
+            <div class="ig-nome">${c.nome||'—'}</div>
+            <div class="ig-handle">${hdl}</div>
+          </div>
+          <button class="btn-copy" title="Copiar handle" onclick="copyHandle('${hdl}', this)">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="4" y="4" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M2 10V2h8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+        <div class="ig-card-actions">
+          <a href="${url}" target="_blank" rel="noopener" class="btn-abrir">Abrir no Instagram</a>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  function filter(query) {
+    const q = query.toLowerCase().trim();
+    const result = q
+      ? allClients.filter(c =>
+          (c.nome||'').toLowerCase().includes(q) ||
+          (c.ig||'').toLowerCase().includes(q)
+        )
+      : allClients;
+    render(result);
+  }
+
+  window.copyHandle = function(hdl, btn) {
+    navigator.clipboard.writeText(hdl).then(() => {
+      btn.classList.add('copied');
+      setTimeout(() => btn.classList.remove('copied'), 1500);
+    });
+  };
+
+  window.addEventListener('load', () => {
+    onSnapshot(collection(db, "dashboards"), snap => {
+      allClients = [];
+      snap.forEach(d => allClients.push({ id: d.id, ...d.data() }));
+      allClients.sort((a,b) => (a.nome||'').localeCompare(b.nome||''));
+
+      document.getElementById('loading-screen').classList.add('hidden');
+      const q = document.getElementById('search-input').value;
+      filter(q);
+    });
+
+    document.getElementById('search-input').addEventListener('input', e => filter(e.target.value));
+  });
+</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0D1117;--surface:#1A2025;--surface2:#212830;
+  --amber:#F5A623;--amber-dim:rgba(245,166,35,0.10);--amber-border:rgba(245,166,35,0.20);
+  --border:#3E4249;--border-light:rgba(62,66,73,0.5);
+  --text:#F0F0F0;--text-sec:#B8B8C0;--text-dim:rgba(255,255,255,0.25);
+  --green:#22C55E;--green-dim:rgba(34,197,94,0.10);--green-border:rgba(34,197,94,0.22);
+  --red:#EF4444;--red-dim:rgba(239,68,68,0.10);--red-border:rgba(239,68,68,0.22);
+  --pink:#EC4899;--pink-dim:rgba(236,72,153,0.10);--pink-border:rgba(236,72,153,0.22);
+}
+html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:15px;line-height:1.5}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(0deg,transparent 24%,rgba(245,166,35,0.03) 25%,rgba(245,166,35,0.03) 26%,transparent 27%),linear-gradient(90deg,transparent 24%,rgba(245,166,35,0.03) 25%,rgba(245,166,35,0.03) 26%,transparent 27%);background-size:50px 50px;pointer-events:none;z-index:0}
+
+/* TOPBAR */
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 28px;height:56px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:50}
+.t-logo{font-family:'Montserrat',sans-serif;font-size:16px;font-weight:800;color:var(--text)}
+.t-logo span{color:var(--amber);font-style:italic}
+.t-sep{width:1px;height:18px;background:var(--border)}
+.t-sub{font-size:13px;color:var(--text-sec)}
+.t-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.btn-back{background:transparent;color:var(--text-sec);border:1px solid var(--border);border-radius:6px;padding:7px 14px;font-size:13px;font-weight:600;font-family:'Montserrat',sans-serif;cursor:pointer;text-decoration:none;transition:all .15s;display:inline-flex;align-items:center;gap:6px}
+.btn-back:hover{border-color:var(--amber-border);color:var(--amber)}
+
+/* CONTENT */
+.content{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:28px 24px 60px}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 18px;position:relative;overflow:hidden}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.sc-pink::before{background:var(--pink)}
+.sc-red::before{background:var(--red)}
+.sc-green::before{background:var(--green)}
+.stat-label{font-size:10px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.14em;font-family:'Montserrat',sans-serif;font-weight:600;margin-bottom:8px}
+.stat-val{font-size:32px;font-weight:800;font-family:'Montserrat',sans-serif;line-height:1}
+.sv-pink{color:var(--pink)}.sv-red{color:var(--red)}.sv-green{color:var(--green)}
+.stat-sub{font-size:11px;color:var(--text-sec);margin-top:5px}
+
+/* TOOLBAR */
+.toolbar{display:flex;align-items:center;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+.section-title{font-size:13px;font-weight:700;font-family:'Montserrat',sans-serif;text-transform:uppercase;letter-spacing:.12em;color:var(--text-sec)}
+.search-input{background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'Inter',sans-serif;font-size:14px;padding:8px 12px;outline:none;transition:border-color .15s;width:260px;margin-left:auto}
+.search-input:focus{border-color:var(--pink)}
+.search-input::placeholder{color:var(--text-dim)}
+
+/* GRID */
+.ig-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.ig-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color .2s,transform .18s}
+.ig-card:hover{border-color:var(--pink-border);transform:translateY(-2px)}
+.ig-card-top{display:flex;align-items:center;gap:12px;padding:16px 18px 14px}
+.ig-avatar{width:40px;height:40px;border-radius:50%;background:var(--pink-dim);border:1px solid var(--pink-border);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--pink);font-family:'Montserrat',sans-serif;flex-shrink:0}
+.ig-info{flex:1;min-width:0}
+.ig-nome{font-size:14px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ig-handle{font-size:12px;color:var(--text-sec);font-family:'JetBrains Mono',monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.btn-copy{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:6px 8px;cursor:pointer;color:var(--text-sec);transition:all .15s;display:flex;align-items:center;flex-shrink:0}
+.btn-copy:hover{border-color:var(--pink-border);color:var(--pink)}
+.btn-copy.copied{border-color:var(--green-border);color:var(--green);background:var(--green-dim)}
+.ig-card-actions{padding:0 18px 14px}
+.btn-abrir{display:block;text-align:center;background:var(--pink-dim);color:var(--pink);border:1px solid var(--pink-border);border-radius:6px;padding:8px 0;font-size:13px;font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:.04em;text-decoration:none;transition:all .15s}
+.btn-abrir:hover{background:var(--pink);color:#fff}
+
+/* EMPTY */
+.empty-state{display:none;text-align:center;padding:60px 20px;color:var(--text-sec)}
+.empty-icon{font-size:40px;margin-bottom:12px;opacity:.4}
+.empty-title{font-size:16px;font-weight:600;color:var(--text);margin-bottom:6px}
+
+/* LOADING */
+#loading-screen{position:fixed;inset:0;background:var(--bg);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
+#loading-screen.hidden{display:none}
+.loading-logo{font-family:'Montserrat',sans-serif;font-size:23px;font-weight:800}
+.loading-logo span{color:var(--amber);font-style:italic}
+.loading-spinner{width:36px;height:36px;border:3px solid rgba(245,166,35,0.15);border-top-color:var(--amber);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.brand-rail{height:2px;background:linear-gradient(90deg,rgba(245,166,35,0),var(--amber),rgba(245,166,35,0));margin-bottom:28px}
+
+@media(max-width:700px){
+  .stats-row{grid-template-columns:1fr 1fr}
+  .topbar{padding:0 14px;gap:8px}
+  .t-sub{display:none}
+  .content{padding:16px 14px 40px}
+  .search-input{width:100%;margin-left:0;margin-top:4px}
+  .toolbar{gap:6px}
+  .ig-grid{grid-template-columns:1fr}
+  .stat-val{font-size:26px}
+}
+</style>
+</head>
+<body>
+
+<div id="loading-screen">
+  <div class="loading-logo">FACE <span>100K</span></div>
+  <div class="loading-spinner"></div>
+  <div style="font-size:14px;color:#A0A0A8">Carregando Instagrams...</div>
+</div>
+
+<div class="topbar">
+  <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect width="22" height="22" rx="5" fill="#1A2025"/><path d="M5.5 7.5L11 6L16.5 7.5V13C16.5 16 14.2 17.8 11 18.5C7.8 17.8 5.5 16 5.5 13Z" stroke="#F5A623" stroke-width="1.3" fill="none"/><path d="M8.5 12L10.5 14L14.5 10" stroke="#F5A623" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  <div class="t-logo">FACE <span>100K</span></div>
+  <div class="t-sep"></div>
+  <div class="t-sub">Instagrams dos Clientes</div>
+  <div class="t-right">
+    <a href="index.html" class="btn-back">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 11L5 7l4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Central
+    </a>
+  </div>
+</div>
+
+<div class="content">
+  <div class="brand-rail"></div>
+
+  <div class="stats-row">
+    <div class="stat-card sc-pink">
+      <div class="stat-label">Com Instagram</div>
+      <div class="stat-val sv-pink" id="st-total">—</div>
+      <div class="stat-sub">perfis cadastrados</div>
+    </div>
+    <div class="stat-card sc-red">
+      <div class="stat-label">Sem Instagram</div>
+      <div class="stat-val sv-red" id="st-sem">—</div>
+      <div class="stat-sub">pendentes</div>
+    </div>
+    <div class="stat-card sc-green">
+      <div class="stat-label">Acesso</div>
+      <div class="stat-val sv-green" style="font-size:18px;padding-top:6px">Clique p/ abrir</div>
+      <div class="stat-sub">direto no perfil</div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <div class="section-title">Perfis</div>
+    <input type="search" id="search-input" class="search-input" placeholder="Buscar por nome ou @handle…">
+  </div>
+
+  <div class="ig-grid" id="ig-grid"></div>
+
+  <div class="empty-state" id="empty-state">
+    <div class="empty-icon">📷</div>
+    <div class="empty-title">Nenhum resultado encontrado</div>
+  </div>
+</div>
+
+</body>
+</html>
