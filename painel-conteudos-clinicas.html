@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Central de Clínicas — FACE 100K</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+import{getFirestore,collection,doc,onSnapshot,addDoc,deleteDoc}from"https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+const cfg={apiKey:"AIzaSyAyupUdCsEb6pPVmTs2clhayS84-TUovGA",authDomain:"dashboard-e465d.firebaseapp.com",projectId:"dashboard-e465d",storageBucket:"dashboard-e465d.firebasestorage.app",messagingSenderId:"865986158280",appId:"1:865986158280:web:1531d13630f9835a9f0ffd"};
+const db=getFirestore(initializeApp(cfg));
+window._db=db;
+window._fs={collection,doc,onSnapshot,addDoc,deleteDoc};
+window.dispatchEvent(new Event('db-ready'));
+</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0D1117;--surface:#1A2025;--surface2:#212830;
+  --amber:#F5A623;--amber-dim:rgba(245,166,35,0.10);--amber-border:rgba(245,166,35,0.20);
+  --border:#3E4249;--border-light:rgba(62,66,73,0.5);
+  --text:#F0F0F0;--text-sec:#A0A0A8;--text-dim:rgba(255,255,255,0.2);
+  --teal:#06B6D4;--teal-dim:rgba(6,182,212,0.10);--teal-border:rgba(6,182,212,0.22);
+  --red:#EF4444;--red-dim:rgba(239,68,68,0.10);--red-border:rgba(239,68,68,0.22);
+  --blue:#3B82F6;--blue-dim:rgba(59,130,246,0.10);--blue-border:rgba(59,130,246,0.22);
+  --green:#22C55E;--green-dim:rgba(34,197,94,0.10);--green-border:rgba(34,197,94,0.22);
+}
+html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:14px;line-height:1.5}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(0deg,transparent 24%,rgba(6,182,212,0.02) 25%,rgba(6,182,212,0.02) 26%,transparent 27%),linear-gradient(90deg,transparent 24%,rgba(6,182,212,0.02) 25%,rgba(6,182,212,0.02) 26%,transparent 27%);background-size:50px 50px;pointer-events:none;z-index:0}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 28px;height:56px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:50}
+.t-logo{font-family:'Montserrat',sans-serif;font-size:15px;font-weight:800;color:var(--text)}
+.t-logo span{color:var(--amber);font-style:italic}
+.t-sep{width:1px;height:18px;background:var(--border)}
+.t-sub{font-size:12px;color:var(--text-sec)}
+.t-right{margin-left:auto;display:flex;gap:10px}
+.btn-back{background:transparent;color:var(--text-sec);border:1px solid var(--border);border-radius:6px;padding:7px 14px;font-size:12px;font-weight:600;font-family:'Montserrat',sans-serif;cursor:pointer;text-decoration:none;transition:all .15s;display:inline-flex;align-items:center;gap:6px}
+.btn-back:hover{border-color:var(--teal-border);color:var(--teal)}
+.content{position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:28px 24px 80px}
+.brand-rail{height:2px;background:linear-gradient(90deg,rgba(6,182,212,0),var(--teal),rgba(6,182,212,0));margin-bottom:28px}
+.page-hdr{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:28px;flex-wrap:wrap}
+.page-title{font-family:'Montserrat',sans-serif;font-size:26px;font-weight:800;color:var(--text);line-height:1.1;margin-bottom:6px}
+.page-title span{color:var(--teal)}
+.page-sub{font-size:13px;color:var(--text-sec)}
+.hdr-actions{display:flex;gap:10px;flex-shrink:0}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:8px;font-size:13px;font-weight:600;font-family:'Montserrat',sans-serif;cursor:pointer;border:none;transition:all .15s;text-decoration:none;white-space:nowrap}
+.btn-primary{background:var(--teal);color:#000}
+.btn-primary:hover{opacity:.88}
+.btn-ghost{background:transparent;color:var(--text-sec);border:1px solid var(--border)}
+.btn-ghost:hover{border-color:var(--teal-border);color:var(--text)}
+.btn-sm{padding:6px 14px;font-size:12px}
+.filters-bar{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
+.search-wrap{flex:1;min-width:220px;position:relative}
+.search-wrap svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text-dim);pointer-events:none}
+.search-input{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Inter',sans-serif;font-size:13px;padding:9px 12px 9px 36px;outline:none;transition:border-color .15s}
+.search-input:focus{border-color:var(--teal-border)}
+.search-input::placeholder{color:var(--text-dim)}
+.filter-select{background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Inter',sans-serif;font-size:13px;padding:9px 14px;outline:none;cursor:pointer;transition:border-color .15s;appearance:none;padding-right:28px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23666' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center}
+.filter-select:focus{border-color:var(--teal-border)}
+.filter-select option{background:var(--surface2)}
+.results-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--border-light)}
+.results-count{font-size:13px;color:var(--text-sec)}
+.results-count strong{color:var(--text);font-weight:600}
+.content-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;animation:fadeIn .3s ease}
+.content-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:0;overflow:hidden;cursor:pointer;transition:border-color .18s,transform .18s;display:flex;flex-direction:column}
+.content-card:hover{border-color:var(--teal-border);transform:translateY(-2px)}
+.card-top{display:flex;gap:12px;padding:14px 16px 0}
+.card-play{width:32px;height:32px;border-radius:6px;background:var(--teal-dim);border:1px solid var(--teal-border);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.card-play svg{color:var(--teal)}
+.card-title{font-size:13px;font-weight:600;color:var(--text);line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;flex:1}
+.card-tags{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 16px 0}
+.badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:6px;font-size:10px;font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:.04em;white-space:nowrap}
+.b-esp{background:var(--teal-dim);color:var(--teal);border:.5px solid var(--teal-border)}
+.b-tipo{background:var(--blue-dim);color:var(--blue);border:.5px solid var(--blue-border)}
+.views-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;color:var(--text-sec);font-family:'Montserrat',sans-serif;white-space:nowrap}
+.views-badge svg{flex-shrink:0;opacity:.6}
+.card-meta{display:flex;align-items:center;gap:6px;padding:8px 16px 14px;margin-top:auto;font-size:11px;color:var(--text-dim);flex-wrap:wrap}
+.card-meta-dot{width:3px;height:3px;border-radius:50%;background:var(--border);flex-shrink:0}
+.card-del{display:none;padding:4px 8px;border-radius:4px;font-size:10px;background:transparent;color:var(--red-dim);border:none;cursor:pointer;transition:all .15s;font-family:'Montserrat',sans-serif;font-weight:600}
+.content-card:hover .card-del{display:inline-flex;align-items:center}
+.card-del:hover{color:var(--red);background:var(--red-dim)}
+.load-more-wrap{text-align:center;margin-top:28px}
+.empty-state{text-align:center;padding:80px 20px;color:var(--text-sec);grid-column:1/-1}
+.empty-icon{font-size:40px;margin-bottom:14px;opacity:.3}
+.empty-title{font-size:16px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--text);margin-bottom:8px}
+.empty-sub{font-size:13px;line-height:1.6;margin-bottom:20px}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:200;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(2px)}
+.modal-overlay.open{display:flex}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:14px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;animation:fadeIn .2s ease}
+.modal-wide{max-width:720px}
+.modal-hdr{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--surface);z-index:1}
+.modal-title{font-family:'Montserrat',sans-serif;font-size:15px;font-weight:700}
+.modal-close{width:28px;height:28px;border-radius:6px;border:none;background:rgba(255,255,255,.06);color:var(--text-sec);cursor:pointer;font-size:16px;transition:background .15s}
+.modal-close:hover{background:rgba(255,255,255,.12)}
+.modal-body{padding:22px}
+.modal-footer{padding:14px 22px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end;position:sticky;bottom:0;background:var(--surface)}
+.form-group{margin-bottom:14px}
+.form-label{display:block;font-size:11px;font-weight:600;color:var(--text-sec);font-family:'Montserrat',sans-serif;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+.form-input,.form-select,.form-textarea{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:9px 12px;color:var(--text);font-size:13px;font-family:'Inter',sans-serif;outline:none;transition:border-color .15s}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--teal-border)}
+.form-select option{background:var(--surface2)}
+.form-textarea{resize:vertical;min-height:64px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.import-step{display:none}
+.import-step.active{display:block}
+.step-indicator{display:flex;align-items:center;gap:8px;margin-bottom:20px}
+.step-dot{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;flex-shrink:0;border:2px solid var(--border);color:var(--text-dim);transition:all .2s}
+.step-dot.done{background:var(--green);border-color:var(--green);color:#000}
+.step-dot.active{background:var(--teal);border-color:var(--teal);color:#000}
+.step-line{flex:1;height:1px;background:var(--border);transition:background .2s}
+.step-line.done{background:var(--green)}
+.instruction-box{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:16px}
+.instruction-box ol{padding-left:18px;display:flex;flex-direction:column;gap:8px}
+.instruction-box li{font-size:12px;color:var(--text-sec);line-height:1.6}
+.instruction-box li strong{color:var(--text);font-weight:600}
+.instruction-box code{background:rgba(255,255,255,.08);padding:1px 6px;border-radius:4px;font-size:11px;font-family:'Courier New',monospace}
+.preview-table-wrap{overflow-x:auto;border-radius:8px;border:1px solid var(--border);margin-bottom:14px;max-height:280px;overflow-y:auto}
+.preview-table{width:100%;border-collapse:collapse;background:var(--surface);font-size:11px}
+.preview-table th{background:var(--surface2);padding:8px 12px;text-align:left;font-size:9px;font-weight:700;font-family:'Montserrat',sans-serif;text-transform:uppercase;letter-spacing:.1em;color:var(--text-sec);white-space:nowrap;border-bottom:1px solid var(--border);position:sticky;top:0}
+.preview-table td{padding:8px 12px;border-bottom:.5px solid rgba(62,66,73,.4);max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text-sec)}
+.preview-table td:first-child{color:var(--text);font-weight:500}
+.import-progress{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:16px}
+.progress-bar{height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;margin:10px 0}
+.progress-fill{height:100%;background:var(--teal);border-radius:3px;transition:width .3s ease}
+.progress-fill.done{background:var(--green)}
+.columns-hint{background:var(--teal-dim);border:1px solid var(--teal-border);border-radius:7px;padding:12px 14px;margin-bottom:16px}
+.columns-hint p{font-size:11px;color:var(--text-sec);margin-bottom:8px}
+.columns-hint code{background:rgba(0,0,0,.2);padding:6px 10px;border-radius:5px;font-size:11px;font-family:'Courier New',monospace;color:var(--teal);display:block;word-break:break-all;line-height:1.8}
+.toast{position:fixed;bottom:24px;right:24px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 18px;font-size:13px;color:var(--text);z-index:999;transform:translateY(80px);opacity:0;transition:all .3s;border-left:3px solid var(--teal);pointer-events:none}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.success{border-left-color:var(--green)}
+.toast.error{border-left-color:var(--red)}
+.spinner{width:20px;height:20px;border:2px solid rgba(6,182,212,.2);border-top-color:var(--teal);border-radius:50%;animation:spin .7s linear infinite;display:inline-block;vertical-align:middle;margin-right:8px}
+@media(max-width:1100px){.content-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:800px){.content-grid{grid-template-columns:repeat(2,1fr)}.filters-bar{gap:8px}.form-row{grid-template-columns:1fr}.topbar{padding:0 16px}}
+@media(max-width:560px){.content-grid{grid-template-columns:1fr}.page-hdr{flex-direction:column;align-items:flex-start}.hdr-actions{width:100%;flex-wrap:wrap}.content{padding:16px 14px 60px}.t-sub{display:none}}
+</style>
+</head>
+<body>
+
+<div id="toast" class="toast"></div>
+
+<!-- MODAL IMPORTAR -->
+<div class="modal-overlay" id="modal-import" onclick="closeImportModal(event)">
+  <div class="modal modal-wide">
+    <div class="modal-hdr">
+      <div class="modal-title">Importar do Google Sheets</div>
+      <button class="modal-close" onclick="closeImportModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="step-indicator">
+        <div class="step-dot active" id="sdot-1">1</div>
+        <div class="step-line" id="sline-1"></div>
+        <div class="step-dot" id="sdot-2">2</div>
+        <div class="step-line" id="sline-2"></div>
+        <div class="step-dot" id="sdot-3">3</div>
+      </div>
+      <div class="import-step active" id="step-1">
+        <div class="instruction-box">
+          <ol>
+            <li>Na sua planilha, vá em <strong>Arquivo → Compartilhar → Publicar na web</strong></li>
+            <li>Selecione a aba e o formato <strong>Valores separados por vírgula (.csv)</strong></li>
+            <li>Clique em <strong>Publicar</strong> e copie o link gerado</li>
+            <li>Cole o link abaixo e clique em <strong>Buscar dados</strong></li>
+          </ol>
+        </div>
+        <div class="columns-hint">
+          <p>Colunas esperadas na planilha:</p>
+          <code>titulo, link, especialidade, tipo, faixa_views, canal, obs</code>
+          <p style="margin-top:8px;font-size:10px;color:var(--text-dim)">
+            especialidade: Odontologia · Medicina Estética · Cirurgia · Saúde Geral · Outro<br>
+            tipo: educativo · prova_social · bastidores · autoridade · captacao · outro<br>
+            faixa_views: 0-25k · 25k-50k · 50k-100k · 100k-300k · 300k-500k · 500k-1M · acima-1M
+          </p>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Link da planilha publicada</label>
+          <input class="form-input" id="sheets-url" type="url" placeholder="https://docs.google.com/spreadsheets/d/e/.../pub?...&output=csv">
+        </div>
+        <div id="fetch-error" style="display:none;color:var(--red);font-size:12px;margin-top:6px"></div>
+      </div>
+      <div class="import-step" id="step-2">
+        <div id="preview-summary" style="margin-bottom:14px;font-size:13px;color:var(--text-sec)"></div>
+        <div class="preview-table-wrap">
+          <table class="preview-table" id="preview-table"><thead></thead><tbody></tbody></table>
+        </div>
+        <div id="preview-errors" style="display:none;background:var(--red-dim);border:1px solid var(--red-border);border-radius:7px;padding:10px 14px;font-size:12px;color:var(--red);margin-top:10px"></div>
+      </div>
+      <div class="import-step" id="step-3">
+        <div class="import-progress">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+            <span style="font-size:13px;font-weight:600" id="prog-label">Importando...</span>
+            <span style="font-size:12px;color:var(--text-sec)" id="prog-nums">0/0</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+          <div style="font-size:11px;color:var(--text-dim)" id="prog-sub">Aguarde...</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer" id="import-footer">
+      <button class="btn btn-ghost" onclick="closeImportModal()" id="btn-imp-cancel">Cancelar</button>
+      <button class="btn btn-primary" onclick="importStep1()" id="btn-imp-next">
+        <span class="spinner" id="fetch-spinner" style="display:none"></span>
+        Buscar dados
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ADICIONAR -->
+<div class="modal-overlay" id="modal-add" onclick="closeAddModal(event)">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-title">Novo conteúdo clínica</div>
+      <button class="modal-close" onclick="closeAddModal()">✕</button>
+    </div>
+    <form onsubmit="submitAddForm(event)">
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Título *</label>
+          <input class="form-input" name="titulo" required placeholder="Ex: 5 perguntas que todo paciente faz antes do procedimento...">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Link do vídeo *</label>
+          <input class="form-input" name="link" type="url" required placeholder="https://www.instagram.com/reel/...">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Especialidade</label>
+            <select class="form-select" name="especialidade">
+              <option value="Odontologia">Odontologia</option>
+              <option value="Medicina Estética">Medicina Estética</option>
+              <option value="Cirurgia">Cirurgia</option>
+              <option value="Saúde Geral">Saúde Geral</option>
+              <option value="Dermatologia">Dermatologia</option>
+              <option value="Nutrição">Nutrição</option>
+              <option value="Fisioterapia">Fisioterapia</option>
+              <option value="Psicologia">Psicologia</option>
+              <option value="Outro">Outro</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tipo de conteúdo</label>
+            <select class="form-select" name="tipo">
+              <option value="educativo">Educativo</option>
+              <option value="prova_social">Prova Social</option>
+              <option value="bastidores">Bastidores</option>
+              <option value="autoridade">Autoridade</option>
+              <option value="captacao">Captação de Leads</option>
+              <option value="outro">Outro</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Faixa de views</label>
+            <select class="form-select" name="faixa_views">
+              <option value="">Não informado</option>
+              <option value="0-25k">0 a 25k</option>
+              <option value="25k-50k">25k a 50k</option>
+              <option value="50k-100k">50k a 100k</option>
+              <option value="100k-300k">100k a 300k</option>
+              <option value="300k-500k">300k a 500k</option>
+              <option value="500k-1M">500k a 1M</option>
+              <option value="acima-1M">Acima de 1M</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Canal / fonte</label>
+            <input class="form-input" name="canal" placeholder="Ex: Dr. Ana Souza">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Observação (opcional)</label>
+          <textarea class="form-textarea" name="obs" placeholder="Por que esse conteúdo funciona para clínicas?"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" onclick="closeAddModal()">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Salvar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="topbar">
+  <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect width="22" height="22" rx="5" fill="#1A2025"/><path d="M5.5 7.5L11 6L16.5 7.5V13C16.5 16 14.2 17.8 11 18.5C7.8 17.8 5.5 16 5.5 13Z" stroke="#F5A623" stroke-width="1.3" fill="none"/><path d="M8.5 12L10.5 14L14.5 10" stroke="#F5A623" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  <div class="t-logo">FACE <span>100K</span></div>
+  <div class="t-sep"></div>
+  <div class="t-sub">Central de Clínicas</div>
+  <div class="t-right">
+    <a href="painel-conteudos.html" class="btn-back">
+      <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M8 10L4 6.5l4-3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Geral
+    </a>
+    <a href="index.html" class="btn-back">Central</a>
+  </div>
+</div>
+
+<div class="content">
+  <div class="brand-rail"></div>
+  <div class="page-hdr">
+    <div>
+      <div class="page-title">Central de <span>Clínicas</span></div>
+      <div class="page-sub">biblioteca exclusiva — odontologia, medicina estética, cirurgia e saúde geral</div>
+    </div>
+    <div class="hdr-actions">
+      <button class="btn btn-ghost" onclick="openImportModal()">
+        <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M7.5 1v9M4 7l3.5 3.5L11 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 12h11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        Importar Google Sheets
+      </button>
+      <button class="btn btn-primary" onclick="openAddModal()">
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 1v11M1 6.5h11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        Novo conteúdo
+      </button>
+    </div>
+  </div>
+
+  <div class="filters-bar">
+    <div class="search-wrap">
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="6.5" cy="6.5" r="5" stroke="currentColor" stroke-width="1.3"/><path d="M10.5 10.5l3 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+      <input class="search-input" id="search-input" placeholder="Buscar por título, canal, especialidade..." oninput="applyFilters()">
+    </div>
+    <select class="filter-select" id="filter-esp" onchange="applyFilters()">
+      <option value="">Todas especialidades</option>
+      <option value="Odontologia">Odontologia</option>
+      <option value="Medicina Estética">Medicina Estética</option>
+      <option value="Cirurgia">Cirurgia</option>
+      <option value="Saúde Geral">Saúde Geral</option>
+      <option value="Dermatologia">Dermatologia</option>
+      <option value="Nutrição">Nutrição</option>
+      <option value="Fisioterapia">Fisioterapia</option>
+      <option value="Psicologia">Psicologia</option>
+      <option value="Outro">Outro</option>
+    </select>
+    <select class="filter-select" id="filter-canal" onchange="applyFilters()">
+      <option value="">Todos os canais</option>
+    </select>
+    <select class="filter-select" id="filter-views" onchange="applyFilters()">
+      <option value="">Todas as faixas</option>
+      <option value="0-25k">0 a 25k</option>
+      <option value="25k-50k">25k a 50k</option>
+      <option value="50k-100k">50k a 100k</option>
+      <option value="100k-300k">100k a 300k</option>
+      <option value="300k-500k">300k a 500k</option>
+      <option value="500k-1M">500k a 1M</option>
+      <option value="acima-1M">Acima de 1M</option>
+    </select>
+    <select class="filter-select" id="filter-order" onchange="applyFilters()">
+      <option value="recentes">Mais recentes</option>
+      <option value="antigos">Mais antigos</option>
+      <option value="az">A → Z</option>
+    </select>
+  </div>
+
+  <div class="results-bar">
+    <div class="results-count"><strong id="count-filtered">0</strong> resultados <span id="count-total-label" style="color:var(--text-dim)"></span></div>
+  </div>
+
+  <div class="content-grid" id="content-grid">
+    <div class="empty-state">
+      <div class="empty-icon">🏥</div>
+      <div class="empty-title">Carregando conteúdos...</div>
+    </div>
+  </div>
+  <div class="load-more-wrap" id="load-more-wrap" style="display:none">
+    <button class="btn btn-ghost" id="load-more-btn" onclick="loadMore()">Carregar mais</button>
+  </div>
+</div>
+
+<script>
+const VIEWS_LABELS={'0-25k':'0 a 25k','25k-50k':'25k a 50k','50k-100k':'50k a 100k','100k-300k':'100k a 300k','300k-500k':'300k a 500k','500k-1M':'500k a 1M','acima-1M':'acima de 1M'};
+const TIPO_LABELS={educativo:'Educativo',prova_social:'Prova Social',bastidores:'Bastidores',autoridade:'Autoridade',captacao:'Captação',outro:'Outro'};
+const COLLECTION='banco_conteudos_clinicas';
+const PAGE_SIZE=24;
+let allItems=[],filteredItems=[],visibleCount=PAGE_SIZE,toastTimer,importRows=[];
+
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function fmtDate(iso){if(!iso)return'—';try{return new Date(iso).toLocaleDateString('pt-BR');}catch{return'—';}}
+function showToast(msg,type=''){const t=document.getElementById('toast');if(!t)return;t.textContent=msg;t.className='toast show'+(type?' '+type:'');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2600);}
+
+function populateCanais(){
+  const canais=[...new Set(allItems.map(c=>c.canal||'').filter(Boolean))].sort();
+  const sel=document.getElementById('filter-canal');
+  const cur=sel.value;
+  sel.innerHTML='<option value="">Todos os canais</option>'+canais.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join('');
+  if(cur)sel.value=cur;
+}
+
+function applyFilters(){
+  const q=(document.getElementById('search-input')?.value||'').toLowerCase();
+  const esp=document.getElementById('filter-esp')?.value||'';
+  const canal=document.getElementById('filter-canal')?.value||'';
+  const views=document.getElementById('filter-views')?.value||'';
+  const order=document.getElementById('filter-order')?.value||'recentes';
+  filteredItems=allItems.filter(c=>{
+    if(q&&!(c.titulo||'').toLowerCase().includes(q)&&!(c.canal||'').toLowerCase().includes(q)&&!(c.especialidade||'').toLowerCase().includes(q))return false;
+    if(esp&&c.especialidade!==esp)return false;
+    if(canal&&c.canal!==canal)return false;
+    if(views&&c.faixa_views!==views)return false;
+    return true;
+  });
+  if(order==='recentes')filteredItems.sort((a,b)=>(b.criadoEm||'').localeCompare(a.criadoEm||''));
+  else if(order==='antigos')filteredItems.sort((a,b)=>(a.criadoEm||'').localeCompare(b.criadoEm||''));
+  else if(order==='az')filteredItems.sort((a,b)=>(a.titulo||'').localeCompare(b.titulo||''));
+  visibleCount=PAGE_SIZE;renderGrid();
+}
+
+function renderGrid(){
+  const grid=document.getElementById('content-grid');
+  const total=allItems.length,filtered=filteredItems.length;
+  document.getElementById('count-filtered').textContent=filtered;
+  document.getElementById('count-total-label').textContent=total!==filtered?`de ${total} total`:'';
+  if(!filtered){
+    grid.innerHTML=`<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-title">${total?'Nenhum resultado':'Nenhum conteúdo ainda'}</div><div class="empty-sub">${total?'Tente outros filtros.':'Importe uma planilha ou adicione um conteúdo.'}</div>${!total?`<button class="btn btn-primary" onclick="openImportModal()">Importar Google Sheets</button>`:''}</div>`;
+    document.getElementById('load-more-wrap').style.display='none';return;
+  }
+  const slice=filteredItems.slice(0,visibleCount);
+  grid.innerHTML=slice.map(c=>cardHtml(c)).join('');
+  const remaining=filtered-visibleCount;
+  const lmw=document.getElementById('load-more-wrap');
+  if(remaining>0){lmw.style.display='block';document.getElementById('load-more-btn').textContent=`Carregar mais ${Math.min(remaining,PAGE_SIZE)} (${remaining} restantes)`;}
+  else lmw.style.display='none';
+}
+
+function loadMore(){visibleCount+=PAGE_SIZE;renderGrid();}
+
+function cardHtml(c){
+  const esp=c.especialidade||'';
+  const tipo=TIPO_LABELS[c.tipo]||c.tipo||'';
+  const views=VIEWS_LABELS[c.faixa_views]||c.faixa_views||'';
+  return`<div class="content-card" onclick="openLink('${esc(c.link)}')">
+    <div class="card-top">
+      <div class="card-play"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 2l7 4-7 4V2z" fill="currentColor"/></svg></div>
+      <div class="card-title">${esc(c.titulo)}</div>
+    </div>
+    <div class="card-tags">
+      ${esp?`<span class="badge b-esp">${esc(esp)}</span>`:''}
+      ${tipo?`<span class="badge b-tipo">${esc(tipo)}</span>`:''}
+      ${views?`<span class="views-badge"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><ellipse cx="5.5" cy="4.5" rx="4.5" ry="3" stroke="currentColor" stroke-width="1.1"/><circle cx="5.5" cy="4.5" r="1.3" fill="currentColor"/></svg>${esc(views)}</span>`:''}
+    </div>
+    <div class="card-meta">
+      ${c.canal?`<span>${esc(c.canal)}</span><div class="card-meta-dot"></div>`:''}
+      <span style="display:flex;align-items:center;gap:4px"><svg width="11" height="11" viewBox="0 0 11 11" fill="none"><rect x="1" y="2" width="9" height="8" rx="1" stroke="currentColor" stroke-width="1.1"/><path d="M3 1v2M8 1v2M1 5h9" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>${fmtDate(c.criadoEm)}</span>
+      <div style="margin-left:auto" onclick="event.stopPropagation()"><button class="card-del" onclick="deleteItem('${c._id}')">✕</button></div>
+    </div>
+  </div>`;
+}
+
+function openLink(url){if(url&&url!=='undefined')window.open(url,'_blank','noopener');}
+async function deleteItem(id){
+  if(!confirm('Remover este conteúdo?'))return;
+  try{await window._fs.deleteDoc(window._fs.doc(window._db,COLLECTION,id));showToast('Removido','success');}
+  catch(e){showToast('Erro ao remover','error');}
+}
+
+function openAddModal(){document.getElementById('modal-add').classList.add('open');}
+function closeAddModal(e){if(e&&e.target!==document.getElementById('modal-add')&&e.type==='click')return;document.getElementById('modal-add').classList.remove('open');}
+async function submitAddForm(e){
+  e.preventDefault();
+  const f=new FormData(e.target);
+  const data={titulo:f.get('titulo').trim(),link:f.get('link').trim(),especialidade:f.get('especialidade'),tipo:f.get('tipo'),faixa_views:f.get('faixa_views')||'',canal:f.get('canal').trim()||'',obs:f.get('obs').trim()||'',criadoEm:new Date().toISOString()};
+  try{await window._fs.addDoc(window._fs.collection(window._db,COLLECTION),data);e.target.reset();closeAddModal();showToast('Conteúdo adicionado!','success');}
+  catch(err){showToast('Erro: '+err.message,'error');}
+}
+
+let importCurrentStep=1;
+function openImportModal(){importCurrentStep=1;importRows=[];setImportStep(1);document.getElementById('sheets-url').value='';document.getElementById('fetch-error').style.display='none';document.getElementById('fetch-spinner').style.display='none';document.getElementById('btn-imp-next').textContent='Buscar dados';document.getElementById('btn-imp-next').onclick=importStep1;document.getElementById('btn-imp-cancel').style.display='';document.getElementById('modal-import').classList.add('open');}
+function closeImportModal(e){if(e&&e.target!==document.getElementById('modal-import')&&e.type==='click')return;if(importCurrentStep===3&&document.getElementById('prog-label').textContent==='Importando...')return;document.getElementById('modal-import').classList.remove('open');}
+function setImportStep(n){[1,2,3].forEach(i=>{document.getElementById('step-'+i).classList.toggle('active',i===n);const dot=document.getElementById('sdot-'+i);dot.classList.toggle('active',i===n);dot.classList.toggle('done',i<n);if(i<3){const line=document.getElementById('sline-'+i);line.classList.toggle('done',i<n);}});importCurrentStep=n;}
+function normalizeSheetUrl(url){if(url.includes('output=csv'))return url;if(url.includes('/pub?'))return url+(url.includes('?')?'&output=csv':'?output=csv');const m=url.match(/\/spreadsheets\/d\/([a-zA-Z0-9_-]+)/);if(m)return`https://docs.google.com/spreadsheets/d/${m[1]}/export?format=csv`;return url;}
+function parseCSVLine(line){const r=[];let cur='',inQ=false;for(let i=0;i<line.length;i++){const ch=line[i];if(ch==='"'){if(inQ&&line[i+1]==='"'){cur+='"';i++;}else inQ=!inQ;}else if(ch===','&&!inQ){r.push(cur);cur='';}else cur+=ch;}r.push(cur);return r;}
+function parseCSV(text){const lines=text.replace(/\r\n/g,'\n').replace(/\r/g,'\n').trim().split('\n').filter(l=>l.trim());if(!lines.length)return[];const headers=parseCSVLine(lines[0]).map(h=>h.trim().replace(/^"|"$/g,'').toLowerCase().replace(/\s+/g,'_'));return lines.slice(1).map(line=>{const vals=parseCSVLine(line);const obj={};headers.forEach((h,i)=>{obj[h]=(vals[i]||'').trim().replace(/^"|"$/g,'').trim();});return obj;}).filter(r=>r.titulo&&r.titulo.trim());}
+async function importStep1(){const url=document.getElementById('sheets-url').value.trim();if(!url){document.getElementById('fetch-error').textContent='Cole o link.';document.getElementById('fetch-error').style.display='block';return;}document.getElementById('fetch-error').style.display='none';document.getElementById('btn-imp-next').innerHTML='<span class="spinner" style="display:inline-block"></span> Buscando...';document.getElementById('btn-imp-next').disabled=true;try{const csvUrl=normalizeSheetUrl(url);const res=await fetch(csvUrl);if(!res.ok)throw new Error('HTTP '+res.status);const text=await res.text();if(text.trimStart().startsWith('<!'))throw new Error('Planilha não publicada como CSV.');importRows=parseCSV(text);if(!importRows.length)throw new Error('Nenhuma linha válida encontrada.');showImportPreview(importRows);setImportStep(2);document.getElementById('btn-imp-next').innerHTML='Importar tudo';document.getElementById('btn-imp-next').onclick=importStep2;document.getElementById('btn-imp-next').disabled=false;}catch(err){document.getElementById('fetch-error').textContent=err.message;document.getElementById('fetch-error').style.display='block';document.getElementById('btn-imp-next').innerHTML='Buscar dados';document.getElementById('btn-imp-next').disabled=false;}}
+function showImportPreview(rows){const preview=rows.slice(0,8);const cols=['titulo','link','especialidade','tipo','faixa_views','canal'];const thead=document.querySelector('#preview-table thead');const tbody=document.querySelector('#preview-table tbody');thead.innerHTML=`<tr>${cols.map(c=>`<th>${c}</th>`).join('')}</tr>`;tbody.innerHTML=preview.map(r=>`<tr>${cols.map(c=>`<td title="${esc(r[c]||'')}">${esc((r[c]||'').slice(0,30)+(r[c]?.length>30?'...':''))}</td>`).join('')}</tr>`).join('');const missing=rows.filter(r=>!r.link).length;const errEl=document.getElementById('preview-errors');if(missing){errEl.textContent=`⚠ ${missing} linha(s) sem link.`;errEl.style.display='block';}else errEl.style.display='none';document.getElementById('preview-summary').innerHTML=`<strong style="color:var(--teal)">${rows.length} conteúdos</strong> encontrados. Visualizando os primeiros ${Math.min(8,rows.length)}:`;}
+async function importStep2(){setImportStep(3);document.getElementById('btn-imp-next').style.display='none';document.getElementById('btn-imp-cancel').style.display='none';const rows=importRows,total=rows.length;let done=0;const progLabel=document.getElementById('prog-label'),progNums=document.getElementById('prog-nums'),progFill=document.getElementById('prog-fill'),progSub=document.getElementById('prog-sub'),now=new Date().toISOString(),CHUNK=15;try{for(let i=0;i<rows.length;i+=CHUNK){const chunk=rows.slice(i,i+CHUNK);await Promise.all(chunk.map(r=>{const data={titulo:(r.titulo||'').trim(),link:(r.link||'').trim(),especialidade:(r.especialidade||'Outro').trim(),tipo:(r.tipo||'outro').trim(),faixa_views:(r.faixa_views||'').trim(),canal:(r.canal||'').trim(),obs:(r.obs||'').trim(),criadoEm:now,importadoEm:now};return window._fs.addDoc(window._fs.collection(window._db,COLLECTION),data);}));done=Math.min(i+CHUNK,total);const pct=Math.round(done/total*100);progNums.textContent=`${done}/${total}`;progFill.style.width=pct+'%';progSub.textContent=`${pct}% concluído`;}progLabel.textContent='Importação concluída!';progFill.classList.add('done');progSub.textContent=`${total} conteúdos importados.`;document.getElementById('btn-imp-cancel').textContent='Fechar';document.getElementById('btn-imp-cancel').style.display='';showToast(`${total} conteúdos importados!`,'success');}catch(err){progLabel.textContent='Erro';progSub.textContent=err.message;progFill.style.background='var(--red)';document.getElementById('btn-imp-cancel').textContent='Fechar';document.getElementById('btn-imp-cancel').style.display='';showToast('Erro ao importar','error');}}
+
+window.addEventListener('db-ready',()=>{
+  window._fs.onSnapshot(window._fs.collection(window._db,COLLECTION),snap=>{
+    allItems=[];
+    snap.forEach(d=>allItems.push({_id:d.id,...d.data()}));
+    populateCanais();
+    applyFilters();
+  });
+});
+
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.getElementById('modal-import').classList.remove('open');document.getElementById('modal-add').classList.remove('open');}});
+window.applyFilters=applyFilters;window.loadMore=loadMore;window.openLink=openLink;window.deleteItem=deleteItem;
+window.openAddModal=openAddModal;window.closeAddModal=closeAddModal;window.submitAddForm=submitAddForm;
+window.openImportModal=openImportModal;window.closeImportModal=closeImportModal;window.importStep1=importStep1;window.importStep2=importStep2;
+</script>
+</body>
+</html>
