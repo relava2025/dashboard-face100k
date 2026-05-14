@@ -364,22 +364,10 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
       <input class="search-input" id="search-input" placeholder="Buscar por título, canal..." oninput="applyFilters()">
     </div>
     <select class="filter-select" id="filter-esp" onchange="applyFilters()">
-      <option value="">Todas especialidades</option>
-      <option value="bucomaxilofacial">Bucomaxilofacial</option>
-      <option value="harmonizacao">Harmonização</option>
-      <option value="implantes">Implantes</option>
-      <option value="ortodontia">Ortodontia</option>
-      <option value="estetica">Estética</option>
-      <option value="geral">Geral</option>
+      <option value="">Todos os nichos</option>
     </select>
-    <select class="filter-select" id="filter-tipo" onchange="applyFilters()">
-      <option value="">Todos os tipos</option>
-      <option value="educativo">Educativo</option>
-      <option value="prova_social">Prova Social</option>
-      <option value="bastidores">Bastidores</option>
-      <option value="autoridade">Autoridade</option>
-      <option value="captacao">Captação de Leads</option>
-      <option value="outro">Outro</option>
+    <select class="filter-select" id="filter-canal" onchange="applyFilters()">
+      <option value="">Todos os canais</option>
     </select>
     <select class="filter-select" id="filter-views" onchange="applyFilters()">
       <option value="">Todas as faixas</option>
@@ -415,9 +403,21 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 </div>
 
 <script>
-const ESP_LABELS={bucomaxilofacial:'Bucomaxilofacial',harmonizacao:'Harmonização',implantes:'Implantes',ortodontia:'Ortodontia',estetica:'Estética',geral:'Geral'};
+const ESP_LABELS={};
 const TIPO_LABELS={educativo:'Educativo',prova_social:'Prova Social',bastidores:'Bastidores',autoridade:'Autoridade',captacao:'Captação',outro:'Outro'};
 const VIEWS_LABELS={'0-25k':'0 a 25k','25k-50k':'25k a 50k','50k-100k':'50k a 100k','100k-300k':'100k a 300k','300k-500k':'300k a 500k','500k-1M':'500k a 1M','acima-1M':'acima de 1M'};
+
+function populateFilters(){
+  const esps=[...new Set(allItems.map(c=>c.especialidade||'').filter(Boolean))].sort();
+  const canais=[...new Set(allItems.map(c=>c.canal||'').filter(Boolean))].sort();
+  const selEsp=document.getElementById('filter-esp');
+  const selCanal=document.getElementById('filter-canal');
+  const curEsp=selEsp.value, curCanal=selCanal.value;
+  selEsp.innerHTML='<option value="">Todos os nichos</option>'+esps.map(e=>`<option value="${e}">${e}</option>`).join('');
+  selCanal.innerHTML='<option value="">Todos os canais</option>'+canais.map(c=>`<option value="${c}">${c}</option>`).join('');
+  if(curEsp)selEsp.value=curEsp;
+  if(curCanal)selCanal.value=curCanal;
+}
 const PAGE_SIZE=24;
 
 let allItems=[];
@@ -439,14 +439,14 @@ function showToast(msg,type=''){
 function applyFilters(){
   const q=(document.getElementById('search-input')?.value||'').toLowerCase();
   const esp=document.getElementById('filter-esp')?.value||'';
-  const tipo=document.getElementById('filter-tipo')?.value||'';
+  const canal=document.getElementById('filter-canal')?.value||'';
   const views=document.getElementById('filter-views')?.value||'';
   const order=document.getElementById('filter-order')?.value||'recentes';
 
   filteredItems=allItems.filter(c=>{
-    if(q&&!(c.titulo||'').toLowerCase().includes(q)&&!(c.canal||'').toLowerCase().includes(q))return false;
+    if(q&&!(c.titulo||'').toLowerCase().includes(q)&&!(c.canal||'').toLowerCase().includes(q)&&!(c.especialidade||'').toLowerCase().includes(q))return false;
     if(esp&&c.especialidade!==esp)return false;
-    if(tipo&&c.tipo!==tipo)return false;
+    if(canal&&c.canal!==canal)return false;
     if(views&&c.faixa_views!==views)return false;
     return true;
   });
@@ -694,6 +694,7 @@ window.addEventListener('db-ready',()=>{
   window._fs.onSnapshot(window._fs.collection(window._db,'banco_conteudos'),snap=>{
     allItems=[];
     snap.forEach(d=>allItems.push({_id:d.id,...d.data()}));
+    populateFilters();
     applyFilters();
   });
 });
