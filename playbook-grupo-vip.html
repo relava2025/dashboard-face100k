@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Playbook — Grupo VIP (Caixa Rápido)</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0D1117;--surface:#1A2025;--surface2:#212830;
+  --amber:#F5A623;--amber-dim:rgba(245,166,35,0.10);--amber-border:rgba(245,166,35,0.22);
+  --border:#3E4249;--text:#F0F0F0;--text-sec:#B8B8C0;--text-dim:rgba(255,255,255,0.25);
+  --green:#22C55E;--green-dim:rgba(34,197,94,0.10);--green-border:rgba(34,197,94,0.22);
+  --blue:#3B82F6;--blue-dim:rgba(59,130,246,0.10);--blue-border:rgba(59,130,246,0.22);
+  --purple:#A855F7;--purple-dim:rgba(168,85,247,0.10);--purple-border:rgba(168,85,247,0.22);
+  --red:#EF4444;
+}
+html,body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:14px;line-height:1.6}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(0deg,transparent 24%,rgba(245,166,35,0.02) 25%,rgba(245,166,35,0.02) 26%,transparent 27%),linear-gradient(90deg,transparent 24%,rgba(245,166,35,0.02) 25%,rgba(245,166,35,0.02) 26%,transparent 27%);background-size:50px 50px;pointer-events:none;z-index:0}
+
+.wrap{position:relative;z-index:1;max-width:820px;margin:0 auto;padding:40px 24px 80px}
+
+/* HEADER */
+.header{margin-bottom:32px}
+.logo{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.logo-icon{width:38px;height:38px;border-radius:9px;background:var(--surface);border:1px solid var(--amber-border);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.logo-text{font-family:'Montserrat',sans-serif;font-size:19px;font-weight:800}
+.logo-text span{color:var(--amber);font-style:italic}
+.badge-estrategia{display:inline-flex;align-items:center;gap:6px;background:var(--amber-dim);border:1px solid var(--amber-border);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--amber);letter-spacing:.06em;margin-bottom:12px}
+h1{font-family:'Montserrat',sans-serif;font-size:24px;font-weight:800;margin-bottom:6px}
+.header-sub{font-size:13px;color:var(--text-sec);max-width:580px}
+.brand-rail{height:2px;background:linear-gradient(90deg,var(--amber),rgba(245,166,35,0));margin-top:18px;max-width:200px;border-radius:2px}
+
+/* TABS NAV */
+.tabs-nav{display:flex;gap:4px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:5px;margin-bottom:28px;overflow-x:auto;scrollbar-width:none}
+.tabs-nav::-webkit-scrollbar{display:none}
+.tab-btn{flex-shrink:0;display:flex;align-items:center;gap:7px;padding:8px 14px;border-radius:8px;border:none;background:transparent;color:var(--text-sec);font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;letter-spacing:.04em;cursor:pointer;transition:all .18s;white-space:nowrap}
+.tab-btn:hover{color:var(--text);background:var(--surface2)}
+.tab-btn.active{background:var(--surface2);color:var(--text)}
+.tab-btn .tab-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+
+/* TAB PANELS */
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+
+/* SECTION */
+.section{margin-bottom:36px}
+.section-head{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.section-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.section-title{font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.section-head::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* CARD */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+
+/* DAY CARDS */
+.day-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:10px;overflow:hidden}
+.day-head{display:flex;align-items:center;gap:14px;padding:15px 18px;border-bottom:1px solid var(--border)}
+.day-badge{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Montserrat',sans-serif;font-size:15px;font-weight:800}
+.day-label{font-family:'Montserrat',sans-serif;font-size:14px;font-weight:700}
+.day-sub{font-size:12px;color:var(--text-sec);margin-top:2px}
+.day-body{padding:14px 18px}
+.flow-list{list-style:none;display:flex;flex-direction:column;gap:8px}
+.flow-item{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--text-sec)}
+.flow-num{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;font-family:'Montserrat',sans-serif;flex-shrink:0;margin-top:1px}
+.flow-item strong{color:var(--text)}
+.inside-group{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-top:12px}
+.inside-group-label{font-size:10px;font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;color:var(--text-dim)}
+.inside-item{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text-sec);margin-bottom:5px}
+.inside-item:last-child{margin-bottom:0}
+
+/* DAY DIVIDER */
+.day-divider{display:flex;align-items:center;gap:10px;margin:20px 0 14px}
+.day-divider-label{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;padding:4px 12px;border-radius:20px}
+.day-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* COPY CARDS */
+.copy-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:10px;overflow:hidden}
+.copy-head{display:flex;align-items:center;justify-content:space-between;padding:11px 16px;border-bottom:1px solid var(--border)}
+.copy-meta{display:flex;align-items:center;gap:10px}
+.copy-time{font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:.06em}
+.copy-label{font-size:13px;font-weight:600;color:var(--text)}
+.copy-channel{font-size:10px;font-weight:600;font-family:'Montserrat',sans-serif;letter-spacing:.06em;padding:3px 9px;border-radius:4px;text-transform:uppercase;white-space:nowrap}
+.copy-body{padding:14px 16px;font-size:13px;color:var(--text-sec);line-height:1.75;white-space:pre-wrap}
+.copy-body strong{color:var(--text)}
+.copy-body em{color:var(--amber);font-style:normal;font-weight:600}
+.copy-note{padding:9px 16px;border-top:1px solid var(--border);font-size:11px;color:var(--text-dim);display:flex;align-items:center;gap:6px}
+
+/* TIMELINE */
+.timeline{display:flex;flex-direction:column}
+.tl-item{display:flex;gap:14px;padding-bottom:14px;position:relative}
+.tl-item:last-child{padding-bottom:0}
+.tl-left{display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:54px}
+.tl-time{font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;color:var(--text-sec);text-align:center;white-space:nowrap}
+.tl-dot{width:10px;height:10px;border-radius:50%;margin:5px auto 0;flex-shrink:0}
+.tl-line{width:1px;background:var(--border);flex:1;margin-top:4px}
+.tl-item:last-child .tl-line{display:none}
+.tl-content{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:13px 16px;margin-top:2px}
+.tl-title{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;margin-bottom:4px}
+.tl-desc{font-size:12px;color:var(--text-sec);line-height:1.6}
+.tl-msg{font-size:12px;color:var(--text-sec);line-height:1.7;margin-top:8px;padding:10px 12px;background:var(--surface2);border-radius:7px;border-left:2px solid;white-space:pre-wrap}
+.tl-cover{display:inline-flex;align-items:center;gap:6px;margin-top:8px;font-size:11px;font-weight:600;padding:4px 10px;border-radius:5px;font-family:'Montserrat',sans-serif}
+
+/* GATILHOS */
+.gatilho-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.gatilho-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:15px 16px}
+.gatilho-title{font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:.07em;text-transform:uppercase;margin-bottom:10px}
+.gatilho-item{font-size:12px;color:var(--text-sec);margin-bottom:8px;line-height:1.55}
+.gatilho-item:last-child{margin-bottom:0}
+
+/* OFFER */
+.offer-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.offer-item{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:13px 15px;display:flex;gap:10px;align-items:flex-start}
+.offer-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.offer-key{font-size:10px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--text-dim);letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px}
+.offer-val{font-size:13px;color:var(--text)}
+
+/* AUTO */
+.auto-flow{display:flex;flex-direction:column;gap:0}
+.auto-step{display:flex;gap:14px;align-items:flex-start;padding-bottom:12px;position:relative}
+.auto-step:last-child{padding-bottom:0}
+.auto-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;flex-shrink:0}
+.auto-arrow{position:absolute;left:13px;top:32px;bottom:0;width:2px;background:var(--border)}
+.auto-step:last-child .auto-arrow{display:none}
+.auto-text{font-size:13px;color:var(--text-sec);padding-top:5px}
+.auto-text strong{color:var(--text)}
+
+/* LABELS */
+.label-grid{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.label-tag{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:600;font-family:'Montserrat',sans-serif}
+
+/* RESULT */
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.result-item{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:14px 16px}
+.result-num{font-family:'Montserrat',sans-serif;font-size:22px;font-weight:800;margin-bottom:4px}
+.result-label{font-size:12px;color:var(--text-sec)}
+
+/* ALERT */
+.alert{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);border-radius:9px;padding:13px 15px;display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--text-sec)}
+.alert strong{color:var(--red)}
+
+/* FOOTER */
+.footer{text-align:center;font-size:12px;color:var(--text-dim);margin-top:24px}
+
+/* COLORS */
+.amber .day-badge{background:var(--amber-dim);border:1px solid var(--amber-border);color:var(--amber)}
+.amber .day-label{color:var(--amber)}
+.amber .flow-num{background:var(--amber-dim);border:1px solid var(--amber-border);color:var(--amber)}
+.blue .day-badge{background:var(--blue-dim);border:1px solid var(--blue-border);color:var(--blue)}
+.blue .day-label{color:var(--blue)}
+.blue .flow-num{background:var(--blue-dim);border:1px solid var(--blue-border);color:var(--blue)}
+.purple .day-badge{background:var(--purple-dim);border:1px solid var(--purple-border);color:var(--purple)}
+.purple .day-label{color:var(--purple)}
+.purple .flow-num{background:var(--purple-dim);border:1px solid var(--purple-border);color:var(--purple)}
+.green .day-badge{background:var(--green-dim);border:1px solid var(--green-border);color:var(--green)}
+.green .day-label{color:var(--green)}
+.green .flow-num{background:var(--green-dim);border:1px solid var(--green-border);color:var(--green)}
+
+@media(max-width:600px){
+  .wrap{padding:24px 14px 60px}
+  h1{font-size:20px}
+  .offer-grid,.result-grid,.gatilho-grid{grid-template-columns:1fr}
+  .tab-btn{padding:7px 11px;font-size:11px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo">
+      <div class="logo-icon">
+        <svg width="20" height="20" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="9" stroke="#F5A623" stroke-width="1.4"/><path d="M7 11l3 3 5-5" stroke="#F5A623" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="logo-text">System <span>Digital</span></div>
+    </div>
+    <div class="badge-estrategia">
+      <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="#F5A623" stroke-width="1.2"/><path d="M6 3v3l2 1" stroke="#F5A623" stroke-width="1.2" stroke-linecap="round"/></svg>
+      ESTRATÉGIA DE CAIXA · 3 DIAS
+    </div>
+    <h1>Playbook — Grupo VIP</h1>
+    <div class="header-sub">Estratégia de faturamento rápido via WhatsApp — urgência, escassez e decisão rápida usando a base de contatos existente. Custo médio: R$0,60/contato.</div>
+    <div class="brand-rail"></div>
+  </div>
+
+  <!-- TABS NAV -->
+  <nav class="tabs-nav">
+    <button class="tab-btn active" data-tab="estrategia">
+      <div class="tab-dot" style="background:var(--amber)"></div>Estratégia
+    </button>
+    <button class="tab-btn" data-tab="copys">
+      <div class="tab-dot" style="background:var(--blue)"></div>Copys
+    </button>
+    <button class="tab-btn" data-tab="cronograma">
+      <div class="tab-dot" style="background:var(--green)"></div>Cronograma
+    </button>
+    <button class="tab-btn" data-tab="gatilhos">
+      <div class="tab-dot" style="background:var(--purple)"></div>Gatilhos
+    </button>
+    <button class="tab-btn" data-tab="operacao">
+      <div class="tab-dot" style="background:var(--blue)"></div>Operação
+    </button>
+    <button class="tab-btn" data-tab="resultado">
+      <div class="tab-dot" style="background:var(--green)"></div>Resultado
+    </button>
+  </nav>
+
+  <!-- ===================== TAB: ESTRATÉGIA ===================== -->
+  <div class="tab-panel active" id="tab-estrategia">
+
+    <div class="section">
+      <div class="section-head">
+        <div class="section-dot" style="background:var(--amber)"></div>
+        <div class="section-title" style="color:var(--amber)">Como Funciona — 3 Dias</div>
+      </div>
+
+      <div class="day-card amber">
+        <div class="day-head">
+          <div class="day-badge">1</div>
+          <div>
+            <div class="day-label">Dia 1 — Convite Inicial</div>
+            <div class="day-sub">Objetivo: gerar curiosidade + entrada no grupo</div>
+          </div>
+        </div>
+        <div class="day-body">
+          <ul class="flow-list">
+            <li class="flow-item"><div class="flow-num">1</div><span><strong>Disparo</strong> para toda a base de contatos</span></li>
+            <li class="flow-item"><div class="flow-num">2</div><span><strong>Mensagem inicial</strong> — convite personalizado</span></li>
+            <li class="flow-item"><div class="flow-num">3</div><span><strong>Mensagem de contexto</strong> — humaniza e aumenta conversão</span></li>
+            <li class="flow-item"><div class="flow-num">4</div><span><strong>Link do Grupo VIP</strong> — direcionamento direto</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="day-card blue">
+        <div class="day-head">
+          <div class="day-badge">2</div>
+          <div>
+            <div class="day-label">Dia 2 — Reforço + Engajamento</div>
+            <div class="day-sub">Objetivo: aumentar adesão e preparar o público para o evento</div>
+          </div>
+        </div>
+        <div class="day-body">
+          <div style="font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:.07em;color:var(--text-dim);text-transform:uppercase;margin-bottom:8px">Manhã / Tarde — Disparo na base</div>
+          <ul class="flow-list">
+            <li class="flow-item"><div class="flow-num">1</div><span><strong>"Tudo bem?"</strong> — reforço leve e humanizado</span></li>
+            <li class="flow-item"><div class="flow-num">2</div><span>Mensagem reforçando <strong>entrada no grupo + suporte</strong></span></li>
+            <li class="flow-item"><div class="flow-num">3</div><span><strong>Reenvio do link</strong> para quem ainda não entrou</span></li>
+          </ul>
+          <div class="inside-group">
+            <div class="inside-group-label">Final da tarde — Dentro do Grupo</div>
+            <div class="inside-item"><span style="color:var(--blue)">📊</span><span><strong style="color:var(--text)">Enquete:</strong> "Quais procedimentos você gostaria de ver em oferta?"</span></div>
+            <div class="inside-item"><span style="color:var(--blue)">🎥</span><span><strong style="color:var(--text)">Vídeo de boas-vindas</strong> — data/hora do evento, evento único, pagamento PIX + link, vagas limitadas, bônus para os 10 primeiros</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="day-card purple">
+        <div class="day-head">
+          <div class="day-badge">3</div>
+          <div>
+            <div class="day-label">Dia 3 — Dia do Evento (Venda)</div>
+            <div class="day-sub">Objetivo: converter a base aquecida em agendamentos</div>
+          </div>
+        </div>
+        <div class="day-body">
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px">
+              <div style="font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--text-dim);letter-spacing:.07em;text-transform:uppercase;margin-bottom:8px">Antecipação</div>
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <div style="display:flex;gap:8px;font-size:13px"><span style="color:var(--purple);font-weight:700;font-family:'Montserrat',sans-serif;min-width:44px">09:00</span><span style="color:var(--text-sec)">→ Mensagem <strong style="color:var(--text)">Falta 1h</strong></span></div>
+                <div style="display:flex;gap:8px;font-size:13px"><span style="color:var(--purple);font-weight:700;font-family:'Montserrat',sans-serif;min-width:44px">09:30</span><span style="color:var(--text-sec)">→ Mensagem <strong style="color:var(--text)">Falta 30min</strong></span></div>
+                <div style="display:flex;gap:8px;font-size:13px"><span style="color:var(--purple);font-weight:700;font-family:'Montserrat',sans-serif;min-width:44px">09:55</span><span style="color:var(--text-sec)">→ 🎥 <strong style="color:var(--text)">Vídeo revelando o bônus</strong></span></div>
+              </div>
+            </div>
+            <div style="display:flex;gap:10px">
+              <div style="flex:1;background:var(--green-dim);border:1px solid var(--green-border);border-radius:8px;padding:12px 14px">
+                <div style="font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--green);letter-spacing:.07em;text-transform:uppercase;margin-bottom:4px">Abertura</div>
+                <div style="font-size:13px;color:var(--text-sec)"><strong style="color:var(--text)">10:00</strong> → Liberação das ofertas no grupo</div>
+              </div>
+              <div style="flex:1;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.22);border-radius:8px;padding:12px 14px">
+                <div style="font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--red);letter-spacing:.07em;text-transform:uppercase;margin-bottom:4px">Encerramento</div>
+                <div style="font-size:13px;color:var(--text-sec)"><strong style="color:var(--text)">18:00</strong> → Vídeo de encerramento + agradecimento</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===================== TAB: COPYS ===================== -->
+  <div class="tab-panel" id="tab-copys">
+
+    <!-- DIA 1 -->
+    <div class="day-divider">
+      <div class="day-divider-label" style="background:var(--amber-dim);border:1px solid var(--amber-border);color:var(--amber)">Dia 1</div>
+    </div>
+
+    <div class="copy-card">
+      <div class="copy-head">
+        <div class="copy-meta">
+          <span class="copy-time" style="color:var(--amber)">MANHÃ</span>
+          <span class="copy-label">Convite Inicial</span>
+        </div>
+        <span class="copy-channel" style="background:var(--green-dim);color:var(--green);border:1px solid var(--green-border)">Disparo base</span>
+      </div>
+      <div class="copy-body">{Oiii|Oiee|Olá|Oi}! Tudo bem? 🥰
+
+Aqui é a <em>[Dra. Nome]</em> da <em>[Clínica Nome]</em>.
+Separei um tempinho para te contar uma novidade muito especial que preparamos por aqui ✨
+
+Entrando no nosso Grupo VIP, você vai ter acesso antecipado a condições especiais, bônus exclusivos e novidades preparadas com muito carinho 💗
+
+Clique no link abaixo e faça parte do nosso Grupo VIP 👇
+
+➡ <em>[LINK]</em></div>
+      <div class="copy-note">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.1"/><path d="M6 5v3M6 4v.5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>
+        Substituir {variáveis} conforme ferramenta de disparo — cada contato recebe uma versão aleatória
+      </div>
+    </div>
+
+    <!-- DIA 2 -->
+    <div class="day-divider">
+      <div class="day-divider-label" style="background:var(--blue-dim);border:1px solid var(--blue-border);color:var(--blue)">Dia 2</div>
+    </div>
+
+    <div class="copy-card">
+      <div class="copy-head">
+        <div class="copy-meta">
+          <span class="copy-time" style="color:var(--blue)">MANHÃ</span>
+          <span class="copy-label">Segundo Convite</span>
+        </div>
+        <span class="copy-channel" style="background:var(--green-dim);color:var(--green);border:1px solid var(--green-border)">Disparo base</span>
+      </div>
+      <div class="copy-body">{Oiiee! 🥰|Olá! 🥰|Oi! 🥰} Tudo bem? 🥳
+
+Passando pra te lembrar que nosso Grupo VIP já está aberto ✨
+Estamos preparando condições especiais e algumas oportunidades exclusivas para quem estiver no grupo 👀💗
+
+É só clicar aqui para entrar 👇
+
+➡ <em>[LINK]</em></div>
+    </div>
+
+    <div class="copy-card">
+      <div class="copy-head">
+        <div class="copy-meta">
+          <span class="copy-time" style="color:var(--blue)">15h</span>
+          <span class="copy-label">Enquete Interativa</span>
+        </div>
+        <span class="copy-channel" style="background:var(--purple-dim);color:var(--purple);border:1px solid var(--purple-border)">Grupo VIP</span>
+      </div>
+      <div class="copy-body">Conta pra mim… ✨
+Qual dessas mudanças faria mais diferença pra sua autoestima hoje? 💗
+
+1️⃣ Reduzir gordura localizada e melhorar o contorno corporal
+2️⃣ Suavizar linhas de expressão e rugas
+3️⃣ Melhorar a firmeza e qualidade da pele
+4️⃣ Fazer uma limpeza profunda e revitalizar o rosto
+5️⃣ Melhorar vasinhos e aparência das pernas
+6️⃣ Estimular colágeno sem dor ou agulhas</div>
+      <div class="copy-note">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.1"/><path d="M6 5v3M6 4v.5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>
+        Postar como enquete no grupo — os resultados orientam quais ofertas priorizar no Dia 3
+      </div>
+    </div>
+
+    <div class="copy-card">
+      <div class="copy-head">
+        <div class="copy-meta">
+          <span class="copy-time" style="color:var(--blue)">17h</span>
+          <span class="copy-label">Boas-vindas + Vídeo</span>
+        </div>
+        <span class="copy-channel" style="background:var(--purple-dim);color:var(--purple);border:1px solid var(--purple-border)">Grupo VIP</span>
+      </div>
+      <div class="copy-body">✨ Seja muito bem-vindo(a) ao nosso Grupo VIP! 💗
+
+🎥 <strong>ASSISTAM AO VÍDEO!</strong>
+
+🚨 Amanhã, às <strong>10h da manhã</strong>, vamos liberar nossas condições especiais! 🚨
+
+✨ Teremos bônus exclusivos para algumas condições
+✨ Para garantir sua vaga, basta escrever: <strong>EU QUERO</strong> aqui no grupo
+✨ Qualquer dúvida, pode mandar mensagem por aqui mesmo
+✨ As vagas e condições serão limitadas
+
+Preparamos tudo com muito carinho para proporcionar uma experiência especial pra vocês 🥰
+Até amanhã! 🤍
+
+<em>[VIDEO]</em></div>
+      <div class="copy-note">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.1"/><path d="M6 5v3M6 4v.5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>
+        Anexar o vídeo de boas-vindas gravado (Vídeo 1)
+      </div>
+    </div>
+
+    <!-- DIA 3 -->
+    <div class="day-divider">
+      <div class="day-divider-label" style="background:var(--purple-dim);border:1px solid var(--purple-border);color:var(--purple)">Dia 3 — Evento</div>
+    </div>
+
+    <div class="copy-card">
+      <div class="copy-head">
+        <div class="copy-meta">
+          <span class="copy-time" style="color:var(--purple)">09:00</span>
+          <span class="copy-label">Aquecimento</span>
+        </div>
+        <span class="copy-channel" style="background:var(--purple-dim);color:var(--purple);border:1px solid var(--purple-border)">Grupo VIP</span>
+      </div>
+      <div class="copy-body">✨ Chegou o grande dia! ✨
+
+Bom diaaa, pessoal! 💗
+
+Hoje, às <strong>10h em ponto</strong>, vamos liberar nossas condições especiais com oportunidades exclusivas para quem está aqui no Grupo VIP 🥰
+
+Preparamos tudo com muito carinho, pensando em autoestima, bem-estar e transformação ✨
+
+⏰ As primeiras pessoas que garantirem a condição ainda vão receber um bônus especial!
+
+Fiquem atentos aqui no grupo 👀💗</div>
+    </div>
+
+    <div class="copy-card">
+      <div class="copy-head">
+        <div class="copy-meta">
+          <span class="copy-time" style="color:var(--purple)">09:30</span>
+          <span class="copy-label">Faltam 30 minutos</span>
+        </div>
+        <span class="copy-channel" style="background:var(--purple-dim);color:var(--purple);border:1px solid var(--purple-border)">Grupo VIP</span>
+      </div>
+      <div class="copy-body">✨ TÁ CHEGANDOOOO! ✨
+
+Faltam só <strong>30 minutinhos</strong> 🥰
+
+Preparamos condições muito especiais e tenho certeza que vocês vão amar 💗
+
+Já já começamos 👀✨</div>
+    </div>
+
+    <div class="copy-card">
+      <div class="copy-head">
+        <div class="copy-meta">
+          <span class="copy-time" style="color:var(--purple)">09:55</span>
+          <span class="copy-label">Faltam 5 minutos + Vídeo Bônus</span>
+        </div>
+        <span class="copy-channel" style="background:var(--purple-dim);color:var(--purple);border:1px solid var(--purple-border)">Grupo VIP</span>
+      </div>
+      <div class="copy-body">🎀 Faltam só 5 minutinhos! 🎀
+
+🎥 <strong>Dá o play no vídeo!</strong> ✨
+
+Hoje vamos liberar uma condição super especial preparada exclusivamente para vocês 💗
+
+Lembrando: após garantir sua vaga, envie o comprovante no privado 💌
+
+⏰ As condições ficam disponíveis somente até às <strong>19h de hoje!</strong>
+
+<em>[VIDEO]</em></div>
+      <div class="copy-note">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.1"/><path d="M6 5v3M6 4v.5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>
+        Vídeo 2 — Revelação do bônus
+      </div>
+    </div>
+
+    <div class="copy-card">
+      <div class="copy-head">
+        <div class="copy-meta">
+          <span class="copy-time" style="color:var(--green)">10:00</span>
+          <span class="copy-label">Abertura das Ofertas</span>
+        </div>
+        <span class="copy-channel" style="background:var(--purple-dim);color:var(--purple);border:1px solid var(--purple-border)">Grupo VIP</span>
+      </div>
+      <div class="copy-body">Oi, meus amores! 💗✨
+
+Como combinado, chegou a hora de revelar as condições especiais que preparamos exclusivamente para vocês que estão no nosso Grupo VIP 🥰
+
+As vagas serão limitadas e algumas condições possuem bônus exclusivos 👀✨</div>
+      <div class="copy-note">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.1"/><path d="M6 5v3M6 4v.5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>
+        Enviar logo em seguida as cards de oferta dos procedimentos
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===================== TAB: CRONOGRAMA ===================== -->
+  <div class="tab-panel" id="tab-cronograma">
+
+    <div class="section">
+      <div class="section-head">
+        <div class="section-dot" style="background:var(--green)"></div>
+        <div class="section-title" style="color:var(--green)">Cronograma Completo — Dia do Evento</div>
+      </div>
+
+      <div class="timeline">
+
+        <div class="tl-item">
+          <div class="tl-left">
+            <div class="tl-time" style="color:var(--green)">10:00</div>
+            <div class="tl-dot" style="background:var(--green)"></div>
+            <div class="tl-line"></div>
+          </div>
+          <div class="tl-content" style="border-color:var(--green-border)">
+            <div class="tl-title" style="color:var(--green)">Abertura + Oferta 1</div>
+            <div class="tl-desc">Enviar Oferta 1 e fixar mensagem no grupo.</div>
+            <div class="tl-msg" style="border-color:var(--green)">📌 Mensagem fixada:
+
+Para garantir sua vaga:
+✅ Comente EU QUERO
+✅ Envie o comprovante no privado</div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-left">
+            <div class="tl-time">10:30</div>
+            <div class="tl-dot" style="background:var(--amber)"></div>
+            <div class="tl-line"></div>
+          </div>
+          <div class="tl-content">
+            <div class="tl-title" style="color:var(--amber)">Movimento Inicial</div>
+            <div class="tl-cover" style="background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border)">🖼 Capa: "35% das vagas preenchidas"</div>
+            <div class="tl-msg" style="border-color:var(--amber)">Genteee 😱
+Em menos de 30 minutos já tivemos MUITA procura!
+
+Algumas vagas já foram preenchidas e o grupo tá movimentado demais 🔥
+
+Se você ainda está pensando… corre porque as condições são limitadas 💫</div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-left">
+            <div class="tl-time">11:30</div>
+            <div class="tl-dot" style="background:var(--blue)"></div>
+            <div class="tl-line"></div>
+          </div>
+          <div class="tl-content">
+            <div class="tl-title" style="color:var(--blue)">Prova Visual / Resultado</div>
+            <div class="tl-desc">Anexar foto antes/depois ou imagem de resultado real.</div>
+            <div class="tl-msg" style="border-color:var(--blue)">Esse procedimento aqui foi um dos mais procurados hoje 😱🔥
+
+Já temos várias confirmações e restam poucas vagas!
+
+Olha esse resultado 👇
+(anexar antes/depois ou imagem real)</div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-left">
+            <div class="tl-time">12:00</div>
+            <div class="tl-dot" style="background:var(--amber)"></div>
+            <div class="tl-line"></div>
+          </div>
+          <div class="tl-content">
+            <div class="tl-title" style="color:var(--amber)">Metade das Vagas</div>
+            <div class="tl-cover" style="background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border)">🖼 Capa: "Mais de 50% preenchido"</div>
+            <div class="tl-msg" style="border-color:var(--amber)">⚠️ Mais da metade das vagas já foi!
+
+Vocês realmente estão aproveitando essa oportunidade ✨
+
+Quem ainda está em dúvida… talvez esse seja o sinal que faltava 👀</div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-left">
+            <div class="tl-time">14:00</div>
+            <div class="tl-dot" style="background:var(--purple)"></div>
+            <div class="tl-line"></div>
+          </div>
+          <div class="tl-content">
+            <div class="tl-title" style="color:var(--purple)">Validação Social</div>
+            <div class="tl-desc">Anexar depoimento, print ou vídeo de paciente.</div>
+            <div class="tl-msg" style="border-color:var(--purple)">Olha esse feedback que acabamos de receber 😍💗
+
+(anexar depoimento, print ou vídeo)
+
+É muito bom ver vocês investindo em autoestima e bem-estar ✨</div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-left">
+            <div class="tl-time" style="color:var(--red)">15:00</div>
+            <div class="tl-dot" style="background:var(--red)"></div>
+            <div class="tl-line"></div>
+          </div>
+          <div class="tl-content" style="border-color:rgba(239,68,68,0.25)">
+            <div class="tl-title" style="color:var(--red)">Escassez</div>
+            <div class="tl-cover" style="background:rgba(239,68,68,0.08);color:var(--red);border:1px solid rgba(239,68,68,0.25)">🖼 Capa: "Últimas oportunidades"</div>
+            <div class="tl-msg" style="border-color:var(--red)">A procura hoje foi muito maior do que imaginávamos 😱
+
+Estamos entrando nas últimas vagas disponíveis 👀
+
+Se você quer aproveitar essa condição, comenta EU QUERO aqui 👇</div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-left">
+            <div class="tl-time" style="color:var(--red)">16:00</div>
+            <div class="tl-dot" style="background:var(--red)"></div>
+            <div class="tl-line"></div>
+          </div>
+          <div class="tl-content" style="border-color:rgba(239,68,68,0.25)">
+            <div class="tl-title" style="color:var(--red)">Reta Final</div>
+            <div class="tl-cover" style="background:rgba(239,68,68,0.08);color:var(--red);border:1px solid rgba(239,68,68,0.25)">🖼 Capa: "Últimas vagas"</div>
+            <div class="tl-msg" style="border-color:var(--red)">Chegamos nas últimas vagas disponíveis 🚨
+
+Assim que encerrarem, não conseguimos manter as mesmas condições.
+
+Se você ainda quer aproveitar, comenta EU QUERO que te chamamos no privado 💗</div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-left">
+            <div class="tl-time">18:00</div>
+            <div class="tl-dot" style="background:var(--text-dim)"></div>
+          </div>
+          <div class="tl-content">
+            <div class="tl-title">Encerramento</div>
+            <div class="tl-desc">Postar Vídeo 3 + aviso de encerramento.</div>
+            <div class="tl-msg" style="border-color:var(--border)">Encerramos oficialmente nossa ação especial de hoje ✨
+
+Obrigada a todos que participaram, confiaram e garantiram suas vagas 💗
+
+Foi incrível acompanhar toda a movimentação do grupo hoje 🥰</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===================== TAB: GATILHOS ===================== -->
+  <div class="tab-panel" id="tab-gatilhos">
+
+    <div class="section">
+      <div class="section-head">
+        <div class="section-dot" style="background:var(--purple)"></div>
+        <div class="section-title" style="color:var(--purple)">Gatilhos de Suporte — Usar ao Longo do Dia 3</div>
+      </div>
+
+      <div class="gatilho-grid">
+        <div class="gatilho-card" style="border-color:rgba(239,68,68,0.25)">
+          <div class="gatilho-title" style="color:var(--red)">Escassez</div>
+          <div class="gatilho-item">• O grupo tá movimentado demais 😱<br>As vagas estão saindo muito rápido!</div>
+          <div class="gatilho-item">• Esse procedimento foi um dos mais procurados hoje 👀<br>Agora restam poucas vagas disponíveis.</div>
+          <div class="gatilho-item">• Últimas oportunidades reais!<br>Depois disso, as condições voltam ao valor normal.</div>
+        </div>
+        <div class="gatilho-card" style="border-color:var(--purple-border)">
+          <div class="gatilho-title" style="color:var(--purple)">Validação Social</div>
+          <div class="gatilho-item">• Acabamos de receber mais uma confirmação 🙌<br>Vocês estão arrasando hoje!</div>
+          <div class="gatilho-item">• Já tivemos várias vagas preenchidas e o movimento tá incrível ✨</div>
+          <div class="gatilho-item">• Tô organizando os agendamentos aqui e impressionada com a procura de hoje 😱💗</div>
+        </div>
+        <div class="gatilho-card" style="border-color:var(--blue-border)">
+          <div class="gatilho-title" style="color:var(--blue)">Curiosidade</div>
+          <div class="gatilho-item">• Tem um procedimento aqui que virou o queridinho do dia 👀<br>Quer descobrir qual é? Me chama no privado ✨</div>
+          <div class="gatilho-item">• Uma das ofertas está surpreendendo MUITO hoje 😱<br>Será que é justamente a que você queria?</div>
+        </div>
+        <div class="gatilho-card" style="border-color:var(--green-border)">
+          <div class="gatilho-title" style="color:var(--green)">Engajamento Direto</div>
+          <div class="gatilho-item">• Me conta aqui: qual procedimento você mais tem vontade de fazer hoje? 👀</div>
+          <div class="gatilho-item">• Se pudesse começar um tratamento agora, qual escolheria? ✨</div>
+          <div class="gatilho-item">• Quero saber: quem aqui já garantiu sua vaga? 🙋<br>E quem ainda está pensando? 👀</div>
+        </div>
+      </div>
+
+      <div class="card" style="padding:15px 16px;border-color:var(--amber-border);background:var(--amber-dim)">
+        <div class="gatilho-title" style="color:var(--amber)">Reforço de Bônus</div>
+        <div class="gatilho-item">• As primeiras confirmações ainda recebem um bônus especial 🎁</div>
+        <div class="gatilho-item">• Ainda dá tempo de garantir as condições + bônus exclusivos ✨</div>
+        <div class="gatilho-item">• Os bônus permanecem ativos somente enquanto ainda tivermos vagas disponíveis 👀</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===================== TAB: OPERAÇÃO ===================== -->
+  <div class="tab-panel" id="tab-operacao">
+
+    <div class="section">
+      <div class="section-head">
+        <div class="section-dot" style="background:var(--blue)"></div>
+        <div class="section-title" style="color:var(--blue)">Estrutura das Ofertas</div>
+      </div>
+
+      <div class="offer-grid">
+        <div class="offer-item">
+          <div class="offer-icon" style="background:var(--blue-dim);border:1px solid var(--blue-border)">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 3h10M2 7h6M2 11h8" stroke="#3B82F6" stroke-width="1.3" stroke-linecap="round"/></svg>
+          </div>
+          <div><div class="offer-key">Campo</div><div class="offer-val">Nome do procedimento</div></div>
+        </div>
+        <div class="offer-item">
+          <div class="offer-icon" style="background:var(--blue-dim);border:1px solid var(--blue-border)">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 4h10M2 7h6" stroke="#3B82F6" stroke-width="1.3" stroke-linecap="round"/></svg>
+          </div>
+          <div><div class="offer-key">Campo</div><div class="offer-val">Breve descrição</div></div>
+        </div>
+        <div class="offer-item">
+          <div class="offer-icon" style="background:var(--blue-dim);border:1px solid var(--blue-border)">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5" stroke="#3B82F6" stroke-width="1.3"/><path d="M7 5v2l1.5 1.5" stroke="#3B82F6" stroke-width="1.2" stroke-linecap="round"/></svg>
+          </div>
+          <div><div class="offer-key">Campo</div><div class="offer-val">Número de sessões</div></div>
+        </div>
+        <div class="offer-item">
+          <div class="offer-icon" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25)">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 3l8 8M3 11l8-8" stroke="#EF4444" stroke-width="1.3" stroke-linecap="round"/></svg>
+          </div>
+          <div><div class="offer-key">Campo</div><div class="offer-val" style="text-decoration:line-through;color:var(--text-sec)">Valor original</div></div>
+        </div>
+        <div class="offer-item">
+          <div class="offer-icon" style="background:var(--green-dim);border:1px solid var(--green-border)">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5" stroke="#22C55E" stroke-width="1.3"/><path d="M5 7l1.5 1.5L9 5.5" stroke="#22C55E" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div><div class="offer-key">Campo</div><div class="offer-val">Valor promocional — à vista e parcelado</div></div>
+        </div>
+        <div class="offer-item">
+          <div class="offer-icon" style="background:var(--green-dim);border:1px solid var(--green-border)">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="2" y="4" width="10" height="7" rx="1.5" stroke="#22C55E" stroke-width="1.3"/><path d="M2 7h10" stroke="#22C55E" stroke-width="1.2"/><circle cx="4.5" cy="9.5" r=".8" fill="#22C55E"/></svg>
+          </div>
+          <div><div class="offer-key">Campo</div><div class="offer-val">PIX disponível</div></div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+        <div class="card" style="padding:13px 15px;border-color:var(--amber-border)">
+          <div class="offer-key" style="color:var(--amber);margin-bottom:4px">CTA obrigatório</div>
+          <div style="font-size:14px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--amber)">"Comente EU QUERO"</div>
+        </div>
+        <div class="card" style="padding:13px 15px;border-color:rgba(239,68,68,0.25)">
+          <div class="offer-key" style="color:var(--red);margin-bottom:4px">Escassez</div>
+          <div style="font-size:13px;color:var(--text)">Vagas limitadas — informar quantidade</div>
+        </div>
+      </div>
+
+      <div class="card" style="padding:13px 15px;border-color:var(--amber-border);background:var(--amber-dim)">
+        <div style="display:flex;align-items:center;gap:8px;font-size:13px">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" style="flex-shrink:0"><path d="M8 2l1.5 3 3.5.5-2.5 2.5.5 3.5L8 10l-3 1.5.5-3.5L3 5.5 6.5 5z" stroke="#F5A623" stroke-width="1.3" stroke-linejoin="round"/></svg>
+          <span><strong style="color:var(--amber)">Regra:</strong> Somente procedimentos com <strong>alta demanda</strong> — baixa demanda não entra.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head">
+        <div class="section-dot" style="background:var(--green)"></div>
+        <div class="section-title" style="color:var(--green)">Automação — WhatsApp</div>
+      </div>
+
+      <div class="card" style="padding:18px">
+        <div class="auto-flow">
+          <div class="auto-step">
+            <div class="auto-num" style="background:var(--blue-dim);border:1px solid var(--blue-border);color:var(--blue)">1</div>
+            <div class="auto-arrow"></div>
+            <div class="auto-text"><strong>Mensagem automática inicial</strong> — disparo ao comentar EU QUERO</div>
+          </div>
+          <div class="auto-step">
+            <div class="auto-num" style="background:var(--blue-dim);border:1px solid var(--blue-border);color:var(--blue)">2</div>
+            <div class="auto-arrow"></div>
+            <div class="auto-text"><strong>Pergunta de interesse</strong> — confirmar qual procedimento</div>
+          </div>
+          <div class="auto-step">
+            <div class="auto-num" style="background:var(--blue-dim);border:1px solid var(--blue-border);color:var(--blue)">3</div>
+            <div class="auto-arrow"></div>
+            <div class="auto-text"><strong>Validação da escolha</strong> — confirmar disponibilidade</div>
+          </div>
+          <div class="auto-step">
+            <div class="auto-num" style="background:var(--blue-dim);border:1px solid var(--blue-border);color:var(--blue)">4</div>
+            <div class="auto-arrow"></div>
+            <div class="auto-text"><strong>Direcionamento para pagamento</strong> — instrução clara</div>
+          </div>
+          <div class="auto-step">
+            <div class="auto-num" style="background:var(--blue-dim);border:1px solid var(--blue-border);color:var(--blue)">5</div>
+            <div class="auto-arrow"></div>
+            <div class="auto-text"><strong>Envio da chave PIX</strong> — automático</div>
+          </div>
+          <div class="auto-step">
+            <div class="auto-num" style="background:var(--green-dim);border:1px solid var(--green-border);color:var(--green)">6</div>
+            <div class="auto-text"><strong>Solicitação de comprovante</strong> — finaliza o fluxo</div>
+          </div>
+        </div>
+        <div style="margin-top:14px;padding:10px 12px;background:var(--green-dim);border:1px solid var(--green-border);border-radius:7px;font-size:12px;color:var(--text-sec)">
+          <strong style="color:var(--green)">Objetivo:</strong> reduzir fricção e acelerar o pagamento — cada etapa remove uma barreira de decisão
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head">
+        <div class="section-dot" style="background:var(--purple)"></div>
+        <div class="section-title" style="color:var(--purple)">Organização e Controle</div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="card" style="padding:16px">
+          <div style="font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--purple);letter-spacing:.07em;text-transform:uppercase;margin-bottom:12px">Etiquetas WhatsApp</div>
+          <div class="label-grid">
+            <div class="label-tag" style="background:var(--blue-dim);border:1px solid var(--blue-border);color:var(--blue)"><div style="width:6px;height:6px;border-radius:50%;background:var(--blue)"></div>Mensagem enviada</div>
+            <div class="label-tag" style="background:var(--amber-dim);border:1px solid var(--amber-border);color:var(--amber)"><div style="width:6px;height:6px;border-radius:50%;background:var(--amber)"></div>EU QUERO</div>
+            <div class="label-tag" style="background:var(--green-dim);border:1px solid var(--green-border);color:var(--green)"><div style="width:6px;height:6px;border-radius:50%;background:var(--green)"></div>Pagamento confirmado</div>
+            <div class="label-tag" style="background:var(--purple-dim);border:1px solid var(--purple-border);color:var(--purple)"><div style="width:6px;height:6px;border-radius:50%;background:var(--purple)"></div>Leads ativos</div>
+            <div class="label-tag" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);color:var(--red)"><div style="width:6px;height:6px;border-radius:50%;background:var(--red)"></div>Leads bloqueados</div>
+          </div>
+        </div>
+        <div class="card" style="padding:16px">
+          <div style="font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--purple);letter-spacing:.07em;text-transform:uppercase;margin-bottom:12px">Vídeos Necessários (3)</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-sec)">
+              <div style="width:22px;height:22px;border-radius:5px;background:var(--blue-dim);border:1px solid var(--blue-border);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--blue);font-family:'Montserrat',sans-serif;flex-shrink:0">1</div>
+              <span><strong style="color:var(--text)">Boas-vindas</strong> — Dia 2, às 17h</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-sec)">
+              <div style="width:22px;height:22px;border-radius:5px;background:var(--purple-dim);border:1px solid var(--purple-border);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--purple);font-family:'Montserrat',sans-serif;flex-shrink:0">2</div>
+              <span><strong style="color:var(--text)">Revelação do bônus</strong> — Dia 3, às 09:55</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-sec)">
+              <div style="width:22px;height:22px;border-radius:5px;background:var(--amber-dim);border:1px solid var(--amber-border);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--amber);font-family:'Montserrat',sans-serif;flex-shrink:0">3</div>
+              <span><strong style="color:var(--text)">Encerramento</strong> — Dia 3, às 18:00</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert" style="margin-top:10px">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="flex-shrink:0;margin-top:1px"><path d="M8 2L2 13h12L8 2z" stroke="#EF4444" stroke-width="1.3" stroke-linejoin="round"/><path d="M8 7v3M8 11.5v.5" stroke="#EF4444" stroke-width="1.3" stroke-linecap="round"/></svg>
+        <div><strong>Antes de começar:</strong> Bloquear contatos indesejados e remover contatos que não devem receber campanhas. Esta é uma <strong>estratégia de caixa</strong> — não de branding. Execução precisa ser rápida e organizada.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===================== TAB: RESULTADO ===================== -->
+  <div class="tab-panel" id="tab-resultado">
+
+    <div class="section">
+      <div class="section-head">
+        <div class="section-dot" style="background:var(--green)"></div>
+        <div class="section-title" style="color:var(--green)">Resultado Esperado</div>
+      </div>
+
+      <div class="result-grid">
+        <div class="result-item" style="border-color:var(--amber-border)">
+          <div class="result-num" style="color:var(--amber)">1 dia</div>
+          <div class="result-label">Pico de faturamento concentrado no Dia 3</div>
+        </div>
+        <div class="result-item" style="border-color:var(--green-border)">
+          <div class="result-num" style="color:var(--green)">R$0,60</div>
+          <div class="result-label">Média de custo por contato disparado</div>
+        </div>
+        <div class="result-item" style="border-color:var(--blue-border)">
+          <div class="result-num" style="color:var(--blue)">+Conversão</div>
+          <div class="result-label">Aumento de conversão da base atual</div>
+        </div>
+        <div class="result-item" style="border-color:var(--purple-border)">
+          <div class="result-num" style="color:var(--purple)">+Agenda</div>
+          <div class="result-label">Aceleração de agenda + novos pacientes qualificados</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head">
+        <div class="section-dot" style="background:var(--amber)"></div>
+        <div class="section-title" style="color:var(--amber)">Princípios Estratégicos</div>
+      </div>
+
+      <div class="card" style="padding:16px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div style="display:flex;gap:8px;align-items:flex-start;font-size:13px;color:var(--text-sec)">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="margin-top:2px;flex-shrink:0"><circle cx="7" cy="7" r="5.5" stroke="#F5A623" stroke-width="1.2"/><path d="M5 7l1.5 1.5L9 5.5" stroke="#F5A623" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Trabalhar <strong style="color:var(--text)">base existente</strong> — baixo custo</span>
+          </div>
+          <div style="display:flex;gap:8px;align-items:flex-start;font-size:13px;color:var(--text-sec)">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="margin-top:2px;flex-shrink:0"><circle cx="7" cy="7" r="5.5" stroke="#F5A623" stroke-width="1.2"/><path d="M5 7l1.5 1.5L9 5.5" stroke="#F5A623" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Foco em <strong style="color:var(--text)">decisão rápida</strong></span>
+          </div>
+          <div style="display:flex;gap:8px;align-items:flex-start;font-size:13px;color:var(--text-sec)">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="margin-top:2px;flex-shrink:0"><circle cx="7" cy="7" r="5.5" stroke="#F5A623" stroke-width="1.2"/><path d="M5 7l1.5 1.5L9 5.5" stroke="#F5A623" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Gatilhos: <strong style="color:var(--text)">Escassez · Urgência · Prova social</strong></span>
+          </div>
+          <div style="display:flex;gap:8px;align-items:flex-start;font-size:13px;color:var(--text-sec)">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="margin-top:2px;flex-shrink:0"><circle cx="7" cy="7" r="5.5" stroke="#F5A623" stroke-width="1.2"/><path d="M5 7l1.5 1.5L9 5.5" stroke="#F5A623" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Conversão via <strong style="color:var(--text)">WhatsApp + PIX</strong></span>
+          </div>
+          <div style="display:flex;gap:8px;align-items:flex-start;font-size:13px;color:var(--text-sec)">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="margin-top:2px;flex-shrink:0"><circle cx="7" cy="7" r="5.5" stroke="#F5A623" stroke-width="1.2"/><path d="M5 7l1.5 1.5L9 5.5" stroke="#F5A623" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Oferta <strong style="color:var(--text)">simples e direta</strong></span>
+          </div>
+          <div style="display:flex;gap:8px;align-items:flex-start;font-size:13px;color:var(--text-sec)">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="margin-top:2px;flex-shrink:0"><circle cx="7" cy="7" r="5.5" stroke="#F5A623" stroke-width="1.2"/><path d="M5 7l1.5 1.5L9 5.5" stroke="#F5A623" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Somente <strong style="color:var(--text)">alta demanda</strong> nas ofertas</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">System Digital · Playbook Grupo VIP (Caixa Rápido)</div>
+
+</div>
+
+<script>
+  const btns = document.querySelectorAll('.tab-btn');
+  const panels = document.querySelectorAll('.tab-panel');
+  btns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      btns.forEach(b => b.classList.remove('active'));
+      panels.forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>
