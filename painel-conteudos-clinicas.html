@@ -258,6 +258,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
                 <option value="Curiosidades">Curiosidades</option>
                 <option value="Experiência e Cuidado">Experiência e Cuidado</option>
               </optgroup>
+              <optgroup label="── Personalizadas ──" id="custom-cats-form"></optgroup>
             </select>
           </div>
         </div>
@@ -360,7 +361,21 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
         <option value="Curiosidades">Curiosidades</option>
         <option value="Experiência e Cuidado">Experiência e Cuidado</option>
       </optgroup>
+      <optgroup label="── Personalizadas ──" id="custom-cats-filter"></optgroup>
     </select>
+    <div style="position:relative;display:inline-flex" id="nova-cat-wrap">
+      <button class="btn btn-ghost btn-sm" onclick="toggleNovaCat()" title="Nova categoria" style="white-space:nowrap;gap:4px">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        Categoria
+      </button>
+      <div id="nova-cat-popup" style="display:none;position:absolute;top:calc(100% + 6px);left:0;background:var(--surface);border:1px solid var(--teal-border);border-radius:8px;padding:10px;z-index:100;width:220px;box-shadow:0 8px 24px rgba(0,0,0,.4)">
+        <div style="font-size:10px;font-weight:700;font-family:'Montserrat',sans-serif;text-transform:uppercase;letter-spacing:.08em;color:var(--text-sec);margin-bottom:6px">Nova categoria</div>
+        <div style="display:flex;gap:6px">
+          <input id="nova-cat-input" class="form-input" style="font-size:12px;padding:6px 10px;flex:1" placeholder="Ex: Antes e Depois" onkeydown="if(event.key==='Enter')salvarNovaCat()">
+          <button class="btn btn-primary btn-sm" onclick="salvarNovaCat()">OK</button>
+        </div>
+      </div>
+    </div>
     <select class="filter-select" id="filter-canal" onchange="applyFilters()">
       <option value="">Todos os canais</option>
     </select>
@@ -400,6 +415,42 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 const VIEWS_LABELS={'0-25k':'0 a 25k','25k-50k':'25k a 50k','50k-100k':'50k a 100k','100k-300k':'100k a 300k','300k-500k':'300k a 500k','500k-1M':'500k a 1M','acima-1M':'acima de 1M'};
 const FORMATO_ICON={Reels:'🎬',Carrossel:'📊',Stories:'📱'};
 const COLLECTION='banco_conteudos_clinicas';
+const CATS_KEY='clinicas_custom_cats';
+
+function loadCustomCats(){
+  return JSON.parse(localStorage.getItem(CATS_KEY)||'[]');
+}
+function saveCustomCats(cats){
+  localStorage.setItem(CATS_KEY,JSON.stringify(cats));
+}
+function renderCustomCats(){
+  const cats=loadCustomCats();
+  ['custom-cats-filter','custom-cats-form'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(!el)return;
+    el.innerHTML=cats.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join('');
+  });
+}
+function toggleNovaCat(){
+  const p=document.getElementById('nova-cat-popup');
+  p.style.display=p.style.display==='none'?'block':'none';
+  if(p.style.display==='block')document.getElementById('nova-cat-input').focus();
+}
+function salvarNovaCat(){
+  const input=document.getElementById('nova-cat-input');
+  const val=input.value.trim();
+  if(!val)return;
+  const cats=loadCustomCats();
+  if(!cats.includes(val)){cats.push(val);saveCustomCats(cats);}
+  renderCustomCats();
+  input.value='';
+  document.getElementById('nova-cat-popup').style.display='none';
+  showToast(`Categoria "${val}" criada!`,'success');
+}
+document.addEventListener('click',e=>{
+  const wrap=document.getElementById('nova-cat-wrap');
+  if(wrap&&!wrap.contains(e.target))document.getElementById('nova-cat-popup').style.display='none';
+});
 const PAGE_SIZE=24;
 let allItems=[],filteredItems=[],visibleCount=PAGE_SIZE,toastTimer,importRows=[];
 
@@ -507,6 +558,7 @@ function showImportPreview(rows){const preview=rows.slice(0,8);const cols=['titu
 async function importStep2(){setImportStep(3);document.getElementById('btn-imp-next').style.display='none';document.getElementById('btn-imp-cancel').style.display='none';const rows=importRows,total=rows.length;let done=0;const progLabel=document.getElementById('prog-label'),progNums=document.getElementById('prog-nums'),progFill=document.getElementById('prog-fill'),progSub=document.getElementById('prog-sub'),now=new Date().toISOString(),CHUNK=15;try{for(let i=0;i<rows.length;i+=CHUNK){const chunk=rows.slice(i,i+CHUNK);await Promise.all(chunk.map(r=>{const data={titulo:(r.titulo||'').trim(),link:(r.link||'').trim(),formato:(r.formato||'').trim(),especialidade:(r.especialidade||'').trim(),faixa_views:(r.faixa_views||'').trim(),canal:(r.canal||'').trim(),obs:(r.obs||'').trim(),criadoEm:now,importadoEm:now};return window._fs.addDoc(window._fs.collection(window._db,COLLECTION),data);}));done=Math.min(i+CHUNK,total);const pct=Math.round(done/total*100);progNums.textContent=`${done}/${total}`;progFill.style.width=pct+'%';progSub.textContent=`${pct}% concluído`;}progLabel.textContent='Importação concluída!';progFill.classList.add('done');progSub.textContent=`${total} conteúdos importados.`;document.getElementById('btn-imp-cancel').textContent='Fechar';document.getElementById('btn-imp-cancel').style.display='';showToast(`${total} conteúdos importados!`,'success');}catch(err){progLabel.textContent='Erro';progSub.textContent=err.message;progFill.style.background='var(--red)';document.getElementById('btn-imp-cancel').textContent='Fechar';document.getElementById('btn-imp-cancel').style.display='';showToast('Erro ao importar','error');}}
 
 window.addEventListener('db-ready',()=>{
+  renderCustomCats();
   window._fs.onSnapshot(window._fs.collection(window._db,COLLECTION),snap=>{
     allItems=[];
     snap.forEach(d=>allItems.push({_id:d.id,...d.data()}));
@@ -519,6 +571,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.getElement
 window.applyFilters=applyFilters;window.loadMore=loadMore;window.openLink=openLink;window.deleteItem=deleteItem;
 window.openAddModal=openAddModal;window.closeAddModal=closeAddModal;window.submitAddForm=submitAddForm;
 window.openImportModal=openImportModal;window.closeImportModal=closeImportModal;window.importStep1=importStep1;window.importStep2=importStep2;
+window.toggleNovaCat=toggleNovaCat;window.salvarNovaCat=salvarNovaCat;
 </script>
 </body>
 </html>
