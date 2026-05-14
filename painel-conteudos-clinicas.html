@@ -168,10 +168,10 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
         </div>
         <div class="columns-hint">
           <p>Colunas esperadas na planilha:</p>
-          <code>titulo, link, especialidade, tipo, faixa_views, canal, obs</code>
+          <code>titulo, link, formato, especialidade, faixa_views, canal, obs</code>
           <p style="margin-top:8px;font-size:10px;color:var(--text-dim)">
-            especialidade: Odontologia · Medicina Estética · Cirurgia · Saúde Geral · Outro<br>
-            tipo: educativo · prova_social · bastidores · autoridade · captacao · outro<br>
+            formato: Reels · Carrossel · Stories<br>
+            especialidade (pilar): Bastidores · Experiência · Casos de Impacto · Life Style · Resultados · História · Falas da Paciente · Depoimentos · Rotina da Clínica · Caixinha de Perguntas · Levantada de Mão<br>
             faixa_views: 0-25k · 25k-50k · 50k-100k · 100k-300k · 300k-500k · 500k-1M · acima-1M
           </p>
         </div>
@@ -228,28 +228,36 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label class="form-label">Especialidade</label>
-            <select class="form-select" name="especialidade">
-              <option value="Odontologia">Odontologia</option>
-              <option value="Medicina Estética">Medicina Estética</option>
-              <option value="Cirurgia">Cirurgia</option>
-              <option value="Saúde Geral">Saúde Geral</option>
-              <option value="Dermatologia">Dermatologia</option>
-              <option value="Nutrição">Nutrição</option>
-              <option value="Fisioterapia">Fisioterapia</option>
-              <option value="Psicologia">Psicologia</option>
-              <option value="Outro">Outro</option>
+            <label class="form-label">Formato</label>
+            <select class="form-select" name="formato">
+              <option value="Reels">Reels</option>
+              <option value="Carrossel">Carrossel</option>
+              <option value="Stories">Stories</option>
             </select>
           </div>
           <div class="form-group">
-            <label class="form-label">Tipo de conteúdo</label>
-            <select class="form-select" name="tipo">
-              <option value="educativo">Educativo</option>
-              <option value="prova_social">Prova Social</option>
-              <option value="bastidores">Bastidores</option>
-              <option value="autoridade">Autoridade</option>
-              <option value="captacao">Captação de Leads</option>
-              <option value="outro">Outro</option>
+            <label class="form-label">Pilar</label>
+            <select class="form-select" name="especialidade">
+              <optgroup label="── Reels ──">
+                <option value="Bastidores">Bastidores</option>
+                <option value="Experiência">Experiência</option>
+                <option value="Casos de Impacto">Casos de Impacto</option>
+                <option value="Life Style">Life Style</option>
+              </optgroup>
+              <optgroup label="── Carrossel ──">
+                <option value="Resultados">Resultados</option>
+                <option value="História">História</option>
+                <option value="Falas da Paciente">Falas da Paciente</option>
+                <option value="Depoimentos">Depoimentos</option>
+              </optgroup>
+              <optgroup label="── Stories ──">
+                <option value="Rotina da Clínica">Rotina da Clínica</option>
+                <option value="Caixinha de Perguntas">Caixinha de Perguntas</option>
+                <option value="Levantada de Mão">Levantada de Mão</option>
+                <option value="Casos de Pacientes">Casos de Pacientes</option>
+                <option value="Curiosidades">Curiosidades</option>
+                <option value="Experiência e Cuidado">Experiência e Cuidado</option>
+              </optgroup>
             </select>
           </div>
         </div>
@@ -305,7 +313,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
   <div class="page-hdr">
     <div>
       <div class="page-title">Central de <span>Clínicas</span></div>
-      <div class="page-sub">biblioteca exclusiva — odontologia, medicina estética, cirurgia e saúde geral</div>
+      <div class="page-sub">biblioteca de referências organizada pelo protocolo de posicionamento</div>
     </div>
     <div class="hdr-actions">
       <button class="btn btn-ghost" onclick="openImportModal()">
@@ -322,19 +330,36 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
   <div class="filters-bar">
     <div class="search-wrap">
       <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="6.5" cy="6.5" r="5" stroke="currentColor" stroke-width="1.3"/><path d="M10.5 10.5l3 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-      <input class="search-input" id="search-input" placeholder="Buscar por título, canal, especialidade..." oninput="applyFilters()">
+      <input class="search-input" id="search-input" placeholder="Buscar por título, pilar, canal..." oninput="applyFilters()">
     </div>
+    <select class="filter-select" id="filter-formato" onchange="applyFilters()">
+      <option value="">Todos os formatos</option>
+      <option value="Reels">🎬 Reels</option>
+      <option value="Carrossel">📊 Carrossel</option>
+      <option value="Stories">📱 Stories</option>
+    </select>
     <select class="filter-select" id="filter-esp" onchange="applyFilters()">
-      <option value="">Todas especialidades</option>
-      <option value="Odontologia">Odontologia</option>
-      <option value="Medicina Estética">Medicina Estética</option>
-      <option value="Cirurgia">Cirurgia</option>
-      <option value="Saúde Geral">Saúde Geral</option>
-      <option value="Dermatologia">Dermatologia</option>
-      <option value="Nutrição">Nutrição</option>
-      <option value="Fisioterapia">Fisioterapia</option>
-      <option value="Psicologia">Psicologia</option>
-      <option value="Outro">Outro</option>
+      <option value="">Todos os pilares</option>
+      <optgroup label="── Reels ──">
+        <option value="Bastidores">Bastidores</option>
+        <option value="Experiência">Experiência</option>
+        <option value="Casos de Impacto">Casos de Impacto</option>
+        <option value="Life Style">Life Style</option>
+      </optgroup>
+      <optgroup label="── Carrossel ──">
+        <option value="Resultados">Resultados</option>
+        <option value="História">História</option>
+        <option value="Falas da Paciente">Falas da Paciente</option>
+        <option value="Depoimentos">Depoimentos</option>
+      </optgroup>
+      <optgroup label="── Stories ──">
+        <option value="Rotina da Clínica">Rotina da Clínica</option>
+        <option value="Caixinha de Perguntas">Caixinha de Perguntas</option>
+        <option value="Levantada de Mão">Levantada de Mão</option>
+        <option value="Casos de Pacientes">Casos de Pacientes</option>
+        <option value="Curiosidades">Curiosidades</option>
+        <option value="Experiência e Cuidado">Experiência e Cuidado</option>
+      </optgroup>
     </select>
     <select class="filter-select" id="filter-canal" onchange="applyFilters()">
       <option value="">Todos os canais</option>
@@ -373,7 +398,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 
 <script>
 const VIEWS_LABELS={'0-25k':'0 a 25k','25k-50k':'25k a 50k','50k-100k':'50k a 100k','100k-300k':'100k a 300k','300k-500k':'300k a 500k','500k-1M':'500k a 1M','acima-1M':'acima de 1M'};
-const TIPO_LABELS={educativo:'Educativo',prova_social:'Prova Social',bastidores:'Bastidores',autoridade:'Autoridade',captacao:'Captação',outro:'Outro'};
+const FORMATO_ICON={Reels:'🎬',Carrossel:'📊',Stories:'📱'};
 const COLLECTION='banco_conteudos_clinicas';
 const PAGE_SIZE=24;
 let allItems=[],filteredItems=[],visibleCount=PAGE_SIZE,toastTimer,importRows=[];
@@ -392,12 +417,14 @@ function populateCanais(){
 
 function applyFilters(){
   const q=(document.getElementById('search-input')?.value||'').toLowerCase();
+  const fmt=document.getElementById('filter-formato')?.value||'';
   const esp=document.getElementById('filter-esp')?.value||'';
   const canal=document.getElementById('filter-canal')?.value||'';
   const views=document.getElementById('filter-views')?.value||'';
   const order=document.getElementById('filter-order')?.value||'recentes';
   filteredItems=allItems.filter(c=>{
     if(q&&!(c.titulo||'').toLowerCase().includes(q)&&!(c.canal||'').toLowerCase().includes(q)&&!(c.especialidade||'').toLowerCase().includes(q))return false;
+    if(fmt&&c.formato!==fmt)return false;
     if(esp&&c.especialidade!==esp)return false;
     if(canal&&c.canal!==canal)return false;
     if(views&&c.faixa_views!==views)return false;
@@ -430,16 +457,17 @@ function loadMore(){visibleCount+=PAGE_SIZE;renderGrid();}
 
 function cardHtml(c){
   const esp=c.especialidade||'';
-  const tipo=TIPO_LABELS[c.tipo]||c.tipo||'';
+  const fmt=c.formato||'';
   const views=VIEWS_LABELS[c.faixa_views]||c.faixa_views||'';
+  const fmtIcon=FORMATO_ICON[fmt]||'';
   return`<div class="content-card" onclick="openLink('${esc(c.link)}')">
     <div class="card-top">
       <div class="card-play"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 2l7 4-7 4V2z" fill="currentColor"/></svg></div>
       <div class="card-title">${esc(c.titulo)}</div>
     </div>
     <div class="card-tags">
+      ${fmt?`<span class="badge b-tipo">${fmtIcon} ${esc(fmt)}</span>`:''}
       ${esp?`<span class="badge b-esp">${esc(esp)}</span>`:''}
-      ${tipo?`<span class="badge b-tipo">${esc(tipo)}</span>`:''}
       ${views?`<span class="views-badge"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><ellipse cx="5.5" cy="4.5" rx="4.5" ry="3" stroke="currentColor" stroke-width="1.1"/><circle cx="5.5" cy="4.5" r="1.3" fill="currentColor"/></svg>${esc(views)}</span>`:''}
     </div>
     <div class="card-meta">
@@ -462,7 +490,7 @@ function closeAddModal(e){if(e&&e.target!==document.getElementById('modal-add')&
 async function submitAddForm(e){
   e.preventDefault();
   const f=new FormData(e.target);
-  const data={titulo:f.get('titulo').trim(),link:f.get('link').trim(),especialidade:f.get('especialidade'),tipo:f.get('tipo'),faixa_views:f.get('faixa_views')||'',canal:f.get('canal').trim()||'',obs:f.get('obs').trim()||'',criadoEm:new Date().toISOString()};
+  const data={titulo:f.get('titulo').trim(),link:f.get('link').trim(),formato:f.get('formato')||'',especialidade:f.get('especialidade')||'',faixa_views:f.get('faixa_views')||'',canal:f.get('canal').trim()||'',obs:f.get('obs').trim()||'',criadoEm:new Date().toISOString()};
   try{await window._fs.addDoc(window._fs.collection(window._db,COLLECTION),data);e.target.reset();closeAddModal();showToast('Conteúdo adicionado!','success');}
   catch(err){showToast('Erro: '+err.message,'error');}
 }
@@ -476,7 +504,7 @@ function parseCSVLine(line){const r=[];let cur='',inQ=false;for(let i=0;i<line.l
 function parseCSV(text){const lines=text.replace(/\r\n/g,'\n').replace(/\r/g,'\n').trim().split('\n').filter(l=>l.trim());if(!lines.length)return[];const headers=parseCSVLine(lines[0]).map(h=>h.trim().replace(/^"|"$/g,'').toLowerCase().replace(/\s+/g,'_'));return lines.slice(1).map(line=>{const vals=parseCSVLine(line);const obj={};headers.forEach((h,i)=>{obj[h]=(vals[i]||'').trim().replace(/^"|"$/g,'').trim();});return obj;}).filter(r=>r.titulo&&r.titulo.trim());}
 async function importStep1(){const url=document.getElementById('sheets-url').value.trim();if(!url){document.getElementById('fetch-error').textContent='Cole o link.';document.getElementById('fetch-error').style.display='block';return;}document.getElementById('fetch-error').style.display='none';document.getElementById('btn-imp-next').innerHTML='<span class="spinner" style="display:inline-block"></span> Buscando...';document.getElementById('btn-imp-next').disabled=true;try{const csvUrl=normalizeSheetUrl(url);const res=await fetch(csvUrl);if(!res.ok)throw new Error('HTTP '+res.status);const text=await res.text();if(text.trimStart().startsWith('<!'))throw new Error('Planilha não publicada como CSV.');importRows=parseCSV(text);if(!importRows.length)throw new Error('Nenhuma linha válida encontrada.');showImportPreview(importRows);setImportStep(2);document.getElementById('btn-imp-next').innerHTML='Importar tudo';document.getElementById('btn-imp-next').onclick=importStep2;document.getElementById('btn-imp-next').disabled=false;}catch(err){document.getElementById('fetch-error').textContent=err.message;document.getElementById('fetch-error').style.display='block';document.getElementById('btn-imp-next').innerHTML='Buscar dados';document.getElementById('btn-imp-next').disabled=false;}}
 function showImportPreview(rows){const preview=rows.slice(0,8);const cols=['titulo','link','especialidade','tipo','faixa_views','canal'];const thead=document.querySelector('#preview-table thead');const tbody=document.querySelector('#preview-table tbody');thead.innerHTML=`<tr>${cols.map(c=>`<th>${c}</th>`).join('')}</tr>`;tbody.innerHTML=preview.map(r=>`<tr>${cols.map(c=>`<td title="${esc(r[c]||'')}">${esc((r[c]||'').slice(0,30)+(r[c]?.length>30?'...':''))}</td>`).join('')}</tr>`).join('');const missing=rows.filter(r=>!r.link).length;const errEl=document.getElementById('preview-errors');if(missing){errEl.textContent=`⚠ ${missing} linha(s) sem link.`;errEl.style.display='block';}else errEl.style.display='none';document.getElementById('preview-summary').innerHTML=`<strong style="color:var(--teal)">${rows.length} conteúdos</strong> encontrados. Visualizando os primeiros ${Math.min(8,rows.length)}:`;}
-async function importStep2(){setImportStep(3);document.getElementById('btn-imp-next').style.display='none';document.getElementById('btn-imp-cancel').style.display='none';const rows=importRows,total=rows.length;let done=0;const progLabel=document.getElementById('prog-label'),progNums=document.getElementById('prog-nums'),progFill=document.getElementById('prog-fill'),progSub=document.getElementById('prog-sub'),now=new Date().toISOString(),CHUNK=15;try{for(let i=0;i<rows.length;i+=CHUNK){const chunk=rows.slice(i,i+CHUNK);await Promise.all(chunk.map(r=>{const data={titulo:(r.titulo||'').trim(),link:(r.link||'').trim(),especialidade:(r.especialidade||'Outro').trim(),tipo:(r.tipo||'outro').trim(),faixa_views:(r.faixa_views||'').trim(),canal:(r.canal||'').trim(),obs:(r.obs||'').trim(),criadoEm:now,importadoEm:now};return window._fs.addDoc(window._fs.collection(window._db,COLLECTION),data);}));done=Math.min(i+CHUNK,total);const pct=Math.round(done/total*100);progNums.textContent=`${done}/${total}`;progFill.style.width=pct+'%';progSub.textContent=`${pct}% concluído`;}progLabel.textContent='Importação concluída!';progFill.classList.add('done');progSub.textContent=`${total} conteúdos importados.`;document.getElementById('btn-imp-cancel').textContent='Fechar';document.getElementById('btn-imp-cancel').style.display='';showToast(`${total} conteúdos importados!`,'success');}catch(err){progLabel.textContent='Erro';progSub.textContent=err.message;progFill.style.background='var(--red)';document.getElementById('btn-imp-cancel').textContent='Fechar';document.getElementById('btn-imp-cancel').style.display='';showToast('Erro ao importar','error');}}
+async function importStep2(){setImportStep(3);document.getElementById('btn-imp-next').style.display='none';document.getElementById('btn-imp-cancel').style.display='none';const rows=importRows,total=rows.length;let done=0;const progLabel=document.getElementById('prog-label'),progNums=document.getElementById('prog-nums'),progFill=document.getElementById('prog-fill'),progSub=document.getElementById('prog-sub'),now=new Date().toISOString(),CHUNK=15;try{for(let i=0;i<rows.length;i+=CHUNK){const chunk=rows.slice(i,i+CHUNK);await Promise.all(chunk.map(r=>{const data={titulo:(r.titulo||'').trim(),link:(r.link||'').trim(),formato:(r.formato||'').trim(),especialidade:(r.especialidade||'').trim(),faixa_views:(r.faixa_views||'').trim(),canal:(r.canal||'').trim(),obs:(r.obs||'').trim(),criadoEm:now,importadoEm:now};return window._fs.addDoc(window._fs.collection(window._db,COLLECTION),data);}));done=Math.min(i+CHUNK,total);const pct=Math.round(done/total*100);progNums.textContent=`${done}/${total}`;progFill.style.width=pct+'%';progSub.textContent=`${pct}% concluído`;}progLabel.textContent='Importação concluída!';progFill.classList.add('done');progSub.textContent=`${total} conteúdos importados.`;document.getElementById('btn-imp-cancel').textContent='Fechar';document.getElementById('btn-imp-cancel').style.display='';showToast(`${total} conteúdos importados!`,'success');}catch(err){progLabel.textContent='Erro';progSub.textContent=err.message;progFill.style.background='var(--red)';document.getElementById('btn-imp-cancel').textContent='Fechar';document.getElementById('btn-imp-cancel').style.display='';showToast('Erro ao importar','error');}}
 
 window.addEventListener('db-ready',()=>{
   window._fs.onSnapshot(window._fs.collection(window._db,COLLECTION),snap=>{
