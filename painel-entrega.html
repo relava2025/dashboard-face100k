@@ -33,8 +33,9 @@
     return()=>{if(unsub)unsub();if(timer)clearTimeout(timer);};
   }
   window._fb = {
-    listenClients(cb){ return snapRetry(()=>collection(db,"entrega"), snap=>{ const l=[]; snap.forEach(d=>l.push({id:d.id,...d.data()})); cb(l); }); },
+    listenClients(cb){ return snapRetry(()=>collection(db,"entrega"), snap=>{ const l=[]; snap.forEach(d=>{ const data=d.data(); if(data.status!=='excluido') l.push({id:d.id,...data}); }); cb(l); }); },
     async save(id,data){ await setDoc(doc(db,"entrega",id),data,{merge:true}); },
+    async exclude(id){ await updateDoc(doc(db,"entrega",id),{status:'excluido',excluidoEm:new Date().toISOString()}); },
     async delete(id){ await deleteDoc(doc(db,"entrega",id)); },
     async getDoc(id){ const s=await getDoc(doc(db,"entrega",id)); return s.exists()?s.data():null; },
     async updateCronograma(id,cronograma){ await updateDoc(doc(db,"entrega",id),{cronograma}); }
@@ -327,6 +328,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
     <span class="sync-txt" id="sync-txt">Conectando...</span>
     <button class="btn-admin" onclick="toggleAdmin()" id="btn-admin">⚙ Configurações</button>
     <button class="btn-admin" onclick="openTutoriasModal()" style="margin-right:4px">📅 Tutorias</button>
+    <a href="painel-excluidos.html" class="btn-admin" style="text-decoration:none;color:var(--text-sec)">🗂 Excluídos</a>
     <button class="btn-new" onclick="openModal()">+ Novo cliente</button>
   </div>
 </div>
@@ -801,9 +803,9 @@ async function saveClient(){
 }
 
 async function confirmDelete(id,name){
-  if(!confirm(`Excluir "${name}"?\n\nEsta ação não pode ser desfeita.`)) return;
+  if(!confirm(`Mover "${name}" para Clientes Excluídos?\n\nO cliente ficará na lista de excluídos e pode ser reativado.`)) return;
   setSyncStatus('saving');
-  try{ await window._fb.delete(id); showToast('Cliente removido',''); }
+  try{ await window._fb.exclude(id); showToast('Cliente movido para excluídos',''); }
   catch(e){ showToast('Erro ao excluir','error'); setSyncStatus('error'); }
 }
 

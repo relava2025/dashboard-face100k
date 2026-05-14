@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clientes Excluídos — System Digital</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+  import { getFirestore, collection, onSnapshot, doc, updateDoc, deleteDoc, enableNetwork } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+  const cfg = {
+    apiKey:"AIzaSyAyupUdCsEb6pPVmTs2clhayS84-TUovGA",
+    authDomain:"dashboard-e465d.firebaseapp.com",
+    projectId:"dashboard-e465d",
+    storageBucket:"dashboard-e465d.firebasestorage.app",
+    messagingSenderId:"865986158280",
+    appId:"1:865986158280:web:1531d13630f9835a9f0ffd"
+  };
+  const db = getFirestore(initializeApp(cfg));
+
+  function snapRetry(refFn, cb) {
+    let unsub, timer, tries = 0;
+    function sub() {
+      try {
+        if (unsub) { try { unsub(); } catch(e) {} }
+        unsub = onSnapshot(refFn(),
+          s => { tries = 0; cb(s); },
+          e => { if (timer) clearTimeout(timer); tries++; timer = setTimeout(() => { enableNetwork(db).then(sub).catch(sub); }, Math.min(3000 * tries, 15000)); }
+        );
+      } catch(e) { timer = setTimeout(sub, 5000); }
+    }
+    sub();
+  }
+
+  window._fb = {
+    listenExcluidos(cb) {
+      return snapRetry(() => collection(db, "entrega"), snap => {
+        const l = [];
+        snap.forEach(d => {
+          const data = d.data();
+          if (data.status === 'excluido') l.push({ id: d.id, ...data });
+        });
+        l.sort((a, b) => (b.excluidoEm || '').localeCompare(a.excluidoEm || ''));
+        cb(l);
+      });
+    },
+    async reativar(id) {
+      await updateDoc(doc(db, "entrega", id), { status: 'ativo', excluidoEm: null });
+    },
+    async deletarPermanente(id) {
+      await deleteDoc(doc(db, "entrega", id));
+    }
+  };
+  window.dispatchEvent(new Event("fb-ready"));
+</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0D1117;--surface:#1A2025;--surface2:#212830;
+  --amber:#F5A623;--amber-dim:rgba(245,166,35,0.10);--amber-border:rgba(245,166,35,0.22);
+  --border:#3E4249;--text:#F0F0F0;--text-sec:#B8B8C0;--text-dim:rgba(255,255,255,0.22);
+  --green:#22C55E;--green-dim:rgba(34,197,94,0.10);--green-border:rgba(34,197,94,0.22);
+  --red:#EF4444;--red-dim:rgba(239,68,68,0.10);--red-border:rgba(239,68,68,0.22);
+  --blue:#3B82F6;--blue-dim:rgba(59,130,246,0.10);--blue-border:rgba(59,130,246,0.22);
+}
+html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:15px;line-height:1.5;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(0deg,transparent 24%,rgba(245,166,35,0.02) 25%,rgba(245,166,35,0.02) 26%,transparent 27%),linear-gradient(90deg,transparent 24%,rgba(245,166,35,0.02) 25%,rgba(245,166,35,0.02) 26%,transparent 27%);background-size:50px 50px;pointer-events:none;z-index:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+#loading{position:fixed;inset:0;background:var(--bg);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
+#loading.hidden{display:none}
+.loading-logo{font-family:'Montserrat',sans-serif;font-size:25px;font-weight:800}
+.loading-logo span{color:var(--amber);font-style:italic}
+.spinner{width:36px;height:36px;border:3px solid rgba(245,166,35,0.15);border-top-color:var(--amber);border-radius:50%;animation:spin .8s linear infinite}
+
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50}
+.logo{font-family:'Montserrat',sans-serif;font-size:16px;font-weight:800;letter-spacing:.04em}
+.logo span{color:var(--amber);font-style:italic}
+.tb-sep{width:1px;height:16px;background:var(--border)}
+.tb-title{font-size:14px;color:var(--text-sec)}
+.btn-back{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:7px;border:1px solid var(--border);background:transparent;color:var(--text-sec);font-size:13px;font-weight:600;cursor:pointer;font-family:'Montserrat',sans-serif;text-decoration:none;transition:border-color .15s,color .15s;margin-left:auto}
+.btn-back:hover{border-color:var(--amber-border);color:var(--amber)}
+
+#app{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:32px 24px 80px;animation:fadeIn .4s ease}
+
+.brand-rail{height:2px;background:linear-gradient(90deg,var(--red),rgba(239,68,68,0));max-width:180px;border-radius:2px;margin-bottom:28px}
+
+.page-header{margin-bottom:28px}
+.page-title{font-family:'Montserrat',sans-serif;font-size:22px;font-weight:800;margin-bottom:6px;display:flex;align-items:center;gap:10px}
+.page-sub{font-size:14px;color:var(--text-sec)}
+.count-badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:10px;font-size:12px;font-weight:700;font-family:'Montserrat',sans-serif;background:var(--red-dim);border:1px solid var(--red-border);color:var(--red)}
+
+.search-bar{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.search-input{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:9px 14px;font-size:14px;color:var(--text);font-family:'Inter',sans-serif;outline:none;transition:border-color .15s}
+.search-input::placeholder{color:var(--text-dim)}
+.search-input:focus{border-color:var(--amber-border)}
+
+.empty{text-align:center;padding:60px 20px;color:var(--text-dim)}
+.empty-icon{font-size:36px;margin-bottom:12px}
+.empty-title{font-family:'Montserrat',sans-serif;font-size:16px;font-weight:700;color:var(--text-sec);margin-bottom:6px}
+.empty-sub{font-size:13px;color:var(--text-dim)}
+
+.client-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:10px;display:flex;align-items:center;gap:16px;transition:border-color .15s}
+.client-card:hover{border-color:rgba(239,68,68,0.3)}
+.client-avatar{width:42px;height:42px;border-radius:10px;background:var(--red-dim);border:1px solid var(--red-border);display:flex;align-items:center;justify-content:center;font-family:'Montserrat',sans-serif;font-size:16px;font-weight:800;color:var(--red);flex-shrink:0}
+.client-info{flex:1;min-width:0}
+.client-name{font-family:'Montserrat',sans-serif;font-size:15px;font-weight:700;margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.client-meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.meta-pill{display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--text-sec);background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 8px}
+.excluido-date{font-size:12px;color:var(--red);font-weight:600;margin-top:4px;display:flex;align-items:center;gap:4px}
+.client-actions{display:flex;gap:8px;flex-shrink:0}
+.btn-reativar{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:7px;border:1px solid var(--green-border);background:var(--green-dim);color:var(--green);font-size:12px;font-weight:700;cursor:pointer;font-family:'Montserrat',sans-serif;transition:opacity .15s;white-space:nowrap}
+.btn-reativar:hover{opacity:.8}
+.btn-deletar{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:7px;border:1px solid var(--border);background:transparent;color:var(--text-dim);font-size:12px;font-weight:600;cursor:pointer;font-family:'Montserrat',sans-serif;transition:border-color .15s,color .15s}
+.btn-deletar:hover{border-color:var(--red-border);color:var(--red)}
+
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 20px;font-size:13px;font-weight:600;z-index:999;opacity:0;transition:opacity .25s,transform .25s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.success{border-color:var(--green-border);color:var(--green)}
+.toast.error{border-color:var(--red-border);color:var(--red)}
+
+@media(max-width:600px){
+  .topbar{padding:12px 16px}
+  #app{padding:24px 14px 60px}
+  .client-card{flex-wrap:wrap}
+  .client-actions{width:100%;justify-content:flex-end}
+}
+</style>
+</head>
+<body>
+
+<div id="loading">
+  <div class="loading-logo">System <span>Digital</span></div>
+  <div class="spinner"></div>
+</div>
+
+<div class="topbar">
+  <div class="logo">System <span>Digital</span></div>
+  <div class="tb-sep"></div>
+  <div class="tb-title">Clientes Excluídos</div>
+  <a href="painel-entrega.html" class="btn-back">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Voltar ao Painel
+  </a>
+</div>
+
+<div id="app">
+  <div class="brand-rail"></div>
+
+  <div class="page-header">
+    <div class="page-title">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="9" stroke="#EF4444" stroke-width="1.4"/><path d="M7.5 7.5l7 7M14.5 7.5l-7 7" stroke="#EF4444" stroke-width="1.4" stroke-linecap="round"/></svg>
+      Clientes Excluídos
+      <span class="count-badge" id="count-badge">0</span>
+    </div>
+    <div class="page-sub">Clientes removidos do programa. Você pode reativar ou excluir permanentemente.</div>
+  </div>
+
+  <div class="search-bar">
+    <input class="search-input" id="search-input" type="text" placeholder="Buscar por nome, especialidade ou CS..." oninput="filterClients()">
+  </div>
+
+  <div id="client-list"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let allExcluidos = [];
+
+function fmtDate(iso) {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  return d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+}
+
+function fmtPrograma(p) {
+  const map = { aceleracao: 'Aceleração', ativacao: 'Ativação', mentoria: 'Mentoria' };
+  return map[p] || p || '—';
+}
+
+function initials(name) {
+  if (!name) return '?';
+  const parts = name.trim().split(' ');
+  if (parts.length === 1) return parts[0][0].toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+function filterClients() {
+  const q = document.getElementById('search-input').value.toLowerCase();
+  const filtered = q
+    ? allExcluidos.filter(c =>
+        (c.name || '').toLowerCase().includes(q) ||
+        (c.spec || '').toLowerCase().includes(q) ||
+        (c.cs1 || '').toLowerCase().includes(q) ||
+        (c.cs2 || '').toLowerCase().includes(q)
+      )
+    : allExcluidos;
+  renderList(filtered);
+}
+
+function renderList(clients) {
+  const el = document.getElementById('client-list');
+  document.getElementById('count-badge').textContent = allExcluidos.length;
+
+  if (clients.length === 0) {
+    el.innerHTML = `
+      <div class="empty">
+        <div class="empty-icon">🗂</div>
+        <div class="empty-title">${allExcluidos.length === 0 ? 'Nenhum cliente excluído' : 'Nenhum resultado encontrado'}</div>
+        <div class="empty-sub">${allExcluidos.length === 0 ? 'Quando um cliente for excluído do painel, ele aparecerá aqui.' : 'Tente buscar por outro termo.'}</div>
+      </div>`;
+    return;
+  }
+
+  el.innerHTML = clients.map(c => `
+    <div class="client-card">
+      <div class="client-avatar">${initials(c.name)}</div>
+      <div class="client-info">
+        <div class="client-name">${c.name || '—'}</div>
+        <div class="client-meta">
+          ${c.spec ? `<span class="meta-pill"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="4" stroke="currentColor" stroke-width="1"/></svg>${c.spec}</span>` : ''}
+          <span class="meta-pill">${fmtPrograma(c.program)}</span>
+          ${c.cs1 ? `<span class="meta-pill">CS: ${c.cs1}</span>` : ''}
+          ${c.startDate ? `<span class="meta-pill">Início: ${fmtDate(c.startDate)}</span>` : ''}
+        </div>
+        <div class="excluido-date">
+          <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><circle cx="5.5" cy="5.5" r="4.5" stroke="#EF4444" stroke-width="1.1"/><path d="M5.5 3v2.5l1.5 1" stroke="#EF4444" stroke-width="1.1" stroke-linecap="round"/></svg>
+          Excluído em ${fmtDate(c.excluidoEm)}
+        </div>
+      </div>
+      <div class="client-actions">
+        <button class="btn-reativar" onclick="reativar('${c.id}','${(c.name||'').replace(/'/g,"\\'")}')">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 6.5a4.5 4.5 0 104.5-4.5" stroke="#22C55E" stroke-width="1.3" stroke-linecap="round"/><path d="M2 3v3.5h3.5" stroke="#22C55E" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Reativar
+        </button>
+        <button class="btn-deletar" onclick="deletarPermanente('${c.id}','${(c.name||'').replace(/'/g,"\\'")}')">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 3.5h9M5 3.5V2.5h3v1M10.5 3.5L10 11H3L2.5 3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Excluir
+        </button>
+      </div>
+    </div>
+  `).join('');
+}
+
+async function reativar(id, name) {
+  if (!confirm(`Reativar "${name}"?\n\nO cliente voltará para o Painel de Entrega.`)) return;
+  try {
+    await window._fb.reativar(id);
+    showToast('Cliente reativado!', 'success');
+  } catch(e) {
+    showToast('Erro ao reativar', 'error');
+  }
+}
+
+async function deletarPermanente(id, name) {
+  if (!confirm(`Excluir "${name}" permanentemente?\n\nEsta ação não pode ser desfeita.`)) return;
+  try {
+    await window._fb.deletarPermanente(id);
+    showToast('Cliente excluído permanentemente', '');
+  } catch(e) {
+    showToast('Erro ao excluir', 'error');
+  }
+}
+
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (type ? ' ' + type : '');
+  setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+window.addEventListener('fb-ready', () => {
+  window._fb.listenExcluidos(clients => {
+    allExcluidos = clients;
+    filterClients();
+    document.getElementById('loading').classList.add('hidden');
+  });
+});
+
+setTimeout(() => {
+  if (!document.getElementById('loading').classList.contains('hidden')) {
+    document.getElementById('loading').classList.add('hidden');
+  }
+}, 12000);
+</script>
+</body>
+</html>
