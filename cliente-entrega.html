@@ -749,15 +749,6 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
         <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="2" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/></svg>
         Visão geral
       </button>
-      <button class="nav-btn" id="nav-alertas" onclick="showPage('alertas',this,'mnav-alertas')" style="display:none">
-        <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.3"/><path d="M8 5v4M8 11v.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-        Alertas
-        <span class="nav-badge" id="alert-nav-count">0</span>
-      </button>
-      <button class="nav-btn" onclick="showPage('semanas',this,'mnav-semanas')">
-        <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="11" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M5 1v3M11 1v3M2 7h12" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-        Semanas
-      </button>
       <div class="sb-section" style="margin-top:8px">Complementar</div>
       <button class="nav-btn" onclick="showPage('metas',this,'mnav-metas')">
         <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M3 13V9M6 13V6M9 13V4M12 13V8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
@@ -819,7 +810,6 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
       <div class="tb-sub" id="tb-sub">Liberação de Tráfego</div>
       <div class="tb-right"><button class="btn-help" onclick="openOnboarding()" title="Como usar">?</button><a id="view-client-btn" class="btn-view-client-tb" href="#" target="_blank"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="4.5" r="2" stroke="currentColor" stroke-width="1.3"/><path d="M1 10.5c0-2.8 2.2-5 5-5s5 2.2 5 5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>Visão do cliente</a>
         <div class="tb-badge tbb-amber" id="tb-week">S— / 24</div>
-        <div class="tb-badge tbb-red" id="tb-alerts" style="display:none">0 alertas</div>
       </div>
     </div>
 
@@ -828,33 +818,6 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
       <!-- PAGE: VISÃO GERAL -->
       <div id="page-visao" class="page active">
         <div class="brand-rail"></div>
-
-        <!-- ROTINA DO DIA -->
-        <div class="rotina-card" id="rotina-card">
-          <div class="rotina-header">
-            <div>
-              <div class="rotina-title">
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="var(--amber)" stroke-width="1.3"/><path d="M7 4v3.5l2 1" stroke="var(--amber)" stroke-width="1.3" stroke-linecap="round"/></svg>
-                O que fazer hoje
-              </div>
-              <div class="rotina-sub" id="rotina-sub">Carregando...</div>
-            </div>
-            <div class="rotina-progress">
-              <div class="rotina-prog-text" id="rotina-prog-text">0/0 concluídas</div>
-              <div class="rotina-prog-bar"><div class="rotina-prog-fill" id="rotina-prog-fill" style="width:0%"></div></div>
-            </div>
-          </div>
-          <div class="rotina-items" id="rotina-items"></div>
-        </div>
-
-        <div id="alert-banner" class="alert-banner">
-          <div class="ab-hdr">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="#EF4444" stroke-width="1.3"/><path d="M8 5v4M8 11v.5" stroke="#EF4444" stroke-width="1.3" stroke-linecap="round"/></svg>
-            <div class="ab-title" id="ab-title">Tarefas não cumpridas</div>
-            <button class="ab-close" onclick="document.getElementById('alert-banner').classList.remove('visible')">Fechar</button>
-          </div>
-          <div class="ab-list" id="ab-list"></div>
-        </div>
 
         <div class="client-info-grid">
           <div class="info-card">
@@ -885,22 +848,9 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
         <div class="section-card">
           <div class="sc-header">
             <div class="sc-title" id="current-week-title">Semana atual</div>
-            <div class="sc-sub" id="current-week-sub">Tarefas desta semana</div>
+            <div class="sc-sub" id="current-week-sub">Observações e contexto</div>
           </div>
-          <div id="current-week-tasks">
-            <table class="task-table">
-              <thead><tr>
-                <th style="width:28px"></th>
-                <th>Tarefa</th>
-                <th style="width:100px">Status</th>
-                <th style="width:90px">Responsável</th>
-                <th style="width:70px"></th>
-              </tr></thead>
-              <tbody id="current-tasks-body"></tbody>
-            </table>
-          </div>
-          <div style="padding:14px 18px;border-top:1px solid var(--border)">
-            <label class="form-label">Observação da semana</label>
+          <div style="padding:14px 18px">
             <textarea class="obs-field" id="week-obs" placeholder="Registre o contexto desta semana — reagendamentos, situações relevantes, acontecimentos importantes..." oninput="scheduleObsSave()"></textarea>
           </div>
         </div>
@@ -919,8 +869,8 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
               </div>
               <div class="health-bars">
                 <div class="hbar-row">
-                  <div class="hbar-label">Execução</div>
-                  <span class="hbar-auto-tag">Auto</span>
+                  <div class="hbar-label" style="color:var(--amber)">Execução</div>
+                  <span class="hbar-auto-tag" style="background:var(--amber-dim);color:var(--amber);border:0.5px solid var(--amber-border)">CS preenche</span>
                   <div class="hbar-bg"><div class="hbar-fill" id="hbar-exec" style="width:0%;background:var(--amber)"></div></div>
                   <div class="hbar-val" id="hval-exec">0pt</div>
                 </div>
@@ -942,6 +892,15 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
             <div class="chart-wrap" id="hs-chart-wrap" style="display:none;margin-top:16px;height:160px"><canvas id="hs-chart"></canvas></div>
 
             <div style="margin-top:16px;border-top:1px solid var(--border);padding-top:16px">
+              <div style="font-size:11px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.12em;font-weight:700;font-family:'Montserrat',sans-serif;margin-bottom:8px">Execução desta semana (0–40pt)</div>
+              <div class="sat-btns" id="exec-buttons" style="margin-bottom:16px">
+                <button class="sat-btn" data-exec="0"  onclick="selectExec(0)"><div class="sat-num">0</div><div class="sat-lbl">Sem exe&shy;cução</div><div class="sat-pts">0pt</div></button>
+                <button class="sat-btn" data-exec="10" onclick="selectExec(10)"><div class="sat-num">10</div><div class="sat-lbl">Fraco</div><div class="sat-pts">10pt</div></button>
+                <button class="sat-btn" data-exec="20" onclick="selectExec(20)"><div class="sat-num">20</div><div class="sat-lbl">Regular</div><div class="sat-pts">20pt</div></button>
+                <button class="sat-btn" data-exec="30" onclick="selectExec(30)"><div class="sat-num">30</div><div class="sat-lbl">Bom</div><div class="sat-pts">30pt</div></button>
+                <button class="sat-btn" data-exec="40" onclick="selectExec(40)"><div class="sat-num">40</div><div class="sat-lbl">Excelente</div><div class="sat-pts">40pt</div></button>
+              </div>
+              <div style="font-size:11px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.12em;font-weight:700;font-family:'Montserrat',sans-serif;margin-bottom:8px">Satisfação do cliente (0–20pt)</div>
               <div style="font-size:13px;color:var(--text-sec);line-height:1.6;margin-bottom:12px;padding:10px 12px;background:var(--surface2);border-radius:6px;border-left:2px solid var(--amber)">
                 <strong style="color:var(--text)">Pergunta para o cliente esta semana:</strong><br>
                 "Em uma escala de 1 a 5, como você está se sentindo com os resultados do programa?"
@@ -1026,23 +985,6 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
       </div>
 
       <!-- PAGE: ALERTAS -->
-      <div id="page-alertas" class="page">
-        <div class="brand-rail"></div>
-        <div class="section-card">
-          <div class="sc-header">
-            <div class="sc-title">Alertas ativos</div>
-            <div class="sc-sub" id="alert-page-sub">—</div>
-          </div>
-          <div class="sc-body" id="alert-page-list"></div>
-        </div>
-      </div>
-
-      <!-- PAGE: SEMANAS -->
-      <div id="page-semanas" class="page">
-        <div class="brand-rail"></div>
-        <div id="all-cps"></div>
-      </div>
-
       <!-- PAGE: METAS -->
       <div id="page-metas" class="page">
         <div class="brand-rail"></div>
@@ -1239,10 +1181,6 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
       <svg viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="2" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/></svg>
       Visão
     </button>
-    <button class="mobile-nav-btn" id="mnav-semanas" onclick="showPage('semanas',this,'mnav-semanas')">
-      <svg viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="11" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M5 1v3M11 1v3M2 7h12" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-      Semanas
-    </button>
     <button class="mobile-nav-btn" id="mnav-metas" onclick="showPage('metas',this,'mnav-metas')">
       <svg viewBox="0 0 16 16" fill="none"><path d="M3 13V9M6 13V6M9 13V4M12 13V8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
       Metas
@@ -1427,28 +1365,6 @@ const CPS = [
   {id:4,num:'04',title:'Escala e recompra',weeks:[21,22,23,24]},
 ];
 
-const WEEK_TASKS = {
-  1:  [{id:'w1t1',name:'Confirmar contrato e pagamento',resp:'CS1'},{id:'w1t2',name:'Cadastrar cliente nas plataformas',resp:'CS1'},{id:'w1t3',name:'Criar Drive do cliente',resp:'CS1'},{id:'w1t4',name:'Call de boas-vindas em até 24h',resp:'CS1'},{id:'w1t5',name:'Preencher diagnóstico inicial completo',resp:'CS1'},{id:'w1t6',name:'Direcionar SDR para grupo + tutorias',resp:'CS1'},{id:'w1t7',name:'Criar projeto no ChatGPT',resp:'CS1'}],
-  2:  [{id:'w2t1',name:'Call de esteira de produtos',resp:'CS2'},{id:'w2t2',name:'Elaborar esteira e produto foco',resp:'CS2'},{id:'w2t3',name:'Enviar formulário (cobrar em 24h)',resp:'CS2'},{id:'w2t4',name:'Direcionar tutoria 6 + consulta Dra. Deborah',resp:'CS2'},{id:'w2t5',name:'Enviar Drive para design iniciar apresentação',resp:'CS2'}],
-  3:  [{id:'w3t1',name:'Receber apresentação e enviar ao cliente',resp:'CS2'},{id:'w3t2',name:'Call de análise da apresentação + SPIN',resp:'CS3'},{id:'w3t3',name:'Call de tráfego',resp:'Tráfego'},{id:'w3t4',name:'Enviar checklist de posicionamento',resp:'Tráfego'},{id:'w3t5',name:'Liberar acesso ao gerenciador',resp:'Tráfego'}],
-  4:  [{id:'w4t1',name:'Ritual semanal obrigatório',resp:'CS2'},{id:'w4t2',name:'Validar comunicação e script alinhados',resp:'CS2'},{id:'w4t3',name:'Analisar primeiras vendas',resp:'CS3'},{id:'w4t4',name:'Call de Checkpoint 1',resp:'CS3'},{id:'w4t5',name:'Verificar checklist 100% e liberar campanhas',resp:'Tráfego'}],
-  5:  [{id:'w5t1',name:'Ritual semanal obrigatório',resp:'CS2'},{id:'w5t2',name:'WhatsApp com revisão de metas + Flashboard',resp:'CS2'},{id:'w5t3',name:'Apresentar implementações realizadas',resp:'CS2'},{id:'w5t4',name:'Definir meta 2–4 vendas/dia',resp:'CS2'}],
-  6:  [{id:'w6t1',name:'Ritual semanal obrigatório',resp:'CS3'},{id:'w6t2',name:'Call de vendas',resp:'CS3'},{id:'w6t3',name:'Identificar gargalos e ajustar script',resp:'CS3'},{id:'w6t4',name:'Pedir indicação ao cliente',resp:'CS3'}],
-  7:  [{id:'w7t1',name:'Ritual semanal obrigatório',resp:'Tráfego'},{id:'w7t2',name:'Call de análise de conversão',resp:'Tráfego'},{id:'w7t3',name:'Mostrar funil completo ao cliente',resp:'Tráfego'}],
-  8:  [{id:'w8t1',name:'Ritual semanal obrigatório',resp:'CS3'},{id:'w8t2',name:'Garantir 2–4 vendas consistentes',resp:'CS3'},{id:'w8t3',name:'Análise de conversão completa',resp:'CS3'},{id:'w8t4',name:'Ajustar script comercial',resp:'CS3'},{id:'w8t5',name:'Validar Health Score ≥ 70',resp:'CS3'},{id:'w8t6',name:'Decisão: renovação 17K ou upgrade 42K',resp:'CS3'},{id:'w8t7',name:'Call de Checkpoint 2',resp:'CS3'}],
-};
-for(let w=9;w<=24;w++){
-  if(!WEEK_TASKS[w]){
-    const base = [{id:`w${w}t1`,name:'Ritual semanal obrigatório',resp:'CS2'}];
-    if(w%4===2) base.push({id:`w${w}t2`,name:'Call de vendas e ajuste de script',resp:'CS3'},{id:`w${w}t3`,name:'Pedir indicação ao cliente',resp:'CS3'});
-    if(w%4===3) base.push({id:`w${w}t2`,name:'Call de análise de conversão',resp:'Tráfego'},{id:`w${w}t3`,name:'Análise e escala de campanhas',resp:'Tráfego'});
-    if(w%4===0) base.push({id:`w${w}t2`,name:'WhatsApp com revisão de metas',resp:'CS2'},{id:`w${w}t3`,name:'Identificar gargalo e definir ação',resp:'CS3'});
-    if(w===12) base.push({id:`w12t_cp`,name:'Call de Checkpoint 2',resp:'CS3'});
-    if(w===20) base.push({id:`w20t_cp`,name:'Call de Checkpoint 3',resp:'CS3'});
-    if(w===24) base.push({id:`w24t_cp`,name:'Call de Checkpoint 4 — Encerramento',resp:'CS3'});
-    WEEK_TASKS[w]=base;
-  }
-}
 
 const ENG_ITEMS = [
   {id:'tutorias', label:'Participação nas tutorias', hint:'Compareceu e participou ativamente da tutoria?',
@@ -1475,7 +1391,6 @@ let hsChart = null;
 // ── HELPERS ──
 function getW(){ return S.currentWeek||1; }
 function getWeekState(w){ return (S.weekStates&&S.weekStates[w])||{}; }
-function getTaskState(w,tid){ return getWeekState(w)[tid]||'pending'; }
 function ini(name){ return (name||'?').split(' ').filter(Boolean).slice(0,2).map(x=>x[0]).join('').toUpperCase(); }
 function fmtCurrency(v){ if(!v) return 'R$ —'; return 'R$'+Number(v).toLocaleString('pt-BR'); }
 function fmtMes(k){const[y,m]=k.split('-');const n=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];return n[Number(m)-1]+'/'+y.slice(2)}
@@ -1509,62 +1424,19 @@ function checkOnboarding(){
   }catch(e){}
 }
 
-// ── ROTINA DO DIA ──
-function renderRotinaHoje(){
-  const w = getW();
-  const tasks = WEEK_TASKS[w] || [];
-  const ws = getWeekState(w);
-  const cp = S.checkpoint || 1;
-  const totalW = S.program === 'ativacao' ? 12 : 24;
-
-  const sub = document.getElementById('rotina-sub');
-  if(sub) sub.textContent = `Semana ${w} de ${totalW} · Checkpoint ${cp}`;
-
-  const done = tasks.filter(t => ws[t.id] === 'done').length;
-  const total = tasks.length;
-  const pct = total ? Math.round(done / total * 100) : 0;
-
-  const progText = document.getElementById('rotina-prog-text');
-  const progFill = document.getElementById('rotina-prog-fill');
-  if(progText) progText.textContent = `${done}/${total} concluídas`;
-  if(progFill) progFill.style.width = pct + '%';
-
-  const container = document.getElementById('rotina-items');
-  if(!container) return;
-
-  if(!tasks.length){
-    container.innerHTML = '<div style="font-size:14px;color:var(--text-sec);padding:4px 0">Sem tarefas definidas para esta semana.</div>';
-    return;
-  }
-
-  const chkSvg = `<svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#000" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-  container.innerHTML = tasks.map(t => {
-    const isDone = ws[t.id] === 'done';
-    return `<div class="rotina-item${isDone ? ' ri-done-row' : ''}">
-      <div class="rotina-item-check ${isDone ? 'ri-check-done' : 'ri-check-pending'}" onclick="cycleTask(${w},'${t.id}')">${isDone ? chkSvg : ''}</div>
-      <div class="rotina-item-name">${t.name}</div>
-      <div class="rotina-item-resp">${t.resp || '—'}</div>
-    </div>`;
-  }).join('');
-}
-
 // ── RENDER ──
 function renderAll(){
   renderTopbar();
-  renderAlertBanner();
   renderClientInfo();
   renderTimeline();
   renderCurrentWeek();
   renderHealthScore();
-  renderAllCPs();
   renderMetas();
   renderResources();
   renderCalls();
   renderEngajamento();
   renderMarcos();
   renderMarcosPreview();
-  renderAlertPage();
-  renderRotinaHoje();
   renderOnboarding();
   renderDiagnostico();
 }
@@ -1574,7 +1446,6 @@ function renderTopbar(){
   const w = getW();
   const totalW = S.program==='ativacao'?12:24;
   const cp = S.checkpoint||1;
-  const alerts = getActiveAlerts();
 
   document.getElementById('tb-title').textContent = name;
   const vcBtn = document.getElementById('view-client-btn');
@@ -1587,50 +1458,8 @@ function renderTopbar(){
   const av = document.getElementById('sb-avatar'); if(av){ av.textContent=ini(name); }
   const sn = document.getElementById('sb-name'); if(sn) sn.textContent=name;
   const sr = document.getElementById('sb-role'); if(sr) sr.textContent=S.cs2?'CS2: '+S.cs2:'—';
-
-  const alertBadge = document.getElementById('tb-alerts');
-  if(alerts.length>0){ alertBadge.style.display=''; alertBadge.textContent=alerts.length+' alerta'+(alerts.length!==1?'s':''); }
-  else alertBadge.style.display='none';
-
-  const navAlertas = document.getElementById('nav-alertas');
-  const alertNavCount = document.getElementById('alert-nav-count');
-  if(navAlertas){ navAlertas.style.display=alerts.length>0?'flex':'none'; if(alertNavCount) alertNavCount.textContent=alerts.length; }
 }
 
-function getActiveAlerts(){
-  const w = getW();
-  const ws = getWeekState(w);
-  const tasks = WEEK_TASKS[w]||[];
-  return tasks.filter(t=>{ const st=ws[t.id]||'pending'; return st==='pending'||st==='overdue'; }).slice(0,5);
-}
-
-function renderAlertBanner(){
-  const alerts = getActiveAlerts();
-  const banner = document.getElementById('alert-banner');
-  const list = document.getElementById('ab-list');
-  const title = document.getElementById('ab-title');
-  if(alerts.length===0){ banner.classList.remove('visible'); return; }
-  banner.classList.add('visible');
-  title.textContent=`${alerts.length} tarefa${alerts.length!==1?'s':''} não cumprida${alerts.length!==1?'s':''} — semana ${getW()}`;
-  list.innerHTML=alerts.map(t=>`
-    <div class="ab-item">
-      <div class="ab-dot"></div>
-      <div class="ab-txt">${t.name}</div>
-      <div class="ab-cs">${t.resp||'—'}</div>
-      <button class="ab-resolve" onclick="resolveTaskAlert('${t.id}')">Resolver</button>
-    </div>`).join('');
-}
-
-function resolveTaskAlert(tid){
-  const w=getW();
-  const ws={...getWeekState(w)};
-  ws[tid]='done';
-  if(!S.weekStates) S.weekStates={};
-  S.weekStates[w]={...S.weekStates[w],...ws};
-  save({weekStates:S.weekStates});
-  renderAll();
-  showToast('Tarefa resolvida!','success');
-}
 
 function renderClientInfo(){
   const name=S.name||'—'; const spec=S.spec||'—'; const cp=S.checkpoint||1; const w=getW();
@@ -1664,37 +1493,17 @@ function renderTimeline(){
 }
 
 function getCPProgress(cp){
-  let done=0,total=0;
-  cp.weeks.forEach(w=>{ const tasks=WEEK_TASKS[w]||[]; total+=tasks.length; done+=tasks.filter(t=>getTaskState(w,t.id)==='done').length; });
-  return total===0?0:Math.round(done/total*100);
+  const currentCP = S.checkpoint||1;
+  if(cp.id < currentCP) return 100;
+  if(cp.id === currentCP) return 50;
+  return 0;
 }
 
 function renderCurrentWeek(){
   const w=getW();
-  const tasks=WEEK_TASKS[w]||[];
-  const ws=getWeekState(w);
-  const obs=ws._obs||'';
-  document.getElementById('current-week-title').textContent=`Semana ${w} — Tarefas`;
-  const done=tasks.filter(t=>ws[t.id]==='done').length;
-  document.getElementById('current-week-sub').textContent=`${done} de ${tasks.length} concluídas`;
-  const body=document.getElementById('current-tasks-body');
-  body.innerHTML=tasks.map(t=>{
-    const st=ws[t.id]||'pending';
-    const isDone=st==='done',isOver=st==='overdue';
-    const chkCls=isDone?'tc-done':isOver?'tc-overdue':'tc-pending';
-    const nameCls=isDone?'done':isOver?'overdue':'';
-    const pillCls=isDone?'tp-done':isOver?'tp-over':'tp-pend';
-    const pillLbl=isDone?'Concluída':isOver?'Não cumprida':'Pendente';
-    const chkInner=isDone?`<svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#000" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`:'';
-    return `<tr class="${isOver?'overdue-row':''}">
-      <td><div class="task-check ${chkCls}" onclick="cycleTask(${w},'${t.id}')">${chkInner}</div></td>
-      <td><div class="task-name ${nameCls}">${t.name}</div><div class="task-desc">${t.resp||''}</div></td>
-      <td><span class="task-pill ${pillCls}">${pillLbl}</span></td>
-      <td style="font-size:13px;color:var(--text-sec)">${t.resp||'—'}</td>
-      <td>${isOver?`<button class="task-resolve" onclick="resolveTaskAlert('${t.id}')">Resolver</button>`:''}</td>
-    </tr>`;
-  }).join('');
-  document.getElementById('week-obs').value=obs;
+  const obs=getWeekState(w)._obs||'';
+  const title=document.getElementById('current-week-title'); if(title) title.textContent=`Semana ${w}`;
+  const el=document.getElementById('week-obs'); if(el) el.value=obs;
 }
 
 function renderHealthScore(){
@@ -1711,8 +1520,11 @@ function renderHealthScore(){
   const ve=document.getElementById('hval-exec'); if(ve) ve.textContent=exec+'pt';
   const vf=document.getElementById('hval-funil'); if(vf) vf.textContent=funil+'pt';
   const vs=document.getElementById('hval-sat'); if(vs) vs.textContent=sat+'pt';
-  document.querySelectorAll('.sat-btn').forEach(btn=>{
+  document.querySelectorAll('#sat-buttons .sat-btn').forEach(btn=>{
     btn.classList.toggle('selected', parseInt(btn.dataset.val)===sat);
+  });
+  document.querySelectorAll('#exec-buttons .sat-btn').forEach(btn=>{
+    btn.classList.toggle('selected', parseInt(btn.dataset.exec)===(S.healthExec||0));
   });
   renderHsChart();
 }
@@ -1747,47 +1559,6 @@ function renderHsChart(){
   });
 }
 
-function renderAllCPs(){
-  const container=document.getElementById('all-cps'); if(!container) return;
-  container.innerHTML=CPS.map(cp=>{
-    const pct=getCPProgress(cp);
-    const isActive=cp.id===(S.checkpoint||1);
-    const numCls=pct===100?'td-done':isActive?'td-active':'td-future';
-    const inner=pct===100?`<svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#000" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`:cp.num;
-    const fillColor=pct===100?'var(--green)':isActive?'var(--amber)':'var(--border)';
-    const weeksHtml=cp.weeks.map(w=>{
-      const tasks=WEEK_TASKS[w]||[];
-      const ws2=getWeekState(w);
-      const done=tasks.filter(t=>ws2[t.id]==='done').length;
-      const wpct=tasks.length?Math.round(done/tasks.length*100):0;
-      const isCurrentW=w===getW();
-      const hasAlert=tasks.some(t=>(ws2[t.id]||'pending')==='pending'||ws2[t.id]==='overdue');
-      const cellCls=isCurrentW?'active':wpct===100?'done-week':hasAlert&&w<getW()?'alert-week':'';
-      const dotColor=wpct===100?'var(--green)':isCurrentW?'var(--amber)':hasAlert?'var(--red)':'var(--text-sec)';
-      const label=wpct===100?'Concluída':isCurrentW?'Atual':hasAlert&&w<getW()?'Com alerta':'Aguardando';
-      const obs2=ws2._obs?`<div class="wk-obs">${ws2._obs}</div>`:'';
-      const alertFlag=hasAlert&&w<getW()?`<div class="wk-alert-flag"><div class="wk-pulse"></div>Atenção</div>`:'';
-      return `<div class="week-cell ${cellCls}" onclick="goToWeek(${w})">
-        <div class="wk-num">Semana ${w}</div>
-        <div class="wk-status"><div class="wk-dot" style="background:${dotColor}"></div><span class="wk-label" style="color:${dotColor}">${label}</span></div>
-        <div class="wk-tasks">${done}/${tasks.length} tarefas</div>
-        ${obs2}${alertFlag}
-      </div>`;
-    }).join('');
-    return `<div class="cp-block">
-      <div class="cp-hdr" onclick="toggleCP(${cp.id})">
-        <div class="cp-num ${numCls}">${inner}</div>
-        <div class="cp-title">CP${cp.id} — ${cp.title} · Semanas ${cp.weeks[0]}–${cp.weeks[cp.weeks.length-1]}</div>
-        <div class="cp-prog-row">
-          <div class="cp-bar"><div class="cp-fill" style="width:${pct}%;background:${fillColor}"></div></div>
-          <div class="cp-pct" style="color:${fillColor}">${pct}%</div>
-        </div>
-        <div class="cp-chev" id="cpchev-${cp.id}">&#8964;</div>
-      </div>
-      <div class="weeks-grid" id="cpweeks-${cp.id}" style="display:grid">${weeksHtml}</div>
-    </div>`;
-  }).join('');
-}
 
 function renderMetas(){
   const ini=S.faturamentoInicial||0;
@@ -2157,38 +1928,7 @@ async function selectEng(itemId, val){
   await save({engajamento:S.engajamento});
 }
 
-function renderAlertPage(){
-  const list=document.getElementById('alert-page-list'); if(!list) return;
-  const alerts=getActiveAlerts();
-  const sub=document.getElementById('alert-page-sub'); if(sub) sub.textContent=alerts.length+(alerts.length!==1?' alertas':' alerta')+' ativos';
-  if(alerts.length===0){ list.innerHTML='<div style="text-align:center;padding:20px;color:var(--green);font-size:14px">Nenhum alerta ativo — todas as tarefas em dia!</div>'; return; }
-  list.innerHTML=`<div class="ab-list">${alerts.map(t=>`
-    <div class="ab-item" style="border:0.5px solid rgba(239,68,68,0.25)">
-      <div class="ab-dot"></div>
-      <div class="ab-txt">${t.name}</div>
-      <div class="ab-cs">${t.resp||'—'}</div>
-      <button class="ab-resolve" onclick="resolveTaskAlert('${t.id}')">Resolver</button>
-    </div>`).join('')}</div>`;
-}
-
 // ── ACTIONS ──
-function cycleTask(w,tid){
-  const ws={...getWeekState(w)};
-  const cur=ws[tid]||'pending';
-  ws[tid]=cur==='pending'?'done':cur==='done'?'overdue':'pending';
-  if(!S.weekStates) S.weekStates={};
-  S.weekStates[w]={...S.weekStates[w],...ws};
-  save({weekStates:S.weekStates});
-  renderAll();
-  showToast(ws[tid]==='done'?'Tarefa concluída!':ws[tid]==='overdue'?'Tarefa marcada como não cumprida':'Tarefa reaberta','success');
-}
-
-function goToWeek(w){
-  showPage('semanas',null,'mnav-semanas');
-  setTimeout(()=>{ const el=document.getElementById(`cpweeks-${getCPForWeek(w)}`); if(el) el.scrollIntoView({behavior:'smooth',block:'nearest'}); },100);
-}
-
-function getCPForWeek(w){ for(const cp of CPS){ if(cp.weeks.includes(w)) return cp.id; } return 1; }
 
 function toggleCP(id){
   const el=document.getElementById('cpweeks-'+id);
@@ -2210,6 +1950,13 @@ function scheduleObsSave(){
   },1200);
 }
 
+function selectExec(pts){
+  S.healthExec=pts;
+  S.healthScore=pts+(S.healthFunil||0)+(S.healthSat||0);
+  document.querySelectorAll('#exec-buttons .sat-btn').forEach(b=>b.classList.toggle('selected',parseInt(b.dataset.exec)===pts));
+  renderHealthScore();
+}
+
 function selectSat(pts){
   S.healthSat=pts;
   S.healthScore=(S.healthExec||0)+(S.healthFunil||0)+pts;
@@ -2217,9 +1964,7 @@ function selectSat(pts){
 }
 
 function updateHealthScore(){
-  const exec=Math.round(((S.weekStates&&S.weekStates[getW()])?Object.values(S.weekStates[getW()]).filter(v=>v==='done').length/Math.max(1,(WEEK_TASKS[getW()]||[]).length)*40:0));
-  S.healthExec=Math.min(40,Math.max(0,exec));
-  S.healthScore=S.healthExec+(S.healthFunil||0)+(S.healthSat||0);
+  S.healthScore=(S.healthExec||0)+(S.healthFunil||0)+(S.healthSat||0);
   renderHealthScore();
 }
 
