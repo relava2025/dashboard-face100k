@@ -626,6 +626,75 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .onb-del-btn:hover{color:var(--red);background:var(--red-dim)}
 .onb-add-btn{width:100%;margin-top:8px;padding:8px;background:transparent;border:1px dashed var(--border);border-radius:6px;color:var(--text-sec);font-size:13px;cursor:pointer;transition:all .15s;font-family:'Montserrat',sans-serif;font-weight:600;letter-spacing:.04em}
 .onb-add-btn:hover{border-color:var(--amber);color:var(--amber)}
+
+/* CALLS ONBOARDING FIXAS */
+.calls-section-label{font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.18em;font-weight:700;font-family:'Montserrat',sans-serif;margin-bottom:10px;padding:0 2px;display:block}
+.call-fixed-wrap{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
+.call-fixed{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:14px 16px;transition:all .2s}
+.call-fixed.cf-done{border-color:rgba(34,197,94,0.35);background:rgba(34,197,94,0.04)}
+.call-fixed.cf-delivery{border-color:var(--amber-border);background:var(--amber-dim)}
+.call-fixed.cf-delivery.cf-done{border-color:rgba(34,197,94,0.35);background:rgba(34,197,94,0.04)}
+.cf-hdr{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+.cf-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;font-family:'Montserrat',sans-serif;flex-shrink:0;background:var(--surface3);color:var(--text-sec);border:1.5px solid var(--border);transition:all .2s}
+.call-fixed.cf-done .cf-num{background:var(--green);color:#000;border-color:var(--green)}
+.cf-delivery-icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;background:var(--amber-dim);border:1px solid var(--amber-border)}
+.call-fixed.cf-delivery.cf-done .cf-delivery-icon{background:var(--green-dim);border-color:var(--green-border)}
+.cf-info{flex:1;min-width:0}
+.cf-title{font-size:14px;font-weight:600;color:var(--text)}
+.cf-meta{display:flex;gap:6px;align-items:center;margin-top:3px;flex-wrap:wrap}
+.cf-resp{font-size:11px;color:var(--text-sec)}
+.cf-dia{font-size:10px;padding:1px 7px;border-radius:4px;background:rgba(245,166,35,0.1);color:var(--amber);border:0.5px solid rgba(245,166,35,0.2);font-family:'Montserrat',sans-serif;font-weight:600}
+.cf-sentimento{font-size:11px;color:var(--text-sec);font-style:italic}
+.cf-status-pill{font-size:10px;padding:2px 8px;border-radius:8px;font-weight:600;font-family:'Montserrat',sans-serif;white-space:nowrap;flex-shrink:0}
+.cf-pill-pend{background:rgba(255,255,255,0.06);color:var(--text-sec);border:0.5px solid var(--border)}
+.cf-pill-done{background:var(--green-dim);color:var(--green);border:0.5px solid var(--green-border)}
+.cf-body{margin-top:10px;padding-top:10px;border-top:1px solid var(--border-light);display:none}
+.call-fixed.cf-open .cf-body{display:block}
+.cf-date-row{display:flex;gap:10px;align-items:center;margin-bottom:8px}
+.cf-date-label{font-size:11px;color:var(--text-sec);white-space:nowrap}
+.cf-date-input{background:var(--surface);border:1px solid var(--border);border-radius:5px;color:var(--text);font-family:'Inter',sans-serif;font-size:13px;padding:5px 9px;outline:none;flex:0 0 auto;width:150px}
+.cf-date-input:focus{border-color:var(--amber)}
+.cf-notes{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:5px;color:var(--text);font-family:'Inter',sans-serif;font-size:13px;padding:7px 10px;outline:none;resize:none;min-height:48px;transition:border-color .15s;margin-bottom:8px}
+.cf-notes:focus{border-color:var(--amber)}
+.cf-notes::placeholder{color:var(--text-dim)}
+.cf-btn-mark{padding:7px 16px;border-radius:5px;font-size:12px;font-weight:700;font-family:'Montserrat',sans-serif;cursor:pointer;transition:all .15s;border:1px solid var(--green-border);background:var(--green-dim);color:var(--green)}
+.cf-btn-mark:hover{background:var(--green);color:#fff;border-color:var(--green)}
+.cf-btn-unmark{padding:6px 14px;border-radius:5px;font-size:11px;font-weight:600;font-family:'Montserrat',sans-serif;cursor:pointer;transition:all .15s;border:1px solid var(--border);background:transparent;color:var(--text-sec);margin-left:8px}
+.cf-btn-unmark:hover{border-color:var(--red-border);color:var(--red)}
+.calls-extra-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.calls-extra-count{font-size:12px;font-family:'JetBrains Mono',monospace;color:var(--text-sec)}
+
+/* DIAGNÓSTICO */
+.diag-header{display:flex;align-items:center;gap:16px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px 22px;margin-bottom:20px;position:relative;overflow:hidden}
+.diag-header::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,rgba(245,166,35,0) 0%,var(--amber) 40%,var(--amber) 60%,rgba(245,166,35,0) 100%)}
+.diag-score-num{font-size:48px;font-weight:800;font-family:'Montserrat',sans-serif;color:var(--amber);line-height:1;min-width:72px}
+.diag-score-right{flex:1}
+.diag-score-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:3px;font-family:'Montserrat',sans-serif}
+.diag-score-sub{font-size:12px;color:var(--text-sec);margin-bottom:8px}
+.diag-score-bar{height:5px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden}
+.diag-score-fill{height:100%;background:linear-gradient(90deg,var(--amber),rgba(245,166,35,0.5));border-radius:3px;transition:width .5s}
+.diag-item{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin-bottom:10px;display:flex;gap:14px;align-items:flex-start;transition:all .3s}
+.diag-item.diag-unlocked{border-color:rgba(245,166,35,0.3)}
+.diag-item.diag-locked{opacity:.35;filter:grayscale(.6)}
+.diag-item-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:17px;background:var(--surface2);border:1px solid var(--border)}
+.diag-item.diag-unlocked .diag-item-icon{background:var(--amber-dim);border-color:var(--amber-border)}
+.diag-item-body{flex:1}
+.diag-item-call-ref{font-size:10px;text-transform:uppercase;letter-spacing:.12em;font-weight:700;color:var(--text-sec);font-family:'Montserrat',sans-serif;margin-bottom:3px}
+.diag-item.diag-unlocked .diag-item-call-ref{color:var(--amber)}
+.diag-item-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px;font-family:'Montserrat',sans-serif}
+.diag-item-text{font-size:13px;color:var(--text-sec);line-height:1.6}
+.diag-item-date{font-size:11px;color:var(--text-sec);margin-top:6px;font-family:'JetBrains Mono',monospace}
+.diag-badge{display:inline-block;font-size:10px;padding:2px 8px;border-radius:4px;font-weight:600;font-family:'Montserrat',sans-serif;margin-top:6px}
+.diag-badge-done{background:var(--green-dim);color:var(--green);border:0.5px solid var(--green-border)}
+.diag-badge-lock{background:rgba(255,255,255,0.05);color:var(--text-sec);border:0.5px solid var(--border)}
+.diag-extra-section{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-top:20px}
+.diag-extra-title{font-size:14px;font-weight:700;color:var(--text);font-family:'Montserrat',sans-serif;margin-bottom:4px}
+.diag-extra-sub{font-size:12px;color:var(--text-sec);margin-bottom:12px}
+.diag-extra-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--border-light)}
+.diag-extra-item:last-child{border-bottom:none}
+.diag-extra-dot{width:6px;height:6px;border-radius:50%;background:var(--blue);flex-shrink:0}
+.diag-extra-text{font-size:13px;color:var(--text);flex:1}
+.diag-extra-date{font-size:11px;color:var(--text-sec);font-family:'JetBrains Mono',monospace}
 </style>
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#F5A623">
@@ -711,6 +780,10 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
       <button class="nav-btn" onclick="showPage('onboarding',this,'mnav-onb')">
         <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M3 4h4M3 8h3M3 12h2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><path d="M9 3l1.5 3 3.5.5-2.5 2 .5 3L9 10l-3 1.5.5-3L4 6l3.5-.5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
         Onboarding
+      </button>
+      <button class="nav-btn" onclick="showPage('diagnostico',this,'mnav-diag')">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M4 2h8a1 1 0 011 1v10a1 1 0 01-1 1H4a1 1 0 01-1-1V3a1 1 0 011-1z" stroke="currentColor" stroke-width="1.3"/><path d="M6 6h4M6 9h4M6 12h2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="5" cy="6" r=".8" fill="currentColor"/><circle cx="5" cy="9" r=".8" fill="currentColor"/><circle cx="5" cy="12" r=".8" fill="currentColor"/></svg>
+        Diagnóstico
       </button>
     </nav>
     <div class="sb-client">
@@ -1047,14 +1120,33 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
       <!-- PAGE: CALLS -->
       <div id="page-calls" class="page">
         <div class="brand-rail"></div>
+
+        <!-- 7 Calls de Onboarding -->
         <div class="section-card">
           <div class="sc-header">
-            <div class="sc-title">Histórico de calls</div>
-            <div class="sc-sub">Registro de todas as calls realizadas</div>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="flex-shrink:0"><circle cx="8" cy="8" r="6" stroke="var(--amber)" stroke-width="1.3"/><path d="M8 5v3l2 1" stroke="var(--amber)" stroke-width="1.3" stroke-linecap="round"/></svg>
+            <div class="sc-title">Calls de Onboarding</div>
+            <div class="sc-sub" id="calls-onb-sub">0 de 7 realizadas</div>
           </div>
           <div class="sc-body">
-            <div class="calls-list" id="calls-list"></div>
-            <button class="btn-add-call" onclick="openCallModal()">+ Registrar call</button>
+            <div class="call-fixed-wrap" id="calls-onb-list"></div>
+          </div>
+        </div>
+
+        <!-- 6 Calls Extra -->
+        <div class="section-card">
+          <div class="sc-header">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="flex-shrink:0"><rect x="2" y="2" width="12" height="12" rx="2" stroke="var(--blue)" stroke-width="1.3"/><path d="M8 5v6M5 8h6" stroke="var(--blue)" stroke-width="1.3" stroke-linecap="round"/></svg>
+            <div class="sc-title">Calls Extra</div>
+            <div class="sc-sub">6 calls disponíveis — qualquer tema</div>
+          </div>
+          <div class="sc-body">
+            <div class="calls-extra-header">
+              <span class="calls-section-label" style="margin-bottom:0">Registros realizados</span>
+              <span class="calls-extra-count" id="calls-extra-count">0 / 6</span>
+            </div>
+            <div class="calls-list" id="calls-list" style="margin-bottom:10px"></div>
+            <button class="btn-add-call" id="btn-add-extra-call" onclick="openCallModal()">+ Registrar call extra</button>
           </div>
         </div>
       </div>
@@ -1124,6 +1216,12 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
         <div id="onb-container"></div>
       </div>
 
+      <!-- PAGE: DIAGNÓSTICO -->
+      <div id="page-diagnostico" class="page">
+        <div class="brand-rail"></div>
+        <div id="diag-container"></div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -1162,6 +1260,10 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
     <button class="mobile-nav-btn" id="mnav-onb" onclick="showPage('onboarding',this,'mnav-onb')">
       <svg viewBox="0 0 16 16" fill="none"><path d="M3 4h4M3 8h3M3 12h2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><path d="M9 3l1.5 3 3.5.5-2.5 2 .5 3L9 10l-3 1.5.5-3L4 6l3.5-.5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
       Onboard
+    </button>
+    <button class="mobile-nav-btn" id="mnav-diag" onclick="showPage('diagnostico',this,'mnav-diag')">
+      <svg viewBox="0 0 16 16" fill="none"><path d="M4 2h8a1 1 0 011 1v10a1 1 0 01-1 1H4a1 1 0 01-1-1V3a1 1 0 011-1z" stroke="currentColor" stroke-width="1.3"/><path d="M6 6h4M6 9h4M6 12h2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="5" cy="6" r=".8" fill="currentColor"/><circle cx="5" cy="9" r=".8" fill="currentColor"/><circle cx="5" cy="12" r=".8" fill="currentColor"/></svg>
+      Diagnóst.
     </button>
   </div>
 </div>
@@ -1458,6 +1560,7 @@ function renderAll(){
   renderAlertPage();
   renderRotinaHoje();
   renderOnboarding();
+  renderDiagnostico();
 }
 
 function renderTopbar(){
@@ -1771,10 +1874,15 @@ function renderResources(){
 }
 
 function renderCalls(){
+  // Render extra calls list
   const list=document.getElementById('calls-list'); if(!list) return;
   const calls=(S.calls||[]).slice().reverse();
-  if(calls.length===0){ list.innerHTML='<div style="text-align:center;padding:20px;color:var(--text-sec);font-size:14px">Nenhuma call registrada ainda</div>'; return; }
-  list.innerHTML=calls.map((c,i)=>`
+  const countEl=document.getElementById('calls-extra-count');
+  if(countEl) countEl.textContent=(S.calls||[]).length+' / 6';
+  const addBtn=document.getElementById('btn-add-extra-call');
+  if(addBtn) addBtn.style.display=(S.calls||[]).length>=6?'none':'block';
+  if(calls.length===0){ list.innerHTML='<div style="text-align:center;padding:16px;color:var(--text-sec);font-size:13px">Nenhuma call extra registrada ainda</div>'; }
+  else list.innerHTML=calls.map(c=>`
     <div class="call-item">
       <div class="call-hdr">
         <span class="call-type-pill">${c.type||'Call'}</span>
@@ -1784,6 +1892,139 @@ function renderCalls(){
       <div class="call-summary">${c.summary||'—'}</div>
       ${c.next?`<div class="call-next"><span class="call-next-label">Próximos passos:</span>${c.next}</div>`:''}
     </div>`).join('');
+  // Render fixed onboarding calls
+  renderCallsOnb();
+}
+
+function renderCallsOnb(){
+  const container=document.getElementById('calls-onb-list'); if(!container) return;
+  const onbData=S.callsOnb||{};
+  const openState=window._callsOnbOpen||(window._callsOnbOpen={});
+  const done=CALLS_ONB.filter(c=>onbData[c.id]?.realizada).length;
+  const callCount=CALLS_ONB.filter(c=>c.type!=='delivery').length;
+  const sub=document.getElementById('calls-onb-sub'); if(sub) sub.textContent=done+' de '+callCount+' realizadas';
+
+  container.innerHTML=CALLS_ONB.map(c=>{
+    const d=onbData[c.id]||{};
+    const isDone=!!d.realizada;
+    const isOpen=!!openState[c.id];
+    const isDelivery=c.type==='delivery';
+    const checkSvg=`<svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L4 7.5L10 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+    const numHtml=isDelivery
+      ? `<div class="cf-delivery-icon">${isDone?checkSvg:'📋'}</div>`
+      : `<div class="cf-num">${isDone?checkSvg:c.num}</div>`;
+    const metaHtml=`
+      ${c.dia?`<span class="cf-dia">${c.dia}</span>`:''}
+      <span class="cf-resp">${c.resp}</span>
+      ${c.sentimento?`<span class="cf-sentimento">${c.sentimento}</span>`:''}`;
+    const bodyHtml=`
+      <div class="cf-body">
+        <div class="cf-date-row">
+          <span class="cf-date-label">Data realizada:</span>
+          <input class="cf-date-input" type="date" value="${d.data||''}" onchange="saveCallOnb('${c.id}','data',this.value)" onclick="event.stopPropagation()">
+        </div>
+        <textarea class="cf-notes" placeholder="Observações da call..." onclick="event.stopPropagation()" oninput="saveCallOnbNotes('${c.id}',this.value)">${d.notas||''}</textarea>
+        <div>
+          ${!isDone?`<button class="cf-btn-mark" onclick="event.stopPropagation();toggleCallOnb('${c.id}',true)">Marcar como realizada</button>`
+            :`<button class="cf-btn-mark" style="background:var(--green);color:#fff;border-color:var(--green);cursor:default">${checkSvg} Realizada</button>
+             <button class="cf-btn-unmark" onclick="event.stopPropagation();toggleCallOnb('${c.id}',false)">Desfazer</button>`}
+        </div>
+      </div>`;
+    return`<div class="call-fixed${isDone?' cf-done':''}${isDelivery?' cf-delivery':''}${isOpen?' cf-open':''}" id="cf-item-${c.id}">
+      <div class="cf-hdr" onclick="toggleCallOnbOpen('${c.id}')">
+        ${numHtml}
+        <div class="cf-info">
+          <div class="cf-title">${c.title}</div>
+          <div class="cf-meta">${metaHtml}</div>
+        </div>
+        <span class="cf-status-pill ${isDone?'cf-pill-done':'cf-pill-pend'}">${isDone?'Realizada':'Pendente'}</span>
+      </div>
+      ${bodyHtml}
+    </div>`;
+  }).join('');
+}
+
+function toggleCallOnbOpen(id){
+  if(!window._callsOnbOpen) window._callsOnbOpen={};
+  window._callsOnbOpen[id]=!window._callsOnbOpen[id];
+  const el=document.getElementById('cf-item-'+id);
+  if(el) el.classList.toggle('cf-open',!!window._callsOnbOpen[id]);
+}
+
+async function toggleCallOnb(id, val){
+  if(!S.callsOnb) S.callsOnb={};
+  if(!S.callsOnb[id]) S.callsOnb[id]={};
+  S.callsOnb[id].realizada=val;
+  if(val && !S.callsOnb[id].data) S.callsOnb[id].data=new Date().toISOString().split('T')[0];
+  await save({callsOnb:S.callsOnb});
+  renderCalls(); renderDiagnostico();
+  showToast(val?'Call marcada como realizada!':'Call desmarcada','success');
+}
+
+let _callOnbTimer=null;
+function saveCallOnb(id,key,val){
+  if(!S.callsOnb) S.callsOnb={};
+  if(!S.callsOnb[id]) S.callsOnb[id]={};
+  S.callsOnb[id][key]=val;
+  clearTimeout(_callOnbTimer);
+  _callOnbTimer=setTimeout(()=>save({callsOnb:S.callsOnb}),800);
+}
+function saveCallOnbNotes(id,val){ saveCallOnb(id,'notas',val); }
+
+function renderDiagnostico(){
+  const container=document.getElementById('diag-container'); if(!container) return;
+  const onbData=S.callsOnb||{};
+  const totalItems=CALLS_ONB.length;
+  const doneCnt=CALLS_ONB.filter(c=>onbData[c.id]?.realizada).length;
+  const pct=Math.round(doneCnt/totalItems*100);
+
+  const stageLabels=['Não iniciado','Em andamento','Onboarding completo'];
+  const stageLabel=doneCnt===0?stageLabels[0]:doneCnt===totalItems?stageLabels[2]:stageLabels[1];
+  const stageColor=doneCnt===0?'var(--text-sec)':doneCnt===totalItems?'var(--green)':'var(--amber)';
+
+  let html=`<div class="diag-header">
+    <div class="diag-score-num" style="color:${stageColor}">${pct}%</div>
+    <div class="diag-score-right">
+      <div class="diag-score-title">Diagnóstico do Cliente</div>
+      <div class="diag-score-sub">${doneCnt} de ${totalItems} etapas concluídas — ${stageLabel}</div>
+      <div class="diag-score-bar"><div class="diag-score-fill" style="width:${pct}%;background:${doneCnt===totalItems?'var(--green)':'linear-gradient(90deg,var(--amber),rgba(245,166,35,0.5))'}"></div></div>
+    </div>
+  </div>`;
+
+  html+=`<div class="section-card"><div class="sc-header"><div class="sc-title">Relatório de Diagnóstico</div><div class="sc-sub" style="font-size:12px">Cada etapa concluída desbloqueia um diagnóstico específico do cliente</div></div><div class="sc-body" style="padding:14px">`;
+
+  CALLS_ONB.forEach(c=>{
+    const d=onbData[c.id]||{};
+    const isUnlocked=!!d.realizada;
+    html+=`<div class="diag-item ${isUnlocked?'diag-unlocked':'diag-locked'}">
+      <div class="diag-item-icon">${c.diag.icon}</div>
+      <div class="diag-item-body">
+        <div class="diag-item-call-ref">${c.diag.callRef}</div>
+        <div class="diag-item-title">${c.diag.titulo}</div>
+        <div class="diag-item-text">${isUnlocked?c.diag.texto:'Complete esta etapa para desbloquear o diagnóstico.'}</div>
+        ${isUnlocked&&d.data?`<div class="diag-item-date">Realizada em ${d.data}</div>`:''}
+        <span class="diag-badge ${isUnlocked?'diag-badge-done':'diag-badge-lock'}">${isUnlocked?'Desbloqueado':'Bloqueado'}</span>
+      </div>
+    </div>`;
+  });
+
+  html+=`</div></div>`;
+
+  // Extra calls diagnostic
+  const extraCalls=S.calls||[];
+  if(extraCalls.length>0){
+    html+=`<div class="diag-extra-section">
+      <div class="diag-extra-title">Calls Extra Realizadas</div>
+      <div class="diag-extra-sub">${extraCalls.length} de 6 calls extra utilizadas</div>
+      ${extraCalls.map(c=>`<div class="diag-extra-item">
+        <div class="diag-extra-dot"></div>
+        <div class="diag-extra-text">${c.type||'Call'} — ${c.summary||'Sem resumo'}</div>
+        <div class="diag-extra-date">${c.date||'—'}</div>
+      </div>`).join('')}
+    </div>`;
+  }
+
+  container.innerHTML=html;
 }
 
 function engScore(eng){
@@ -1948,14 +2189,20 @@ function addResourceWithName(name){ if(!S.resources) S.resources=[]; S.resources
 function updateResource(i,key,val){ if(!S.resources||!S.resources[i]) return; S.resources[i][key]=val; save({resources:S.resources}); }
 function deleteResource(i){ if(!S.resources) return; S.resources.splice(i,1); save({resources:S.resources}); renderResources(); showToast('Recurso removido',''); }
 
-function openCallModal(){ document.getElementById('call-date').value=new Date().toISOString().split('T')[0]; document.getElementById('call-type').value='semanal'; ['call-resp','call-summary','call-next'].forEach(id=>document.getElementById(id).value=''); document.getElementById('call-modal').classList.add('open'); }
+function openCallModal(){
+  if((S.calls||[]).length>=6){ showToast('Limite de 6 calls extra atingido','error'); return; }
+  document.getElementById('call-date').value=new Date().toISOString().split('T')[0];
+  document.getElementById('call-type').value='semanal';
+  ['call-resp','call-summary','call-next'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('call-modal').classList.add('open');
+}
 function closeCallModal(){ document.getElementById('call-modal').classList.remove('open'); }
 function closeCallModalOutside(e){ if(e.target===document.getElementById('call-modal')) closeCallModal(); }
 async function saveCall(){
   const call={id:Date.now().toString(36),date:document.getElementById('call-date').value,type:document.getElementById('call-type').value,resp:document.getElementById('call-resp').value,summary:document.getElementById('call-summary').value,next:document.getElementById('call-next').value,createdAt:new Date().toISOString()};
   if(!call.summary){ showToast('Adicione o resumo da call','error'); return; }
   if(!S.calls) S.calls=[]; S.calls.push(call);
-  await save({calls:S.calls}); closeCallModal(); showToast('Call registrada!','success'); renderCalls();
+  await save({calls:S.calls}); closeCallModal(); showToast('Call extra registrada!','success'); renderCalls(); renderDiagnostico();
 }
 
 
@@ -2276,6 +2523,42 @@ const ONB_STAGES = [
 ];
 
 const ONB_CONC_DEFAULTS = ['Boas-Vindas realizada','Metas definidas','Cliente integrado ao ecossistema','Esteira de Produtos realizada','Produto foco definido','Apresentação de venda entregue','Call de vendas realizada pelo CS3','Call de marketing e tráfego realizada','Cliente sabe exatamente o que executar','Próximas ações registradas no acompanhamento interno'];
+
+// ── CALLS DE ONBOARDING FIXAS (7 calls + 1 entrega) ──────────────────────
+const CALLS_ONB = [
+  { id:'c1', num:1, type:'call', title:'Call de Boas-Vindas', resp:'Mari — CS1',
+    dia:'Dia 7', sentimento:'"Fiz a escolha certa"',
+    diag:{ icon:'👋', callRef:'Call 1 — Boas-Vindas', titulo:'Integração concluída',
+      texto:'Cliente integrado ao ecossistema, metas definidas e jornada alinhada. Base do programa estabelecida.' } },
+  { id:'c2', num:2, type:'call', title:'Call com a Equipe', resp:'Alane + Mari',
+    dia:'Dia 7', sentimento:'"Meu time vai ser acompanhado"',
+    diag:{ icon:'🤝', callRef:'Call 2 — Equipe', titulo:'Equipe apresentada',
+      texto:'Cliente conheceu toda a equipe de suporte e sabe quem acionar em cada etapa da jornada.' } },
+  { id:'c3', num:3, type:'call', title:'Call de Confiança', resp:'Dra. Déborah Caribé — Embaixadora',
+    dia:'Após Dia 7', sentimento:'"Agora eu botei fé"',
+    diag:{ icon:'💎', callRef:'Call 3 — Confiança', titulo:'Confiança estabelecida',
+      texto:'Validação simbólica e emocional recebida da embaixadora do programa. Cliente entrou na mentalidade correta.' } },
+  { id:'c4', num:4, type:'call', title:'Call de Esteira', resp:'Alane — CS2',
+    dia:'Dias 7–10', sentimento:'"Como vou aplicar isso?"',
+    diag:{ icon:'🎯', callRef:'Call 4 — Esteira', titulo:'Esteira de produtos mapeada',
+      texto:'Produto foco definido, oferta principal estruturada, ticket médio validado e objeções comerciais levantadas.' } },
+  { id:'c5', num:null, type:'delivery', title:'Entrega da Apresentação de Venda', resp:'Equipe System Digital',
+    dia:'Após Esteira', sentimento:'',
+    diag:{ icon:'📋', callRef:'Entrega — Apresentação', titulo:'Ferramenta comercial entregue',
+      texto:'Apresentação de vendas construída com oferta, argumentos e quebra de objeções. Pronta para uso imediato.' } },
+  { id:'c6', num:5, type:'call', title:'Call de Implementação', resp:'Felipe — CS3',
+    dia:'Dia 11', sentimento:'"Agora entendi"',
+    diag:{ icon:'⚡', callRef:'Call 5 — Implementação', titulo:'Processo comercial ativo',
+      texto:'Cliente sabe conduzir calls de vendas, aplicar a apresentação e conduzir o cliente à decisão de compra.' } },
+  { id:'c7', num:6, type:'call', title:'Marketing e Tráfego — Call 1', resp:'Pedro — Head de Tráfego',
+    dia:'Dia 12', sentimento:'"Perfeito"',
+    diag:{ icon:'📣', callRef:'Call 6 — Marketing', titulo:'Estratégia de marketing definida',
+      texto:'Canais ativos mapeados, público-alvo alinhado e produto foco conectado à estratégia de tráfego.' } },
+  { id:'c8', num:7, type:'call', title:'Marketing e Tráfego — Call 2', resp:'Pedro — Head de Tráfego',
+    dia:'Dia 12', sentimento:'"Perfeito"',
+    diag:{ icon:'🚀', callRef:'Call 7 — Tráfego', titulo:'Onboarding concluído',
+      texto:'Criativos, roteiros e próximos passos com gestor de tráfego definidos. Cliente pronto para operar e escalar.' } },
+];
 
 const checkSvgOnb = `<svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 
