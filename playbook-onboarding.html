@@ -54,26 +54,50 @@ h1{font-family:'Montserrat',sans-serif;font-size:24px;font-weight:800;margin-bot
 .card{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:10px}
 .card-body{padding:16px 18px}
 
-/* LÓGICA JORNADA */
-.journey{display:flex;align-items:center;gap:0;flex-wrap:wrap;margin-bottom:4px}
-.journey-step{display:flex;align-items:center;gap:0}
-.journey-label{font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;padding:7px 14px;border-radius:7px;white-space:nowrap}
-.journey-arrow{font-size:16px;color:var(--text-dim);padding:0 4px;flex-shrink:0}
+/* EQUIPE */
+.equipe-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.membro{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;display:flex;align-items:flex-start;gap:12px}
+.membro-avatar{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:'Montserrat',sans-serif;font-size:14px;font-weight:800;flex-shrink:0}
+.membro-cargo{font-size:10px;font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:.07em;text-transform:uppercase;margin-bottom:2px}
+.membro-nome{font-size:14px;font-weight:700;color:var(--text);margin-bottom:2px}
+.membro-func{font-size:12px;color:var(--text-sec)}
 
-/* OVERVIEW TABLE */
-.ov-table{width:100%;border-collapse:collapse}
-.ov-table th{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim);padding:8px 14px;text-align:left;border-bottom:1px solid var(--border)}
-.ov-table td{padding:12px 14px;border-bottom:1px solid rgba(62,66,73,0.5);font-size:13px;vertical-align:top}
-.ov-table tr:last-child td{border-bottom:none}
-.ov-table tr:hover td{background:rgba(255,255,255,0.02)}
-.etapa-num{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:800;flex-shrink:0}
-.resp-chip{display:inline-flex;align-items:center;padding:2px 10px;border-radius:10px;font-size:11px;font-weight:600;font-family:'Montserrat',sans-serif;white-space:nowrap}
+/* TIMELINE CALLS */
+.tl{display:flex;flex-direction:column;gap:0}
+.tl-item{display:flex;gap:0;position:relative}
+.tl-left{display:flex;flex-direction:column;align-items:center;width:80px;flex-shrink:0}
+.tl-day{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;color:var(--text-dim);text-align:center;padding:10px 0 4px;white-space:nowrap}
+.tl-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+.tl-line{width:1px;background:var(--border);flex:1;min-height:16px}
+.tl-item:last-child .tl-line{display:none}
+.tl-content{flex:1;padding:8px 0 20px 16px}
+.tl-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.tl-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px}
+.tl-call-num{font-size:10px;font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:.07em;text-transform:uppercase;color:var(--text-dim);margin-bottom:2px}
+.tl-call-name{font-family:'Montserrat',sans-serif;font-size:14px;font-weight:800}
+.tl-resp{display:inline-flex;padding:3px 10px;border-radius:10px;font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;white-space:nowrap;margin-top:4px}
+.sentimento{display:flex;align-items:center;gap:8px;background:var(--surface2);border-radius:7px;padding:9px 12px;font-size:12px;color:var(--text-sec);font-style:italic}
+.sentimento-icon{font-size:15px;flex-shrink:0}
+
+/* ENTREGA APRESENTACAO */
+.entrega-step{display:flex;gap:0;position:relative}
+.entrega-left{display:flex;flex-direction:column;align-items:center;width:80px;flex-shrink:0}
+.entrega-content{flex:1;padding:8px 0 20px 16px}
+.entrega-card{background:var(--amber-dim);border:1px solid var(--amber-border);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:12px}
+
+/* CALLS COUNT */
+.calls-split{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.calls-box{border-radius:10px;padding:18px;text-align:center}
+.calls-num{font-family:'Montserrat',sans-serif;font-size:38px;font-weight:800;line-height:1;margin-bottom:4px}
+.calls-label{font-size:12px;font-weight:600;margin-bottom:2px;font-family:'Montserrat',sans-serif}
+.calls-sub{font-size:11px;color:var(--text-sec)}
+.calls-total{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;display:flex;align-items:center;justify-content:center;gap:10px}
 
 /* STAGE HEADER */
-.stage-hdr{padding:18px 20px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:16px}
-.stage-num{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Montserrat',sans-serif;font-size:20px;font-weight:800;flex-shrink:0}
-.stage-name{font-family:'Montserrat',sans-serif;font-size:16px;font-weight:800;margin-bottom:3px}
-.stage-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.stage-hdr{padding:16px 18px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:14px}
+.stage-num{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Montserrat',sans-serif;font-size:18px;font-weight:800;flex-shrink:0}
+.stage-name{font-family:'Montserrat',sans-serif;font-size:15px;font-weight:800;margin-bottom:2px}
+.stage-meta{display:flex;flex-wrap:wrap;gap:7px;margin-top:6px}
 .meta-tag{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--text-sec);background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:3px 9px}
 .meta-tag strong{color:var(--text)}
 
@@ -84,58 +108,53 @@ h1{font-family:'Montserrat',sans-serif;font-size:24px;font-weight:800;margin-bot
 
 /* PAUTA */
 .pauta{display:flex;flex-direction:column;gap:0}
-.pauta-item{display:flex;gap:14px;padding-bottom:14px;position:relative}
+.pauta-item{display:flex;gap:14px;padding-bottom:14px}
 .pauta-item:last-child{padding-bottom:0}
-.pauta-left{display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:32px}
+.pauta-left{display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:30px}
 .pauta-num{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:800;flex-shrink:0}
-.pauta-line{width:1px;background:var(--border);flex:1;margin-top:4px}
-.pauta-item:last-child .pauta-line{display:none}
+.pauta-vline{width:1px;background:var(--border);flex:1;margin-top:4px}
+.pauta-item:last-child .pauta-vline{display:none}
 .pauta-content{flex:1;padding-top:3px}
-.pauta-title{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;margin-bottom:4px}
+.pauta-title{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;margin-bottom:3px}
 .pauta-desc{font-size:12px;color:var(--text-sec);line-height:1.6}
 
-/* HIGHLIGHT BOX */
-.highlight{border-radius:9px;padding:14px 16px;margin-bottom:10px}
-.highlight-label{font-size:10px;font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
-.highlight-text{font-size:13px;line-height:1.6}
-
 /* ENTREGA FINAL */
-.entrega{background:var(--green-dim);border:1px solid var(--green-border);border-radius:9px;padding:14px 16px}
+.entrega-final{background:var(--green-dim);border:1px solid var(--green-border);border-radius:9px;padding:14px 16px}
 .entrega-label{font-size:10px;font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--green);margin-bottom:8px}
 .entrega-item{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--text-sec);margin-bottom:5px}
 .entrega-item:last-child{margin-bottom:0}
 
-/* ALERT / RULE */
-.rule-box{background:var(--amber-dim);border:1px solid var(--amber-border);border-radius:9px;padding:14px 16px;display:flex;gap:10px;font-size:13px;color:var(--text-sec)}
-.rule-box strong{color:var(--amber)}
-.warn-box{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);border-radius:9px;padding:14px 16px;display:flex;gap:10px;font-size:13px;color:var(--text-sec)}
-.warn-box strong{color:var(--red)}
+/* HIGHLIGHT */
+.highlight{border-radius:9px;padding:14px 16px;margin-bottom:12px}
+.hl-label{font-size:10px;font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
 
 /* STATUS */
 .status-list{display:flex;flex-direction:column;gap:6px}
 .status-item{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:11px 14px}
 .status-num{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;color:var(--text-dim);width:20px;text-align:right;flex-shrink:0}
 .status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.status-name{font-size:13px;font-weight:600;color:var(--text)}
-.status-group{font-size:11px;color:var(--text-dim);margin-left:auto;font-family:'Montserrat',sans-serif;font-weight:600;white-space:nowrap}
+.status-name{font-size:13px;font-weight:600;flex:1}
+.status-group{font-size:11px;color:var(--text-dim);font-family:'Montserrat',sans-serif;font-weight:600;white-space:nowrap}
 
-/* GOLDEN RULE */
+/* GOLDEN */
 .golden{background:var(--surface);border:2px solid var(--amber-border);border-radius:12px;padding:24px;text-align:center}
-.golden-rule{font-family:'Montserrat',sans-serif;font-size:20px;font-weight:800;color:var(--amber);line-height:1.4;margin-bottom:8px}
+.golden-rule{font-family:'Montserrat',sans-serif;font-size:19px;font-weight:800;color:var(--amber);line-height:1.4;margin-bottom:8px}
 .golden-sub{font-size:13px;color:var(--text-sec);max-width:480px;margin:0 auto;line-height:1.6}
 
-/* TWO COL */
+/* WARN */
+.warn-box{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);border-radius:9px;padding:13px 15px;display:flex;gap:10px;font-size:13px;color:var(--text-sec)}
+.warn-box strong{color:var(--red)}
+
 .two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 
-/* FOOTER */
 .footer{text-align:center;font-size:12px;color:var(--text-dim);margin-top:24px}
 
-@media(max-width:620px){
+@media(max-width:640px){
   .wrap{padding:24px 14px 60px}
   h1{font-size:20px}
-  .two-col{grid-template-columns:1fr}
-  .journey{gap:4px}
+  .equipe-grid,.two-col,.calls-split{grid-template-columns:1fr}
   .tab-btn{padding:7px 10px;font-size:10px}
+  .tl-left{width:60px}
 }
 </style>
 </head>
@@ -146,161 +165,256 @@ h1{font-family:'Montserrat',sans-serif;font-size:24px;font-weight:800;margin-bot
   <div class="header">
     <div class="logo">
       <div class="logo-icon">
-        <svg width="20" height="20" viewBox="0 0 22 22" fill="none"><path d="M5.5 7.5L11 6L16.5 7.5V13C16.5 16 14.2 17.8 11 18.5C7.8 17.8 5.5 16 5.5 13Z" stroke="#F5A623" stroke-width="1.3" fill="none"/><path d="M8.5 12L10.5 14L14.5 10" stroke="#F5A623" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg width="20" height="20" viewBox="0 0 22 22" fill="none"><path d="M5.5 7.5L11 6L16.5 7.5V13C16.5 16 14.2 17.8 11 18.5C7.8 17.8 5.5 16 5.5 13Z" stroke="#F5A623" stroke-width="1.3"/><path d="M8.5 12L10.5 14L14.5 10" stroke="#F5A623" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </div>
       <div class="logo-text">System <span>Digital</span></div>
     </div>
     <div class="badge">
       <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="#F5A623" stroke-width="1.2"/><path d="M4 6l1.5 1.5L8 4.5" stroke="#F5A623" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      PROCESSO OFICIAL · 6 ETAPAS · 7–10 DIAS ÚTEIS
+      PROCESSO OFICIAL · 7 CALLS · 12 DIAS
     </div>
     <h1>Playbook de Onboarding</h1>
-    <div class="header-sub">Jornada de ativação do cliente — do alinhamento inicial até a liberação para execução. Não é suporte. É ativação.</div>
+    <div class="header-sub">Jornada de ativação do cliente — do alinhamento inicial até a execução. 13 calls no total: 7 de onboarding + 6 extras.</div>
     <div class="brand-rail"></div>
   </div>
 
   <!-- TABS -->
   <nav class="tabs-nav">
-    <button class="tab-btn active" data-tab="visao">
-      <div class="tab-dot" style="background:var(--amber)"></div>Visão Geral
-    </button>
-    <button class="tab-btn" data-tab="prep">
-      <div class="tab-dot" style="background:var(--text-dim)"></div>Preparação
-    </button>
-    <button class="tab-btn" data-tab="calls12">
-      <div class="tab-dot" style="background:var(--blue)"></div>Calls 1–2
-    </button>
-    <button class="tab-btn" data-tab="calls34">
-      <div class="tab-dot" style="background:var(--green)"></div>Calls 3–4
-    </button>
-    <button class="tab-btn" data-tab="calls56">
-      <div class="tab-dot" style="background:var(--purple)"></div>Calls 5–6
-    </button>
-    <button class="tab-btn" data-tab="status">
-      <div class="tab-dot" style="background:var(--amber)"></div>Status
-    </button>
+    <button class="tab-btn active" data-tab="visao"><div class="tab-dot" style="background:var(--amber)"></div>Visão Geral</button>
+    <button class="tab-btn" data-tab="prep"><div class="tab-dot" style="background:var(--text-dim)"></div>Preparação</button>
+    <button class="tab-btn" data-tab="calls12"><div class="tab-dot" style="background:var(--blue)"></div>Calls 1–2</button>
+    <button class="tab-btn" data-tab="calls34"><div class="tab-dot" style="background:var(--purple)"></div>Calls 3–4</button>
+    <button class="tab-btn" data-tab="calls56"><div class="tab-dot" style="background:var(--green)"></div>Calls 5–6</button>
+    <button class="tab-btn" data-tab="status"><div class="tab-dot" style="background:var(--amber)"></div>Status</button>
   </nav>
 
   <!-- ======================== VISÃO GERAL ======================== -->
   <div class="tab-panel active" id="tab-visao">
 
+    <!-- EQUIPE -->
     <div class="section">
       <div class="section-head">
         <div class="section-dot" style="background:var(--amber)"></div>
-        <div class="section-title" style="color:var(--amber)">Lógica da Jornada</div>
+        <div class="section-title" style="color:var(--amber)">Equipe de Onboarding</div>
       </div>
-      <div class="card card-body">
-        <div class="journey" style="gap:0;margin-bottom:14px">
-          <div class="journey-step">
-            <div class="journey-label" style="background:var(--amber-dim);border:1px solid var(--amber-border);color:var(--amber)">Alinhamento</div>
-            <div class="journey-arrow">→</div>
-          </div>
-          <div class="journey-step">
-            <div class="journey-label" style="background:var(--blue-dim);border:1px solid var(--blue-border);color:var(--blue)">Confiança</div>
-            <div class="journey-arrow">→</div>
-          </div>
-          <div class="journey-step">
-            <div class="journey-label" style="background:var(--green-dim);border:1px solid var(--green-border);color:var(--green)">Oferta</div>
-            <div class="journey-arrow">→</div>
-          </div>
-          <div class="journey-step">
-            <div class="journey-label" style="background:var(--purple-dim);border:1px solid var(--purple-border);color:var(--purple)">Aplicação Comercial</div>
-            <div class="journey-arrow">→</div>
-          </div>
-          <div class="journey-step">
-            <div class="journey-label" style="background:var(--pink-dim);border:1px solid var(--pink-border);color:var(--pink)">Geração de Demanda</div>
+      <div class="equipe-grid">
+        <div class="membro">
+          <div class="membro-avatar" style="background:var(--blue-dim);border:1px solid var(--blue-border);color:var(--blue)">M</div>
+          <div>
+            <div class="membro-cargo" style="color:var(--blue)">CS1</div>
+            <div class="membro-nome">Mari</div>
+            <div class="membro-func">Boas-vindas</div>
           </div>
         </div>
-        <div style="font-size:12px;color:var(--text-sec)">O cliente sai do onboarding sabendo <strong style="color:var(--text)">qual meta perseguir, qual produto vender, como vender na consulta, como gerar demanda e quais ações executar primeiro.</strong></div>
+        <div class="membro">
+          <div class="membro-avatar" style="background:var(--purple-dim);border:1px solid var(--purple-border);color:var(--purple)">D</div>
+          <div>
+            <div class="membro-cargo" style="color:var(--purple)">Embaixadora</div>
+            <div class="membro-nome">Dra. Déborah Caribé</div>
+            <div class="membro-func">Call de Confiança</div>
+          </div>
+        </div>
+        <div class="membro">
+          <div class="membro-avatar" style="background:var(--green-dim);border:1px solid var(--green-border);color:var(--green)">A</div>
+          <div>
+            <div class="membro-cargo" style="color:var(--green)">CS2</div>
+            <div class="membro-nome">Alane</div>
+            <div class="membro-func">Esteira de Produtos</div>
+          </div>
+        </div>
+        <div class="membro">
+          <div class="membro-avatar" style="background:var(--amber-dim);border:1px solid var(--amber-border);color:var(--amber)">F</div>
+          <div>
+            <div class="membro-cargo" style="color:var(--amber)">CS3</div>
+            <div class="membro-nome">Felipe</div>
+            <div class="membro-func">Call de Vendas e Apresentação</div>
+          </div>
+        </div>
+        <div class="membro" style="grid-column:1/-1">
+          <div class="membro-avatar" style="background:var(--pink-dim);border:1px solid var(--pink-border);color:var(--pink)">P</div>
+          <div>
+            <div class="membro-cargo" style="color:var(--pink)">Head de Tráfego</div>
+            <div class="membro-nome">Pedro</div>
+            <div class="membro-func">Marketing e Tráfego</div>
+          </div>
+        </div>
       </div>
     </div>
 
+    <!-- TIMELINE -->
     <div class="section">
       <div class="section-head">
-        <div class="section-dot" style="background:var(--amber)"></div>
-        <div class="section-title" style="color:var(--amber)">Visão Geral das Etapas</div>
+        <div class="section-dot" style="background:var(--blue)"></div>
+        <div class="section-title" style="color:var(--blue)">Jornada — Calls por Dia</div>
       </div>
-      <div class="card" style="overflow:auto">
-        <table class="ov-table">
-          <thead>
-            <tr>
-              <th>Etapa</th>
-              <th>Call</th>
-              <th>Responsável</th>
-              <th>Função</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <div style="display:flex;align-items:center;gap:8px">
-                  <div class="etapa-num" style="background:var(--surface2);border:1px solid var(--border);color:var(--text-dim)">0</div>
+
+      <div class="tl">
+
+        <!-- CALLS DIA 7 -->
+        <div class="tl-item">
+          <div class="tl-left">
+            <div class="tl-day" style="color:var(--blue)">Dia 7</div>
+            <div class="tl-dot" style="background:var(--blue)"></div>
+            <div class="tl-line"></div>
+          </div>
+          <div class="tl-content">
+            <div class="tl-card" style="border-color:var(--blue-border);margin-bottom:10px">
+              <div class="tl-card-top">
+                <div>
+                  <div class="tl-call-num">Call 1</div>
+                  <div class="tl-call-name" style="color:var(--blue)">Boas-vindas</div>
+                  <span class="tl-resp" style="background:var(--blue-dim);border:1px solid var(--blue-border);color:var(--blue)">Mari — CS1</span>
                 </div>
-              </td>
-              <td><strong>Preparação Interna</strong></td>
-              <td><span class="resp-chip" style="background:var(--amber-dim);border:1px solid var(--amber-border);color:var(--amber)">Comercial + CS</span></td>
-              <td style="color:var(--text-sec)">Organizar informações antes do cliente entrar</td>
-            </tr>
-            <tr>
-              <td><div class="etapa-num" style="background:var(--blue-dim);border:1px solid var(--blue-border);color:var(--blue)">1</div></td>
-              <td><strong>Boas-vindas</strong></td>
-              <td><span class="resp-chip" style="background:var(--blue-dim);border:1px solid var(--blue-border);color:var(--blue)">Mari</span></td>
-              <td style="color:var(--text-sec)">Alinhar cenário, metas e funcionamento</td>
-            </tr>
-            <tr>
-              <td><div class="etapa-num" style="background:var(--purple-dim);border:1px solid var(--purple-border);color:var(--purple)">2</div></td>
-              <td><strong>Call de Confiança</strong></td>
-              <td><span class="resp-chip" style="background:var(--purple-dim);border:1px solid var(--purple-border);color:var(--purple)">Dra. Déborah</span></td>
-              <td style="color:var(--text-sec)">Gerar segurança e reforçar confiança no método</td>
-            </tr>
-            <tr>
-              <td><div class="etapa-num" style="background:var(--green-dim);border:1px solid var(--green-border);color:var(--green)">3</div></td>
-              <td><strong>Esteira de Produtos</strong></td>
-              <td><span class="resp-chip" style="background:var(--green-dim);border:1px solid var(--green-border);color:var(--green)">Alane</span></td>
-              <td style="color:var(--text-sec)">Definir produto foco, oferta e direção comercial</td>
-            </tr>
-            <tr>
-              <td><div class="etapa-num" style="background:var(--amber-dim);border:1px solid var(--amber-border);color:var(--amber)">4</div></td>
-              <td><strong>Implementação de Vendas</strong></td>
-              <td><span class="resp-chip" style="background:var(--amber-dim);border:1px solid var(--amber-border);color:var(--amber)">Felipe</span></td>
-              <td style="color:var(--text-sec)">Ensinar como usar a esteira na consulta</td>
-            </tr>
-            <tr>
-              <td><div class="etapa-num" style="background:var(--pink-dim);border:1px solid var(--pink-border);color:var(--pink)">5</div></td>
-              <td><strong>Marketing e Vendas</strong></td>
-              <td><span class="resp-chip" style="background:var(--pink-dim);border:1px solid var(--pink-border);color:var(--pink)">Pedro</span></td>
-              <td style="color:var(--text-sec)">Posicionamento, conteúdo e geração de demanda</td>
-            </tr>
-            <tr>
-              <td><div class="etapa-num" style="background:var(--green-dim);border:1px solid var(--green-border);color:var(--green)">6</div></td>
-              <td><strong>Fechamento do Onboarding</strong></td>
-              <td><span class="resp-chip" style="background:var(--blue-dim);border:1px solid var(--blue-border);color:var(--blue)">Mari / CS</span></td>
-              <td style="color:var(--text-sec)">Confirmar entregas e liberar execução</td>
-            </tr>
-          </tbody>
-        </table>
+              </div>
+              <div class="sentimento">
+                <span class="sentimento-icon">💙</span>
+                <span>"Fiz a escolha certa."</span>
+              </div>
+            </div>
+            <div class="tl-card" style="border-color:var(--blue-border)">
+              <div class="tl-card-top">
+                <div>
+                  <div class="tl-call-num">Call 2</div>
+                  <div class="tl-call-name" style="color:var(--blue)">Call com a Equipe</div>
+                  <span class="tl-resp" style="background:var(--blue-dim);border:1px solid var(--blue-border);color:var(--blue)">Alane + Mari</span>
+                </div>
+              </div>
+              <div class="sentimento">
+                <span class="sentimento-icon">🤝</span>
+                <span>"Meu time vai ser acompanhado."</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CALL DE CONFIANÇA -->
+        <div class="tl-item">
+          <div class="tl-left">
+            <div class="tl-day" style="color:var(--purple)">Após<br>7 dias</div>
+            <div class="tl-dot" style="background:var(--purple)"></div>
+            <div class="tl-line"></div>
+          </div>
+          <div class="tl-content">
+            <div class="tl-card" style="border-color:var(--purple-border)">
+              <div class="tl-card-top">
+                <div>
+                  <div class="tl-call-num">Call 3</div>
+                  <div class="tl-call-name" style="color:var(--purple)">Call de Confiança</div>
+                  <span class="tl-resp" style="background:var(--purple-dim);border:1px solid var(--purple-border);color:var(--purple)">Dra. Déborah Caribé</span>
+                </div>
+              </div>
+              <div class="sentimento">
+                <span class="sentimento-icon">🙏</span>
+                <span>"Agora eu botei fé."</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ESTEIRA -->
+        <div class="tl-item">
+          <div class="tl-left">
+            <div class="tl-day" style="color:var(--green)">7–10<br>dias</div>
+            <div class="tl-dot" style="background:var(--green)"></div>
+            <div class="tl-line"></div>
+          </div>
+          <div class="tl-content">
+            <div class="tl-card" style="border-color:var(--green-border);margin-bottom:10px">
+              <div class="tl-card-top">
+                <div>
+                  <div class="tl-call-num">Call 4</div>
+                  <div class="tl-call-name" style="color:var(--green)">Esteira de Produtos</div>
+                  <span class="tl-resp" style="background:var(--green-dim);border:1px solid var(--green-border);color:var(--green)">Alane — CS2</span>
+                </div>
+              </div>
+              <div class="sentimento">
+                <span class="sentimento-icon">🧩</span>
+                <span>"Como vou aplicar isso?"</span>
+              </div>
+            </div>
+            <!-- ENTREGA DA APRESENTAÇÃO -->
+            <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--amber-dim);border:1px solid var(--amber-border);border-radius:9px">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="flex-shrink:0"><rect x="2" y="2" width="12" height="10" rx="1.5" stroke="#F5A623" stroke-width="1.3"/><path d="M5 14h6M8 12v2" stroke="#F5A623" stroke-width="1.3" stroke-linecap="round"/></svg>
+              <div>
+                <div style="font-size:10px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--amber);letter-spacing:.07em;text-transform:uppercase;margin-bottom:1px">Entrega</div>
+                <div style="font-size:13px;color:var(--text-sec)"><strong style="color:var(--text)">Entrega da Apresentação</strong> — Alane envia a apresentação comercial ao cliente</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- IMPLEMENTAÇÃO -->
+        <div class="tl-item">
+          <div class="tl-left">
+            <div class="tl-day" style="color:var(--amber)">Dia 11</div>
+            <div class="tl-dot" style="background:var(--amber)"></div>
+            <div class="tl-line"></div>
+          </div>
+          <div class="tl-content">
+            <div class="tl-card" style="border-color:var(--amber-border)">
+              <div class="tl-card-top">
+                <div>
+                  <div class="tl-call-num">Call 5</div>
+                  <div class="tl-call-name" style="color:var(--amber)">Implementação de Vendas</div>
+                  <span class="tl-resp" style="background:var(--amber-dim);border:1px solid var(--amber-border);color:var(--amber)">Felipe — CS3</span>
+                </div>
+              </div>
+              <div class="sentimento">
+                <span class="sentimento-icon">💡</span>
+                <span>"Agora entendi."</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MARKETING -->
+        <div class="tl-item">
+          <div class="tl-left">
+            <div class="tl-day" style="color:var(--pink)">Dia 12</div>
+            <div class="tl-dot" style="background:var(--pink)"></div>
+          </div>
+          <div class="tl-content">
+            <div class="tl-card" style="border-color:var(--pink-border)">
+              <div class="tl-card-top">
+                <div>
+                  <div class="tl-call-num">Call 6 + 7</div>
+                  <div class="tl-call-name" style="color:var(--pink)">Marketing e Vendas</div>
+                  <span class="tl-resp" style="background:var(--pink-dim);border:1px solid var(--pink-border);color:var(--pink)">Pedro — Head de Tráfego</span>
+                </div>
+              </div>
+              <div class="sentimento">
+                <span class="sentimento-icon">🚀</span>
+                <span>"Perfeito."</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
 
+    <!-- 13 CALLS -->
     <div class="section">
       <div class="section-head">
         <div class="section-dot" style="background:var(--amber)"></div>
-        <div class="section-title" style="color:var(--amber)">Prazo e Regra de Ouro</div>
+        <div class="section-title" style="color:var(--amber)">Estrutura de Calls</div>
       </div>
-      <div class="two-col" style="margin-bottom:12px">
-        <div class="card card-body" style="border-color:var(--amber-border)">
-          <div style="font-size:10px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--amber);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px">Prazo ideal</div>
-          <div style="font-family:'Montserrat',sans-serif;font-size:28px;font-weight:800;color:var(--amber);margin-bottom:4px">7–10</div>
-          <div style="font-size:13px;color:var(--text-sec)">dias úteis para conclusão</div>
+      <div class="calls-split">
+        <div class="calls-box" style="background:var(--blue-dim);border:1px solid var(--blue-border)">
+          <div class="calls-num" style="color:var(--blue)">7</div>
+          <div class="calls-label" style="color:var(--blue)">Calls de Onboarding</div>
+          <div class="calls-sub">Estrutura obrigatória — processo oficial</div>
         </div>
-        <div class="card card-body">
-          <div style="font-size:10px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--text-dim);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px">Por que não pode atrasar</div>
-          <div style="font-size:13px;color:var(--text-sec)">O cliente compra com energia alta. Se o onboarding se arrasta, ele perde <strong style="color:var(--text)">confiança, urgência e ritmo.</strong></div>
+        <div class="calls-box" style="background:var(--green-dim);border:1px solid var(--green-border)">
+          <div class="calls-num" style="color:var(--green)">6</div>
+          <div class="calls-label" style="color:var(--green)">Calls Extras</div>
+          <div class="calls-sub">Qualquer tema — conforme necessidade</div>
         </div>
       </div>
-      <div class="golden">
-        <div class="golden-rule">Onboarding não é suporte.<br>Onboarding é ativação.</div>
-        <div class="golden-sub">O objetivo não é deixar o cliente confortável com muitas reuniões. O objetivo é colocá-lo em movimento com clareza, confiança e direção.</div>
+      <div class="calls-total">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="7.5" stroke="#F5A623" stroke-width="1.4"/><path d="M9 5v4l2.5 2" stroke="#F5A623" stroke-width="1.4" stroke-linecap="round"/></svg>
+        <span style="font-family:'Montserrat',sans-serif;font-size:15px;font-weight:800;color:var(--amber)">13 calls no total</span>
+        <span style="font-size:13px;color:var(--text-sec)">— disponíveis para cada cliente</span>
       </div>
     </div>
 
@@ -308,10 +422,9 @@ h1{font-family:'Montserrat',sans-serif;font-size:24px;font-weight:800;margin-bot
 
   <!-- ======================== PREPARAÇÃO ======================== -->
   <div class="tab-panel" id="tab-prep">
-
-    <div class="card" style="margin-bottom:16px">
+    <div class="card">
       <div class="stage-hdr">
-        <div class="stage-num" style="background:var(--surface2);border:1px solid var(--border);color:var(--text-sec)">0</div>
+        <div class="stage-num" style="background:var(--surface2);border:1px solid var(--border);color:var(--text-dim)">0</div>
         <div>
           <div class="stage-name">Preparação Interna</div>
           <div style="font-size:13px;color:var(--text-sec);margin-top:2px">Antes de qualquer call com o cliente</div>
@@ -333,8 +446,7 @@ h1{font-family:'Montserrat',sans-serif;font-size:24px;font-weight:800;margin-bot
           <li class="check-item"><div class="check-icon" style="background:var(--amber-dim);border:1px solid var(--amber-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#F5A623" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Grupo oficial criado</li>
           <li class="check-item"><div class="check-icon" style="background:var(--amber-dim);border:1px solid var(--amber-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#F5A623" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Ficha do cliente preenchida</li>
           <li class="check-item"><div class="check-icon" style="background:var(--amber-dim);border:1px solid var(--amber-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#F5A623" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Responsável comercial informou o contexto da venda</li>
-          <li class="check-item"><div class="check-icon" style="background:var(--amber-dim);border:1px solid var(--amber-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#F5A623" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Produto contratado identificado</li>
-          <li class="check-item"><div class="check-icon" style="background:var(--amber-dim);border:1px solid var(--amber-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#F5A623" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Valor pago registrado</li>
+          <li class="check-item"><div class="check-icon" style="background:var(--amber-dim);border:1px solid var(--amber-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#F5A623" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Produto contratado identificado e valor pago registrado</li>
           <li class="check-item"><div class="check-icon" style="background:var(--amber-dim);border:1px solid var(--amber-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#F5A623" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Promessa comercial alinhada</li>
           <li class="check-item"><div class="check-icon" style="background:var(--amber-dim);border:1px solid var(--amber-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#F5A623" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Agenda das calls definida</li>
           <li class="check-item"><div class="check-icon" style="background:var(--amber-dim);border:1px solid var(--amber-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#F5A623" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Cliente com acesso aos materiais iniciais</li>
@@ -346,20 +458,16 @@ h1{font-family:'Montserrat',sans-serif;font-size:24px;font-weight:800;margin-bot
         </div>
         <div class="two-col" style="margin-bottom:16px">
           <ul class="checklist">
-            <li class="check-item"><div class="check-icon" style="background:var(--blue-dim);border:1px solid var(--blue-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 2v3l2 1" stroke="#3B82F6" stroke-width="1.2" stroke-linecap="round"/><circle cx="5" cy="5" r="3.5" stroke="#3B82F6" stroke-width="1.1"/></svg></div>Nome e especialidade</li>
-            <li class="check-item"><div class="check-icon" style="background:var(--blue-dim);border:1px solid var(--blue-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 2v3l2 1" stroke="#3B82F6" stroke-width="1.2" stroke-linecap="round"/><circle cx="5" cy="5" r="3.5" stroke="#3B82F6" stroke-width="1.1"/></svg></div>Cidade</li>
-            <li class="check-item"><div class="check-icon" style="background:var(--blue-dim);border:1px solid var(--blue-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 2v3l2 1" stroke="#3B82F6" stroke-width="1.2" stroke-linecap="round"/><circle cx="5" cy="5" r="3.5" stroke="#3B82F6" stroke-width="1.1"/></svg></div>Faturamento atual informado</li>
-            <li class="check-item"><div class="check-icon" style="background:var(--blue-dim);border:1px solid var(--blue-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 2v3l2 1" stroke="#3B82F6" stroke-width="1.2" stroke-linecap="round"/><circle cx="5" cy="5" r="3.5" stroke="#3B82F6" stroke-width="1.1"/></svg></div>Principal dor</li>
-            <li class="check-item"><div class="check-icon" style="background:var(--blue-dim);border:1px solid var(--blue-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 2v3l2 1" stroke="#3B82F6" stroke-width="1.2" stroke-linecap="round"/><circle cx="5" cy="5" r="3.5" stroke="#3B82F6" stroke-width="1.1"/></svg></div>Objetivo declarado</li>
-            <li class="check-item"><div class="check-icon" style="background:var(--blue-dim);border:1px solid var(--blue-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 2v3l2 1" stroke="#3B82F6" stroke-width="1.2" stroke-linecap="round"/><circle cx="5" cy="5" r="3.5" stroke="#3B82F6" stroke-width="1.1"/></svg></div>Produto vendido</li>
+            <li class="check-item"><div class="check-icon" style="background:var(--blue-dim);border:1px solid var(--blue-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#3B82F6" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Nome, especialidade e cidade</li>
+            <li class="check-item"><div class="check-icon" style="background:var(--blue-dim);border:1px solid var(--blue-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#3B82F6" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Faturamento atual informado</li>
+            <li class="check-item"><div class="check-icon" style="background:var(--blue-dim);border:1px solid var(--blue-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#3B82F6" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Principal dor e objetivo declarado</li>
+            <li class="check-item"><div class="check-icon" style="background:var(--blue-dim);border:1px solid var(--blue-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#3B82F6" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Produto vendido e condição comercial</li>
           </ul>
           <ul class="checklist">
-            <li class="check-item"><div class="check-icon" style="background:var(--blue-dim);border:1px solid var(--blue-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 2v3l2 1" stroke="#3B82F6" stroke-width="1.2" stroke-linecap="round"/><circle cx="5" cy="5" r="3.5" stroke="#3B82F6" stroke-width="1.1"/></svg></div>Condição comercial</li>
-            <li class="check-item"><div class="check-icon" style="background:var(--blue-dim);border:1px solid var(--blue-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 2v3l2 1" stroke="#3B82F6" stroke-width="1.2" stroke-linecap="round"/><circle cx="5" cy="5" r="3.5" stroke="#3B82F6" stroke-width="1.1"/></svg></div>Quem participou da venda</li>
-            <li class="check-item"><div class="check-icon" style="background:var(--blue-dim);border:1px solid var(--blue-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 2v3l2 1" stroke="#3B82F6" stroke-width="1.2" stroke-linecap="round"/><circle cx="5" cy="5" r="3.5" stroke="#3B82F6" stroke-width="1.1"/></svg></div>Expectativa criada</li>
-            <li class="check-item"><div class="check-icon" style="background:var(--blue-dim);border:1px solid var(--blue-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 2v3l2 1" stroke="#3B82F6" stroke-width="1.2" stroke-linecap="round"/><circle cx="5" cy="5" r="3.5" stroke="#3B82F6" stroke-width="1.1"/></svg></div>Veio por indicação?</li>
-            <li class="check-item"><div class="check-icon" style="background:var(--blue-dim);border:1px solid var(--blue-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 2v3l2 1" stroke="#3B82F6" stroke-width="1.2" stroke-linecap="round"/><circle cx="5" cy="5" r="3.5" stroke="#3B82F6" stroke-width="1.1"/></svg></div>Veio pela Dra. Déborah?</li>
-            <li class="check-item"><div class="check-icon" style="background:var(--blue-dim);border:1px solid var(--blue-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 2v3l2 1" stroke="#3B82F6" stroke-width="1.2" stroke-linecap="round"/><circle cx="5" cy="5" r="3.5" stroke="#3B82F6" stroke-width="1.1"/></svg></div>Observações importantes</li>
+            <li class="check-item"><div class="check-icon" style="background:var(--blue-dim);border:1px solid var(--blue-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#3B82F6" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Quem participou da venda</li>
+            <li class="check-item"><div class="check-icon" style="background:var(--blue-dim);border:1px solid var(--blue-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#3B82F6" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Expectativa criada na negociação</li>
+            <li class="check-item"><div class="check-icon" style="background:var(--blue-dim);border:1px solid var(--blue-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#3B82F6" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Veio por indicação ou pela Dra. Déborah?</li>
+            <li class="check-item"><div class="check-icon" style="background:var(--blue-dim);border:1px solid var(--blue-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#3B82F6" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Observações importantes</li>
           </ul>
         </div>
 
@@ -369,7 +477,6 @@ h1{font-family:'Montserrat',sans-serif;font-size:24px;font-weight:800;margin-bot
         </div>
       </div>
     </div>
-
   </div>
 
   <!-- ======================== CALLS 1–2 ======================== -->
@@ -381,147 +488,64 @@ h1{font-family:'Montserrat',sans-serif;font-size:24px;font-weight:800;margin-bot
         <div class="stage-num" style="background:var(--blue-dim);border:1px solid var(--blue-border);color:var(--blue)">1</div>
         <div>
           <div class="stage-name" style="color:var(--blue)">Boas-vindas</div>
-          <div style="font-size:13px;color:var(--text-sec);margin-top:2px">Iniciar a jornada, entender o cenário e definir metas</div>
           <div class="stage-meta">
-            <div class="meta-tag"><strong>Responsável:</strong> Mari</div>
+            <div class="meta-tag"><strong>Responsável:</strong> Mari — CS1</div>
+            <div class="meta-tag"><strong>Dia:</strong> 7</div>
             <div class="meta-tag"><strong>Duração:</strong> 45–60 min</div>
           </div>
+          <div style="margin-top:10px"><div class="sentimento" style="display:inline-flex"><span class="sentimento-icon">💙</span><span>"Fiz a escolha certa."</span></div></div>
         </div>
       </div>
       <div class="card-body">
-
-        <div class="section-head" style="margin-bottom:12px">
-          <div class="section-dot" style="background:var(--blue)"></div>
-          <div class="section-title" style="color:var(--blue)">O que precisa ser levantado</div>
+        <div class="highlight" style="background:var(--blue-dim);border:1px solid var(--blue-border);margin-bottom:16px">
+          <div class="hl-label" style="color:var(--blue)">Pergunta principal</div>
+          <div style="font-size:13px;color:var(--text-sec)">"Doutor, se daqui 60 dias você olhar para trás e disser que valeu a pena ter entrado na System, <strong style="color:var(--text)">quanto você precisa estar faturando?</strong>"</div>
+          <div style="margin-top:6px;font-size:12px;color:var(--blue);font-weight:600">→ Essa resposta vira a Meta 60 Dias</div>
         </div>
+
+        <div class="section-head" style="margin-bottom:12px"><div class="section-dot" style="background:var(--blue)"></div><div class="section-title" style="color:var(--blue)">O que levantar</div></div>
         <div class="two-col" style="margin-bottom:16px">
           <ul class="checklist">
-            <li class="check-item"><div class="check-icon" style="background:var(--blue-dim);border:1px solid var(--blue-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#3B82F6" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Faturamento atual</li>
-            <li class="check-item"><div class="check-icon" style="background:var(--blue-dim);border:1px solid var(--blue-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#3B82F6" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Ticket médio</li>
+            <li class="check-item"><div class="check-icon" style="background:var(--blue-dim);border:1px solid var(--blue-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#3B82F6" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Faturamento atual e ticket médio</li>
             <li class="check-item"><div class="check-icon" style="background:var(--blue-dim);border:1px solid var(--blue-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#3B82F6" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Investimento em marketing</li>
-            <li class="check-item"><div class="check-icon" style="background:var(--blue-dim);border:1px solid var(--blue-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#3B82F6" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Estrutura comercial atual</li>
-            <li class="check-item"><div class="check-icon" style="background:var(--blue-dim);border:1px solid var(--blue-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#3B82F6" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Quem vende hoje</li>
+            <li class="check-item"><div class="check-icon" style="background:var(--blue-dim);border:1px solid var(--blue-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#3B82F6" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Estrutura comercial e quem vende</li>
             <li class="check-item"><div class="check-icon" style="background:var(--blue-dim);border:1px solid var(--blue-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#3B82F6" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Taxa de comparecimento</li>
           </ul>
           <ul class="checklist">
-            <li class="check-item"><div class="check-icon" style="background:var(--blue-dim);border:1px solid var(--blue-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#3B82F6" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Principais procedimentos</li>
-            <li class="check-item"><div class="check-icon" style="background:var(--blue-dim);border:1px solid var(--blue-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#3B82F6" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Gargalo principal</li>
-            <li class="check-item"><div class="check-icon" style="background:var(--blue-dim);border:1px solid var(--blue-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#3B82F6" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Meta base</li>
-            <li class="check-item"><div class="check-icon" style="background:var(--blue-dim);border:1px solid var(--blue-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#3B82F6" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Meta média</li>
-            <li class="check-item"><div class="check-icon" style="background:var(--blue-dim);border:1px solid var(--blue-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#3B82F6" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Super meta</li>
+            <li class="check-item"><div class="check-icon" style="background:var(--blue-dim);border:1px solid var(--blue-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#3B82F6" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Principais procedimentos e gargalo</li>
+            <li class="check-item"><div class="check-icon" style="background:var(--blue-dim);border:1px solid var(--blue-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#3B82F6" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Meta base, meta média e super meta</li>
             <li class="check-item"><div class="check-icon" style="background:var(--blue-dim);border:1px solid var(--blue-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#3B82F6" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Meta de 60 dias</li>
           </ul>
         </div>
 
-        <div class="highlight" style="background:var(--blue-dim);border:1px solid var(--blue-border);margin-bottom:16px">
-          <div class="highlight-label" style="color:var(--blue)">Pergunta principal da call</div>
-          <div class="highlight-text" style="color:var(--text-sec)">"Doutor, se daqui 60 dias você olhar para trás e disser que valeu a pena ter entrado na System, <strong style="color:var(--text)">quanto você precisa estar faturando?</strong>"</div>
-          <div style="margin-top:8px;font-size:12px;color:var(--blue);font-weight:600">→ Essa resposta vira a Meta 60 Dias</div>
-        </div>
-
-        <div class="section-head" style="margin-bottom:12px">
-          <div class="section-dot" style="background:var(--blue)"></div>
-          <div class="section-title" style="color:var(--blue)">Pauta da Call</div>
-        </div>
+        <div class="section-head" style="margin-bottom:12px"><div class="section-dot" style="background:var(--blue)"></div><div class="section-title" style="color:var(--blue)">Pauta</div></div>
         <div class="pauta" style="margin-bottom:16px">
-          <div class="pauta-item">
-            <div class="pauta-left"><div class="pauta-num" style="background:var(--blue-dim);border:1px solid var(--blue-border);color:var(--blue)">1</div><div class="pauta-line"></div></div>
-            <div class="pauta-content"><div class="pauta-title">Abertura</div><div class="pauta-desc">Comunicar que a jornada começou oficialmente.</div></div>
-          </div>
-          <div class="pauta-item">
-            <div class="pauta-left"><div class="pauta-num" style="background:var(--blue-dim);border:1px solid var(--blue-border);color:var(--blue)">2</div><div class="pauta-line"></div></div>
-            <div class="pauta-content"><div class="pauta-title">Diagnóstico inicial</div><div class="pauta-desc">Entender o cenário atual da clínica.</div></div>
-          </div>
-          <div class="pauta-item">
-            <div class="pauta-left"><div class="pauta-num" style="background:var(--blue-dim);border:1px solid var(--blue-border);color:var(--blue)">3</div><div class="pauta-line"></div></div>
-            <div class="pauta-content"><div class="pauta-title">Definição das metas</div><div class="pauta-desc">Formalizar os números que vão guiar a entrega.</div></div>
-          </div>
-          <div class="pauta-item">
-            <div class="pauta-left"><div class="pauta-num" style="background:var(--blue-dim);border:1px solid var(--blue-border);color:var(--blue)">4</div><div class="pauta-line"></div></div>
-            <div class="pauta-content"><div class="pauta-title">Alinhamento de expectativa</div><div class="pauta-desc">A System entrega direção, estrutura e acompanhamento — mas o cliente precisa executar.</div></div>
-          </div>
-          <div class="pauta-item">
-            <div class="pauta-left"><div class="pauta-num" style="background:var(--blue-dim);border:1px solid var(--blue-border);color:var(--blue)">5</div><div class="pauta-line"></div></div>
-            <div class="pauta-content"><div class="pauta-title">Explicação da jornada</div><div class="pauta-desc">Mostrar as próximas calls: Confiança, Esteira, Implementação de Vendas e Marketing.</div></div>
-          </div>
-          <div class="pauta-item">
-            <div class="pauta-left"><div class="pauta-num" style="background:var(--blue-dim);border:1px solid var(--blue-border);color:var(--blue)">6</div></div>
-            <div class="pauta-content"><div class="pauta-title">Próximos passos</div><div class="pauta-desc">Confirmar agenda e tarefas antes da próxima call.</div></div>
-          </div>
+          <div class="pauta-item"><div class="pauta-left"><div class="pauta-num" style="background:var(--blue-dim);border:1px solid var(--blue-border);color:var(--blue)">1</div><div class="pauta-vline"></div></div><div class="pauta-content"><div class="pauta-title">Abertura</div><div class="pauta-desc">Comunicar que a jornada começou oficialmente.</div></div></div>
+          <div class="pauta-item"><div class="pauta-left"><div class="pauta-num" style="background:var(--blue-dim);border:1px solid var(--blue-border);color:var(--blue)">2</div><div class="pauta-vline"></div></div><div class="pauta-content"><div class="pauta-title">Diagnóstico inicial</div><div class="pauta-desc">Entender o cenário atual da clínica.</div></div></div>
+          <div class="pauta-item"><div class="pauta-left"><div class="pauta-num" style="background:var(--blue-dim);border:1px solid var(--blue-border);color:var(--blue)">3</div><div class="pauta-vline"></div></div><div class="pauta-content"><div class="pauta-title">Definição das metas</div><div class="pauta-desc">Formalizar os números que vão guiar a entrega, incluindo a Meta 60 Dias.</div></div></div>
+          <div class="pauta-item"><div class="pauta-left"><div class="pauta-num" style="background:var(--blue-dim);border:1px solid var(--blue-border);color:var(--blue)">4</div><div class="pauta-vline"></div></div><div class="pauta-content"><div class="pauta-title">Alinhamento de expectativa</div><div class="pauta-desc">A System entrega direção, estrutura e acompanhamento — o cliente precisa executar.</div></div></div>
+          <div class="pauta-item"><div class="pauta-left"><div class="pauta-num" style="background:var(--blue-dim);border:1px solid var(--blue-border);color:var(--blue)">5</div></div><div class="pauta-content"><div class="pauta-title">Próximos passos</div><div class="pauta-desc">Confirmar agenda e apresentar a sequência de calls.</div></div></div>
         </div>
-
-        <div class="entrega">
-          <div class="entrega-label">Entrega Final — cliente sai com</div>
-          <div class="entrega-item"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="#22C55E" stroke-width="1.2"/><path d="M4 6l1.5 1.5L8 4.5" stroke="#22C55E" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Metas definidas</div>
-          <div class="entrega-item"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="#22C55E" stroke-width="1.2"/><path d="M4 6l1.5 1.5L8 4.5" stroke="#22C55E" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Clareza do processo</div>
-          <div class="entrega-item"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="#22C55E" stroke-width="1.2"/><path d="M4 6l1.5 1.5L8 4.5" stroke="#22C55E" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Próximos passos confirmados e agenda do onboarding alinhada</div>
-        </div>
+        <div class="entrega-final"><div class="entrega-label">Entrega Final</div><div class="entrega-item"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="#22C55E" stroke-width="1.2"/><path d="M4 6l1.5 1.5L8 4.5" stroke="#22C55E" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Metas definidas, clareza do processo e agenda do onboarding alinhada</div></div>
       </div>
     </div>
 
     <!-- CALL 2 -->
     <div class="card">
-      <div class="stage-hdr" style="border-color:var(--purple-border)">
-        <div class="stage-num" style="background:var(--purple-dim);border:1px solid var(--purple-border);color:var(--purple)">2</div>
+      <div class="stage-hdr" style="border-color:var(--blue-border)">
+        <div class="stage-num" style="background:var(--blue-dim);border:1px solid var(--blue-border);color:var(--blue)">2</div>
         <div>
-          <div class="stage-name" style="color:var(--purple)">Call de Confiança</div>
-          <div style="font-size:13px;color:var(--text-sec);margin-top:2px">Aumentar a segurança do cliente no processo</div>
+          <div class="stage-name" style="color:var(--blue)">Call com a Equipe</div>
           <div class="stage-meta">
-            <div class="meta-tag"><strong>Responsável:</strong> Dra. Déborah</div>
-            <div class="meta-tag"><strong>Acompanhamento:</strong> Mari ou CS</div>
-            <div class="meta-tag"><strong>Duração:</strong> 20–30 min</div>
+            <div class="meta-tag"><strong>Responsável:</strong> Alane + Mari</div>
+            <div class="meta-tag"><strong>Dia:</strong> 7</div>
           </div>
+          <div style="margin-top:10px"><div class="sentimento" style="display:inline-flex"><span class="sentimento-icon">🤝</span><span>"Meu time vai ser acompanhado."</span></div></div>
         </div>
       </div>
       <div class="card-body">
-        <div class="highlight" style="background:var(--purple-dim);border:1px solid var(--purple-border);margin-bottom:16px">
-          <div class="highlight-label" style="color:var(--purple)">Papel da Dra. Déborah</div>
-          <div class="highlight-text" style="color:var(--text-sec)">Ela entra como <strong style="color:var(--text)">Embaixadora de Resultado System</strong> — não para dar consultoria, mas para mostrar visão, segurança e bastidores de quem aplicou. Começou com ~R$150k e chegou a ~R$700k.</div>
-        </div>
-
-        <div class="section-head" style="margin-bottom:12px">
-          <div class="section-dot" style="background:var(--purple)"></div>
-          <div class="section-title" style="color:var(--purple)">Pauta da Call</div>
-        </div>
-        <div class="pauta" style="margin-bottom:16px">
-          <div class="pauta-item">
-            <div class="pauta-left"><div class="pauta-num" style="background:var(--purple-dim);border:1px solid var(--purple-border);color:var(--purple)">1</div><div class="pauta-line"></div></div>
-            <div class="pauta-content"><div class="pauta-title">Abertura pelo CS</div><div class="pauta-desc">"Doutor, essa call é para você conversar com uma das nossas maiores histórias de resultado. A Dra. Déborah vai compartilhar a experiência dela, o que fez diferença e o que ela considera importante para quem está começando agora."</div></div>
-          </div>
-          <div class="pauta-item">
-            <div class="pauta-left"><div class="pauta-num" style="background:var(--purple-dim);border:1px solid var(--purple-border);color:var(--purple)">2</div><div class="pauta-line"></div></div>
-            <div class="pauta-content"><div class="pauta-title">História da Dra. Déborah</div><div class="pauta-desc">Como era antes, as dúvidas, o que mudou, o papel da execução, o que evitaria e o que mais fez diferença no crescimento.</div></div>
-          </div>
-          <div class="pauta-item">
-            <div class="pauta-left"><div class="pauta-num" style="background:var(--purple-dim);border:1px solid var(--purple-border);color:var(--purple)">3</div><div class="pauta-line"></div></div>
-            <div class="pauta-content"><div class="pauta-title">Perguntas controladas</div><div class="pauta-desc">O cliente pode fazer 1 ou 2 perguntas. Não pode virar diagnóstico individual.</div></div>
-          </div>
-          <div class="pauta-item">
-            <div class="pauta-left"><div class="pauta-num" style="background:var(--purple-dim);border:1px solid var(--purple-border);color:var(--purple)">4</div></div>
-            <div class="pauta-content"><div class="pauta-title">Fechamento pelo CS</div><div class="pauta-desc">"O resultado vem de direção com execução. Agora vamos para a parte prática, começando pela estruturação da sua esteira de produtos."</div></div>
-          </div>
-        </div>
-
-        <div class="two-col" style="margin-bottom:0">
-          <div>
-            <div style="font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--green);letter-spacing:.07em;text-transform:uppercase;margin-bottom:8px">O que ela deve reforçar</div>
-            <ul class="checklist">
-              <li class="check-item"><div class="check-icon" style="background:var(--green-dim);border:1px solid var(--green-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#22C55E" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>"Eu também comecei com dúvidas."</li>
-              <li class="check-item"><div class="check-icon" style="background:var(--green-dim);border:1px solid var(--green-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#22C55E" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>"O resultado veio da execução."</li>
-              <li class="check-item"><div class="check-icon" style="background:var(--green-dim);border:1px solid var(--green-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#22C55E" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>"O comercial foi uma virada."</li>
-              <li class="check-item"><div class="check-icon" style="background:var(--green-dim);border:1px solid var(--green-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#22C55E" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>"Confie no processo e no time."</li>
-            </ul>
-          </div>
-          <div>
-            <div style="font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--red);letter-spacing:.07em;text-transform:uppercase;margin-bottom:8px">O que ela NÃO pode fazer</div>
-            <ul class="checklist">
-              <li class="check-item"><div class="check-icon" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2.5 2.5l5 5M7.5 2.5l-5 5" stroke="#EF4444" stroke-width="1.3" stroke-linecap="round"/></svg></div>Prometer resultado individual</li>
-              <li class="check-item"><div class="check-icon" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2.5 2.5l5 5M7.5 2.5l-5 5" stroke="#EF4444" stroke-width="1.3" stroke-linecap="round"/></svg></div>Analisar a clínica individualmente</li>
-              <li class="check-item"><div class="check-icon" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2.5 2.5l5 5M7.5 2.5l-5 5" stroke="#EF4444" stroke-width="1.3" stroke-linecap="round"/></svg></div>Abrir atendimento no privado</li>
-              <li class="check-item"><div class="check-icon" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2.5 2.5l5 5M7.5 2.5l-5 5" stroke="#EF4444" stroke-width="1.3" stroke-linecap="round"/></svg></div>Contradizer o time da System</li>
-            </ul>
-          </div>
-        </div>
+        <div style="font-size:13px;color:var(--text-sec);margin-bottom:12px">O cliente conhece a equipe que vai acompanhar sua jornada. Essa call cria pertencimento e eleva a confiança no processo logo no início.</div>
+        <div class="entrega-final"><div class="entrega-label">Entrega Final</div><div class="entrega-item"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="#22C55E" stroke-width="1.2"/><path d="M4 6l1.5 1.5L8 4.5" stroke="#22C55E" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Cliente apresentado ao time — sente que vai ser acompanhado de perto</div></div>
       </div>
     </div>
 
@@ -532,117 +556,90 @@ h1{font-family:'Montserrat',sans-serif;font-size:24px;font-weight:800;margin-bot
 
     <!-- CALL 3 -->
     <div class="card" style="margin-bottom:16px">
-      <div class="stage-hdr" style="border-color:var(--green-border)">
-        <div class="stage-num" style="background:var(--green-dim);border:1px solid var(--green-border);color:var(--green)">3</div>
+      <div class="stage-hdr" style="border-color:var(--purple-border)">
+        <div class="stage-num" style="background:var(--purple-dim);border:1px solid var(--purple-border);color:var(--purple)">3</div>
         <div>
-          <div class="stage-name" style="color:var(--green)">Esteira de Produtos</div>
-          <div style="font-size:13px;color:var(--text-sec);margin-top:2px">Estruturar o que será vendido</div>
+          <div class="stage-name" style="color:var(--purple)">Call de Confiança</div>
           <div class="stage-meta">
-            <div class="meta-tag"><strong>Responsável:</strong> Alane</div>
-            <div class="meta-tag"><strong>Duração:</strong> 60 min</div>
+            <div class="meta-tag"><strong>Responsável:</strong> Dra. Déborah Caribé</div>
+            <div class="meta-tag"><strong>Acompanhamento:</strong> Mari ou CS</div>
+            <div class="meta-tag"><strong>Prazo:</strong> Após 7 dias</div>
+            <div class="meta-tag"><strong>Duração:</strong> 20–30 min</div>
           </div>
+          <div style="margin-top:10px"><div class="sentimento" style="display:inline-flex"><span class="sentimento-icon">🙏</span><span>"Agora eu botei fé."</span></div></div>
         </div>
       </div>
       <div class="card-body">
-        <div class="section-head" style="margin-bottom:12px">
-          <div class="section-dot" style="background:var(--green)"></div>
-          <div class="section-title" style="color:var(--green)">O que precisa ser definido</div>
-        </div>
-        <div class="two-col" style="margin-bottom:16px">
-          <ul class="checklist">
-            <li class="check-item"><div class="check-icon" style="background:var(--green-dim);border:1px solid var(--green-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#22C55E" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Produto foco</li>
-            <li class="check-item"><div class="check-icon" style="background:var(--green-dim);border:1px solid var(--green-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#22C55E" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Procedimento principal</li>
-            <li class="check-item"><div class="check-icon" style="background:var(--green-dim);border:1px solid var(--green-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#22C55E" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Ticket de entrada</li>
-            <li class="check-item"><div class="check-icon" style="background:var(--green-dim);border:1px solid var(--green-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#22C55E" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Ticket intermediário</li>
-            <li class="check-item"><div class="check-icon" style="background:var(--green-dim);border:1px solid var(--green-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#22C55E" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Ticket premium</li>
-            <li class="check-item"><div class="check-icon" style="background:var(--green-dim);border:1px solid var(--green-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#22C55E" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Possíveis combos</li>
-          </ul>
-          <ul class="checklist">
-            <li class="check-item"><div class="check-icon" style="background:var(--green-dim);border:1px solid var(--green-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#22C55E" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Sequência ideal de venda</li>
-            <li class="check-item"><div class="check-icon" style="background:var(--green-dim);border:1px solid var(--green-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#22C55E" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Perfil de paciente ideal</li>
-            <li class="check-item"><div class="check-icon" style="background:var(--green-dim);border:1px solid var(--green-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#22C55E" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Principal dor do paciente</li>
-            <li class="check-item"><div class="check-icon" style="background:var(--green-dim);border:1px solid var(--green-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#22C55E" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Promessa comercial permitida</li>
-            <li class="check-item"><div class="check-icon" style="background:var(--green-dim);border:1px solid var(--green-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#22C55E" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Diferenciais da clínica</li>
-            <li class="check-item"><div class="check-icon" style="background:var(--green-dim);border:1px solid var(--green-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#22C55E" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Oferta principal</li>
-          </ul>
+        <div class="highlight" style="background:var(--purple-dim);border:1px solid var(--purple-border);margin-bottom:16px">
+          <div class="hl-label" style="color:var(--purple)">Papel da Dra. Déborah</div>
+          <div style="font-size:13px;color:var(--text-sec)">Entra como <strong style="color:var(--text)">Embaixadora de Resultado System</strong> — não para dar consultoria, mas para mostrar bastidores de quem aplicou. Começou com ~R$150k e chegou a ~R$700k.</div>
         </div>
 
-        <div class="section-head" style="margin-bottom:12px">
-          <div class="section-dot" style="background:var(--green)"></div>
-          <div class="section-title" style="color:var(--green)">Pauta da Call</div>
-        </div>
+        <div class="section-head" style="margin-bottom:12px"><div class="section-dot" style="background:var(--purple)"></div><div class="section-title" style="color:var(--purple)">Pauta</div></div>
         <div class="pauta" style="margin-bottom:16px">
-          <div class="pauta-item"><div class="pauta-left"><div class="pauta-num" style="background:var(--green-dim);border:1px solid var(--green-border);color:var(--green)">1</div><div class="pauta-line"></div></div><div class="pauta-content"><div class="pauta-title">Levantamento dos procedimentos</div><div class="pauta-desc">Entender tudo que a clínica oferece.</div></div></div>
-          <div class="pauta-item"><div class="pauta-left"><div class="pauta-num" style="background:var(--green-dim);border:1px solid var(--green-border);color:var(--green)">2</div><div class="pauta-line"></div></div><div class="pauta-content"><div class="pauta-title">Organização por prioridade</div><div class="pauta-desc">Separar o que é principal, secundário e complementar.</div></div></div>
-          <div class="pauta-item"><div class="pauta-left"><div class="pauta-num" style="background:var(--green-dim);border:1px solid var(--green-border);color:var(--green)">3</div><div class="pauta-line"></div></div><div class="pauta-content"><div class="pauta-title">Definição do produto foco</div><div class="pauta-desc">Escolher o procedimento que terá prioridade comercial.</div></div></div>
-          <div class="pauta-item"><div class="pauta-left"><div class="pauta-num" style="background:var(--green-dim);border:1px solid var(--green-border);color:var(--green)">4</div><div class="pauta-line"></div></div><div class="pauta-content"><div class="pauta-title">Estruturação da oferta</div><div class="pauta-desc">Definir o que será apresentado ao paciente.</div></div></div>
-          <div class="pauta-item"><div class="pauta-left"><div class="pauta-num" style="background:var(--green-dim);border:1px solid var(--green-border);color:var(--green)">5</div></div><div class="pauta-content"><div class="pauta-title">Caminho da venda</div><div class="pauta-desc">Definir qual produto entra primeiro e quais produtos podem ser apresentados depois.</div></div></div>
+          <div class="pauta-item"><div class="pauta-left"><div class="pauta-num" style="background:var(--purple-dim);border:1px solid var(--purple-border);color:var(--purple)">1</div><div class="pauta-vline"></div></div><div class="pauta-content"><div class="pauta-title">Abertura pelo CS</div><div class="pauta-desc">"Doutor, essa call é para você conversar com uma das nossas maiores histórias de resultado..."</div></div></div>
+          <div class="pauta-item"><div class="pauta-left"><div class="pauta-num" style="background:var(--purple-dim);border:1px solid var(--purple-border);color:var(--purple)">2</div><div class="pauta-vline"></div></div><div class="pauta-content"><div class="pauta-title">História da Dra. Déborah</div><div class="pauta-desc">Como era antes, as dúvidas, o que mudou, o papel da execução e o que mais fez diferença.</div></div></div>
+          <div class="pauta-item"><div class="pauta-left"><div class="pauta-num" style="background:var(--purple-dim);border:1px solid var(--purple-border);color:var(--purple)">3</div><div class="pauta-vline"></div></div><div class="pauta-content"><div class="pauta-title">Perguntas controladas</div><div class="pauta-desc">1 ou 2 perguntas do cliente — não pode virar diagnóstico individual.</div></div></div>
+          <div class="pauta-item"><div class="pauta-left"><div class="pauta-num" style="background:var(--purple-dim);border:1px solid var(--purple-border);color:var(--purple)">4</div></div><div class="pauta-content"><div class="pauta-title">Fechamento pelo CS</div><div class="pauta-desc">"Resultado vem de direção com execução. Agora vamos para a parte prática."</div></div></div>
         </div>
 
-        <div class="entrega">
-          <div class="entrega-label">Entrega Final — cliente sai com</div>
-          <div class="entrega-item"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="#22C55E" stroke-width="1.2"/><path d="M4 6l1.5 1.5L8 4.5" stroke="#22C55E" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Esteira de produtos estruturada</div>
-          <div class="entrega-item"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="#22C55E" stroke-width="1.2"/><path d="M4 6l1.5 1.5L8 4.5" stroke="#22C55E" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Produto foco definido e oferta principal organizada</div>
-          <div class="entrega-item"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="#22C55E" stroke-width="1.2"/><path d="M4 6l1.5 1.5L8 4.5" stroke="#22C55E" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Caminho comercial claro</div>
+        <div class="two-col" style="margin-bottom:16px">
+          <div>
+            <div style="font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--green);letter-spacing:.07em;text-transform:uppercase;margin-bottom:8px">O que reforçar</div>
+            <ul class="checklist">
+              <li class="check-item"><div class="check-icon" style="background:var(--green-dim);border:1px solid var(--green-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#22C55E" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>"Eu também comecei com dúvidas."</li>
+              <li class="check-item"><div class="check-icon" style="background:var(--green-dim);border:1px solid var(--green-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#22C55E" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>"O resultado veio da execução."</li>
+              <li class="check-item"><div class="check-icon" style="background:var(--green-dim);border:1px solid var(--green-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#22C55E" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>"Confie no processo e no time."</li>
+            </ul>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--red);letter-spacing:.07em;text-transform:uppercase;margin-bottom:8px">O que NÃO pode</div>
+            <ul class="checklist">
+              <li class="check-item"><div class="check-icon" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2.5 2.5l5 5M7.5 2.5l-5 5" stroke="#EF4444" stroke-width="1.3" stroke-linecap="round"/></svg></div>Prometer resultado individual</li>
+              <li class="check-item"><div class="check-icon" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2.5 2.5l5 5M7.5 2.5l-5 5" stroke="#EF4444" stroke-width="1.3" stroke-linecap="round"/></svg></div>Analisar a clínica individualmente</li>
+              <li class="check-item"><div class="check-icon" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2.5 2.5l5 5M7.5 2.5l-5 5" stroke="#EF4444" stroke-width="1.3" stroke-linecap="round"/></svg></div>Abrir atendimento no privado</li>
+            </ul>
+          </div>
         </div>
+        <div class="entrega-final"><div class="entrega-label">Entrega Final</div><div class="entrega-item"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="#22C55E" stroke-width="1.2"/><path d="M4 6l1.5 1.5L8 4.5" stroke="#22C55E" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Cliente mais seguro, confiante e disposto a executar</div></div>
       </div>
     </div>
 
     <!-- CALL 4 -->
     <div class="card">
-      <div class="stage-hdr" style="border-color:var(--amber-border)">
-        <div class="stage-num" style="background:var(--amber-dim);border:1px solid var(--amber-border);color:var(--amber)">4</div>
+      <div class="stage-hdr" style="border-color:var(--green-border)">
+        <div class="stage-num" style="background:var(--green-dim);border:1px solid var(--green-border);color:var(--green)">4</div>
         <div>
-          <div class="stage-name" style="color:var(--amber)">Implementação de Vendas</div>
-          <div style="font-size:13px;color:var(--text-sec);margin-top:2px">Como usar a esteira na consulta</div>
+          <div class="stage-name" style="color:var(--green)">Esteira de Produtos</div>
           <div class="stage-meta">
-            <div class="meta-tag"><strong>Responsável:</strong> Felipe</div>
+            <div class="meta-tag"><strong>Responsável:</strong> Alane — CS2</div>
+            <div class="meta-tag"><strong>Prazo:</strong> 7–10 dias</div>
             <div class="meta-tag"><strong>Duração:</strong> 60 min</div>
           </div>
+          <div style="margin-top:10px"><div class="sentimento" style="display:inline-flex"><span class="sentimento-icon">🧩</span><span>"Como vou aplicar isso?"</span></div></div>
         </div>
       </div>
       <div class="card-body">
-        <div class="section-head" style="margin-bottom:12px">
-          <div class="section-dot" style="background:var(--amber)"></div>
-          <div class="section-title" style="color:var(--amber)">O Felipe precisa ensinar</div>
-        </div>
-        <ul class="checklist" style="margin-bottom:16px">
-          <li class="check-item"><div class="check-icon" style="background:var(--amber-dim);border:1px solid var(--amber-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#F5A623" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Como conduzir a consulta com intenção comercial</li>
-          <li class="check-item"><div class="check-icon" style="background:var(--amber-dim);border:1px solid var(--amber-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#F5A623" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Como identificar o perfil do paciente</li>
-          <li class="check-item"><div class="check-icon" style="background:var(--amber-dim);border:1px solid var(--amber-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#F5A623" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Como conectar dor, desejo e procedimento</li>
-          <li class="check-item"><div class="check-icon" style="background:var(--amber-dim);border:1px solid var(--amber-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#F5A623" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Como apresentar a esteira sem parecer forçado</li>
-          <li class="check-item"><div class="check-icon" style="background:var(--amber-dim);border:1px solid var(--amber-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#F5A623" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Como conduzir proposta e fechamento</li>
-          <li class="check-item"><div class="check-icon" style="background:var(--amber-dim);border:1px solid var(--amber-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#F5A623" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Como lidar com objeções básicas</li>
-          <li class="check-item"><div class="check-icon" style="background:var(--amber-dim);border:1px solid var(--amber-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#F5A623" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Como registrar no CRM e fazer follow-up</li>
-        </ul>
-
-        <div class="section-head" style="margin-bottom:12px">
-          <div class="section-dot" style="background:var(--amber)"></div>
-          <div class="section-title" style="color:var(--amber)">Script de Condução da Consulta</div>
-        </div>
-        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px">
-          {{'Acolhimento','Diagnóstico','Identificação do desejo','Explicação do problema','Apresentação do caminho','Proposta','Fechamento','Próximo passo'.split(',').map((s,i)=>`<div style="display:flex;align-items:center;gap:6px"><div style="width:20px;height:20px;border-radius:5px;background:var(--amber-dim);border:1px solid var(--amber-border);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:var(--amber);font-family:'Montserrat',sans-serif">${i+1}</div><span style="font-size:12px;color:var(--text-sec)">${s}</span></div>`).join('')}}
-        </div>
-        <div id="script-steps" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px"></div>
-
-        <div class="section-head" style="margin-bottom:12px">
-          <div class="section-dot" style="background:var(--amber)"></div>
-          <div class="section-title" style="color:var(--amber)">Objeções mais comuns</div>
-        </div>
-        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px">
-          <span style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:6px;padding:4px 10px;font-size:12px;color:var(--text-sec)">Preço</span>
-          <span style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:6px;padding:4px 10px;font-size:12px;color:var(--text-sec)">Medo</span>
-          <span style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:6px;padding:4px 10px;font-size:12px;color:var(--text-sec)">Tempo</span>
-          <span style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:6px;padding:4px 10px;font-size:12px;color:var(--text-sec)">Preciso pensar</span>
-          <span style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:6px;padding:4px 10px;font-size:12px;color:var(--text-sec)">Vou falar com alguém</span>
-          <span style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:6px;padding:4px 10px;font-size:12px;color:var(--text-sec)">Está caro</span>
-          <span style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:6px;padding:4px 10px;font-size:12px;color:var(--text-sec)">Não tenho dinheiro agora</span>
+        <div class="section-head" style="margin-bottom:12px"><div class="section-dot" style="background:var(--green)"></div><div class="section-title" style="color:var(--green)">O que definir</div></div>
+        <div class="two-col" style="margin-bottom:16px">
+          <ul class="checklist">
+            <li class="check-item"><div class="check-icon" style="background:var(--green-dim);border:1px solid var(--green-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#22C55E" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Produto foco e procedimento principal</li>
+            <li class="check-item"><div class="check-icon" style="background:var(--green-dim);border:1px solid var(--green-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#22C55E" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Ticket entrada, intermediário e premium</li>
+            <li class="check-item"><div class="check-icon" style="background:var(--green-dim);border:1px solid var(--green-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#22C55E" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Possíveis combos e sequência de venda</li>
+          </ul>
+          <ul class="checklist">
+            <li class="check-item"><div class="check-icon" style="background:var(--green-dim);border:1px solid var(--green-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#22C55E" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Perfil e dor do paciente ideal</li>
+            <li class="check-item"><div class="check-icon" style="background:var(--green-dim);border:1px solid var(--green-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#22C55E" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Diferenciais da clínica</li>
+            <li class="check-item"><div class="check-icon" style="background:var(--green-dim);border:1px solid var(--green-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#22C55E" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Oferta principal estruturada</li>
+          </ul>
         </div>
 
-        <div class="entrega">
-          <div class="entrega-label">Entrega Final — cliente sai sabendo</div>
-          <div class="entrega-item"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="#22C55E" stroke-width="1.2"/><path d="M4 6l1.5 1.5L8 4.5" stroke="#22C55E" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Como vender a oferta definida na esteira dentro da consulta</div>
+        <div style="display:flex;align-items:center;gap:12px;background:var(--amber-dim);border:1px solid var(--amber-border);border-radius:9px;padding:12px 16px;margin-bottom:16px">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" style="flex-shrink:0"><rect x="2" y="2" width="14" height="11" rx="1.5" stroke="#F5A623" stroke-width="1.3"/><path d="M6 16h6M9 13v3" stroke="#F5A623" stroke-width="1.3" stroke-linecap="round"/></svg>
+          <div><div style="font-size:10px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--amber);letter-spacing:.07em;text-transform:uppercase;margin-bottom:2px">Após a call</div><div style="font-size:13px;color:var(--text-sec)"><strong style="color:var(--text)">Entrega da Apresentação</strong> — Alane envia a apresentação comercial montada com a esteira definida</div></div>
         </div>
+
+        <div class="entrega-final"><div class="entrega-label">Entrega Final</div><div class="entrega-item"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="#22C55E" stroke-width="1.2"/><path d="M4 6l1.5 1.5L8 4.5" stroke="#22C55E" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Esteira estruturada, produto foco definido, apresentação comercial entregue</div></div>
       </div>
     </div>
 
@@ -653,102 +650,65 @@ h1{font-family:'Montserrat',sans-serif;font-size:24px;font-weight:800;margin-bot
 
     <!-- CALL 5 -->
     <div class="card" style="margin-bottom:16px">
-      <div class="stage-hdr" style="border-color:var(--pink-border)">
-        <div class="stage-num" style="background:var(--pink-dim);border:1px solid var(--pink-border);color:var(--pink)">5</div>
+      <div class="stage-hdr" style="border-color:var(--amber-border)">
+        <div class="stage-num" style="background:var(--amber-dim);border:1px solid var(--amber-border);color:var(--amber)">5</div>
         <div>
-          <div class="stage-name" style="color:var(--pink)">Marketing e Vendas</div>
-          <div style="font-size:13px;color:var(--text-sec);margin-top:2px">Posicionamento, conteúdo e geração de demanda</div>
+          <div class="stage-name" style="color:var(--amber)">Implementação de Vendas</div>
           <div class="stage-meta">
-            <div class="meta-tag"><strong>Responsável:</strong> Pedro</div>
+            <div class="meta-tag"><strong>Responsável:</strong> Felipe — CS3</div>
+            <div class="meta-tag"><strong>Dia:</strong> 11</div>
             <div class="meta-tag"><strong>Duração:</strong> 60 min</div>
           </div>
+          <div style="margin-top:10px"><div class="sentimento" style="display:inline-flex"><span class="sentimento-icon">💡</span><span>"Agora entendi."</span></div></div>
         </div>
       </div>
       <div class="card-body">
-        <div class="highlight" style="background:var(--surface2);border:1px solid var(--border);margin-bottom:16px">
-          <div class="highlight-label" style="color:var(--text-dim)">Por que essa call vem depois da Implementação?</div>
-          <div class="highlight-text" style="color:var(--text-sec)">O cliente já sabe <strong style="color:var(--text)">o que vender, como vender, qual produto priorizar e como conduzir a consulta.</strong> Agora o Pedro mostra como gerar demanda para essa estrutura.</div>
-        </div>
+        <div class="section-head" style="margin-bottom:12px"><div class="section-dot" style="background:var(--amber)"></div><div class="section-title" style="color:var(--amber)">O que ensinar</div></div>
+        <ul class="checklist" style="margin-bottom:16px">
+          <li class="check-item"><div class="check-icon" style="background:var(--amber-dim);border:1px solid var(--amber-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#F5A623" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Como conduzir a consulta com intenção comercial</li>
+          <li class="check-item"><div class="check-icon" style="background:var(--amber-dim);border:1px solid var(--amber-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#F5A623" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Como conectar dor, desejo e procedimento</li>
+          <li class="check-item"><div class="check-icon" style="background:var(--amber-dim);border:1px solid var(--amber-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#F5A623" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Como usar a apresentação comercial na consulta</li>
+          <li class="check-item"><div class="check-icon" style="background:var(--amber-dim);border:1px solid var(--amber-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#F5A623" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Como conduzir proposta e fechamento</li>
+          <li class="check-item"><div class="check-icon" style="background:var(--amber-dim);border:1px solid var(--amber-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#F5A623" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Como lidar com objeções: preço, medo, tempo, "preciso pensar", "está caro"</li>
+          <li class="check-item"><div class="check-icon" style="background:var(--amber-dim);border:1px solid var(--amber-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#F5A623" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Como registrar no CRM e fazer follow-up pós-consulta</li>
+        </ul>
 
-        <div class="section-head" style="margin-bottom:12px">
-          <div class="section-dot" style="background:var(--pink)"></div>
-          <div class="section-title" style="color:var(--pink)">O que precisa ser definido</div>
-        </div>
-        <div class="two-col" style="margin-bottom:16px">
-          <ul class="checklist">
-            <li class="check-item"><div class="check-icon" style="background:var(--pink-dim);border:1px solid var(--pink-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#EC4899" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Posicionamento principal</li>
-            <li class="check-item"><div class="check-icon" style="background:var(--pink-dim);border:1px solid var(--pink-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#EC4899" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Mensagem central</li>
-            <li class="check-item"><div class="check-icon" style="background:var(--pink-dim);border:1px solid var(--pink-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#EC4899" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Linha editorial</li>
-            <li class="check-item"><div class="check-icon" style="background:var(--pink-dim);border:1px solid var(--pink-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#EC4899" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Provas que precisam ser construídas</li>
-            <li class="check-item"><div class="check-icon" style="background:var(--pink-dim);border:1px solid var(--pink-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#EC4899" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Conteúdos prioritários</li>
-          </ul>
-          <ul class="checklist">
-            <li class="check-item"><div class="check-icon" style="background:var(--pink-dim);border:1px solid var(--pink-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#EC4899" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Estratégia de social selling</li>
-            <li class="check-item"><div class="check-icon" style="background:var(--pink-dim);border:1px solid var(--pink-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#EC4899" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Direção para tráfego pago</li>
-            <li class="check-item"><div class="check-icon" style="background:var(--pink-dim);border:1px solid var(--pink-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#EC4899" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Campanhas iniciais</li>
-            <li class="check-item"><div class="check-icon" style="background:var(--pink-dim);border:1px solid var(--pink-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#EC4899" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Oportunidades de aquisição</li>
-            <li class="check-item"><div class="check-icon" style="background:var(--pink-dim);border:1px solid var(--pink-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#EC4899" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Rotina comercial com os leads</li>
-          </ul>
-        </div>
+        <div class="section-head" style="margin-bottom:12px"><div class="section-dot" style="background:var(--amber)"></div><div class="section-title" style="color:var(--amber)">Script de Condução da Consulta</div></div>
+        <div id="script-steps" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px"></div>
 
-        <div class="section-head" style="margin-bottom:12px">
-          <div class="section-dot" style="background:var(--pink)"></div>
-          <div class="section-title" style="color:var(--pink)">Pauta da Call</div>
-        </div>
-        <div class="pauta" style="margin-bottom:16px">
-          <div class="pauta-item"><div class="pauta-left"><div class="pauta-num" style="background:var(--pink-dim);border:1px solid var(--pink-border);color:var(--pink)">1</div><div class="pauta-line"></div></div><div class="pauta-content"><div class="pauta-title">Diagnóstico do posicionamento</div><div class="pauta-desc">Analisar se o Instagram e comunicação estão claros.</div></div></div>
-          <div class="pauta-item"><div class="pauta-left"><div class="pauta-num" style="background:var(--pink-dim);border:1px solid var(--pink-border);color:var(--pink)">2</div><div class="pauta-line"></div></div><div class="pauta-content"><div class="pauta-title">Definição da mensagem</div><div class="pauta-desc">O que o paciente precisa entender sobre a clínica.</div></div></div>
-          <div class="pauta-item"><div class="pauta-left"><div class="pauta-num" style="background:var(--pink-dim);border:1px solid var(--pink-border);color:var(--pink)">3</div><div class="pauta-line"></div></div><div class="pauta-content"><div class="pauta-title">Conteúdos prioritários</div><div class="pauta-desc">Definir quais conteúdos precisam ser criados primeiro.</div></div></div>
-          <div class="pauta-item"><div class="pauta-left"><div class="pauta-num" style="background:var(--pink-dim);border:1px solid var(--pink-border);color:var(--pink)">4</div><div class="pauta-line"></div></div><div class="pauta-content"><div class="pauta-title">Social selling</div><div class="pauta-desc">Orientar abordagem, relacionamento e ativação de oportunidades.</div></div></div>
-          <div class="pauta-item"><div class="pauta-left"><div class="pauta-num" style="background:var(--pink-dim);border:1px solid var(--pink-border);color:var(--pink)">5</div><div class="pauta-line"></div></div><div class="pauta-content"><div class="pauta-title">Direção de tráfego</div><div class="pauta-desc">O que pode ser anunciado e qual oferta faz sentido.</div></div></div>
-          <div class="pauta-item"><div class="pauta-left"><div class="pauta-num" style="background:var(--pink-dim);border:1px solid var(--pink-border);color:var(--pink)">6</div></div><div class="pauta-content"><div class="pauta-title">Próximas ações</div><div class="pauta-desc">O que precisa ser executado nos próximos 7 dias.</div></div></div>
-        </div>
-
-        <div class="entrega">
-          <div class="entrega-label">Entrega Final</div>
-          <div class="entrega-item"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="#22C55E" stroke-width="1.2"/><path d="M4 6l1.5 1.5L8 4.5" stroke="#22C55E" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Direção de marketing, conteúdo e geração de demanda</div>
-        </div>
+        <div class="entrega-final"><div class="entrega-label">Entrega Final</div><div class="entrega-item"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="#22C55E" stroke-width="1.2"/><path d="M4 6l1.5 1.5L8 4.5" stroke="#22C55E" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Cliente sabe como vender a oferta da esteira dentro da consulta</div></div>
       </div>
     </div>
 
-    <!-- CALL 6 -->
+    <!-- CALL 6+7 -->
     <div class="card">
-      <div class="stage-hdr" style="border-color:var(--green-border)">
-        <div class="stage-num" style="background:var(--green-dim);border:1px solid var(--green-border);color:var(--green)">6</div>
+      <div class="stage-hdr" style="border-color:var(--pink-border)">
+        <div class="stage-num" style="background:var(--pink-dim);border:1px solid var(--pink-border);color:var(--pink)">6–7</div>
         <div>
-          <div class="stage-name" style="color:var(--green)">Fechamento do Onboarding</div>
-          <div style="font-size:13px;color:var(--text-sec);margin-top:2px">Confirmar entregas e liberar execução</div>
+          <div class="stage-name" style="color:var(--pink)">Marketing e Vendas</div>
           <div class="stage-meta">
-            <div class="meta-tag"><strong>Responsável:</strong> Mari / CS</div>
-            <div class="meta-tag"><strong>Duração:</strong> 15–30 min</div>
+            <div class="meta-tag"><strong>Responsável:</strong> Pedro — Head de Tráfego</div>
+            <div class="meta-tag"><strong>Dia:</strong> 12</div>
+            <div class="meta-tag"><strong>Duração:</strong> 60 min</div>
           </div>
+          <div style="margin-top:10px"><div class="sentimento" style="display:inline-flex"><span class="sentimento-icon">🚀</span><span>"Perfeito."</span></div></div>
         </div>
       </div>
       <div class="card-body">
-        <div style="font-size:13px;color:var(--text-sec);margin-bottom:16px">O onboarding só é considerado concluído quando <strong style="color:var(--text)">todos os itens abaixo estiverem marcados.</strong></div>
-
-        <div class="section-head" style="margin-bottom:12px">
-          <div class="section-dot" style="background:var(--green)"></div>
-          <div class="section-title" style="color:var(--green)">Checklist de Conclusão</div>
+        <div class="section-head" style="margin-bottom:12px"><div class="section-dot" style="background:var(--pink)"></div><div class="section-title" style="color:var(--pink)">O que definir</div></div>
+        <div class="two-col" style="margin-bottom:16px">
+          <ul class="checklist">
+            <li class="check-item"><div class="check-icon" style="background:var(--pink-dim);border:1px solid var(--pink-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#EC4899" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Posicionamento e mensagem central</li>
+            <li class="check-item"><div class="check-icon" style="background:var(--pink-dim);border:1px solid var(--pink-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#EC4899" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Linha editorial e conteúdos prioritários</li>
+            <li class="check-item"><div class="check-icon" style="background:var(--pink-dim);border:1px solid var(--pink-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#EC4899" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Provas que precisam ser construídas</li>
+          </ul>
+          <ul class="checklist">
+            <li class="check-item"><div class="check-icon" style="background:var(--pink-dim);border:1px solid var(--pink-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#EC4899" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Estratégia de social selling</li>
+            <li class="check-item"><div class="check-icon" style="background:var(--pink-dim);border:1px solid var(--pink-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#EC4899" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Direção de tráfego e campanhas iniciais</li>
+            <li class="check-item"><div class="check-icon" style="background:var(--pink-dim);border:1px solid var(--pink-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#EC4899" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Próximas ações dos próximos 7 dias</li>
+          </ul>
         </div>
-        <ul class="checklist" style="margin-bottom:16px">
-          <li class="check-item"><div class="check-icon" style="background:var(--green-dim);border:1px solid var(--green-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#22C55E" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Boas-vindas realizada</li>
-          <li class="check-item"><div class="check-icon" style="background:var(--green-dim);border:1px solid var(--green-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#22C55E" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Metas definidas</li>
-          <li class="check-item"><div class="check-icon" style="background:var(--green-dim);border:1px solid var(--green-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#22C55E" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Call de Confiança realizada</li>
-          <li class="check-item"><div class="check-icon" style="background:var(--green-dim);border:1px solid var(--green-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#22C55E" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Esteira de produtos estruturada</li>
-          <li class="check-item"><div class="check-icon" style="background:var(--green-dim);border:1px solid var(--green-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#22C55E" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Implementação de Vendas realizada</li>
-          <li class="check-item"><div class="check-icon" style="background:var(--green-dim);border:1px solid var(--green-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#22C55E" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Marketing e Vendas realizado</li>
-          <li class="check-item"><div class="check-icon" style="background:var(--green-dim);border:1px solid var(--green-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#22C55E" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Grupo oficial ativo</li>
-          <li class="check-item"><div class="check-icon" style="background:var(--green-dim);border:1px solid var(--green-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#22C55E" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Cliente com próximos passos claros</li>
-          <li class="check-item"><div class="check-icon" style="background:var(--green-dim);border:1px solid var(--green-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#22C55E" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Primeira ação da semana definida</li>
-          <li class="check-item"><div class="check-icon" style="background:var(--green-dim);border:1px solid var(--green-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#22C55E" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Responsável interno definido</li>
-          <li class="check-item"><div class="check-icon" style="background:var(--green-dim);border:1px solid var(--green-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#22C55E" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Cliente sabe o que precisa executar</div>
-        </ul>
-
-        <div class="entrega">
-          <div class="entrega-label">Entrega Final</div>
-          <div class="entrega-item"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="#22C55E" stroke-width="1.2"/><path d="M4 6l1.5 1.5L8 4.5" stroke="#22C55E" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Cliente sai oficialmente do onboarding e entra na fase de <strong>execução acompanhada</strong></div>
-        </div>
+        <div class="entrega-final"><div class="entrega-label">Entrega Final</div><div class="entrega-item"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="#22C55E" stroke-width="1.2"/><path d="M4 6l1.5 1.5L8 4.5" stroke="#22C55E" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Cliente com direção de marketing, conteúdo e geração de demanda — pronto para execução</div></div>
       </div>
     </div>
 
@@ -760,22 +720,23 @@ h1{font-family:'Montserrat',sans-serif;font-size:24px;font-weight:800;margin-bot
     <div class="section">
       <div class="section-head">
         <div class="section-dot" style="background:var(--amber)"></div>
-        <div class="section-title" style="color:var(--amber)">Régua de Status do Onboarding</div>
+        <div class="section-title" style="color:var(--amber)">Régua de Status</div>
       </div>
       <div class="status-list">
         <div class="status-item"><span class="status-num">1</span><div class="status-dot" style="background:#6B7280"></div><span class="status-name">Vendido</span><span class="status-group">Pré-onboarding</span></div>
         <div class="status-item"><span class="status-num">2</span><div class="status-dot" style="background:var(--amber)"></div><span class="status-name">Aguardando contrato</span><span class="status-group">Pré-onboarding</span></div>
         <div class="status-item"><span class="status-num">3</span><div class="status-dot" style="background:var(--amber)"></div><span class="status-name">Aguardando pagamento</span><span class="status-group">Pré-onboarding</span></div>
-        <div class="status-item"><span class="status-num">4</span><div class="status-dot" style="background:var(--blue)"></div><span class="status-name">Grupo criado</span><span class="status-group">Etapa 0</span></div>
-        <div class="status-item"><span class="status-num">5</span><div class="status-dot" style="background:var(--blue)"></div><span class="status-name">Boas-vindas agendada</span><span class="status-group">Etapa 1</span></div>
-        <div class="status-item"><span class="status-num">6</span><div class="status-dot" style="background:var(--blue)"></div><span class="status-name">Boas-vindas realizada</span><span class="status-group">Etapa 1</span></div>
-        <div class="status-item"><span class="status-num">7</span><div class="status-dot" style="background:var(--purple)"></div><span class="status-name">Call de Confiança realizada</span><span class="status-group">Etapa 2</span></div>
-        <div class="status-item"><span class="status-num">8</span><div class="status-dot" style="background:var(--green)"></div><span class="status-name">Esteira realizada</span><span class="status-group">Etapa 3</span></div>
-        <div class="status-item"><span class="status-num">9</span><div class="status-dot" style="background:var(--amber)"></div><span class="status-name">Implementação de Vendas realizada</span><span class="status-group">Etapa 4</span></div>
-        <div class="status-item"><span class="status-num">10</span><div class="status-dot" style="background:var(--pink)"></div><span class="status-name">Marketing e Vendas realizado</span><span class="status-group">Etapa 5</span></div>
-        <div class="status-item" style="border-color:var(--green-border)"><span class="status-num">11</span><div class="status-dot" style="background:var(--green)"></div><span class="status-name" style="color:var(--green)">Onboarding concluído</span><span class="status-group" style="color:var(--green)">Etapa 6</span></div>
-        <div class="status-item" style="border-color:var(--green-border)"><span class="status-num">12</span><div class="status-dot" style="background:var(--green)"></div><span class="status-name" style="color:var(--green)">Em execução</span><span class="status-group" style="color:var(--green)">Pós-onboarding</span></div>
-        <div class="status-item" style="border-color:rgba(239,68,68,0.3)"><span class="status-num">13</span><div class="status-dot" style="background:var(--red)"></div><span class="status-name" style="color:var(--red)">Risco de atraso</span><span class="status-group" style="color:var(--red)">Alerta</span></div>
+        <div class="status-item"><span class="status-num">4</span><div class="status-dot" style="background:var(--blue)"></div><span class="status-name">Grupo criado</span><span class="status-group">Preparação</span></div>
+        <div class="status-item"><span class="status-num">5</span><div class="status-dot" style="background:var(--blue)"></div><span class="status-name">Boas-vindas realizada</span><span class="status-group">Call 1 — Dia 7</span></div>
+        <div class="status-item"><span class="status-num">6</span><div class="status-dot" style="background:var(--blue)"></div><span class="status-name">Call com a Equipe realizada</span><span class="status-group">Call 2 — Dia 7</span></div>
+        <div class="status-item"><span class="status-num">7</span><div class="status-dot" style="background:var(--purple)"></div><span class="status-name">Call de Confiança realizada</span><span class="status-group">Call 3 — após Dia 7</span></div>
+        <div class="status-item"><span class="status-num">8</span><div class="status-dot" style="background:var(--green)"></div><span class="status-name">Esteira realizada</span><span class="status-group">Call 4 — Dias 7–10</span></div>
+        <div class="status-item"><span class="status-num">9</span><div class="status-dot" style="background:var(--amber)"></div><span class="status-name">Apresentação entregue</span><span class="status-group">Entrega — Dias 7–10</span></div>
+        <div class="status-item"><span class="status-num">10</span><div class="status-dot" style="background:var(--amber)"></div><span class="status-name">Implementação de Vendas realizada</span><span class="status-group">Call 5 — Dia 11</span></div>
+        <div class="status-item" style="border-color:var(--green-border)"><span class="status-num">11</span><div class="status-dot" style="background:var(--pink)"></div><span class="status-name">Marketing e Vendas realizado</span><span class="status-group">Calls 6–7 — Dia 12</span></div>
+        <div class="status-item" style="border-color:var(--green-border)"><span class="status-num">12</span><div class="status-dot" style="background:var(--green)"></div><span class="status-name" style="color:var(--green)">Onboarding concluído</span><span class="status-group" style="color:var(--green)">Pós-onboarding</span></div>
+        <div class="status-item" style="border-color:var(--green-border)"><span class="status-num">13</span><div class="status-dot" style="background:var(--green)"></div><span class="status-name" style="color:var(--green)">Em execução</span><span class="status-group" style="color:var(--green)">Pós-onboarding</span></div>
+        <div class="status-item" style="border-color:rgba(239,68,68,0.3)"><span class="status-num">—</span><div class="status-dot" style="background:var(--red)"></div><span class="status-name" style="color:var(--red)">Risco de atraso</span><span class="status-group" style="color:var(--red)">Alerta</span></div>
       </div>
     </div>
 
@@ -789,8 +750,7 @@ h1{font-family:'Montserrat',sans-serif;font-size:24px;font-weight:800;margin-bot
         <div style="font-family:'Montserrat',sans-serif;font-size:20px;font-weight:800;color:var(--green);margin-bottom:10px">Cliente pronto para executar</div>
         <ul class="checklist">
           <li class="check-item"><div class="check-icon" style="background:var(--green-dim);border:1px solid var(--green-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#22C55E" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Sabe qual meta perseguir</li>
-          <li class="check-item"><div class="check-icon" style="background:var(--green-dim);border:1px solid var(--green-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#22C55E" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Sabe qual produto vender</li>
-          <li class="check-item"><div class="check-icon" style="background:var(--green-dim);border:1px solid var(--green-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#22C55E" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Sabe como vender na consulta</li>
+          <li class="check-item"><div class="check-icon" style="background:var(--green-dim);border:1px solid var(--green-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#22C55E" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Sabe qual produto vender e como vender na consulta</li>
           <li class="check-item"><div class="check-icon" style="background:var(--green-dim);border:1px solid var(--green-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#22C55E" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Sabe como gerar demanda</li>
           <li class="check-item"><div class="check-icon" style="background:var(--green-dim);border:1px solid var(--green-border)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#22C55E" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Sabe quais ações executar primeiro</li>
         </ul>
@@ -803,7 +763,7 @@ h1{font-family:'Montserrat',sans-serif;font-size:24px;font-weight:800;margin-bot
 
   </div>
 
-  <div class="footer">System Digital · Playbook de Onboarding · Processo Oficial</div>
+  <div class="footer">System Digital · Playbook de Onboarding · Processo Oficial — 13 Calls</div>
 </div>
 
 <script>
