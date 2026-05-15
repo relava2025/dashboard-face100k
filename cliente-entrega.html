@@ -695,6 +695,12 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .diag-extra-dot{width:6px;height:6px;border-radius:50%;background:var(--blue);flex-shrink:0}
 .diag-extra-text{font-size:13px;color:var(--text);flex:1}
 .diag-extra-date{font-size:11px;color:var(--text-sec);font-family:'JetBrains Mono',monospace}
+/* DIAGNÓSTICO Q&A */
+.diag-qa-row{display:grid;grid-template-columns:190px 1fr;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--border-light)}
+.diag-qa-row:last-child{border-bottom:none}
+.diag-qa-label{font-size:11px;color:var(--text-sec);font-weight:600;font-family:'Montserrat',sans-serif;letter-spacing:.03em;padding-top:1px}
+.diag-qa-value{font-size:13px;color:var(--text);line-height:1.5}
+@media(max-width:600px){.diag-qa-row{grid-template-columns:1fr}.diag-qa-label{padding-bottom:2px}}
 </style>
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#F5A623">
@@ -1899,47 +1905,74 @@ function renderCalls(){
 function renderCallsOnb(){
   const container=document.getElementById('calls-onb-list'); if(!container) return;
   const onbData=S.callsOnb||{};
-  const openState=window._callsOnbOpen||(window._callsOnbOpen={});
+  if(!window._callsOnbOpen) window._callsOnbOpen={};
   const done=CALLS_ONB.filter(c=>onbData[c.id]?.realizada).length;
   const callCount=CALLS_ONB.filter(c=>c.type!=='delivery').length;
   const sub=document.getElementById('calls-onb-sub'); if(sub) sub.textContent=done+' de '+callCount+' realizadas';
+  const checkSvg=`<svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L4 7.5L10 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 
   container.innerHTML=CALLS_ONB.map(c=>{
     const d=onbData[c.id]||{};
+    const resps=d.respostas||{};
     const isDone=!!d.realizada;
-    const isOpen=!!openState[c.id];
+    const isOpen=!!window._callsOnbOpen[c.id];
     const isDelivery=c.type==='delivery';
-    const checkSvg=`<svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L4 7.5L10 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+    const filledCount=c.perguntas.filter(q=>resps[q.id]&&resps[q.id].trim()).length;
+
     const numHtml=isDelivery
-      ? `<div class="cf-delivery-icon">${isDone?checkSvg:'📋'}</div>`
+      ? `<div class="cf-delivery-icon">${c.icon}</div>`
       : `<div class="cf-num">${isDone?checkSvg:c.num}</div>`;
-    const metaHtml=`
-      ${c.dia?`<span class="cf-dia">${c.dia}</span>`:''}
-      <span class="cf-resp">${c.resp}</span>
-      ${c.sentimento?`<span class="cf-sentimento">${c.sentimento}</span>`:''}`;
-    const bodyHtml=`
-      <div class="cf-body">
-        <div class="cf-date-row">
-          <span class="cf-date-label">Data realizada:</span>
-          <input class="cf-date-input" type="date" value="${d.data||''}" onchange="saveCallOnb('${c.id}','data',this.value)" onclick="event.stopPropagation()">
-        </div>
-        <textarea class="cf-notes" placeholder="Observações da call..." onclick="event.stopPropagation()" oninput="saveCallOnbNotes('${c.id}',this.value)">${d.notas||''}</textarea>
-        <div>
-          ${!isDone?`<button class="cf-btn-mark" onclick="event.stopPropagation();toggleCallOnb('${c.id}',true)">Marcar como realizada</button>`
-            :`<button class="cf-btn-mark" style="background:var(--green);color:#fff;border-color:var(--green);cursor:default">${checkSvg} Realizada</button>
-             <button class="cf-btn-unmark" onclick="event.stopPropagation();toggleCallOnb('${c.id}',false)">Desfazer</button>`}
-        </div>
+
+    const progressHtml=filledCount>0&&!isDone
+      ? `<span class="cf-status-pill cf-pill-pend" style="background:rgba(245,166,35,0.1);color:var(--amber);border-color:var(--amber-border)">${filledCount}/${c.perguntas.length} preench.</span>`
+      : `<span class="cf-status-pill ${isDone?'cf-pill-done':'cf-pill-pend'}">${isDone?'Realizada':'Pendente'}</span>`;
+
+    const pergsHtml=c.perguntas.map(q=>{
+      const val=resps[q.id]||'';
+      const inputEl= q.type==='select'
+        ? `<select class="cf-date-input" style="width:auto;flex:1;max-width:280px" onclick="event.stopPropagation()" onchange="saveCallOnbResp('${c.id}','${q.id}',this.value)">
+            <option value="">Selecione...</option>
+            ${q.options.map(o=>`<option value="${o}"${val===o?' selected':''}>${o}</option>`).join('')}
+           </select>`
+        : q.type==='textarea'
+        ? `<textarea class="cf-notes" style="min-height:42px;margin-bottom:0" placeholder="${q.placeholder||''}" onclick="event.stopPropagation()" oninput="saveCallOnbResp('${c.id}','${q.id}',this.value)">${val}</textarea>`
+        : `<input class="cf-date-input" type="text" style="width:auto;flex:1;max-width:220px" placeholder="${q.placeholder||''}" value="${val.replace(/"/g,'&quot;')}" onclick="event.stopPropagation()" oninput="saveCallOnbResp('${c.id}','${q.id}',this.value)">`;
+      return`<div class="cf-date-row" style="align-items:flex-start;gap:12px;margin-bottom:10px;flex-wrap:wrap">
+        <span class="cf-date-label" style="min-width:180px;padding-top:${q.type==='textarea'?'6':'5'}px">${q.label}</span>
+        ${inputEl}
       </div>`;
+    }).join('');
+
     return`<div class="call-fixed${isDone?' cf-done':''}${isDelivery?' cf-delivery':''}${isOpen?' cf-open':''}" id="cf-item-${c.id}">
       <div class="cf-hdr" onclick="toggleCallOnbOpen('${c.id}')">
         ${numHtml}
         <div class="cf-info">
           <div class="cf-title">${c.title}</div>
-          <div class="cf-meta">${metaHtml}</div>
+          <div class="cf-meta">
+            ${c.dia?`<span class="cf-dia">${c.dia}</span>`:''}
+            <span class="cf-resp">${c.resp}</span>
+            ${c.sentimento?`<span class="cf-sentimento">${c.sentimento}</span>`:''}
+          </div>
         </div>
-        <span class="cf-status-pill ${isDone?'cf-pill-done':'cf-pill-pend'}">${isDone?'Realizada':'Pendente'}</span>
+        ${progressHtml}
+        <span style="color:var(--text-sec);font-size:18px;padding-left:4px;flex-shrink:0;transition:transform .2s" id="cf-chev-${c.id}">${isOpen?'&#8963;':'&#8964;'}</span>
       </div>
-      ${bodyHtml}
+      <div class="cf-body">
+        <div class="cf-date-row" style="margin-bottom:14px">
+          <span class="cf-date-label">Data realizada:</span>
+          <input class="cf-date-input" type="date" value="${d.data||''}" onchange="saveCallOnb('${c.id}','data',this.value)" onclick="event.stopPropagation()">
+        </div>
+        <div style="border-top:1px solid var(--border-light);padding-top:14px;margin-bottom:14px">
+          <div style="font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.16em;font-weight:700;font-family:'Montserrat',sans-serif;margin-bottom:12px">Perguntas do diagnóstico</div>
+          ${pergsHtml}
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          ${!isDone
+            ?`<button class="cf-btn-mark" onclick="event.stopPropagation();toggleCallOnb('${c.id}',true)">Marcar como realizada</button>`
+            :`<button class="cf-btn-mark" style="background:var(--green);color:#fff;border-color:var(--green)">${checkSvg} Realizada</button>
+              <button class="cf-btn-unmark" onclick="event.stopPropagation();toggleCallOnb('${c.id}',false)">Desfazer</button>`}
+        </div>
+      </div>
     </div>`;
   }).join('');
 }
@@ -1947,8 +1980,20 @@ function renderCallsOnb(){
 function toggleCallOnbOpen(id){
   if(!window._callsOnbOpen) window._callsOnbOpen={};
   window._callsOnbOpen[id]=!window._callsOnbOpen[id];
+  const isOpen=window._callsOnbOpen[id];
   const el=document.getElementById('cf-item-'+id);
-  if(el) el.classList.toggle('cf-open',!!window._callsOnbOpen[id]);
+  if(el) el.classList.toggle('cf-open',isOpen);
+  const chev=document.getElementById('cf-chev-'+id);
+  if(chev) chev.innerHTML=isOpen?'&#8963;':'&#8964;';
+}
+
+function saveCallOnbResp(callId, qId, val){
+  if(!S.callsOnb) S.callsOnb={};
+  if(!S.callsOnb[callId]) S.callsOnb[callId]={};
+  if(!S.callsOnb[callId].respostas) S.callsOnb[callId].respostas={};
+  S.callsOnb[callId].respostas[qId]=val;
+  clearTimeout(_callOnbTimer);
+  _callOnbTimer=setTimeout(()=>{ save({callsOnb:S.callsOnb}); renderDiagnostico(); }, 900);
 }
 
 async function toggleCallOnb(id, val){
@@ -1976,46 +2021,77 @@ function renderDiagnostico(){
   const onbData=S.callsOnb||{};
   const totalItems=CALLS_ONB.length;
   const doneCnt=CALLS_ONB.filter(c=>onbData[c.id]?.realizada).length;
+  // count calls with at least 1 answer (partially filled)
+  const partialCnt=CALLS_ONB.filter(c=>{ const r=onbData[c.id]?.respostas||{}; return Object.values(r).some(v=>v&&v.trim()); }).length;
   const pct=Math.round(doneCnt/totalItems*100);
-
-  const stageLabels=['Não iniciado','Em andamento','Onboarding completo'];
-  const stageLabel=doneCnt===0?stageLabels[0]:doneCnt===totalItems?stageLabels[2]:stageLabels[1];
   const stageColor=doneCnt===0?'var(--text-sec)':doneCnt===totalItems?'var(--green)':'var(--amber)';
+  const stageLabel=doneCnt===0?'Não iniciado':doneCnt===totalItems?'Diagnóstico completo':'Em construção';
 
   let html=`<div class="diag-header">
     <div class="diag-score-num" style="color:${stageColor}">${pct}%</div>
     <div class="diag-score-right">
-      <div class="diag-score-title">Diagnóstico do Cliente</div>
-      <div class="diag-score-sub">${doneCnt} de ${totalItems} etapas concluídas — ${stageLabel}</div>
+      <div class="diag-score-title">Diagnóstico do Cliente — ${S.name||'Cliente'}</div>
+      <div class="diag-score-sub">${doneCnt} de ${totalItems} etapas concluídas · ${partialCnt} em preenchimento · ${stageLabel}</div>
       <div class="diag-score-bar"><div class="diag-score-fill" style="width:${pct}%;background:${doneCnt===totalItems?'var(--green)':'linear-gradient(90deg,var(--amber),rgba(245,166,35,0.5))'}"></div></div>
     </div>
   </div>`;
 
-  html+=`<div class="section-card"><div class="sc-header"><div class="sc-title">Relatório de Diagnóstico</div><div class="sc-sub" style="font-size:12px">Cada etapa concluída desbloqueia um diagnóstico específico do cliente</div></div><div class="sc-body" style="padding:14px">`;
-
   CALLS_ONB.forEach(c=>{
     const d=onbData[c.id]||{};
-    const isUnlocked=!!d.realizada;
-    html+=`<div class="diag-item ${isUnlocked?'diag-unlocked':'diag-locked'}">
-      <div class="diag-item-icon">${c.diag.icon}</div>
-      <div class="diag-item-body">
-        <div class="diag-item-call-ref">${c.diag.callRef}</div>
-        <div class="diag-item-title">${c.diag.titulo}</div>
-        <div class="diag-item-text">${isUnlocked?c.diag.texto:'Complete esta etapa para desbloquear o diagnóstico.'}</div>
-        ${isUnlocked&&d.data?`<div class="diag-item-date">Realizada em ${d.data}</div>`:''}
-        <span class="diag-badge ${isUnlocked?'diag-badge-done':'diag-badge-lock'}">${isUnlocked?'Desbloqueado':'Bloqueado'}</span>
+    const resps=d.respostas||{};
+    const isRealizada=!!d.realizada;
+    const hasAnyResp=c.perguntas.some(q=>resps[q.id]&&resps[q.id].trim());
+    const filledCnt=c.perguntas.filter(q=>resps[q.id]&&resps[q.id].trim()).length;
+
+    if(!hasAnyResp && !isRealizada){
+      // Locked card - minimal
+      html+=`<div class="diag-item diag-locked" style="padding:14px 18px">
+        <div class="diag-item-icon">${c.icon}</div>
+        <div class="diag-item-body">
+          <div class="diag-item-call-ref">${c.type==='delivery'?'Entrega':'Call '+(c.num||'')}</div>
+          <div class="diag-item-title">${c.title}</div>
+          <div class="diag-item-text" style="font-size:12px">Preencha as perguntas na aba <strong style="color:var(--amber)">Histórico de Calls</strong> para construir este diagnóstico.</div>
+        </div>
+        <span class="diag-badge diag-badge-lock">Aguardando</span>
+      </div>`;
+      return;
+    }
+
+    // Unlocked — show Q&A report
+    const statusColor=isRealizada?'var(--green)':'var(--amber)';
+    const statusLabel=isRealizada?'Realizada':'Parcial';
+    const qaRows=c.perguntas.map(q=>{
+      const val=resps[q.id]||'';
+      if(!val.trim()) return'';
+      return`<div class="diag-qa-row">
+        <div class="diag-qa-label">${q.label}</div>
+        <div class="diag-qa-value">${val}</div>
+      </div>`;
+    }).filter(Boolean).join('');
+
+    html+=`<div class="diag-item diag-unlocked" style="flex-direction:column;padding:0;overflow:hidden">
+      <div style="display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--border-light)">
+        <div class="diag-item-icon">${c.icon}</div>
+        <div style="flex:1">
+          <div class="diag-item-call-ref">${c.type==='delivery'?'Entrega':('Call '+(c.num||''))} · ${c.resp}</div>
+          <div class="diag-item-title" style="margin-bottom:0">${c.diagTitle}</div>
+        </div>
+        <div style="text-align:right;flex-shrink:0">
+          <span class="diag-badge" style="background:${isRealizada?'var(--green-dim)':'var(--amber-dim)'};color:${statusColor};border:0.5px solid ${isRealizada?'var(--green-border)':'var(--amber-border)'};">${statusLabel}</span>
+          ${d.data?`<div style="font-size:11px;color:var(--text-sec);margin-top:4px;font-family:'JetBrains Mono',monospace">${d.data}</div>`:''}
+          <div style="font-size:11px;color:var(--text-dim);margin-top:2px">${filledCnt}/${c.perguntas.length} respostas</div>
+        </div>
       </div>
+      <div style="padding:14px 18px">${qaRows||'<div style="font-size:13px;color:var(--text-sec)">Nenhuma resposta preenchida ainda.</div>'}</div>
     </div>`;
   });
 
-  html+=`</div></div>`;
-
-  // Extra calls diagnostic
+  // Extra calls
   const extraCalls=S.calls||[];
   if(extraCalls.length>0){
     html+=`<div class="diag-extra-section">
-      <div class="diag-extra-title">Calls Extra Realizadas</div>
-      <div class="diag-extra-sub">${extraCalls.length} de 6 calls extra utilizadas</div>
+      <div class="diag-extra-title">Calls Extra</div>
+      <div class="diag-extra-sub">${extraCalls.length} de 6 utilizadas</div>
       ${extraCalls.map(c=>`<div class="diag-extra-item">
         <div class="diag-extra-dot"></div>
         <div class="diag-extra-text">${c.type||'Call'} — ${c.summary||'Sem resumo'}</div>
@@ -2526,38 +2602,65 @@ const ONB_CONC_DEFAULTS = ['Boas-Vindas realizada','Metas definidas','Cliente in
 
 // ── CALLS DE ONBOARDING FIXAS (7 calls + 1 entrega) ──────────────────────
 const CALLS_ONB = [
-  { id:'c1', num:1, type:'call', title:'Call de Boas-Vindas', resp:'Mari — CS1',
-    dia:'Dia 7', sentimento:'"Fiz a escolha certa"',
-    diag:{ icon:'👋', callRef:'Call 1 — Boas-Vindas', titulo:'Integração concluída',
-      texto:'Cliente integrado ao ecossistema, metas definidas e jornada alinhada. Base do programa estabelecida.' } },
-  { id:'c2', num:2, type:'call', title:'Call com a Equipe', resp:'Alane + Mari',
-    dia:'Dia 7', sentimento:'"Meu time vai ser acompanhado"',
-    diag:{ icon:'🤝', callRef:'Call 2 — Equipe', titulo:'Equipe apresentada',
-      texto:'Cliente conheceu toda a equipe de suporte e sabe quem acionar em cada etapa da jornada.' } },
-  { id:'c3', num:3, type:'call', title:'Call de Confiança', resp:'Dra. Déborah Caribé — Embaixadora',
-    dia:'Após Dia 7', sentimento:'"Agora eu botei fé"',
-    diag:{ icon:'💎', callRef:'Call 3 — Confiança', titulo:'Confiança estabelecida',
-      texto:'Validação simbólica e emocional recebida da embaixadora do programa. Cliente entrou na mentalidade correta.' } },
-  { id:'c4', num:4, type:'call', title:'Call de Esteira', resp:'Alane — CS2',
-    dia:'Dias 7–10', sentimento:'"Como vou aplicar isso?"',
-    diag:{ icon:'🎯', callRef:'Call 4 — Esteira', titulo:'Esteira de produtos mapeada',
-      texto:'Produto foco definido, oferta principal estruturada, ticket médio validado e objeções comerciais levantadas.' } },
-  { id:'c5', num:null, type:'delivery', title:'Entrega da Apresentação de Venda', resp:'Equipe System Digital',
-    dia:'Após Esteira', sentimento:'',
-    diag:{ icon:'📋', callRef:'Entrega — Apresentação', titulo:'Ferramenta comercial entregue',
-      texto:'Apresentação de vendas construída com oferta, argumentos e quebra de objeções. Pronta para uso imediato.' } },
-  { id:'c6', num:5, type:'call', title:'Call de Implementação', resp:'Felipe — CS3',
-    dia:'Dia 11', sentimento:'"Agora entendi"',
-    diag:{ icon:'⚡', callRef:'Call 5 — Implementação', titulo:'Processo comercial ativo',
-      texto:'Cliente sabe conduzir calls de vendas, aplicar a apresentação e conduzir o cliente à decisão de compra.' } },
-  { id:'c7', num:6, type:'call', title:'Marketing e Tráfego — Call 1', resp:'Pedro — Head de Tráfego',
-    dia:'Dia 12', sentimento:'"Perfeito"',
-    diag:{ icon:'📣', callRef:'Call 6 — Marketing', titulo:'Estratégia de marketing definida',
-      texto:'Canais ativos mapeados, público-alvo alinhado e produto foco conectado à estratégia de tráfego.' } },
-  { id:'c8', num:7, type:'call', title:'Marketing e Tráfego — Call 2', resp:'Pedro — Head de Tráfego',
-    dia:'Dia 12', sentimento:'"Perfeito"',
-    diag:{ icon:'🚀', callRef:'Call 7 — Tráfego', titulo:'Onboarding concluído',
-      texto:'Criativos, roteiros e próximos passos com gestor de tráfego definidos. Cliente pronto para operar e escalar.' } },
+  { id:'c1', num:1, type:'call', title:'Call de Boas-Vindas', resp:'Mari — CS1', dia:'Dia 7', sentimento:'"Fiz a escolha certa"',
+    icon:'👋', diagTitle:'Diagnóstico Inicial do Cliente',
+    perguntas:[
+      { id:'fat_atual',   label:'Faturamento atual (R$)',          type:'text',     placeholder:'Ex: 30.000' },
+      { id:'ticket',      label:'Ticket médio atual (R$)',          type:'text',     placeholder:'Ex: 1.200' },
+      { id:'gargalo',     label:'Principal gargalo identificado',   type:'textarea', placeholder:'Qual o maior problema atual da clínica?' },
+      { id:'meta_base',   label:'Meta Base definida (R$)',          type:'text',     placeholder:'Ex: 50.000' },
+      { id:'super_meta',  label:'Super Meta definida (R$)',         type:'text',     placeholder:'Ex: 150.000' },
+      { id:'sentimento',  label:'Sentimento do cliente na call',    type:'select',   options:['Animado','Engajado','Inseguro','Ansioso','Desconfiado'] },
+    ]},
+  { id:'c2', num:2, type:'call', title:'Call com a Equipe', resp:'Alane + Mari', dia:'Dia 7', sentimento:'"Meu time vai ser acompanhado"',
+    icon:'🤝', diagTitle:'Diagnóstico de Acolhimento',
+    perguntas:[
+      { id:'recepcao',    label:'Como o cliente recebeu a equipe?', type:'select',   options:['Muito bem','Com entusiasmo','Neutro','Com dúvidas','Resistente'] },
+      { id:'duvida',      label:'Principal dúvida levantada',       type:'textarea', placeholder:'O que o cliente mais questionou?' },
+      { id:'engajamento', label:'Nível de engajamento percebido',   type:'select',   options:['Alto','Médio','Baixo'] },
+    ]},
+  { id:'c3', num:3, type:'call', title:'Call de Confiança', resp:'Dra. Déborah Caribé — Embaixadora', dia:'Após Dia 7', sentimento:'"Agora eu botei fé"',
+    icon:'💎', diagTitle:'Diagnóstico de Confiança',
+    perguntas:[
+      { id:'confianca',   label:'Cliente demonstrou confiança?',    type:'select',   options:['Sim, totalmente','Parcialmente','Não demonstrou'] },
+      { id:'virada',      label:'Ponto de virada percebido',        type:'textarea', placeholder:'O que mudou na percepção do cliente?' },
+      { id:'obs_embx',    label:'Observação da Dra. Déborah',       type:'textarea', placeholder:'Registro da embaixadora sobre o cliente...' },
+    ]},
+  { id:'c4', num:4, type:'call', title:'Call de Esteira', resp:'Alane — CS2', dia:'Dias 7–10', sentimento:'"Como vou aplicar isso?"',
+    icon:'🎯', diagTitle:'Diagnóstico Comercial',
+    perguntas:[
+      { id:'prod_foco',   label:'Produto foco definido',            type:'text',     placeholder:'Ex: Implante dentário, Harmonização...' },
+      { id:'oferta',      label:'Oferta principal estruturada',     type:'textarea', placeholder:'Como será apresentada a oferta ao paciente?' },
+      { id:'ticket_ideal',label:'Ticket médio ideal (R$)',          type:'text',     placeholder:'Ex: 3.500' },
+      { id:'objecao',     label:'Principal objeção do cliente',     type:'textarea', placeholder:'O que o paciente mais resiste?' },
+    ]},
+  { id:'c5', num:null, type:'delivery', title:'Entrega da Apresentação de Venda', resp:'Equipe System Digital', dia:'Após Esteira', sentimento:'',
+    icon:'📋', diagTitle:'Diagnóstico da Ferramenta Comercial',
+    perguntas:[
+      { id:'entregue',    label:'Apresentação entregue?',           type:'select',   options:['Sim','Em andamento','Não'] },
+      { id:'obs_apres',   label:'Observações sobre a apresentação', type:'textarea', placeholder:'Pontos de atenção ou ajustes necessários...' },
+    ]},
+  { id:'c6', num:5, type:'call', title:'Call de Implementação', resp:'Felipe — CS3', dia:'Dia 11', sentimento:'"Agora entendi"',
+    icon:'⚡', diagTitle:'Diagnóstico de Vendas',
+    perguntas:[
+      { id:'entendeu',    label:'Cliente entendeu como usar a apresentação?', type:'select', options:['Sim, plenamente','Parcialmente','Precisa de mais suporte'] },
+      { id:'ajustes',     label:'Ajustes realizados na apresentação',        type:'textarea', placeholder:'O que foi adaptado após a call?' },
+      { id:'gargalo_vnd', label:'Gargalo comercial identificado',            type:'textarea', placeholder:'Onde o cliente trava mais nas vendas?' },
+    ]},
+  { id:'c7', num:6, type:'call', title:'Marketing e Tráfego — Call 1', resp:'Pedro — Head de Tráfego', dia:'Dia 12', sentimento:'"Perfeito"',
+    icon:'📣', diagTitle:'Diagnóstico de Marketing',
+    perguntas:[
+      { id:'canais',      label:'Canais ativos do cliente',         type:'text',     placeholder:'Ex: Instagram, Google Ads, indicação...' },
+      { id:'invest_traf', label:'Investimento atual em tráfego (R$/mês)', type:'text', placeholder:'Ex: 1.500' },
+      { id:'alinhado',    label:'Produto foco alinhado com tráfego?', type:'select', options:['Sim','Parcialmente','Não'] },
+    ]},
+  { id:'c8', num:7, type:'call', title:'Marketing e Tráfego — Call 2', resp:'Pedro — Head de Tráfego', dia:'Dia 12', sentimento:'"Perfeito"',
+    icon:'🚀', diagTitle:'Diagnóstico de Tráfego e Escala',
+    perguntas:[
+      { id:'prox_traf',   label:'Próximos passos de tráfego definidos', type:'textarea', placeholder:'O que será feito nas próximas semanas?' },
+      { id:'gestor',      label:'Possui gestor de tráfego externo?',    type:'select',   options:['Sim','Não','Em contratação'] },
+      { id:'avaliacao',   label:'Avaliação geral no onboarding',        type:'select',   options:['Excelente','Bom','Regular','Precisa de atenção'] },
+    ]},
 ];
 
 const checkSvgOnb = `<svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
