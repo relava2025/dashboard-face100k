@@ -1132,7 +1132,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
           <div class="sc-header">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="flex-shrink:0"><circle cx="8" cy="8" r="6" stroke="var(--amber)" stroke-width="1.3"/><path d="M8 5v3l2 1" stroke="var(--amber)" stroke-width="1.3" stroke-linecap="round"/></svg>
             <div class="sc-title">Calls de Onboarding</div>
-            <div class="sc-sub" id="calls-onb-sub">0 de 7 realizadas</div>
+            <div class="sc-sub" id="calls-onb-sub">0 de 6 realizadas</div>
           </div>
           <div class="sc-body">
             <div class="call-fixed-wrap" id="calls-onb-list"></div>
@@ -2647,19 +2647,15 @@ const CALLS_ONB = [
       { id:'ajustes',     label:'Ajustes realizados na apresentação',        type:'textarea', placeholder:'O que foi adaptado após a call?' },
       { id:'gargalo_vnd', label:'Gargalo comercial identificado',            type:'textarea', placeholder:'Onde o cliente trava mais nas vendas?' },
     ]},
-  { id:'c7', num:6, type:'call', title:'Marketing e Tráfego — Call 1', resp:'Pedro — Head de Tráfego', dia:'Dia 12', sentimento:'"Perfeito"',
-    icon:'📣', diagTitle:'Diagnóstico de Marketing',
+  { id:'c7', num:6, type:'call', title:'Marketing e Vendas', resp:'Pedro — Head de Tráfego', dia:'Dia 12', sentimento:'"Perfeito"',
+    icon:'🚀', diagTitle:'Diagnóstico de Marketing e Tráfego',
     perguntas:[
-      { id:'canais',      label:'Canais ativos do cliente',         type:'text',     placeholder:'Ex: Instagram, Google Ads, indicação...' },
-      { id:'invest_traf', label:'Investimento atual em tráfego (R$/mês)', type:'text', placeholder:'Ex: 1.500' },
-      { id:'alinhado',    label:'Produto foco alinhado com tráfego?', type:'select', options:['Sim','Parcialmente','Não'] },
-    ]},
-  { id:'c8', num:7, type:'call', title:'Marketing e Tráfego — Call 2', resp:'Pedro — Head de Tráfego', dia:'Dia 12', sentimento:'"Perfeito"',
-    icon:'🚀', diagTitle:'Diagnóstico de Tráfego e Escala',
-    perguntas:[
-      { id:'prox_traf',   label:'Próximos passos de tráfego definidos', type:'textarea', placeholder:'O que será feito nas próximas semanas?' },
-      { id:'gestor',      label:'Possui gestor de tráfego externo?',    type:'select',   options:['Sim','Não','Em contratação'] },
-      { id:'avaliacao',   label:'Avaliação geral no onboarding',        type:'select',   options:['Excelente','Bom','Regular','Precisa de atenção'] },
+      { id:'canais',      label:'Canais ativos do cliente',              type:'text',     placeholder:'Ex: Instagram, Google Ads, indicação...' },
+      { id:'invest_traf', label:'Investimento atual em tráfego (R$/mês)', type:'text',   placeholder:'Ex: 1.500' },
+      { id:'alinhado',    label:'Produto foco alinhado com tráfego?',    type:'select',   options:['Sim','Parcialmente','Não'] },
+      { id:'prox_traf',   label:'Próximos passos de tráfego definidos',  type:'textarea', placeholder:'O que será feito nas próximas semanas?' },
+      { id:'gestor',      label:'Possui gestor de tráfego externo?',     type:'select',   options:['Sim','Não','Em contratação'] },
+      { id:'avaliacao',   label:'Avaliação geral no onboarding',         type:'select',   options:['Excelente','Bom','Regular','Precisa de atenção'] },
     ]},
 ];
 
