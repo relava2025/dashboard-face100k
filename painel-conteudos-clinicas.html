@@ -170,7 +170,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
           <p>Colunas esperadas na planilha:</p>
           <code>titulo, link, formato, especialidade, faixa_views, canal, obs</code>
           <p style="margin-top:8px;font-size:10px;color:var(--text-dim)">
-            formato: Reels · Carrossel · Stories<br>
+            formato: Reels · Carrossel<br>
             especialidade (pilar): Bastidores · Experiência · Casos de Impacto · Life Style · Resultados · História · Falas da Paciente · Depoimentos · Rotina da Clínica · Caixinha de Perguntas · Levantada de Mão<br>
             faixa_views: 0-25k · 25k-50k · 50k-100k · 100k-300k · 300k-500k · 500k-1M · acima-1M
           </p>
@@ -232,7 +232,6 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
             <select class="form-select" name="formato">
               <option value="Reels">Reels</option>
               <option value="Carrossel">Carrossel</option>
-              <option value="Stories">Stories</option>
             </select>
           </div>
           <div class="form-group">
@@ -249,14 +248,6 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
                 <option value="História">História</option>
                 <option value="Falas da Paciente">Falas da Paciente</option>
                 <option value="Depoimentos">Depoimentos</option>
-              </optgroup>
-              <optgroup label="── Stories ──">
-                <option value="Rotina da Clínica">Rotina da Clínica</option>
-                <option value="Caixinha de Perguntas">Caixinha de Perguntas</option>
-                <option value="Levantada de Mão">Levantada de Mão</option>
-                <option value="Casos de Pacientes">Casos de Pacientes</option>
-                <option value="Curiosidades">Curiosidades</option>
-                <option value="Experiência e Cuidado">Experiência e Cuidado</option>
               </optgroup>
               <optgroup label="── Personalizadas ──" id="custom-cats-form"></optgroup>
             </select>
@@ -330,7 +321,6 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
       <option value="">Todos os formatos</option>
       <option value="Reels">🎬 Reels</option>
       <option value="Carrossel">📊 Carrossel</option>
-      <option value="Stories">📱 Stories</option>
     </select>
     <select class="filter-select" id="filter-esp" onchange="applyFilters()">
       <option value="">Todos os pilares</option>
@@ -345,14 +335,6 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
         <option value="História">História</option>
         <option value="Falas da Paciente">Falas da Paciente</option>
         <option value="Depoimentos">Depoimentos</option>
-      </optgroup>
-      <optgroup label="── Stories ──">
-        <option value="Rotina da Clínica">Rotina da Clínica</option>
-        <option value="Caixinha de Perguntas">Caixinha de Perguntas</option>
-        <option value="Levantada de Mão">Levantada de Mão</option>
-        <option value="Casos de Pacientes">Casos de Pacientes</option>
-        <option value="Curiosidades">Curiosidades</option>
-        <option value="Experiência e Cuidado">Experiência e Cuidado</option>
       </optgroup>
       <optgroup label="── Personalizadas ──" id="custom-cats-filter"></optgroup>
     </select>
@@ -406,7 +388,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 
 <script>
 const VIEWS_LABELS={'0-25k':'0 a 25k','25k-50k':'25k a 50k','50k-100k':'50k a 100k','100k-300k':'100k a 300k','300k-500k':'300k a 500k','500k-1M':'500k a 1M','acima-1M':'acima de 1M'};
-const FORMATO_ICON={Reels:'🎬',Carrossel:'📊',Stories:'📱'};
+const FORMATO_ICON={Reels:'🎬',Carrossel:'📊'};
 const COLLECTION='banco_conteudos_clinicas';
 const CATS_KEY='clinicas_custom_cats';
 
