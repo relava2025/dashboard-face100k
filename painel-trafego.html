@@ -688,7 +688,7 @@ function filterMetaAccounts(q){
 function metaAccountOptions(sel=''){
   const base='<option value="">Sem conta Meta Ads</option>';
   if(!metaAccounts.length)return base+'<option disabled>Carregando contas...</option>';
-  return base+metaAccounts.map(a=>`<option value="${a.id}"${a.id===sel?' selected':''}>${escapeHtml(a.displayName||a.name)}</option>`).join('');
+  return base+metaAccounts.map(a=>`<option value="${a.id}"${a.id===sel?' selected':''}>${escapeHtml(a.displayName||a.name)} · ${a.id.replace('act_','')}</option>`).join('');
 }
 
 function openEditClienteModal(id){
