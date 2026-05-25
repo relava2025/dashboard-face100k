@@ -505,6 +505,7 @@ const ROTINA_TASKS_DEFAULT=[
 const TAB_ORDER=['carteira','board','roteiros','rotina','agenda','flashboard'];
 const SB_URL='https://svgaztetrufiqxptqqvs.supabase.co';
 const SB_KEY='sb_publishable_LPTf0Psj_cbLbK3KA9tAwQ_t4ZdqoAD';
+const META_TOKEN='EAARjutAH2BcBRhQZCLVxyOB67JBFP5rzakweBZBc3p9xEbsZBvNBSxqZBGvL2ZAvxFHdJcN07bAEzU8JsDAVrL3wX3V859JZAhSfBmtyQZCUBGABsGoD11GnWCZCuUlwerGempwi69iPhTRVoSsPxZB91pidywOVKcfmQMAZBKrEp56G1KA5M1NZAhfKx6DwinpZBUVD';
 
 let S={trafego:{},roteiros:{}};
 let allGestores=[],bancoCopy=[];
@@ -514,6 +515,7 @@ let rotinaUnsub=null,otDiariaUnsub=null,otDiariaDate='';
 let otimizacaoDiaria={cards:{}};
 let currentTab='carteira';
 let toastTimer;
+let metaAccounts=[];
 
 function todayStr(){return new Date().toISOString().split('T')[0]}
 function fmtDate(s){if(!s)return'—';const d=new Date(s+'T00:00:00');return d.toLocaleDateString('pt-BR')}
@@ -660,6 +662,26 @@ function openAddClienteModal(){
     </form>`);
 }
 
+async function loadMetaAccounts(){
+  if(metaAccounts.length)return metaAccounts;
+  try{
+    let all=[],url=`https://graph.facebook.com/v25.0/me/adaccounts?fields=id,name,account_status&limit=100&access_token=${META_TOKEN}`;
+    while(url){
+      const res=await fetch(url);const json=await res.json();
+      all=[...all,...(json.data||[])];
+      url=json.paging?.next||null;
+    }
+    metaAccounts=all.filter(a=>a.account_status===1).sort((a,b)=>a.name.localeCompare(b.name));
+  }catch(e){console.warn('Meta accounts error',e);}
+  return metaAccounts;
+}
+
+function metaAccountOptions(sel=''){
+  const base='<option value="">Sem conta Meta Ads</option>';
+  if(!metaAccounts.length)return base+'<option disabled>Carregando contas...</option>';
+  return base+metaAccounts.map(a=>`<option value="${a.id}"${a.id===sel?' selected':''}>${escapeHtml(a.name)} (${a.id})</option>`).join('');
+}
+
 function openEditClienteModal(id){
   const c=S.trafego[id];if(!c)return;
   openModal('Editar cliente',`
@@ -684,6 +706,10 @@ function openEditClienteModal(id){
             <option value="completa"${c.impl==='completa'?' selected':''}>Implementação Completa</option>
           </select>
         </div>
+        <div class="form-group"><label class="form-label">Conta Meta Ads</label>
+          <select class="form-select" name="adAccountId" id="meta-account-sel">${metaAccountOptions(c.adAccountId||'')}</select>
+          <div class="form-hint">Vincula ao gerenciador de anúncios para puxar métricas automaticamente</div>
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-danger btn-sm" onclick="deleteCliente('${id}')">Excluir</button>
@@ -691,6 +717,10 @@ function openEditClienteModal(id){
         <button type="submit" class="btn btn-primary">Salvar</button>
       </div>
     </form>`);
+  loadMetaAccounts().then(()=>{
+    const sel=document.getElementById('meta-account-sel');
+    if(sel)sel.innerHTML=metaAccountOptions(c.adAccountId||'');
+  });
 }
 
 function openMetricasModal(id){
@@ -793,7 +823,7 @@ async function submitClienteForm(e){
 async function submitEditClienteForm(e,id){
   e.preventDefault();
   const f=new FormData(e.target);
-  const data={name:f.get('name').trim(),gestor:f.get('gestor'),status:f.get('status'),impl:f.get('impl')||'',updatedAt:new Date().toISOString()};
+  const data={name:f.get('name').trim(),gestor:f.get('gestor'),status:f.get('status'),impl:f.get('impl')||'',adAccountId:f.get('adAccountId')||'',updatedAt:new Date().toISOString()};
   try{await window._fs.updateDoc(window._fs.doc(window._db,'trafego',id),data);closeModal();}
   catch(err){alert('Erro: '+err.message);}
 }
@@ -862,34 +892,70 @@ async function loadHistoricoMetricas(clienteId){
 }
 
 async function prefillMetricasFromFlashboard(clienteId){
+  const c=S.trafego[clienteId];
   const setHint=(txt,ok)=>{
     const el=document.getElementById('fb-prefill-txt');
     if(el){el.textContent=txt;if(ok!==undefined)el.closest('#fb-prefill-hint').style.borderColor=ok?'var(--green-border)':'var(--border)';}
   };
+  const setVal=(name,val)=>{const el=document.querySelector(`[name="${name}"]`);if(el&&(val||val===0))el.value=val;};
+  const hoje=new Date();
+  const dow=hoje.getDay();
+  const mondayOffset=dow===0?-6:1-dow;
+  const monday=new Date(hoje);monday.setDate(hoje.getDate()+mondayOffset);
+  const weekStart=monday.toISOString().split('T')[0];
+  const weekEnd=hoje.toISOString().split('T')[0];
+  const periodo=`${fmtDate(weekStart)} a ${fmtDate(weekEnd)}`;
+
+  const sources=[];
+
+  // Meta Ads
+  const adAccountId=c?.adAccountId;
+  if(adAccountId){
+    try{
+      const url=`https://graph.facebook.com/v25.0/${adAccountId}/insights?fields=spend,actions&date_preset=this_week_mon_today&access_token=${META_TOKEN}`;
+      const res=await fetch(url);const json=await res.json();
+      const row=json.data?.[0];
+      if(row){
+        const spend=parseFloat(row.spend||0);
+        const leadAction=(row.actions||[]).find(a=>a.action_type==='lead'||a.action_type==='onsite_conversion.lead_grouped');
+        const leads=leadAction?parseInt(leadAction.value):0;
+        const cpl=leads>0?Math.round((spend/leads)*100)/100:0;
+        if(leads)setVal('leads',leads);
+        if(cpl)setVal('cpl',cpl);
+        sources.push('Meta Ads');
+      }
+    }catch(e){console.warn('Meta prefill error',e);}
+  }
+
+  // Supabase / Flashboard
   try{
     if(!Object.keys(entregaMap).length){
       const snap=await window._fs.getDocs(window._fs.collection(window._db,'entrega'));
       snap.forEach(d=>{entregaMap[d.id]={flashboardContaId:d.data().flashboardContaId||''};});
     }
     const contaId=entregaMap[clienteId]?.flashboardContaId;
-    if(!contaId){setHint('Cliente sem conta Flashboard vinculada.',false);return;}
-    const hoje=new Date();
-    const dow=hoje.getDay();
-    const mondayOffset=dow===0?-6:1-dow;
-    const monday=new Date(hoje);monday.setDate(hoje.getDate()+mondayOffset);
-    const weekStart=monday.toISOString().split('T')[0];
-    const weekEnd=hoje.toISOString().split('T')[0];
-    const url=`${SB_URL}/rest/v1/registros_diarios?conta_id=eq.${contaId}&data=gte.${weekStart}&data=lte.${weekEnd}&select=leads,agendamentos,comparecimentos,vendas`;
-    const res=await fetch(url,{headers:{'Authorization':'Bearer '+SB_KEY,'apikey':SB_KEY}});
-    if(!res.ok)throw new Error('HTTP '+res.status);
-    const rows=await res.json();
-    if(!rows.length){setHint(`Sem dados no Flashboard para esta semana (${fmtDate(weekStart)} a ${fmtDate(weekEnd)}).`,false);return;}
-    const tot={leads:0,compar:0,vendas:0};
-    rows.forEach(r=>{tot.leads+=r.leads||0;tot.compar+=r.comparecimentos||0;tot.vendas+=r.vendas||0;});
-    const setVal=(name,val)=>{const el=document.querySelector(`[name="${name}"]`);if(el)el.value=val||'';};
-    setVal('leads',tot.leads);setVal('comparecimentos',tot.compar);setVal('vendas',tot.vendas);
-    setHint(`Dados carregados do Flashboard — ${fmtDate(weekStart)} a ${fmtDate(weekEnd)}. Revise e salve.`,true);
-  }catch(e){setHint('Não foi possível carregar o Flashboard.',false);}
+    if(contaId){
+      const url=`${SB_URL}/rest/v1/registros_diarios?conta_id=eq.${contaId}&data=gte.${weekStart}&data=lte.${weekEnd}&select=leads,agendamentos,comparecimentos,vendas`;
+      const res=await fetch(url,{headers:{'Authorization':'Bearer '+SB_KEY,'apikey':SB_KEY}});
+      if(res.ok){
+        const rows=await res.json();
+        if(rows.length){
+          const tot={leads:0,compar:0,vendas:0};
+          rows.forEach(r=>{tot.leads+=r.leads||0;tot.compar+=r.comparecimentos||0;tot.vendas+=r.vendas||0;});
+          if(!adAccountId&&tot.leads)setVal('leads',tot.leads);
+          setVal('comparecimentos',tot.compar);
+          setVal('vendas',tot.vendas);
+          sources.push('Flashboard');
+        }
+      }
+    }
+  }catch(e){console.warn('Supabase prefill error',e);}
+
+  if(sources.length){
+    setHint(`Dados carregados de: ${sources.join(' + ')} — ${periodo}. Revise e salve.`,true);
+  }else{
+    setHint(`Nenhuma fonte configurada para ${periodo}. Preencha manualmente.`,false);
+  }
 }
 
 async function deleteCliente(id){
@@ -1405,7 +1471,7 @@ window.openAddClienteModal=openAddClienteModal;window.openEditClienteModal=openE
 window.openMetricasModal=openMetricasModal;window.openClienteDetailModal=openClienteDetailModal;
 window.saveClienteAlertas=saveClienteAlertas;window.pickHealth=pickHealth;
 window.submitClienteForm=submitClienteForm;window.submitEditClienteForm=submitEditClienteForm;
-window.submitMetricasForm=submitMetricasForm;window.loadHistoricoMetricas=loadHistoricoMetricas;window.prefillMetricasFromFlashboard=prefillMetricasFromFlashboard;window.deleteCliente=deleteCliente;
+window.submitMetricasForm=submitMetricasForm;window.loadHistoricoMetricas=loadHistoricoMetricas;window.prefillMetricasFromFlashboard=prefillMetricasFromFlashboard;window.loadMetaAccounts=loadMetaAccounts;window.deleteCliente=deleteCliente;
 window.renderCarteira=renderCarteira;
 window.moverOtimizado=moverOtimizado;window.confirmMoverParado=confirmMoverParado;
 window.saveMoverParado=saveMoverParado;window.moverClientes=moverClientes;window.removerCardDia=removerCardDia;
