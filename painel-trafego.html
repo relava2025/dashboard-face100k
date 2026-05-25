@@ -676,6 +676,14 @@ async function loadMetaAccounts(){
   return metaAccounts;
 }
 
+function filterMetaAccounts(q){
+  const sel=document.getElementById('meta-account-sel');if(!sel)return;
+  const query=q.toLowerCase();
+  Array.from(sel.options).forEach(opt=>{
+    opt.hidden=!!(query&&opt.value&&!opt.text.toLowerCase().includes(query));
+  });
+}
+
 function metaAccountOptions(sel=''){
   const base='<option value="">Sem conta Meta Ads</option>';
   if(!metaAccounts.length)return base+'<option disabled>Carregando contas...</option>';
@@ -707,8 +715,9 @@ function openEditClienteModal(id){
           </select>
         </div>
         <div class="form-group"><label class="form-label">Conta Meta Ads</label>
-          <select class="form-select" name="adAccountId" id="meta-account-sel">${metaAccountOptions(c.adAccountId||'')}</select>
-          <div class="form-hint">Vincula ao gerenciador de anúncios para puxar métricas automaticamente</div>
+          <input class="form-input" id="meta-search" placeholder="Buscar conta..." oninput="filterMetaAccounts(this.value)" autocomplete="off" style="margin-bottom:6px">
+          <select class="form-select" name="adAccountId" id="meta-account-sel" size="5" style="height:auto">${metaAccountOptions(c.adAccountId||'')}</select>
+          <div class="form-hint">Digite para filtrar · selecione a conta e salve</div>
         </div>
       </div>
       <div class="modal-footer">
@@ -1471,7 +1480,7 @@ window.openAddClienteModal=openAddClienteModal;window.openEditClienteModal=openE
 window.openMetricasModal=openMetricasModal;window.openClienteDetailModal=openClienteDetailModal;
 window.saveClienteAlertas=saveClienteAlertas;window.pickHealth=pickHealth;
 window.submitClienteForm=submitClienteForm;window.submitEditClienteForm=submitEditClienteForm;
-window.submitMetricasForm=submitMetricasForm;window.loadHistoricoMetricas=loadHistoricoMetricas;window.prefillMetricasFromFlashboard=prefillMetricasFromFlashboard;window.loadMetaAccounts=loadMetaAccounts;window.deleteCliente=deleteCliente;
+window.submitMetricasForm=submitMetricasForm;window.loadHistoricoMetricas=loadHistoricoMetricas;window.prefillMetricasFromFlashboard=prefillMetricasFromFlashboard;window.loadMetaAccounts=loadMetaAccounts;window.filterMetaAccounts=filterMetaAccounts;window.deleteCliente=deleteCliente;
 window.renderCarteira=renderCarteira;
 window.moverOtimizado=moverOtimizado;window.confirmMoverParado=confirmMoverParado;
 window.saveMoverParado=saveMoverParado;window.moverClientes=moverClientes;window.removerCardDia=removerCardDia;
