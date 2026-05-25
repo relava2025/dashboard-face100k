@@ -956,15 +956,28 @@ async function prefillMetricasFromFlashboard(clienteId,customStart,customEnd){
       const json=await res.json();
       if(json.error)throw new Error(json.error.message);
       const row=json.data?.[0];
+      // sempre limpa os campos antes de preencher
+      setVal('leads','');setVal('cpl','');
       if(row){
         const spend=parseFloat(row.spend||0);
         const actions=row.actions||[];
+        const MSG_TYPES=['onsite_conversion.messaging_first_reply','onsite_conversion.messaging_conversation_started_7d'];
         const leadActions=actions.filter(a=>LEAD_TYPES.includes(a.action_type));
-        const leads=leadActions.length?Math.max(...leadActions.map(a=>parseInt(a.value||0))):0;
+        const msgActions=actions.filter(a=>MSG_TYPES.includes(a.action_type));
+        let leads=0,fonte='';
+        if(leadActions.length){
+          leads=Math.max(...leadActions.map(a=>parseInt(a.value||0)));
+          fonte='formulário';
+        }else if(msgActions.length){
+          // usa primeira resposta como proxy de lead WhatsApp
+          const firstReply=actions.find(a=>a.action_type==='onsite_conversion.messaging_first_reply');
+          leads=firstReply?parseInt(firstReply.value||0):Math.max(...msgActions.map(a=>parseInt(a.value||0)));
+          fonte='WhatsApp';
+        }
         const cpl=leads>0?Math.round((spend/leads)*100)/100:0;
-        if(leads)setVal('leads',leads);
+        setVal('leads',leads);
         if(cpl)setVal('cpl',cpl);
-        sources.push(`Meta Ads (${leads} leads · R$${spend.toFixed(2)})`);
+        sources.push(`Meta Ads (${leads} leads via ${fonte||'—'} · R$${spend.toFixed(2)})`);
       }else{
         sources.push('Meta Ads (sem dados na semana)');
       }
