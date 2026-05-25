@@ -738,9 +738,17 @@ function openMetricasModal(id){
   openModal('Métricas — '+escapeHtml(c.name),`
     <form onsubmit="submitMetricasForm(event,'${id}')">
       <div class="modal-body">
+        <div style="display:flex;gap:8px;align-items:flex-end;margin-bottom:14px;flex-wrap:wrap">
+          <div class="form-group" style="margin:0;flex:1;min-width:120px"><label class="form-label">De</label><input class="form-input" type="date" id="metrica-de" style="padding:7px 10px"></div>
+          <div class="form-group" style="margin:0;flex:1;min-width:120px"><label class="form-label">Até</label><input class="form-input" type="date" id="metrica-ate" style="padding:7px 10px"></div>
+          <button type="button" class="btn btn-ghost btn-sm" style="white-space:nowrap;border-color:var(--amber-border);color:var(--amber)" onclick="buscarMetricasPeriodo('${id}')">
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M10 10L7.5 7.5M8.5 5A3.5 3.5 0 111 5a3.5 3.5 0 017.5 0z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+            Buscar
+          </button>
+        </div>
         <div id="fb-prefill-hint" style="font-size:11px;color:var(--text-sec);background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:8px 12px;margin-bottom:14px;display:flex;align-items:center;gap:8px">
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="flex-shrink:0;opacity:.5"><circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.3"/><path d="M6 5.5v3M6 3.5v.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-          <span id="fb-prefill-txt">Buscando dados do Flashboard...</span>
+          <span id="fb-prefill-txt">Buscando dados...</span>
         </div>
         <div class="form-row">
           <div class="form-group"><label class="form-label">Leads</label><input class="form-input" name="leads" type="number" min="0" placeholder="0"></div>
@@ -901,22 +909,37 @@ async function loadHistoricoMetricas(clienteId){
   }catch(err){el.innerHTML='<div style="font-size:12px;color:var(--red)">Erro ao carregar histórico</div>';}
 }
 
-async function prefillMetricasFromFlashboard(clienteId){
+function buscarMetricasPeriodo(clienteId){
+  const de=document.getElementById('metrica-de')?.value;
+  const ate=document.getElementById('metrica-ate')?.value;
+  if(!de||!ate){showToast('Selecione as duas datas','');return;}
+  prefillMetricasFromFlashboard(clienteId,de,ate);
+}
+
+async function prefillMetricasFromFlashboard(clienteId,customStart,customEnd){
   const c=S.trafego[clienteId];
   const setHint=(txt,ok)=>{
     const el=document.getElementById('fb-prefill-txt');
     if(el){el.textContent=txt;if(ok!==undefined)el.closest('#fb-prefill-hint').style.borderColor=ok?'var(--green-border)':'var(--border)';}
   };
   const setVal=(name,val)=>{const el=document.querySelector(`[name="${name}"]`);if(el&&(val||val===0))el.value=val;};
-  const hoje=new Date();
-  const dow=hoje.getDay(); // 0=dom,1=seg,...,6=sab
-  // Se seg ou dom (semana recém-começada), usar semana passada (seg-sex anterior)
-  const usarSemanaPassada=dow===1||dow===0;
-  const mondayOffset=dow===0?-6:1-dow;
-  const monday=new Date(hoje);monday.setDate(hoje.getDate()+mondayOffset-(usarSemanaPassada?7:0));
-  const friday=new Date(monday);friday.setDate(monday.getDate()+4);
-  const weekStart=monday.toISOString().split('T')[0];
-  const weekEnd=usarSemanaPassada?friday.toISOString().split('T')[0]:hoje.toISOString().split('T')[0];
+  let weekStart,weekEnd;
+  if(customStart&&customEnd){
+    weekStart=customStart;weekEnd=customEnd;
+  }else{
+    const hoje=new Date();
+    const dow=hoje.getDay();
+    const usarSemanaPassada=dow===1||dow===0;
+    const mondayOffset=dow===0?-6:1-dow;
+    const monday=new Date(hoje);monday.setDate(hoje.getDate()+mondayOffset-(usarSemanaPassada?7:0));
+    const friday=new Date(monday);friday.setDate(monday.getDate()+4);
+    weekStart=monday.toISOString().split('T')[0];
+    weekEnd=usarSemanaPassada?friday.toISOString().split('T')[0]:hoje.toISOString().split('T')[0];
+  }
+  // preenche os inputs de data com o período usado
+  const deEl=document.getElementById('metrica-de');const ateEl=document.getElementById('metrica-ate');
+  if(deEl&&!deEl.value)deEl.value=weekStart;
+  if(ateEl&&!ateEl.value)ateEl.value=weekEnd;
   const periodo=`${fmtDate(weekStart)} a ${fmtDate(weekEnd)}`;
 
   const sources=[];
@@ -1492,7 +1515,7 @@ window.openAddClienteModal=openAddClienteModal;window.openEditClienteModal=openE
 window.openMetricasModal=openMetricasModal;window.openClienteDetailModal=openClienteDetailModal;
 window.saveClienteAlertas=saveClienteAlertas;window.pickHealth=pickHealth;
 window.submitClienteForm=submitClienteForm;window.submitEditClienteForm=submitEditClienteForm;
-window.submitMetricasForm=submitMetricasForm;window.loadHistoricoMetricas=loadHistoricoMetricas;window.prefillMetricasFromFlashboard=prefillMetricasFromFlashboard;window.loadMetaAccounts=loadMetaAccounts;window.filterMetaAccounts=filterMetaAccounts;window.deleteCliente=deleteCliente;
+window.submitMetricasForm=submitMetricasForm;window.loadHistoricoMetricas=loadHistoricoMetricas;window.prefillMetricasFromFlashboard=prefillMetricasFromFlashboard;window.buscarMetricasPeriodo=buscarMetricasPeriodo;window.loadMetaAccounts=loadMetaAccounts;window.filterMetaAccounts=filterMetaAccounts;window.deleteCliente=deleteCliente;
 window.renderCarteira=renderCarteira;
 window.moverOtimizado=moverOtimizado;window.confirmMoverParado=confirmMoverParado;
 window.saveMoverParado=saveMoverParado;window.moverClientes=moverClientes;window.removerCardDia=removerCardDia;
