@@ -222,7 +222,7 @@ function renderRow(c) {
         <div class="name-txt">${c.name || c.id}</div>
         <div class="name-date">${fmtDate(f.createdAt)}</div>
       </div>
-      <div class="row-programa">${f.programa || <span class="empty-cell">—</span>}</div>
+      <div class="row-programa">${f.programa || '<span class="empty-cell">—</span>'}</div>
       <div class="row-forma">${formaTag} ${parcelasInfo}</div>
       <div class="row-valor">${n.valorTotal ? fmt(n.valorTotal) : "—"}</div>
       <div class="row-equipe">${closerBadge} ${sdrBadge}</div>
