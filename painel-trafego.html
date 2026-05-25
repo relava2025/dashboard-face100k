@@ -946,6 +946,7 @@ async function prefillMetricasFromFlashboard(clienteId,customStart,customEnd){
 
   // Meta Ads
   const adAccountId=c?.adAccountId;
+  if(!adAccountId){setHint('Conta Meta Ads não vinculada. Edite o cliente e selecione a conta.',false);return;}
   if(adAccountId){
     try{
       const LEAD_TYPES=['lead','onsite_conversion.lead','onsite_conversion.lead_grouped','onsite_web_lead','offsite_conversion.fb_pixel_lead','offsite_conversion.custom.lead'];
@@ -981,7 +982,11 @@ async function prefillMetricasFromFlashboard(clienteId,customStart,customEnd){
       }else{
         sources.push('Meta Ads (sem dados na semana)');
       }
-    }catch(e){console.warn('Meta prefill error',e);sources.push('Meta Ads (erro: '+e.message+')');}
+    }catch(e){
+      console.error('Meta Ads erro:',e);
+      setHint(`Erro Meta Ads [${adAccountId}]: ${e.message}`,false);
+      return;
+    }
   }
 
   // Supabase / Flashboard
