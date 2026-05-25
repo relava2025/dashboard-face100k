@@ -699,14 +699,17 @@ function openMetricasModal(id){
     <form onsubmit="submitMetricasForm(event,'${id}')">
       <div class="modal-body">
         <div class="form-row">
-          <div class="form-group"><label class="form-label">Leads</label><input class="form-input" name="leads" type="number" min="0" value="${c.leads||''}"></div>
-          <div class="form-group"><label class="form-label">CPL (R$)</label><input class="form-input" name="cpl" type="number" min="0" step="0.01" value="${c.cpl||''}"></div>
+          <div class="form-group"><label class="form-label">Leads</label><input class="form-input" name="leads" type="number" min="0" placeholder="0"></div>
+          <div class="form-group"><label class="form-label">CPL (R$)</label><input class="form-input" name="cpl" type="number" min="0" step="0.01" placeholder="0,00"></div>
         </div>
         <div class="form-row">
-          <div class="form-group"><label class="form-label">Comparecimentos</label><input class="form-input" name="comparecimentos" type="number" min="0" value="${c.comparecimentos||''}"></div>
-          <div class="form-group"><label class="form-label">Vendas</label><input class="form-input" name="vendas" type="number" min="0" value="${c.vendas||''}"></div>
+          <div class="form-group"><label class="form-label">Comparecimentos</label><input class="form-input" name="comparecimentos" type="number" min="0" placeholder="0"></div>
+          <div class="form-group"><label class="form-label">Vendas</label><input class="form-input" name="vendas" type="number" min="0" placeholder="0"></div>
         </div>
-        <div class="form-group"><label class="form-label">ROAS</label><input class="form-input" name="roas" type="number" min="0" step="0.01" value="${c.roas||''}"></div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">ROAS</label><input class="form-input" name="roas" type="number" min="0" step="0.01" placeholder="0,0"></div>
+          <div class="form-group"><label class="form-label">Gestor</label><select class="form-select" name="gestor">${gestorOptions(c.gestor||'')}</select></div>
+        </div>
         <div class="form-section-label">Health</div>
         <div class="health-picker">
           <button type="button" class="hp-btn hp-c1" onclick="pickHealth(1)">Crítico</button>
@@ -716,13 +719,16 @@ function openMetricasModal(id){
           <button type="button" class="hp-btn hp-c5" onclick="pickHealth(5)">Ótimo</button>
         </div>
         <input type="hidden" name="healthScore" id="hp-val" value="${c.healthScore||''}">
+        <div class="form-section-label" style="margin-top:20px">Histórico semanal</div>
+        <div id="historico-metricas"><div style="font-size:12px;color:var(--text-dim);padding:8px 0">Carregando...</div></div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-ghost" onclick="closeModal()">Cancelar</button>
-        <button type="submit" class="btn btn-primary">Salvar</button>
+        <button type="submit" class="btn btn-primary">Salvar semana</button>
       </div>
     </form>`);
   if(c.healthScore)pickHealth(c.healthScore);
+  loadHistoricoMetricas(id);
 }
 
 function openClienteDetailModal(id){
@@ -790,9 +796,64 @@ async function submitEditClienteForm(e,id){
 async function submitMetricasForm(e,id){
   e.preventDefault();
   const f=new FormData(e.target);
-  const data={leads:Number(f.get('leads')||0),cpl:Number(f.get('cpl')||0),comparecimentos:Number(f.get('comparecimentos')||0),vendas:Number(f.get('vendas')||0),roas:Number(f.get('roas')||0),healthScore:Number(f.get('healthScore')||0),ultimaAtualizacao:todayStr(),updatedAt:new Date().toISOString()};
-  try{await window._fs.updateDoc(window._fs.doc(window._db,'trafego',id),data);closeModal();}
-  catch(err){alert('Erro: '+err.message);}
+  const today=todayStr();
+  const snapshot={
+    leads:Number(f.get('leads')||0),
+    cpl:Number(f.get('cpl')||0),
+    comparecimentos:Number(f.get('comparecimentos')||0),
+    vendas:Number(f.get('vendas')||0),
+    roas:Number(f.get('roas')||0),
+    healthScore:Number(f.get('healthScore')||0),
+    gestor:f.get('gestor')||'',
+    semana:today,
+    savedAt:new Date().toISOString()
+  };
+  try{
+    await window._fs.setDoc(window._fs.doc(window._db,'trafego',id,'historico',today),snapshot);
+    await window._fs.updateDoc(window._fs.doc(window._db,'trafego',id),{
+      leads:snapshot.leads,cpl:snapshot.cpl,comparecimentos:snapshot.comparecimentos,
+      vendas:snapshot.vendas,roas:snapshot.roas,healthScore:snapshot.healthScore,
+      ultimaAtualizacao:today,updatedAt:new Date().toISOString()
+    });
+    closeModal();showToast('Métricas da semana salvas!','success');
+  }catch(err){alert('Erro: '+err.message);}
+}
+
+async function loadHistoricoMetricas(clienteId){
+  const el=document.getElementById('historico-metricas');if(!el)return;
+  try{
+    const snap=await window._fs.getDocs(window._fs.collection(window._db,'trafego',clienteId,'historico'));
+    const items=[];
+    snap.forEach(d=>items.push(d.data()));
+    items.sort((a,b)=>(b.semana||'').localeCompare(a.semana||''));
+    if(!items.length){el.innerHTML='<div style="font-size:12px;color:var(--text-dim);padding:8px 0">Nenhum histórico ainda. Salve a primeira semana acima.</div>';return;}
+    const thStyle='padding:7px 10px;text-align:left;font-size:9px;font-weight:700;font-family:\'Montserrat\',sans-serif;text-transform:uppercase;letter-spacing:.1em;color:var(--text-sec);border-bottom:1px solid var(--border);white-space:nowrap';
+    const tdStyle='padding:7px 10px;font-size:11px;border-bottom:.5px solid rgba(62,66,73,0.4)';
+    el.innerHTML=`<div style="overflow-x:auto;border-radius:8px;border:1px solid var(--border)">
+      <table style="width:100%;border-collapse:collapse;background:var(--surface2)">
+        <thead><tr>
+          <th style="${thStyle}">Semana</th>
+          <th style="${thStyle};text-align:right">Leads</th>
+          <th style="${thStyle};text-align:right">CPL</th>
+          <th style="${thStyle};text-align:right">Compar.</th>
+          <th style="${thStyle};text-align:right">Vendas</th>
+          <th style="${thStyle};text-align:right">ROAS</th>
+          <th style="${thStyle};text-align:center">Health</th>
+        </tr></thead>
+        <tbody>
+          ${items.map((h,i)=>`<tr style="${i===items.length-1?'':''}">
+            <td style="${tdStyle};color:var(--text-sec)">${fmtDate(h.semana)}${h.gestor?`<br><span style="font-size:10px;color:var(--text-dim)">${escapeHtml(h.gestor)}</span>`:''}</td>
+            <td style="${tdStyle};text-align:right;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--amber)">${fmtNum(h.leads)}</td>
+            <td style="${tdStyle};text-align:right">${h.cpl?fmtCur(h.cpl):'—'}</td>
+            <td style="${tdStyle};text-align:right">${fmtNum(h.comparecimentos)}</td>
+            <td style="${tdStyle};text-align:right;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--green)">${fmtNum(h.vendas)}</td>
+            <td style="${tdStyle};text-align:right">${h.roas?Number(h.roas).toFixed(1)+'x':'—'}</td>
+            <td style="${tdStyle};text-align:center">${healthBadge(h.healthScore)}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>`;
+  }catch(err){el.innerHTML='<div style="font-size:12px;color:var(--red)">Erro ao carregar histórico</div>';}
 }
 
 async function deleteCliente(id){
@@ -1308,7 +1369,7 @@ window.openAddClienteModal=openAddClienteModal;window.openEditClienteModal=openE
 window.openMetricasModal=openMetricasModal;window.openClienteDetailModal=openClienteDetailModal;
 window.saveClienteAlertas=saveClienteAlertas;window.pickHealth=pickHealth;
 window.submitClienteForm=submitClienteForm;window.submitEditClienteForm=submitEditClienteForm;
-window.submitMetricasForm=submitMetricasForm;window.deleteCliente=deleteCliente;
+window.submitMetricasForm=submitMetricasForm;window.loadHistoricoMetricas=loadHistoricoMetricas;window.deleteCliente=deleteCliente;
 window.renderCarteira=renderCarteira;
 window.moverOtimizado=moverOtimizado;window.confirmMoverParado=confirmMoverParado;
 window.saveMoverParado=saveMoverParado;window.moverClientes=moverClientes;window.removerCardDia=removerCardDia;
