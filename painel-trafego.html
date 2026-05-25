@@ -823,6 +823,7 @@ function renderOtimizacaoDiaria(){
   const cards=otimizacaoDiaria?.cards||{};
   const byCol={clientes:[],otimizado:[],parado:[]};
   clients.forEach(c=>{
+    if(cards[c._id]?.hidden)return;
     const st=cards[c._id]?.status||'clientes';
     byCol[st].push(c);
   });
@@ -845,12 +846,15 @@ function renderOtimizacaoDiaria(){
           const ini=(c.name||'?').split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();
           const cardObs=cards[c._id]?.obs;
           return`<div class="board-card">
-            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-              <div style="width:28px;height:28px;border-radius:50%;background:var(--amber-dim);border:1px solid var(--amber-border);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--amber);font-family:'Montserrat',sans-serif;flex-shrink:0">${ini}</div>
-              <div>
-                <div class="bc-cliente">${escapeHtml(c.name)}</div>
-                <div class="bc-gestor">${escapeHtml(c.gestor||'—')}</div>
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;justify-content:space-between">
+              <div style="display:flex;align-items:center;gap:8px;min-width:0">
+                <div style="width:28px;height:28px;border-radius:50%;background:var(--amber-dim);border:1px solid var(--amber-border);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--amber);font-family:'Montserrat',sans-serif;flex-shrink:0">${ini}</div>
+                <div style="min-width:0">
+                  <div class="bc-cliente">${escapeHtml(c.name)}</div>
+                  <div class="bc-gestor">${escapeHtml(c.gestor||'—')}</div>
+                </div>
               </div>
+              <button class="btn btn-icon btn-ghost" title="Remover do dia" style="flex-shrink:0;color:var(--text-dim);padding:4px" onclick="removerCardDia('${c._id}')"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1 1l8 8M9 1L1 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
             </div>
             ${c.healthScore?`<div style="margin-bottom:8px">${healthBadge(c.healthScore)}</div>`:''}
             ${cardObs?`<div style="font-size:10px;color:var(--text-sec);background:var(--surface2);padding:6px 8px;border-radius:5px;margin-bottom:8px;line-height:1.5">${escapeHtml(cardObs)}</div>`:''}
@@ -925,6 +929,15 @@ async function moverClientes(clienteId){
       if(data.cards)delete data.cards[clienteId];
       await window._fs.setDoc(window._fs.doc(window._db,'otimizacao_diaria',today),data);
     }
+  }catch(e){alert('Erro: '+e.message);}
+}
+
+async function removerCardDia(clienteId){
+  const today=todayStr();
+  try{
+    await window._fs.setDoc(window._fs.doc(window._db,'otimizacao_diaria',today),
+      {data:today,cards:{[clienteId]:{hidden:true,updatedAt:new Date().toISOString()}}},
+      {merge:true});
   }catch(e){alert('Erro: '+e.message);}
 }
 
@@ -1298,7 +1311,7 @@ window.submitClienteForm=submitClienteForm;window.submitEditClienteForm=submitEd
 window.submitMetricasForm=submitMetricasForm;window.deleteCliente=deleteCliente;
 window.renderCarteira=renderCarteira;
 window.moverOtimizado=moverOtimizado;window.confirmMoverParado=confirmMoverParado;
-window.saveMoverParado=saveMoverParado;window.moverClientes=moverClientes;
+window.saveMoverParado=saveMoverParado;window.moverClientes=moverClientes;window.removerCardDia=removerCardDia;
 window.openAddRoteiroModal=openAddRoteiroModal;window.openRoteiroModal=openRoteiroModal;
 window.submitRoteiroForm=submitRoteiroForm;window.deleteRoteiro=deleteRoteiro;
 window.updateRoteiroCliente=updateRoteiroCliente;window.renderRoteiros=renderRoteiros;
