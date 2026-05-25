@@ -821,17 +821,17 @@ function renderOtimizacaoDiaria(){
 
   const clients=getTrafego().sort((a,b)=>(a.name||'').localeCompare(b.name||''));
   const cards=otimizacaoDiaria?.cards||{};
-  const byCol={clientes:[],otimizado:[],parado:[]};
+  const byCol={clientes:[],otimizado:[],parado:[],excluido:[]};
   clients.forEach(c=>{
-    if(cards[c._id]?.hidden)return;
     const st=cards[c._id]?.status||'clientes';
-    byCol[st].push(c);
+    byCol[st]?.push(c);
   });
 
   const colDefs=[
     {id:'clientes',label:'Clientes',color:'var(--text-sec)'},
     {id:'otimizado',label:'Otimizado',color:'var(--green)'},
     {id:'parado',label:'Parado',color:'var(--red)'},
+    {id:'excluido',label:'Excluídos',color:'var(--border)'},
   ];
   const board=document.getElementById('board-kanban');
   board.innerHTML=colDefs.map(col=>{
@@ -854,13 +854,13 @@ function renderOtimizacaoDiaria(){
                   <div class="bc-gestor">${escapeHtml(c.gestor||'—')}</div>
                 </div>
               </div>
-              <button class="btn btn-icon btn-ghost" title="Remover do dia" style="flex-shrink:0;color:var(--text-dim);padding:4px" onclick="removerCardDia('${c._id}')"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1 1l8 8M9 1L1 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+              ${col.id!=='excluido'?`<button class="btn btn-icon btn-ghost" title="Mover para Excluídos" style="flex-shrink:0;color:var(--text-dim);padding:4px" onclick="removerCardDia('${c._id}')"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1 1l8 8M9 1L1 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>`:''}
             </div>
             ${c.healthScore?`<div style="margin-bottom:8px">${healthBadge(c.healthScore)}</div>`:''}
             ${cardObs?`<div style="font-size:10px;color:var(--text-sec);background:var(--surface2);padding:6px 8px;border-radius:5px;margin-bottom:8px;line-height:1.5">${escapeHtml(cardObs)}</div>`:''}
             <div style="display:flex;gap:5px;flex-wrap:wrap">
-              ${col.id!=='otimizado'?`<button class="btn btn-ghost btn-sm" style="color:var(--green);border-color:var(--green-border);font-size:10px;padding:3px 10px" onclick="moverOtimizado('${c._id}')">✓ Otimizado</button>`:''}
-              ${col.id!=='parado'?`<button class="btn btn-ghost btn-sm" style="color:var(--red);border-color:var(--red-border);font-size:10px;padding:3px 10px" onclick="confirmMoverParado('${c._id}')">✗ Parado</button>`:''}
+              ${col.id!=='otimizado'&&col.id!=='excluido'?`<button class="btn btn-ghost btn-sm" style="color:var(--green);border-color:var(--green-border);font-size:10px;padding:3px 10px" onclick="moverOtimizado('${c._id}')">✓ Otimizado</button>`:''}
+              ${col.id!=='parado'&&col.id!=='excluido'?`<button class="btn btn-ghost btn-sm" style="color:var(--red);border-color:var(--red-border);font-size:10px;padding:3px 10px" onclick="confirmMoverParado('${c._id}')">✗ Parado</button>`:''}
               ${col.id!=='clientes'?`<button class="btn btn-ghost btn-sm" style="font-size:10px;padding:3px 10px" onclick="moverClientes('${c._id}')">↩</button>`:''}
             </div>
           </div>`;
@@ -936,7 +936,7 @@ async function removerCardDia(clienteId){
   const today=todayStr();
   try{
     await window._fs.setDoc(window._fs.doc(window._db,'otimizacao_diaria',today),
-      {data:today,cards:{[clienteId]:{hidden:true,updatedAt:new Date().toISOString()}}},
+      {data:today,cards:{[clienteId]:{status:'excluido',updatedAt:new Date().toISOString()}}},
       {merge:true});
   }catch(e){alert('Erro: '+e.message);}
 }
