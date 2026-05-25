@@ -671,7 +671,8 @@ async function loadMetaAccounts(){
       all=[...all,...(json.data||[])];
       url=json.paging?.next||null;
     }
-    metaAccounts=all.filter(a=>a.account_status===1).sort((a,b)=>a.name.localeCompare(b.name));
+    const statusLabel={1:'',2:' [Desativada]',3:' [Sem saldo]',101:' [Pendente]'};
+    metaAccounts=all.map(a=>({...a,displayName:a.name+(statusLabel[a.account_status]||'')})).sort((a,b)=>a.name.localeCompare(b.name));
   }catch(e){console.warn('Meta accounts error',e);}
   return metaAccounts;
 }
@@ -687,7 +688,7 @@ function filterMetaAccounts(q){
 function metaAccountOptions(sel=''){
   const base='<option value="">Sem conta Meta Ads</option>';
   if(!metaAccounts.length)return base+'<option disabled>Carregando contas...</option>';
-  return base+metaAccounts.map(a=>`<option value="${a.id}"${a.id===sel?' selected':''}>${escapeHtml(a.name)} (${a.id})</option>`).join('');
+  return base+metaAccounts.map(a=>`<option value="${a.id}"${a.id===sel?' selected':''}>${escapeHtml(a.displayName||a.name)}</option>`).join('');
 }
 
 function openEditClienteModal(id){
