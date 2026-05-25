@@ -698,6 +698,10 @@ function openMetricasModal(id){
   openModal('Métricas — '+escapeHtml(c.name),`
     <form onsubmit="submitMetricasForm(event,'${id}')">
       <div class="modal-body">
+        <div id="fb-prefill-hint" style="font-size:11px;color:var(--text-sec);background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:8px 12px;margin-bottom:14px;display:flex;align-items:center;gap:8px">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="flex-shrink:0;opacity:.5"><circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.3"/><path d="M6 5.5v3M6 3.5v.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+          <span id="fb-prefill-txt">Buscando dados do Flashboard...</span>
+        </div>
         <div class="form-row">
           <div class="form-group"><label class="form-label">Leads</label><input class="form-input" name="leads" type="number" min="0" placeholder="0"></div>
           <div class="form-group"><label class="form-label">CPL (R$)</label><input class="form-input" name="cpl" type="number" min="0" step="0.01" placeholder="0,00"></div>
@@ -729,6 +733,7 @@ function openMetricasModal(id){
     </form>`);
   if(c.healthScore)pickHealth(c.healthScore);
   loadHistoricoMetricas(id);
+  prefillMetricasFromFlashboard(id);
 }
 
 function openClienteDetailModal(id){
@@ -854,6 +859,37 @@ async function loadHistoricoMetricas(clienteId){
       </table>
     </div>`;
   }catch(err){el.innerHTML='<div style="font-size:12px;color:var(--red)">Erro ao carregar histórico</div>';}
+}
+
+async function prefillMetricasFromFlashboard(clienteId){
+  const setHint=(txt,ok)=>{
+    const el=document.getElementById('fb-prefill-txt');
+    if(el){el.textContent=txt;if(ok!==undefined)el.closest('#fb-prefill-hint').style.borderColor=ok?'var(--green-border)':'var(--border)';}
+  };
+  try{
+    if(!Object.keys(entregaMap).length){
+      const snap=await window._fs.getDocs(window._fs.collection(window._db,'entrega'));
+      snap.forEach(d=>{entregaMap[d.id]={flashboardContaId:d.data().flashboardContaId||''};});
+    }
+    const contaId=entregaMap[clienteId]?.flashboardContaId;
+    if(!contaId){setHint('Cliente sem conta Flashboard vinculada.',false);return;}
+    const hoje=new Date();
+    const dow=hoje.getDay();
+    const mondayOffset=dow===0?-6:1-dow;
+    const monday=new Date(hoje);monday.setDate(hoje.getDate()+mondayOffset);
+    const weekStart=monday.toISOString().split('T')[0];
+    const weekEnd=hoje.toISOString().split('T')[0];
+    const url=`${SB_URL}/rest/v1/registros_diarios?conta_id=eq.${contaId}&data=gte.${weekStart}&data=lte.${weekEnd}&select=leads,agendamentos,comparecimentos,vendas`;
+    const res=await fetch(url,{headers:{'Authorization':'Bearer '+SB_KEY,'apikey':SB_KEY}});
+    if(!res.ok)throw new Error('HTTP '+res.status);
+    const rows=await res.json();
+    if(!rows.length){setHint(`Sem dados no Flashboard para esta semana (${fmtDate(weekStart)} a ${fmtDate(weekEnd)}).`,false);return;}
+    const tot={leads:0,compar:0,vendas:0};
+    rows.forEach(r=>{tot.leads+=r.leads||0;tot.compar+=r.comparecimentos||0;tot.vendas+=r.vendas||0;});
+    const setVal=(name,val)=>{const el=document.querySelector(`[name="${name}"]`);if(el)el.value=val||'';};
+    setVal('leads',tot.leads);setVal('comparecimentos',tot.compar);setVal('vendas',tot.vendas);
+    setHint(`Dados carregados do Flashboard — ${fmtDate(weekStart)} a ${fmtDate(weekEnd)}. Revise e salve.`,true);
+  }catch(e){setHint('Não foi possível carregar o Flashboard.',false);}
 }
 
 async function deleteCliente(id){
@@ -1369,7 +1405,7 @@ window.openAddClienteModal=openAddClienteModal;window.openEditClienteModal=openE
 window.openMetricasModal=openMetricasModal;window.openClienteDetailModal=openClienteDetailModal;
 window.saveClienteAlertas=saveClienteAlertas;window.pickHealth=pickHealth;
 window.submitClienteForm=submitClienteForm;window.submitEditClienteForm=submitEditClienteForm;
-window.submitMetricasForm=submitMetricasForm;window.loadHistoricoMetricas=loadHistoricoMetricas;window.deleteCliente=deleteCliente;
+window.submitMetricasForm=submitMetricasForm;window.loadHistoricoMetricas=loadHistoricoMetricas;window.prefillMetricasFromFlashboard=prefillMetricasFromFlashboard;window.deleteCliente=deleteCliente;
 window.renderCarteira=renderCarteira;
 window.moverOtimizado=moverOtimizado;window.confirmMoverParado=confirmMoverParado;
 window.saveMoverParado=saveMoverParado;window.moverClientes=moverClientes;window.removerCardDia=removerCardDia;
