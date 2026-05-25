@@ -928,13 +928,11 @@ async function prefillMetricasFromFlashboard(clienteId,customStart,customEnd){
     weekStart=customStart;weekEnd=customEnd;
   }else{
     const hoje=new Date();
-    const dow=hoje.getDay();
-    const usarSemanaPassada=dow===1||dow===0;
+    const dow=hoje.getDay(); // 0=dom,1=seg...6=sab
     const mondayOffset=dow===0?-6:1-dow;
-    const monday=new Date(hoje);monday.setDate(hoje.getDate()+mondayOffset-(usarSemanaPassada?7:0));
-    const friday=new Date(monday);friday.setDate(monday.getDate()+4);
+    const monday=new Date(hoje);monday.setDate(hoje.getDate()+mondayOffset);
     weekStart=monday.toISOString().split('T')[0];
-    weekEnd=usarSemanaPassada?friday.toISOString().split('T')[0]:hoje.toISOString().split('T')[0];
+    weekEnd=hoje.toISOString().split('T')[0];
   }
   // preenche os inputs de data com o período usado
   const deEl=document.getElementById('metrica-de');const ateEl=document.getElementById('metrica-ate');
@@ -963,9 +961,9 @@ async function prefillMetricasFromFlashboard(clienteId,customStart,customEnd){
         const spend=parseFloat(row.spend||0);
         const actions=row.actions||[];
         const leadActions=actions.filter(a=>LEAD_TYPES.includes(a.action_type));
-        const firstReply=actions.find(a=>a.action_type==='onsite_conversion.messaging_first_reply');
+        const convStarted=actions.find(a=>a.action_type==='onsite_conversion.messaging_conversation_started_7d');
         const formLeads=leadActions.length?Math.max(...leadActions.map(a=>parseInt(a.value||0))):0;
-        const waLeads=firstReply?parseInt(firstReply.value||0):0;
+        const waLeads=convStarted?parseInt(convStarted.value||0):0;
         const totalLeads=formLeads+waLeads;
         const cpl=totalLeads>0?Math.round((spend/totalLeads)*100)/100:0;
         setVal('leads',totalLeads);
