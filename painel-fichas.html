@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-import { getFirestore, collection, onSnapshot, enableNetwork } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+import { getFirestore, collection, onSnapshot, enableNetwork, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 const firebaseConfig = {
   apiKey:"AIzaSyAyupUdCsEb6pPVmTs2clhayS84-TUovGA",
   authDomain:"dashboard-e465d.firebaseapp.com",
@@ -212,6 +212,7 @@ function renderRow(c) {
       <div class="detail-actions">
         <a href="ficha-cliente.html" class="btn-detail btn-edit" onclick="sessionStorage.setItem('editClientId','${c.id}')">Editar ficha →</a>
         <a href="painel-carteira.html" class="btn-detail btn-carteira">Ver na carteira →</a>
+        <button class="btn-detail btn-excluir" onclick="deletarFicha('${c.id}')">Excluir ficha</button>
       </div>
     </div>`;
   }
@@ -233,6 +234,13 @@ function renderRow(c) {
     ${detail}
   </div>`;
 }
+
+window.deletarFicha = async function(id) {
+  if (!confirm("Excluir esta ficha? Esta ação não pode ser desfeita.")) return;
+  try {
+    await deleteDoc(doc(db, "entrega", id));
+  } catch(e) { alert("Erro ao excluir: " + e.message); }
+};
 
 window.toggleRow = function(id) {
   expanded[id] = !expanded[id];
@@ -366,6 +374,7 @@ option{background:#1A2025}
 .btn-detail:hover{opacity:.8}
 .btn-edit{background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border)}
 .btn-carteira{background:var(--green-dim);color:var(--green);border:1px solid var(--green-border)}
+.btn-excluir{background:var(--red-dim);color:var(--red);border:1px solid rgba(239,68,68,0.22);cursor:pointer;margin-left:auto}
 
 .empty{text-align:center;padding:48px;color:var(--text-dim);font-size:14px}
 
