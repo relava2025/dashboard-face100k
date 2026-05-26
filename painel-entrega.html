@@ -272,6 +272,43 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .tut-sess-full{grid-column:1/-1}
 .tut-field-label{display:block;font-size:11px;color:var(--text-sec);font-weight:600;margin-bottom:3px;text-transform:uppercase;letter-spacing:.06em}
 
+/* QUICK PANEL */
+#quick-panel{position:fixed;right:-430px;top:56px;width:400px;height:calc(100vh - 56px);background:var(--surface);border-left:1px solid var(--border);z-index:100;display:flex;flex-direction:column;transition:right .26s cubic-bezier(.4,0,.2,1);box-shadow:-6px 0 28px rgba(0,0,0,.35)}
+#quick-panel.open{right:0}
+.qp-hdr{padding:18px 20px 14px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:10px}
+.qp-hdr-info{flex:1;min-width:0}
+.qp-hdr-name{font-size:16px;font-weight:700;font-family:'Montserrat',sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.qp-hdr-sub{font-size:12px;color:var(--text-sec);margin-top:3px}
+.qp-close{background:transparent;border:none;cursor:pointer;color:var(--text-dim);font-size:22px;line-height:1;padding:0 2px;flex-shrink:0;margin-top:-2px}
+.qp-close:hover{color:var(--text)}
+.qp-body{flex:1;padding:18px 20px;display:flex;flex-direction:column;gap:18px;overflow-y:auto}
+.qp-section{display:flex;flex-direction:column;gap:8px}
+.qp-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--text-sec);font-family:'Montserrat',sans-serif;display:flex;align-items:center;gap:8px}
+.qp-saved{font-size:10px;color:var(--green);font-weight:700;opacity:0;transition:opacity .3s}
+.qp-saved.show{opacity:1}
+.qp-hs-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}
+.qp-hs-btn{display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 3px;border-radius:8px;border:2px solid var(--border);background:var(--surface2);cursor:pointer;transition:all .18s;font-family:inherit;color:var(--text);width:100%}
+.qp-hs-btn:hover{border-color:var(--amber-border);background:var(--surface3)}
+.qp-hs-btn.selected{border-color:var(--amber);background:var(--amber-dim);box-shadow:0 0 0 2px rgba(245,166,35,0.15)}
+.qp-hs-emoji{font-size:18px;line-height:1}
+.qp-hs-lbl{font-size:9px;font-weight:700;text-align:center;line-height:1.2}
+.qp-cp-grid{display:flex;gap:6px}
+.qp-cp-btn{flex:1;padding:9px 4px;border-radius:7px;border:1.5px solid var(--border);background:var(--surface2);cursor:pointer;font-size:12px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--text-sec);transition:all .18s;text-align:center}
+.qp-cp-btn:hover{border-color:var(--amber-border);color:var(--amber)}
+.qp-cp-btn.selected{border-color:var(--amber);background:var(--amber-dim);color:var(--amber)}
+.qp-input{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:7px;color:var(--text);font-family:'Inter',sans-serif;font-size:14px;padding:8px 12px;outline:none;transition:border-color .15s}
+.qp-input:focus{border-color:var(--amber)}
+.qp-textarea{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:7px;color:var(--text);font-family:'Inter',sans-serif;font-size:13px;padding:8px 12px;outline:none;resize:vertical;min-height:72px;transition:border-color .15s;line-height:1.5}
+.qp-textarea:focus{border-color:var(--amber)}
+.qp-week-pill{display:inline-flex;align-items:center;padding:3px 10px;background:var(--amber-dim);border:1px solid var(--amber-border);border-radius:20px;font-size:12px;font-weight:700;color:var(--amber);font-family:'JetBrains Mono',monospace}
+.qp-team-row{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.qp-footer{padding:14px 20px;border-top:1px solid var(--border);display:flex;gap:8px}
+.qp-btn{flex:1;padding:9px;border-radius:7px;font-size:13px;font-weight:600;font-family:'Montserrat',sans-serif;cursor:pointer;transition:all .15s;text-decoration:none;text-align:center;display:block}
+.qp-btn-primary{background:var(--amber);color:#000;border:none}
+.qp-btn-primary:hover{opacity:.88}
+.qp-btn-secondary{background:var(--surface2);color:var(--text-sec);border:1px solid var(--border)}
+.qp-btn-secondary:hover{border-color:var(--amber);color:var(--amber)}
+
 @media(max-width:768px){
   .stats-row{grid-template-columns:repeat(3,1fr)}
   .topbar{padding:0 12px;gap:8px;height:auto;min-height:56px;flex-wrap:wrap}
@@ -468,6 +505,65 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
     <div style="margin-top:20px;display:flex;justify-content:flex-end">
       <button class="btn-cancel" onclick="closeMarcosModal()">Fechar</button>
     </div>
+  </div>
+</div>
+
+<!-- QUICK EDIT PANEL -->
+<div id="quick-panel">
+  <div class="qp-hdr">
+    <div class="qp-hdr-info">
+      <div class="qp-hdr-name" id="qp-name">—</div>
+      <div class="qp-hdr-sub" id="qp-sub">—</div>
+    </div>
+    <button class="qp-close" onclick="closeQuickPanel()">×</button>
+  </div>
+  <div class="qp-body">
+
+    <div class="qp-section">
+      <div class="qp-lbl">Health Score da semana <span class="qp-saved" id="qp-hs-saved">✓ Salvo</span></div>
+      <div class="qp-hs-grid">
+        <button class="qp-hs-btn" data-score="20" onclick="selectQPHealth(20)"><span class="qp-hs-emoji">🔴</span><span class="qp-hs-lbl">Em crise</span></button>
+        <button class="qp-hs-btn" data-score="40" onclick="selectQPHealth(40)"><span class="qp-hs-emoji">🟠</span><span class="qp-hs-lbl">Em risco</span></button>
+        <button class="qp-hs-btn" data-score="60" onclick="selectQPHealth(60)"><span class="qp-hs-emoji">🟡</span><span class="qp-hs-lbl">Atenção</span></button>
+        <button class="qp-hs-btn" data-score="80" onclick="selectQPHealth(80)"><span class="qp-hs-emoji">🟢</span><span class="qp-hs-lbl">Bom</span></button>
+        <button class="qp-hs-btn" data-score="100" onclick="selectQPHealth(100)"><span class="qp-hs-emoji">⭐</span><span class="qp-hs-lbl">Excelente</span></button>
+      </div>
+    </div>
+
+    <div class="qp-section">
+      <div class="qp-lbl">Checkpoint atual</div>
+      <div class="qp-cp-grid">
+        <button class="qp-cp-btn" data-cp="1" onclick="selectQPCheckpoint(1)">CP1</button>
+        <button class="qp-cp-btn" data-cp="2" onclick="selectQPCheckpoint(2)">CP2</button>
+        <button class="qp-cp-btn" data-cp="3" onclick="selectQPCheckpoint(3)">CP3</button>
+        <button class="qp-cp-btn" data-cp="4" onclick="selectQPCheckpoint(4)">CP4</button>
+      </div>
+    </div>
+
+    <div class="qp-section">
+      <div class="qp-lbl">Data de início</div>
+      <input class="qp-input" type="date" id="qp-start-date" onchange="saveQPField('startDate',this.value)">
+      <div id="qp-week-info"></div>
+    </div>
+
+    <div class="qp-section">
+      <div class="qp-lbl">Observação da semana <span class="qp-saved" id="qp-obs-saved">✓ Salvo</span></div>
+      <textarea class="qp-textarea" id="qp-obs" placeholder="Contexto geral, pontos de atenção, próximos passos..." oninput="debounceSaveQPObs()"></textarea>
+    </div>
+
+    <div class="qp-section">
+      <div class="qp-lbl">Equipe</div>
+      <div class="qp-team-row">
+        <input class="qp-input" type="text" id="qp-cs1" placeholder="CS1" onblur="saveQPTeam()">
+        <input class="qp-input" type="text" id="qp-cs2" placeholder="CS2" onblur="saveQPTeam()">
+        <input class="qp-input" type="text" id="qp-cs3" placeholder="CS3" onblur="saveQPTeam()" style="grid-column:1/-1">
+      </div>
+    </div>
+
+  </div>
+  <div class="qp-footer">
+    <a class="qp-btn qp-btn-primary" id="qp-link-full" href="#" target="_blank">Abrir dashboard completo</a>
+    <a class="qp-btn qp-btn-secondary" id="qp-link-view" href="#" target="_blank">Visão cliente</a>
   </div>
 </div>
 
@@ -756,7 +852,7 @@ function renderClients(){
           : `<div style="padding:5px 18px;background:rgba(34,197,94,0.05);border-top:.5px solid rgba(34,197,94,0.12);display:flex;align-items:center;gap:6px"><span style="font-size:8px;padding:1px 6px;border-radius:4px;background:rgba(34,197,94,0.15);color:#22C55E;font-weight:700;font-family:'Montserrat',sans-serif">FLASHBOARD</span><span style="font-size:11px;color:#22C55E">${dias===0?'Preencheu hoje':'Há '+dias+'d'}</span></div>`)
       : '';
 
-    html += `<div class="c-card${hasAlert?' has-alert':''}">
+    html += `<div class="c-card${hasAlert?' has-alert':''}" onclick="openQuickPanel('${c.id}')">
       <div class="c-accent ${h.accentCls}"></div>
       <div class="c-body">
         <div class="c-top">
@@ -798,7 +894,7 @@ function renderClients(){
         <button class="btn-open-dash" onclick="event.stopPropagation();openDashboard('${c.id}')">Abrir dashboard</button>
         <button class="btn-view-client" onclick="event.stopPropagation();openClientView('${c.id}')">Visão cliente</button>
         <button class="btn-bonus-client" onclick="event.stopPropagation();openMarcosModal('${c.id}')">Bônus</button>
-        <button class="btn-edit-client" onclick="openModal('${c.id}')">Editar</button>
+        <button class="btn-edit-client" onclick="event.stopPropagation();openModal('${c.id}')">Editar</button>
         <button class="btn-del-client" onclick="event.stopPropagation();confirmDelete('${c.id}','${(c.name||'').replace(/'/g,'')}') " title="Excluir">✕</button>
       </div>
     </div>`;
@@ -1419,6 +1515,134 @@ async function saveTutorias(){
 
 function closeTutModal(){ document.getElementById('tut-modal').classList.remove('open'); }
 function closeTutModalOutside(e){ if(e.target===document.getElementById('tut-modal')) closeTutModal(); }
+
+// ─── QUICK PANEL ───
+let qpClientId = null;
+let qpObsTimer = null;
+
+function calcQPWeek(startDate, program){
+  if(!startDate) return 1;
+  const start = new Date(startDate+'T12:00:00');
+  const diffDays = Math.floor((new Date()-start)/86400000);
+  const totalW = program==='ativacao'?12:24;
+  return Math.min(Math.max(1,Math.floor(diffDays/7)+1),totalW);
+}
+
+function updateQPWeekInfo(startDate, program){
+  const el = document.getElementById('qp-week-info');
+  if(!el) return;
+  if(!startDate){ el.innerHTML=''; return; }
+  const w = calcQPWeek(startDate, program);
+  const totalW = program==='ativacao'?12:24;
+  el.innerHTML = `<span class="qp-week-pill">Semana ${w} de ${totalW}</span>`;
+}
+
+function openQuickPanel(id){
+  const c = allClients.find(x=>x.id===id);
+  if(!c) return;
+  qpClientId = id;
+
+  document.getElementById('qp-name').textContent = c.name||'—';
+  const prog = c.program==='ativacao'?'Ativação':c.program==='aceleracao'?'Aceleração':'Mentoria';
+  document.getElementById('qp-sub').textContent = [c.spec, prog].filter(Boolean).join(' · ');
+
+  const score = c.healthScore||0;
+  document.querySelectorAll('.qp-hs-btn').forEach(btn=>btn.classList.toggle('selected',parseInt(btn.dataset.score)===score));
+  document.getElementById('qp-hs-saved').classList.remove('show');
+
+  const cp = parseInt(c.checkpoint)||1;
+  document.querySelectorAll('.qp-cp-btn').forEach(btn=>btn.classList.toggle('selected',parseInt(btn.dataset.cp)===cp));
+
+  document.getElementById('qp-start-date').value = c.startDate||'';
+  updateQPWeekInfo(c.startDate, c.program);
+
+  const w = calcQPWeek(c.startDate, c.program);
+  const obs = (c.weekStates&&c.weekStates[w]&&c.weekStates[w]._obs)||'';
+  document.getElementById('qp-obs').value = obs;
+  document.getElementById('qp-obs-saved').classList.remove('show');
+
+  document.getElementById('qp-cs1').value = c.cs1||'';
+  document.getElementById('qp-cs2').value = c.cs2||'';
+  document.getElementById('qp-cs3').value = c.cs3||'';
+
+  document.getElementById('qp-link-full').href = `cliente-entrega.html?cliente=${encodeURIComponent(id)}`;
+  document.getElementById('qp-link-view').href = `cliente-view.html?cliente=${encodeURIComponent(id)}`;
+
+  document.getElementById('quick-panel').classList.add('open');
+}
+
+function closeQuickPanel(){
+  document.getElementById('quick-panel').classList.remove('open');
+  qpClientId = null;
+}
+
+async function selectQPHealth(score){
+  if(!qpClientId) return;
+  const c = allClients.find(x=>x.id===qpClientId);
+  if(!c) return;
+  c.healthScore = score;
+  document.querySelectorAll('.qp-hs-btn').forEach(btn=>btn.classList.toggle('selected',parseInt(btn.dataset.score)===score));
+  const hist = c.healthHistory||{};
+  const w = calcQPWeek(c.startDate, c.program);
+  hist[w] = score;
+  c.healthHistory = hist;
+  await window._fb.save(qpClientId,{healthScore:score,healthHistory:hist});
+  const msg = document.getElementById('qp-hs-saved');
+  if(msg){ msg.classList.add('show'); setTimeout(()=>msg.classList.remove('show'),2000); }
+  renderClients();
+}
+
+async function selectQPCheckpoint(cp){
+  if(!qpClientId) return;
+  const c = allClients.find(x=>x.id===qpClientId);
+  if(!c) return;
+  c.checkpoint = cp;
+  document.querySelectorAll('.qp-cp-btn').forEach(btn=>btn.classList.toggle('selected',parseInt(btn.dataset.cp)===cp));
+  await window._fb.save(qpClientId,{checkpoint:cp});
+  renderClients();
+}
+
+async function saveQPField(key, value){
+  if(!qpClientId) return;
+  const c = allClients.find(x=>x.id===qpClientId);
+  if(!c) return;
+  c[key] = value;
+  await window._fb.save(qpClientId,{[key]:value});
+  if(key==='startDate') updateQPWeekInfo(value,c.program);
+  renderClients();
+}
+
+async function saveQPTeam(){
+  if(!qpClientId) return;
+  const cs1 = document.getElementById('qp-cs1').value.trim();
+  const cs2 = document.getElementById('qp-cs2').value.trim();
+  const cs3 = document.getElementById('qp-cs3').value.trim();
+  const c = allClients.find(x=>x.id===qpClientId);
+  if(c){ c.cs1=cs1; c.cs2=cs2; c.cs3=cs3; }
+  await window._fb.save(qpClientId,{cs1,cs2,cs3});
+  renderClients();
+}
+
+function debounceSaveQPObs(){
+  if(qpObsTimer) clearTimeout(qpObsTimer);
+  qpObsTimer = setTimeout(saveQPObs,1000);
+}
+
+async function saveQPObs(){
+  if(!qpClientId) return;
+  const c = allClients.find(x=>x.id===qpClientId);
+  if(!c) return;
+  const val = document.getElementById('qp-obs').value;
+  const w = calcQPWeek(c.startDate, c.program);
+  if(!c.weekStates) c.weekStates={};
+  if(!c.weekStates[w]) c.weekStates[w]={};
+  c.weekStates[w]._obs = val;
+  await window._fb.save(qpClientId,{weekStates:c.weekStates});
+  const msg = document.getElementById('qp-obs-saved');
+  if(msg){ msg.classList.add('show'); setTimeout(()=>msg.classList.remove('show'),2000); }
+}
+
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeQuickPanel(); });
 </script>
 </body>
 </html>
