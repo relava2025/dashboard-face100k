@@ -181,32 +181,6 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .tl-name{font-size:11px;color:var(--text-sec);text-align:center;max-width:80px;line-height:1.4}
 .tl-status{font-size:10px;text-align:center;font-weight:600;font-family:'Montserrat',sans-serif}
 
-/* TASK PROGRESS */
-.task-prog-wrap{margin-bottom:16px;padding-bottom:16px;border-bottom:.5px solid var(--border)}
-.task-prog-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.task-prog-label{font-size:13px;color:var(--text-sec)}
-.task-prog-count{font-size:15px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--amber)}
-.task-prog-bar{height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden}
-.task-prog-fill{height:100%;background:var(--amber);border-radius:3px;transition:width .6s ease}
-.task-prog-fill.full{background:var(--green)}
-
-/* TASKS */
-.task-list{display:flex;flex-direction:column;gap:8px}
-.task-item{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;background:var(--surface2);border:.5px solid var(--border);border-radius:8px;transition:border-color .15s;-webkit-tap-highlight-color:transparent}
-.task-item.mine{border-color:rgba(245,166,35,0.3);background:rgba(245,166,35,0.04);cursor:pointer}
-.task-item.mine:hover{border-color:var(--amber)}
-.task-check{width:20px;height:20px;border-radius:4px;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .2s}
-.tc-done{background:var(--green)}.tc-mine{background:transparent;border:2px solid rgba(245,166,35,0.5)}.tc-team{background:transparent;border:1.5px solid var(--border)}
-.task-info{flex:1;min-width:0}
-.task-name{font-size:14px;font-weight:500;margin-bottom:2px}
-.task-name.done{text-decoration:line-through;color:var(--text-dim)}
-.task-resp{font-size:11px;color:var(--text-sec)}
-.task-pill{font-size:10px;padding:2px 9px;border-radius:8px;font-weight:600;font-family:'Montserrat',sans-serif;white-space:nowrap;flex-shrink:0;margin-left:auto;align-self:flex-start;margin-top:1px}
-.tp-done{background:var(--green-dim);color:var(--green)}.tp-mine{background:var(--amber-dim);color:var(--amber);border:.5px solid var(--amber-border)}.tp-team{background:rgba(255,255,255,0.06);color:var(--text-sec)}
-.task-legend{display:flex;gap:16px;margin-top:12px;padding-top:12px;border-top:.5px solid var(--border);flex-wrap:wrap}
-.leg-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-sec)}
-.leg-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
-
 /* METAS */
 .metas-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
 .meta-card{background:var(--surface2);border:.5px solid var(--border);border-radius:10px;padding:14px 16px;position:relative;overflow:hidden}
@@ -340,7 +314,6 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
   .stats{grid-template-columns:repeat(2,1fr)}
   .stat-val{font-size:19px}
   .chart-wrap{height:140px}
-  .task-legend{gap:10px}
 }
 @media(max-width:380px){
   .hero{padding:18px 12px 16px}
@@ -355,7 +328,6 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
   .topbar{padding:10px 12px}
   .metas-grid{grid-template-columns:1fr}
   .resources-grid{grid-template-columns:1fr}
-  .task-legend{flex-direction:column;gap:6px}
 }
 /* CRONOGRAMA */
 .cv-phase-row{margin-bottom:12px}
@@ -571,30 +543,6 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
         <div class="scard-sub" id="conquistas-sub">marcos do programa</div>
       </div>
       <div class="scard-body" id="conquistas-body"></div>
-    </div>
-
-    <!-- TAREFAS -->
-    <div class="scard">
-      <div class="scard-hdr">
-        <div class="scard-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="11" rx="1.5" stroke="#F5A623" stroke-width="1.3"/><path d="M5 1v3M11 1v3M2 7h12" stroke="#F5A623" stroke-width="1.3" stroke-linecap="round"/></svg></div>
-        <div class="scard-title" id="tasks-title">Tarefas da semana</div>
-        <div class="scard-sub" id="tasks-sub">—</div>
-      </div>
-      <div class="scard-body">
-        <div class="task-prog-wrap">
-          <div class="task-prog-hdr">
-            <span class="task-prog-label">Progresso das tarefas</span>
-            <span class="task-prog-count" id="task-prog-count">0/0</span>
-          </div>
-          <div class="task-prog-bar"><div class="task-prog-fill" id="task-prog-fill" style="width:0%"></div></div>
-        </div>
-        <div class="task-list" id="task-list"></div>
-        <div class="task-legend">
-          <div class="leg-item"><div class="leg-dot" style="background:rgba(245,166,35,0.4);border:1px solid rgba(245,166,35,0.5)"></div>Você executa</div>
-          <div class="leg-item"><div class="leg-dot" style="background:rgba(255,255,255,0.08);border:1px solid #3E4249"></div>Equipe executa</div>
-          <div class="leg-item"><div class="leg-dot" style="background:#22C55E"></div>Concluída</div>
-        </div>
-      </div>
     </div>
 
     <!-- METAS -->
@@ -832,23 +780,6 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 <script>
 const RING_CIRC = 414.69; // 2*π*66
 
-const WEEK_TASKS = {
-  1:[{id:'w1t1',name:'Confirmar contrato e pagamento',resp:'CS1',mine:false},{id:'w1t2',name:'Acessar plataforma de aulas e iniciar trilha',resp:'Você',mine:true},{id:'w1t3',name:'Entrar no grupo do SDR',resp:'Você',mine:true},{id:'w1t4',name:'Configurar Flashboard e CRM',resp:'CS1',mine:false}],
-  2:[{id:'w2t1',name:'Assistir aula de esteira de produto',resp:'Você',mine:true},{id:'w2t2',name:'Preencher formulário da esteira (24h)',resp:'Você',mine:true},{id:'w2t3',name:'Call de esteira de produtos',resp:'CS2',mine:false}],
-  3:[{id:'w3t1',name:'Assistir tutoria 6 e consulta',resp:'Você',mine:true},{id:'w3t2',name:'Call de análise da apresentação',resp:'CS3',mine:false},{id:'w3t3',name:'Gravar consulta de venda',resp:'Você',mine:true},{id:'w3t4',name:'Call de tráfego',resp:'Tráfego',mine:false}],
-  4:[{id:'w4t1',name:'Realizar primeira venda',resp:'Você',mine:true},{id:'w4t2',name:'Preencher Flashboard diariamente',resp:'Você',mine:true},{id:'w4t3',name:'Call de Checkpoint 1',resp:'CS3',mine:false}],
-};
-for(let w=5;w<=24;w++){
-  if(!WEEK_TASKS[w]){
-    const t=[{id:`w${w}t1`,name:'Preencher Flashboard diariamente',resp:'Você',mine:true}];
-    if(w%4===2)t.push({id:`w${w}t2`,name:'Participar das tutorias de segunda e terça',resp:'Você',mine:true},{id:`w${w}t3`,name:'Call de vendas',resp:'CS3',mine:false});
-    if(w%4===3)t.push({id:`w${w}t2`,name:'Acompanhar funil no CRM',resp:'Você',mine:true},{id:`w${w}t3`,name:'Call de análise de conversão',resp:'Tráfego',mine:false});
-    if(w%4===0)t.push({id:`w${w}t2`,name:'Garantir 4 vendas nesta semana',resp:'Você',mine:true});
-    if(w%4===1&&w>1)t.push({id:`w${w}t2`,name:'Revisar script de vendas',resp:'Você',mine:true});
-    WEEK_TASKS[w]=t;
-  }
-}
-
 const CPS=[
   {id:1,title:'Primeira venda',sub:'S1–S4',weeks:[1,2,3,4]},
   {id:2,title:'Consistência de vendas',sub:'S5–S12',weeks:[5,6,7,8,9,10,11,12]},
@@ -971,7 +902,6 @@ function renderAll(){
   renderTeam();
   renderTimeline(cp.id,w,activeCPs);
   renderConquistas();
-  renderTasks(w);
   renderMetas(fats,fatMeses);
   renderRecursos();
   renderPlaybook();
@@ -1087,32 +1017,6 @@ function renderTimeline(currentCP,w,activeCPs){
       <div class="tl-dot ${dotCls}">${inner}</div>
       <div class="tl-name">CP${cp.id} — ${cp.title}</div>
       <div class="tl-status" style="color:${statusColor}">${statusTxt}</div>
-    </div>`;
-  }).join('');
-}
-
-function renderTasks(w){
-  const tasks=WEEK_TASKS[w]||[],ws=getWeekState(w);
-  const done=tasks.filter(t=>ws[t.id]==='done').length;
-  const pct=tasks.length?Math.round(done/tasks.length*100):0;
-  document.getElementById('tasks-title').textContent=`Tarefas da semana ${w}`;
-  document.getElementById('tasks-sub').textContent=`${done} de ${tasks.length} concluídas`;
-  document.getElementById('task-prog-count').textContent=`${done}/${tasks.length}`;
-  const fill=document.getElementById('task-prog-fill');
-  fill.style.width=pct+'%';
-  fill.className='task-prog-fill'+(pct===100?' full':'');
-  document.getElementById('task-list').innerHTML=tasks.map(t=>{
-    const isDone=ws[t.id]==='done';
-    const chkCls=isDone?'tc-done':t.mine?'tc-mine':'tc-team';
-    const chkInner=isDone?`<svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#000" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`:'';
-    const pill=isDone?'<span class="task-pill tp-done">Concluída</span>':t.mine?'<span class="task-pill tp-mine">Você faz</span>':'<span class="task-pill tp-team">Equipe faz</span>';
-    return`<div class="task-item${t.mine?' mine':''}"${t.mine?` onclick="toggleMyTask('${t.id}',${w})"`:''}>
-      <div class="task-check ${chkCls}">${chkInner}</div>
-      <div class="task-info">
-        <div class="task-name${isDone?' done':''}">${t.name}</div>
-        <div class="task-resp">${t.resp}</div>
-      </div>
-      ${pill}
     </div>`;
   }).join('');
 }
@@ -1305,15 +1209,6 @@ function toggleRoteiro(i){
   const open=body.style.display!=='none';
   body.style.display=open?'none':'block';
   if(chev)chev.style.transform=open?'':'rotate(180deg)';
-}
-
-function toggleMyTask(tid,w){
-  if(!S.weekStates)S.weekStates={};
-  if(!S.weekStates[w])S.weekStates[w]={};
-  const cur=S.weekStates[w][tid]||'pending';
-  S.weekStates[w][tid]=cur==='done'?'pending':'done';
-  renderTasks(w);
-  if(window._fb)window._fb.save({weekStates:S.weekStates});
 }
 
 function togglePB(i){

@@ -74,19 +74,15 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .btn-admin.active{background:var(--amber-dim);color:var(--amber);border-color:var(--amber-border)}
 .btn-new{background:var(--amber);color:#000;border:none;border-radius:6px;padding:8px 18px;font-size:14px;font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:.04em;cursor:pointer;transition:opacity .15s}
 .btn-new:hover{opacity:.88}
-.alert-topbtn{background:var(--red-dim);color:var(--red);border:1px solid var(--red-border);border-radius:6px;padding:6px 14px;font-size:13px;font-weight:600;font-family:'Montserrat',sans-serif;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .15s}
-.alert-topbtn:hover{background:rgba(239,68,68,0.18)}
-.alert-topbtn-count{background:var(--red);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:8px}
 
 /* CONTENT */
 .content{position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:24px 28px 60px}
 
 /* STATS */
-.stats-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
 .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 18px;position:relative;overflow:hidden}
 .stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
 .sc-total::before{background:var(--amber)}
-.sc-alert::before{background:var(--red)}
 .sc-attention::before{background:var(--yellow)}
 .sc-healthy::before{background:var(--green)}
 .stat-label{font-size:10px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.14em;margin-bottom:8px;font-family:'Montserrat',sans-serif;font-weight:600}
@@ -110,38 +106,12 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .cpm-row-days{font-size:11px;color:var(--text-sec);white-space:nowrap}
 .cpm-row-btn{font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;padding:4px 10px;border-radius:6px;background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border);text-decoration:none;white-space:nowrap;transition:opacity .15s}
 .cpm-row-btn:hover{opacity:.8}
-.alert-section{background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.22);border-radius:10px;padding:16px 18px;margin-bottom:20px;display:none}
-.alert-section.visible{display:block}
-.alert-section-hdr{display:flex;align-items:center;gap:10px;margin-bottom:14px}
-.alert-hdr-icon{width:18px;height:18px;flex-shrink:0}
-.alert-hdr-title{font-size:15px;font-weight:700;color:var(--red);font-family:'Montserrat',sans-serif;flex:1}
-.alert-hdr-count{font-size:11px;background:rgba(239,68,68,0.2);color:var(--red);padding:2px 9px;border-radius:8px;border:0.5px solid rgba(239,68,68,0.3);font-family:'Montserrat',sans-serif;font-weight:600}
-.alert-hdr-close{font-size:13px;color:var(--text-sec);padding:4px 10px;border:0.5px solid var(--border);border-radius:4px;cursor:pointer;background:transparent;transition:all .15s}
-.alert-hdr-close:hover{border-color:var(--text-sec);color:var(--text)}
-.alert-list{display:flex;flex-direction:column;gap:8px}
-.alert-item{background:var(--surface);border-radius:6px;padding:10px 14px;display:flex;align-items:flex-start;gap:10px}
-.alert-item.red-alert{border:0.5px solid rgba(239,68,68,0.25)}
-.alert-item.yellow-alert{border:0.5px solid rgba(234,179,8,0.25)}
-.alert-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:4px}
-.ad-red{background:var(--red)}.ad-yellow{background:var(--yellow)}
-.alert-info{flex:1;min-width:0}
-.alert-client-name{font-size:14px;font-weight:600;color:var(--text);margin-bottom:2px}
-.alert-desc{font-size:13px;color:var(--text-sec);margin-bottom:4px}
-.alert-meta{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
-.alert-week-txt{font-size:11px;font-weight:600}
-.aw-red{color:var(--red)}.aw-yellow{color:var(--yellow)}
-.alert-cs-txt{font-size:11px;color:var(--text-sec)}
-.alert-resolve-btn{padding:5px 12px;background:transparent;border:0.5px solid var(--border);border-radius:4px;font-size:11px;font-weight:600;color:var(--text-sec);cursor:pointer;font-family:'Montserrat',sans-serif;white-space:nowrap;transition:all .15s}
-.alert-resolve-btn:hover{border-color:var(--green);color:var(--green)}
-.alert-open-btn{padding:5px 12px;background:var(--amber-dim);border:0.5px solid var(--amber-border);border-radius:4px;font-size:11px;font-weight:600;color:var(--amber);cursor:pointer;font-family:'Montserrat',sans-serif;white-space:nowrap;transition:all .15s;margin-left:4px}
-.alert-open-btn:hover{background:var(--amber);color:#000}
 
 /* FILTERS */
 .filters-row{display:flex;align-items:center;gap:8px;margin-bottom:18px;flex-wrap:wrap}
 .filter-btn{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:600;font-family:'Montserrat',sans-serif;border:1px solid var(--border);background:transparent;color:var(--text-sec);cursor:pointer;transition:all .15s}
 .filter-btn:hover{border-color:var(--text-sec);color:var(--text)}
 .filter-btn.active{background:var(--amber-dim);color:var(--amber);border-color:var(--amber-border)}
-.filter-btn.alert-filter{background:rgba(239,68,68,0.08);color:var(--red);border-color:rgba(239,68,68,0.25)}
 .search-input{background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'Inter',sans-serif;font-size:14px;padding:7px 12px;outline:none;transition:border-color .15s;width:220px;margin-left:auto}
 .search-input:focus{border-color:var(--amber)}
 .search-input::placeholder{color:var(--text-dim)}
@@ -153,8 +123,6 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .sd-line{flex:1;height:1px;background:var(--border)}
 .c-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color .2s,transform .2s;cursor:pointer;display:flex;flex-direction:column}
 .c-card:hover{border-color:var(--amber-border);transform:translateY(-2px)}
-.c-card.has-alert{border-color:rgba(239,68,68,0.35)}
-.c-card.has-alert:hover{border-color:var(--red)}
 .c-accent{height:3px}
 .ca-red{background:var(--red)}.ca-yellow{background:var(--yellow)}.ca-green{background:var(--green)}.ca-amber{background:var(--amber)}
 .c-body{padding:16px 18px;flex:1}
@@ -178,15 +146,11 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .c-meta-item strong{color:var(--text);display:block;font-size:13px;font-weight:600;margin-bottom:1px}
 .health-chip{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text-sec)}
 .h-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-/* ALERT BANNER ON CARD */
+/* BANNERS ON CARD */
 .c-alert-banner{padding:7px 18px;display:flex;align-items:center;gap:7px;border-top:0.5px solid transparent}
-.cab-red{background:rgba(239,68,68,0.08);border-top-color:rgba(239,68,68,0.2)}
-.cab-yellow{background:rgba(234,179,8,0.08);border-top-color:rgba(234,179,8,0.2)}
-.cab-green{background:rgba(34,197,94,0.07);border-top-color:rgba(34,197,94,0.15)}
 .cab-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;animation:blink .9s infinite alternate}
 @keyframes blink{from{opacity:.3}to{opacity:1}}
 .cab-txt{font-size:11px;flex:1}
-.cab-btn{font-size:10px;padding:2px 8px;background:transparent;border-radius:3px;cursor:pointer;white-space:nowrap}
 /* ACTIONS */
 .c-actions{display:flex;flex-wrap:wrap;gap:7px;padding:10px 18px 14px}
 .btn-open-dash{flex:1 1 100%;padding:8px;border-radius:5px;font-size:13px;font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:.04em;background:var(--amber);color:#000;border:none;cursor:pointer;transition:opacity .15s;text-align:center}
@@ -222,31 +186,6 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .btn-save:hover{opacity:.88}
 
 /* TOAST */
-/* ADMIN */
-.admin-section{display:none}
-.admin-section.active{display:block}
-.week-editor{background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:12px;overflow:hidden}
-.week-editor-hdr{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border);cursor:pointer;user-select:none;background:var(--surface2)}
-.week-editor-hdr:hover{background:var(--surface3)}
-.week-editor-num{font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--amber);background:var(--amber-dim);border:1px solid var(--amber-border);border-radius:4px;padding:2px 8px}
-.week-editor-title{font-size:14px;font-weight:600;color:var(--text);flex:1}
-.week-editor-count{font-size:11px;color:var(--text-sec)}
-.week-editor-body{padding:14px 16px;display:none}
-.week-editor-body.open{display:block}
-.task-edit-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:0.5px solid var(--border-light)}
-.task-edit-row:last-child{border-bottom:none}
-.task-edit-name{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:5px;color:var(--text);font-family:'Inter',sans-serif;font-size:14px;padding:7px 10px;outline:none;transition:border-color .15s}
-.task-edit-name:focus{border-color:var(--amber)}
-.task-edit-resp{width:110px;background:var(--surface2);border:1px solid var(--border);border-radius:5px;color:var(--text);font-family:'Inter',sans-serif;font-size:14px;padding:7px 10px;outline:none;transition:border-color .15s}
-.task-edit-resp:focus{border-color:var(--amber)}
-.task-edit-del{padding:6px 10px;background:transparent;border:0.5px solid var(--border);border-radius:4px;color:var(--text-dim);cursor:pointer;font-size:13px;flex-shrink:0}
-.task-edit-del:hover{border-color:var(--red-border);color:var(--red);background:var(--red-dim)}
-.btn-add-task{width:100%;padding:8px;background:transparent;border:1px dashed var(--border);border-radius:6px;color:var(--text-sec);font-size:13px;cursor:pointer;transition:all .15s;font-family:'Montserrat',sans-serif;font-weight:600;letter-spacing:.04em;margin-top:10px}
-.btn-add-task:hover{border-color:var(--amber);color:var(--amber)}
-.btn-save-week{padding:7px 16px;background:var(--amber);color:#000;border:none;border-radius:5px;font-size:13px;font-weight:700;font-family:'Montserrat',sans-serif;cursor:pointer;margin-top:10px}
-.btn-save-week:hover{opacity:.88}
-.cp-group-label{font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;text-transform:uppercase;letter-spacing:.12em;color:var(--amber);margin:20px 0 10px;display:flex;align-items:center;gap:8px}
-.cp-group-label::after{content:'';flex:1;height:1px;background:var(--amber-border)}
 .toast{position:fixed;bottom:24px;right:24px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 18px;font-size:14px;color:var(--text);z-index:999;transform:translateY(80px);opacity:0;transition:all .3s;max-width:320px;border-left:3px solid var(--amber)}
 .toast.show{transform:translateY(0);opacity:1}
 .toast.success{border-left-color:var(--green)}
@@ -368,14 +307,8 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
   <div class="t-sep"></div>
   <div class="t-sub">Painel de Entrega — System Digital</div>
   <div class="t-right">
-    <div id="alert-topbtn" class="alert-topbtn" style="display:none" onclick="toggleAlertSection()">
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.3"/><path d="M7 4.5v3.5M7 10v.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-      <span>Alertas</span>
-      <span class="alert-topbtn-count" id="alert-topbtn-count">0</span>
-    </div>
     <div class="sync-dot" id="sync-dot"></div>
     <span class="sync-txt" id="sync-txt">Conectando...</span>
-    <button class="btn-admin" onclick="toggleAdmin()" id="btn-admin">⚙ Configurações</button>
     <button class="btn-admin" onclick="openTutoriasModal()" style="margin-right:4px">📅 Tutorias</button>
     <a href="painel-excluidos.html" class="btn-admin" style="text-decoration:none;color:var(--text-sec)">🗂 Excluídos</a>
     <button class="btn-new" onclick="openModal()">+ Novo cliente</button>
@@ -387,9 +320,8 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 
   <div class="stats-row">
     <div class="stat-card sc-total"><div class="stat-label">Total de clientes</div><div class="stat-val sv-amber" id="st-total">0</div><div class="stat-sub">ativos no programa</div></div>
-    <div class="stat-card sc-alert"><div class="stat-label">Com alerta</div><div class="stat-val sv-red" id="st-alerts">0</div><div class="stat-sub">tarefas não cumpridas</div></div>
-    <div class="stat-card sc-attention"><div class="stat-label">Em atenção</div><div class="stat-val sv-yellow" id="st-attention">0</div><div class="stat-sub">health score 60–79</div></div>
-    <div class="stat-card sc-healthy"><div class="stat-label">Saudáveis</div><div class="stat-val sv-green" id="st-healthy">0</div><div class="stat-sub">sem alertas esta semana</div></div>
+    <div class="stat-card sc-attention"><div class="stat-label">Em atenção</div><div class="stat-val sv-yellow" id="st-attention">0</div><div class="stat-sub">health score 40–79</div></div>
+    <div class="stat-card sc-healthy"><div class="stat-label">Health boa</div><div class="stat-val sv-green" id="st-healthy">0</div><div class="stat-sub">score 80 ou mais</div></div>
     <div class="stat-card" style="border-color:rgba(245,166,35,0.25);cursor:pointer" onclick="setFilter('cp-call',document.querySelector('[data-filter=cp-call]'))"><div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--amber)"></div><div class="stat-label">Call de Checkpoint</div><div class="stat-val sv-amber" id="st-cp-call">0</div><div class="stat-sub">aguardando chamada</div></div>
     <div class="stat-card" style="border-color:rgba(34,197,94,0.25)"><div class="stat-card" style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--green)"></div><div class="stat-label">Bônus desbloqueado</div><div class="stat-val sv-green" id="st-bonus">R$ 0</div><div class="stat-sub" id="st-bonus-sub">0 marcos atingidos</div></div>
   </div>
@@ -404,19 +336,8 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
     <div class="cpm-list" id="cp-meetings-list"></div>
   </div>
 
-  <div class="alert-section" id="alert-section">
-    <div class="alert-section-hdr">
-      <svg class="alert-hdr-icon" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" stroke="#EF4444" stroke-width="1.4"/><path d="M9 6v4.5M9 12.5v.5" stroke="#EF4444" stroke-width="1.4" stroke-linecap="round"/></svg>
-      <div class="alert-hdr-title">Tarefas não cumpridas — semana atual</div>
-      <div class="alert-hdr-count" id="alert-hdr-count">0 alertas</div>
-      <button class="alert-hdr-close" onclick="toggleAlertSection()">Fechar</button>
-    </div>
-    <div class="alert-list" id="alert-list"></div>
-  </div>
-
   <div class="filters-row">
     <button class="filter-btn active" onclick="setFilter('all',this)">Todos</button>
-    <button class="filter-btn" onclick="setFilter('alert',this)">Com alerta</button>
     <button class="filter-btn" onclick="setFilter('cp1',this)">CP1</button>
     <button class="filter-btn" onclick="setFilter('cp2',this)">CP2</button>
     <button class="filter-btn" onclick="setFilter('cp3',this)">CP3</button>
@@ -432,18 +353,6 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 </div>
 
 </div><!-- end main-content -->
-<!-- ADMIN SECTION -->
-<div class="admin-section" id="section-admin">
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
-    <div>
-      <div style="font-size:19px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--text)">Central de Administração</div>
-      <div style="font-size:14px;color:var(--text-sec);margin-top:3px">Edite as tarefas de cada semana do programa</div>
-    </div>
-    <button class="btn-new" onclick="saveAllTasks()" style="background:var(--green)">Salvar tudo</button>
-  </div>
-  <div id="admin-weeks-container"></div>
-</div>
-
 <!-- MODAL -->
 <div class="modal-overlay" id="modal" onclick="closeModalOutside(event)">
   <div class="modal">
@@ -484,7 +393,6 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
         </select>
       </div>
     </div>
-    <div class="form-field"><label class="form-label">Semana atual no programa</label><input class="form-input" id="f-week" type="number" min="1" max="24" placeholder="Ex: 3"></div>
     <div class="modal-actions">
       <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
       <button class="btn-save" onclick="saveClient()">Salvar cliente</button>
@@ -576,7 +484,6 @@ const SB_KEY='sb_publishable_LPTf0Psj_cbLbK3KA9tAwQ_t4ZdqoAD';
 let allClients = [];
 let currentFilter = 'all';
 let editingId = null;
-let alertSectionOpen = false;
 let fbDiasMap = {}; // slug → dias sem preencher (null=nunca, número=dias)
 
 async function loadFlashboardAlerts(){
@@ -617,14 +524,9 @@ function getHealthStatusLabel(s){
   return '🔴 Em crise';
 }
 
-function getClientAlerts(c){
-  const alerts = c.alerts || [];
-  return alerts.filter(a=>!a.resolved);
-}
-
 function getCheckpointCallStatus(c){
   const CP_CALL_WEEKS = {4:1, 12:2, 20:3, 24:4};
-  const w = c.currentWeek||1;
+  const w = calcQPWeek(c.startDate, c.program);
   const cpRequired = CP_CALL_WEEKS[w];
   if(!cpRequired) return null;
   if((c.checkpoint||1) !== cpRequired) return null;
@@ -650,14 +552,11 @@ function getContractStatus(c){
 }
 
 function calcStats(){
-  const tots = {alert:0,attention:0,healthy:0,cpCall:0};
+  const tots = {attention:0,healthy:0,cpCall:0};
   allClients.forEach(c=>{
     const score = c.healthScore || 0;
-    const alerts = getClientAlerts(c);
-    if(alerts.length>0) tots.alert++;
-    else if(score>=60&&score<80) tots.attention++;
-    else if(score>=80) tots.healthy++;
-    else tots.alert++;
+    if(score>=80) tots.healthy++;
+    else if(score>=40) tots.attention++;
     if(getCheckpointCallStatus(c)) tots.cpCall++;
   });
   return tots;
@@ -666,7 +565,6 @@ function calcStats(){
 function renderAll(){
   const tots = calcStats();
   document.getElementById('st-total').textContent = allClients.length;
-  document.getElementById('st-alerts').textContent = tots.alert;
   document.getElementById('st-attention').textContent = tots.attention;
   document.getElementById('st-healthy').textContent = tots.healthy;
   const cpCallEl = document.getElementById('st-cp-call');
@@ -683,19 +581,8 @@ function renderAll(){
   if(bonusEl) bonusEl.textContent = 'R$ '+totalBonus.toLocaleString('pt-BR');
   if(bonusSubEl) bonusSubEl.textContent = totalMarcos+' marco'+(totalMarcos!==1?'s':'')+' atingido'+(totalMarcos!==1?'s':'');
 
-  const totalAlerts = allClients.reduce((a,c)=>a+getClientAlerts(c).length,0);
-  const alertBtn = document.getElementById('alert-topbtn');
-  const alertCount = document.getElementById('alert-topbtn-count');
-  alertBtn.style.display = totalAlerts>0?'flex':'none';
-  alertCount.textContent = totalAlerts;
-  document.getElementById('alert-hdr-count').textContent = totalAlerts+' alerta'+(totalAlerts!==1?'s':'');
-
-  renderAlertSection();
   renderCPMeetings();
   renderClients();
-
-  const nb = document.getElementById('pend-nav-badge');
-  if(nb){ nb.textContent=totalAlerts; nb.style.display=totalAlerts===0?'none':''; }
 }
 
 function getNextCPMeeting(c){
@@ -749,33 +636,6 @@ function renderCPMeetings(){
   }).join('');
 }
 
-function renderAlertSection(){
-  const list = document.getElementById('alert-list');
-  list.innerHTML = '';
-  allClients.forEach(c=>{
-    const alerts = getClientAlerts(c);
-    if(alerts.length===0) return;
-    alerts.forEach(a=>{
-      const daysLate = a.daysLate||1;
-      const isRed = daysLate>=2;
-      const div = document.createElement('div');
-      div.className = 'alert-item '+(isRed?'red-alert':'yellow-alert');
-      div.innerHTML = `
-        <div class="alert-dot ${isRed?'ad-red':'ad-yellow'}"></div>
-        <div class="alert-info">
-          <div class="alert-client-name">${c.name||'—'}</div>
-          <div class="alert-desc">${a.desc||'Tarefa não cumprida'}</div>
-          <div class="alert-meta">
-            <span class="alert-week-txt ${isRed?'aw-red':'aw-yellow'}">Semana ${c.currentWeek||'?'} — ${daysLate} dia${daysLate!==1?'s':''} de atraso</span>
-            <span class="alert-cs-txt">${a.responsible||''}</span>
-          </div>
-        </div>
-        <button class="alert-resolve-btn" onclick="resolveAlert('${c.id}','${a.id}')">Resolver</button>
-        <button class="alert-open-btn" onclick="openDashboard('${c.id}')">Abrir</button>`;
-      list.appendChild(div);
-    });
-  });
-}
 
 function renderClients(){
   const search = document.getElementById('search').value.toLowerCase();
@@ -783,12 +643,10 @@ function renderClients(){
 
   let filtered = allClients.filter(c=>{
     const score = c.healthScore||0;
-    const alerts = getClientAlerts(c);
     const cp = 'cp'+(c.checkpoint||'1');
     const prog = c.program||'aceleracao';
     const matchFilter =
       currentFilter==='all' ||
-      (currentFilter==='alert' && alerts.length>0) ||
       (currentFilter==='cp-call' && !!getCheckpointCallStatus(c)) ||
       (currentFilter==='risk' && score<60) ||
       (currentFilter==='aceleracao' && prog==='aceleracao') ||
@@ -803,9 +661,6 @@ function renderClients(){
     const pa = progOrder[a.program||'aceleracao']??0;
     const pb = progOrder[b.program||'aceleracao']??0;
     if(pa!==pb) return pa-pb;
-    const aa = getClientAlerts(a).length>0?0:1;
-    const bb = getClientAlerts(b).length>0?0:1;
-    if(aa!==bb) return aa-bb;
     return (a.healthScore||0)-(b.healthScore||0);
   });
 
@@ -830,8 +685,6 @@ function renderClients(){
 
     const score = c.healthScore||0;
     const h = getHealthColor(score);
-    const alerts = getClientAlerts(c);
-    const hasAlert = alerts.length>0;
     const pct = Math.min(100,Math.max(0,c.progress||0));
     const ini = (c.name||'?').split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase();
     const startDate = c.startDate ? new Date(c.startDate).toLocaleDateString('pt-BR') : '—';
@@ -844,9 +697,6 @@ function renderClients(){
       : '';
     const progLabel = prog==='ativacao'?'Ativação':prog==='mentoria'?'Mentoria':'Aceleração';
     const progBadgeCls = prog==='ativacao'?'prog-badge-ativ':prog==='mentoria'?'prog-badge-ment':'prog-badge-acel';
-    const alertBanner = hasAlert
-      ? `<div class="c-alert-banner cab-red"><div class="cab-dot" style="background:#EF4444"></div><span class="cab-txt" style="color:#EF4444">${alerts.length} tarefa${alerts.length!==1?'s':''} não cumprida${alerts.length!==1?'s':''} — semana ${calcQPWeek(c.startDate,c.program)}</span><span class="cab-btn" style="border:0.5px solid rgba(239,68,68,0.3);border-radius:3px;color:#EF4444" onclick="event.stopPropagation();toggleAlertSection()">Ver alertas</span></div>`
-      : `<div class="c-alert-banner cab-green"><div class="cab-dot" style="background:#22C55E;animation:none"></div><span class="cab-txt" style="color:#22C55E">Todas as tarefas desta semana em dia</span></div>`;
     const cpCall = getCheckpointCallStatus(c);
     const cpCallBanner = cpCall
       ? `<div class="c-alert-banner" style="background:rgba(245,166,35,0.08);border-top:.5px solid rgba(245,166,35,0.2)"><div class="cab-dot" style="background:#F5A623"></div><span class="cab-txt" style="color:#F5A623">📞 Call de Checkpoint CP${cpCall.cpNum} — Semana ${cpCall.week}</span></div>`
@@ -860,7 +710,7 @@ function renderClients(){
           : `<div style="padding:5px 18px;background:rgba(34,197,94,0.05);border-top:.5px solid rgba(34,197,94,0.12);display:flex;align-items:center;gap:6px"><span style="font-size:8px;padding:1px 6px;border-radius:4px;background:rgba(34,197,94,0.15);color:#22C55E;font-weight:700;font-family:'Montserrat',sans-serif">FLASHBOARD</span><span style="font-size:11px;color:#22C55E">${dias===0?'Preencheu hoje':'Há '+dias+'d'}</span></div>`)
       : '';
 
-    html += `<div class="c-card${hasAlert?' has-alert':''}" onclick="openQuickPanel('${c.id}')">
+    html += `<div class="c-card" onclick="openQuickPanel('${c.id}')">
       <div class="c-accent ${h.accentCls}"></div>
       <div class="c-body">
         <div class="c-top">
@@ -894,7 +744,6 @@ function renderClients(){
           return `<div style="display:flex;align-items:center;gap:4px;margin-top:8px">${dots}<span style="margin-left:auto;font-size:11px;font-weight:600;color:${totalB?'var(--green)':'var(--text-dim)'};font-family:'JetBrains Mono',monospace">${totalB?'R$ '+totalB:'—'}</span></div>`;
         })()}
       </div>
-      ${alertBanner}
       ${cpCallBanner}
       ${contractBanner}
       ${fbBanner}
@@ -923,20 +772,6 @@ function setFilter(f,btn){
   renderClients();
 }
 
-function toggleAlertSection(){
-  alertSectionOpen=!alertSectionOpen;
-  document.getElementById('alert-section').classList.toggle('visible',alertSectionOpen);
-}
-
-async function resolveAlert(clientId, alertId){
-  const c = allClients.find(x=>x.id===clientId);
-  if(!c) return;
-  const alerts = (c.alerts||[]).map(a=>a.id===alertId?{...a,resolved:true,resolvedAt:new Date().toISOString()}:a);
-  setSyncStatus('saving');
-  try{ await window._fb.save(clientId,{alerts}); showToast('Alerta resolvido!','success'); }
-  catch(e){ showToast('Erro ao resolver alerta','error'); setSyncStatus('error'); }
-}
-
 function openModal(id=null){
   editingId=id;
   document.getElementById('modal-title').textContent=id?'Editar cliente':'Novo cliente';
@@ -953,7 +788,6 @@ function openModal(id=null){
     document.getElementById('f-traffic').value=c.traffic||'';
     document.getElementById('f-start').value=c.startDate||'';
     document.getElementById('f-cp').value=c.checkpoint||'1';
-    document.getElementById('f-week').value=c.currentWeek||'1';
     document.getElementById('f-meta-base').value=c.metaBase||'';
     document.getElementById('f-meta-alvo').value=c.metaAlvo||'';
     document.getElementById('f-meta-super').value=c.metaSuper||'';
@@ -961,7 +795,6 @@ function openModal(id=null){
     ['f-name','f-spec','f-ig','f-cs1','f-cs2','f-cs3','f-traffic','f-contaid','f-meta-base','f-meta-alvo','f-meta-super'].forEach(i=>document.getElementById(i).value='');
     document.getElementById('f-program').value='aceleracao';
     document.getElementById('f-cp').value='1';
-    document.getElementById('f-week').value='1';
     document.getElementById('f-start').value=new Date().toISOString().split('T')[0];
   }
   document.getElementById('modal').classList.add('open');
@@ -987,7 +820,6 @@ async function saveClient(){
     traffic:document.getElementById('f-traffic').value.trim(),
     startDate:document.getElementById('f-start').value,
     checkpoint:parseInt(document.getElementById('f-cp').value)||1,
-    currentWeek:parseInt(document.getElementById('f-week').value)||1,
     metaBase:parseFloat(document.getElementById('f-meta-base').value)||0,
     metaAlvo:parseFloat(document.getElementById('f-meta-alvo').value)||0,
     metaSuper:parseFloat(document.getElementById('f-meta-super').value)||0,
@@ -1120,138 +952,6 @@ function showToast(msg,type=''){
   setTimeout(()=>t.classList.remove('show'),3200);
 }
 
-// ── ADMIN ──
-const WEEK_TASKS_DEFAULT = {
-  1:[{id:'w1t1',name:'Confirmar contrato e pagamento',resp:'CS1'},{id:'w1t2',name:'Cadastrar cliente nas plataformas',resp:'CS1'},{id:'w1t3',name:'Criar Drive do cliente',resp:'CS1'},{id:'w1t4',name:'Call de boas-vindas em até 24h',resp:'CS1'},{id:'w1t5',name:'Preencher diagnóstico inicial',resp:'CS1'},{id:'w1t6',name:'Direcionar SDR para grupo + tutorias',resp:'CS1'},{id:'w1t7',name:'Criar projeto no ChatGPT',resp:'CS1'}],
-  2:[{id:'w2t1',name:'Call de esteira de produtos',resp:'CS2'},{id:'w2t2',name:'Elaborar esteira e produto foco',resp:'CS2'},{id:'w2t3',name:'Enviar formulário (cobrar em 24h)',resp:'CS2'},{id:'w2t4',name:'Direcionar tutoria 6 + consulta Dra. Deborah',resp:'CS2'},{id:'w2t5',name:'Enviar Drive para design iniciar apresentação',resp:'CS2'}],
-  3:[{id:'w3t1',name:'Enviar apresentação ao cliente',resp:'CS2'},{id:'w3t2',name:'Call de análise da apresentação + SPIN',resp:'CS3'},{id:'w3t3',name:'Call de tráfego',resp:'Tráfego'},{id:'w3t4',name:'Enviar checklist de posicionamento',resp:'Tráfego'},{id:'w3t5',name:'Liberar acesso ao gerenciador',resp:'Tráfego'}],
-  4:[{id:'w4t1',name:'Ritual semanal obrigatório',resp:'CS2'},{id:'w4t2',name:'Validar comunicação e script',resp:'CS2'},{id:'w4t3',name:'Analisar primeiras vendas',resp:'CS3'},{id:'w4t4',name:'Call de Checkpoint 1',resp:'CS3'},{id:'w4t5',name:'Verificar checklist e liberar campanhas',resp:'Tráfego'}],
-};
-for(let w=5;w<=24;w++){
-  if(!WEEK_TASKS_DEFAULT[w]){
-    const t=[{id:`w${w}t1`,name:'Ritual semanal obrigatório',resp:'CS2'}];
-    if(w%4===2) t.push({id:`w${w}t2`,name:'Call de vendas',resp:'CS3'},{id:`w${w}t3`,name:'Pedir indicação ao cliente',resp:'CS3'});
-    if(w%4===3) t.push({id:`w${w}t2`,name:'Call de análise de conversão',resp:'Tráfego'});
-    if(w%4===0) t.push({id:`w${w}t2`,name:'WhatsApp com revisão de metas + Flashboard',resp:'CS2'});
-    if(w===12) t.push({id:`w12cp`,name:'Call de Checkpoint 2',resp:'CS3'});
-    if(w===20) t.push({id:`w20cp`,name:'Call de Checkpoint 3',resp:'CS3'});
-    if(w===24) t.push({id:`w24cp`,name:'Call de Checkpoint 4 — Encerramento',resp:'CS3'});
-    WEEK_TASKS_DEFAULT[w]=t;
-  }
-}
-
-let adminTasks = null;
-let adminOpen = false;
-
-function toggleAdmin(){
-  adminOpen = !adminOpen;
-  const btn = document.getElementById('btn-admin');
-  const section = document.getElementById('section-admin');
-  const mainContent = document.getElementById('main-content');
-  if(adminOpen){
-    btn.classList.add('active');
-    if(section) section.classList.add('active');
-    if(mainContent) mainContent.style.display='none';
-    renderAdminWeeks();
-  } else {
-    btn.classList.remove('active');
-    if(section) section.classList.remove('active');
-    if(mainContent) mainContent.style.display='';
-  }
-}
-
-async function loadAdminTasks(){
-  if(window._fb2) return;
-  const {getFirestore,doc,getDoc,setDoc} = await import('https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js');
-  const db = getFirestore();
-  const ref = doc(db,'config','weekTasks');
-  const snap = await getDoc(ref);
-  if(snap.exists()) adminTasks = snap.data().tasks;
-  else adminTasks = JSON.parse(JSON.stringify(WEEK_TASKS_DEFAULT));
-  window._fb2 = {db, ref, setDoc};
-}
-
-async function saveAllTasks(){
-  if(!adminTasks) return;
-  // Collect all edits from inputs
-  for(let w=1;w<=24;w++){
-    const tasks = adminTasks[w]||[];
-    tasks.forEach((t,i)=>{
-      const nameEl = document.getElementById(`admin-name-${w}-${i}`);
-      const respEl = document.getElementById(`admin-resp-${w}-${i}`);
-      if(nameEl) t.name = nameEl.value;
-      if(respEl) t.resp = respEl.value;
-    });
-  }
-  try{
-    const {setDoc} = await import('https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js');
-    const {getFirestore,doc} = await import('https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js');
-    const db = getFirestore();
-    await setDoc(doc(db,'config','weekTasks'),{tasks:adminTasks,updatedAt:new Date().toISOString()});
-    showToast('Tarefas salvas com sucesso!','success');
-  } catch(e){ showToast('Erro ao salvar: '+e.message,'error'); }
-}
-
-function addAdminTask(w){
-  if(!adminTasks[w]) adminTasks[w]=[];
-  const newId = `w${w}t${Date.now()}`;
-  adminTasks[w].push({id:newId,name:'Nova tarefa',resp:'CS2'});
-  renderAdminWeeks();
-}
-
-function removeAdminTask(w,i){
-  if(!adminTasks[w]) return;
-  adminTasks[w].splice(i,1);
-  renderAdminWeeks();
-}
-
-const CP_RANGES = [{cp:1,weeks:[1,2,3,4]},{cp:2,weeks:[5,6,7,8,9,10,11,12]},{cp:3,weeks:[13,14,15,16,17,18,19,20]},{cp:4,weeks:[21,22,23,24]}];
-const RESP_OPTIONS = ['CS1','CS2','CS3','Tráfego','Todos'];
-
-async function renderAdminWeeks(){
-  const container = document.getElementById('admin-weeks-container');
-  if(!container) return;
-  if(!adminTasks){ await loadAdminTasks(); }
-  
-  let html = '';
-  CP_RANGES.forEach(({cp,weeks})=>{
-    const cpLabels = {1:'Primeira venda',2:'Consistência de vendas',3:'Metas batendo',4:'Escala e recompra'};
-    html += `<div class="cp-group-label">CP${cp} — ${cpLabels[cp]} · Semanas ${weeks[0]} a ${weeks[weeks.length-1]}</div>`;
-    weeks.forEach(w=>{
-      const tasks = adminTasks[w]||[];
-      html += `<div class="week-editor">
-        <div class="week-editor-hdr" onclick="toggleWeekEditor(${w})">
-          <span class="week-editor-num">S${w}</span>
-          <span class="week-editor-title">Semana ${w}</span>
-          <span class="week-editor-count">${tasks.length} tarefa${tasks.length!==1?'s':''}</span>
-          <span style="color:var(--text-sec);font-size:17px;transition:transform .2s" id="wedge-${w}">⌄</span>
-        </div>
-        <div class="week-editor-body" id="wedge-body-${w}">
-          ${tasks.map((t,i)=>`
-            <div class="task-edit-row">
-              <span style="font-size:11px;color:var(--text-dim);min-width:18px">${i+1}</span>
-              <input class="task-edit-name" id="admin-name-${w}-${i}" value="${(t.name||'').replace(/"/g,'&quot;')}" placeholder="Nome da tarefa">
-              <select class="task-edit-resp" id="admin-resp-${w}-${i}">
-                ${RESP_OPTIONS.map(r=>`<option value="${r}" ${t.resp===r?'selected':''}>${r}</option>`).join('')}
-              </select>
-              <button class="task-edit-del" onclick="removeAdminTask(${w},${i})">✕</button>
-            </div>`).join('')}
-          <button class="btn-add-task" onclick="addAdminTask(${w})">+ Adicionar tarefa</button>
-        </div>
-      </div>`;
-    });
-  });
-  container.innerHTML = html;
-}
-
-function toggleWeekEditor(w){
-  const body = document.getElementById(`wedge-body-${w}`);
-  const chev = document.getElementById(`wedge-${w}`);
-  if(!body) return;
-  const open = body.classList.contains('open');
-  body.classList.toggle('open',!open);
-  if(chev) chev.style.transform = open?'':'rotate(180deg)';
-}
 
 window.addEventListener('fb-ready',()=>{
   setSyncStatus('connecting');
