@@ -98,6 +98,18 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .brand-rail{height:2px;background:linear-gradient(90deg,rgba(245,166,35,0) 0%,var(--amber) 40%,var(--amber) 60%,rgba(245,166,35,0) 100%);margin-bottom:22px}
 
 /* ALERT SECTION */
+.cp-meetings-section{background:rgba(245,166,35,0.06);border:1px solid rgba(245,166,35,0.3);border-radius:10px;padding:16px 18px;margin-bottom:16px}
+.cpm-hdr{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.cpm-hdr-title{font-size:13px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--amber);flex:1}
+.cpm-hdr-count{font-size:11px;color:var(--text-sec);background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:2px 8px}
+.cpm-list{display:flex;flex-direction:column;gap:6px}
+.cpm-row{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--surface);border:1px solid rgba(245,166,35,0.2);border-radius:8px}
+.cpm-row-cp{font-size:10px;font-weight:800;font-family:'Montserrat',sans-serif;background:var(--amber);color:#000;padding:2px 8px;border-radius:10px;white-space:nowrap}
+.cpm-row-name{font-size:14px;font-weight:600;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cpm-row-date{font-size:12px;color:var(--amber);font-weight:700;font-family:'Montserrat',sans-serif;white-space:nowrap}
+.cpm-row-days{font-size:11px;color:var(--text-sec);white-space:nowrap}
+.cpm-row-btn{font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;padding:4px 10px;border-radius:6px;background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border);text-decoration:none;white-space:nowrap;transition:opacity .15s}
+.cpm-row-btn:hover{opacity:.8}
 .alert-section{background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.22);border-radius:10px;padding:16px 18px;margin-bottom:20px;display:none}
 .alert-section.visible{display:block}
 .alert-section-hdr{display:flex;align-items:center;gap:10px;margin-bottom:14px}
@@ -345,6 +357,16 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
     <div class="stat-card" style="border-color:rgba(34,197,94,0.25)"><div class="stat-card" style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--green)"></div><div class="stat-label">Bônus desbloqueado</div><div class="stat-val sv-green" id="st-bonus">R$ 0</div><div class="stat-sub" id="st-bonus-sub">0 marcos atingidos</div></div>
   </div>
 
+  <!-- REUNIÕES DE CHECKPOINT -->
+  <div class="cp-meetings-section" id="cp-meetings-section" style="display:none">
+    <div class="cpm-hdr">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="10" height="10" rx="1.5" stroke="#F5A623" stroke-width="1.3"/><path d="M11 6l4-2v8l-4-2V6z" stroke="#F5A623" stroke-width="1.3" stroke-linejoin="round"/></svg>
+      <div class="cpm-hdr-title">Reuniões de Checkpoint</div>
+      <div class="cpm-hdr-count" id="cp-meetings-count">—</div>
+    </div>
+    <div class="cpm-list" id="cp-meetings-list"></div>
+  </div>
+
   <div class="alert-section" id="alert-section">
     <div class="alert-section-hdr">
       <svg class="alert-hdr-icon" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" stroke="#EF4444" stroke-width="1.4"/><path d="M9 6v4.5M9 12.5v.5" stroke="#EF4444" stroke-width="1.4" stroke-linecap="round"/></svg>
@@ -566,10 +588,61 @@ function renderAll(){
   document.getElementById('alert-hdr-count').textContent = totalAlerts+' alerta'+(totalAlerts!==1?'s':'');
 
   renderAlertSection();
+  renderCPMeetings();
   renderClients();
 
   const nb = document.getElementById('pend-nav-badge');
   if(nb){ nb.textContent=totalAlerts; nb.style.display=totalAlerts===0?'none':''; }
+}
+
+function getNextCPMeeting(c){
+  if(!c.startDate) return null;
+  const m=c.checkpointMeeting||{};
+  const start=new Date(c.startDate+'T12:00:00');
+  const CP_WEEKS=[4,12,20,24];
+  const [h,min]=(m.time||'19:00').split(':').map(Number);
+  const now=new Date();
+  for(let i=0;i<4;i++){
+    const d=new Date(start.getTime()+CP_WEEKS[i]*7*24*60*60*1000);
+    d.setHours(h,min,0,0);
+    if(d>(new Date(now.getTime()-3600000))) return{cp:i+1,date:d,link:m.link||''};
+  }
+  return null;
+}
+
+function renderCPMeetings(){
+  const section=document.getElementById('cp-meetings-section');
+  const list=document.getElementById('cp-meetings-list');
+  const countEl=document.getElementById('cp-meetings-count');
+  if(!section||!list) return;
+  const now=new Date();
+  const in14=new Date(now.getTime()+14*24*60*60*1000);
+  const DIAS=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+  const MESES=['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+  const upcoming=[];
+  allClients.forEach(c=>{
+    const next=getNextCPMeeting(c);
+    if(!next) return;
+    if(next.date<=in14) upcoming.push({c,next});
+  });
+  upcoming.sort((a,b)=>a.next.date-b.next.date);
+  if(!upcoming.length){section.style.display='none';return;}
+  section.style.display='block';
+  countEl.textContent=upcoming.length+' reunião'+(upcoming.length!==1?'s':'')+' nos próximos 14 dias';
+  list.innerHTML=upcoming.map(({c,next})=>{
+    const diffMs=next.date-now;
+    const diffDias=Math.ceil(diffMs/86400000);
+    const dStr=`${DIAS[next.date.getDay()]} ${next.date.getDate().toString().padStart(2,'0')}/${MESES[next.date.getMonth()]} ${next.date.getHours().toString().padStart(2,'0')}:${next.date.getMinutes().toString().padStart(2,'0')}`;
+    const daysLbl=diffMs<=0?'Agora!':diffDias===0?'Hoje':diffDias===1?'Amanhã':`Em ${diffDias} dias`;
+    const linkBtn=next.link?`<a class="cpm-row-btn" href="${next.link}" target="_blank" rel="noopener">Entrar</a>`:'';
+    return`<div class="cpm-row">
+      <span class="cpm-row-cp">CP${next.cp}</span>
+      <span class="cpm-row-name">${c.name||c.id}</span>
+      <span class="cpm-row-date">${dStr}</span>
+      <span class="cpm-row-days">${daysLbl}</span>
+      ${linkBtn}
+    </div>`;
+  }).join('');
 }
 
 function renderAlertSection(){
