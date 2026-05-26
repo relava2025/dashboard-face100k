@@ -866,28 +866,16 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
             <div class="sc-sub">aviso exibido na visão do cliente</div>
           </div>
           <div style="padding:14px 18px;display:flex;flex-direction:column;gap:10px">
+            <div id="cpm-dates-preview" style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-bottom:4px"></div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
               <div>
-                <div style="font-size:11px;color:var(--text-sec);margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:.08em">Data</div>
-                <input type="date" id="cpm-inp-date" class="obs-field" style="padding:8px 12px" onchange="saveCPMeeting()">
-              </div>
-              <div>
-                <div style="font-size:11px;color:var(--text-sec);margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:.08em">Horário</div>
+                <div style="font-size:11px;color:var(--text-sec);margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:.08em">Horário padrão</div>
                 <input type="time" id="cpm-inp-time" class="obs-field" style="padding:8px 12px" onchange="saveCPMeeting()">
               </div>
-            </div>
-            <div>
-              <div style="font-size:11px;color:var(--text-sec);margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:.08em">Link da reunião (Meet / Zoom)</div>
-              <input type="url" id="cpm-inp-link" class="obs-field" style="padding:8px 12px" placeholder="https://meet.google.com/..." oninput="saveCPMeeting()">
-            </div>
-            <div>
-              <div style="font-size:11px;color:var(--text-sec);margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:.08em">Checkpoint</div>
-              <select id="cpm-inp-cp" class="obs-field" style="padding:8px 12px" onchange="saveCPMeeting()">
-                <option value="1">CP1 — Primeira venda</option>
-                <option value="2">CP2 — Consistência de vendas</option>
-                <option value="3">CP3 — Comercial + metas</option>
-                <option value="4">CP4 — Escala e recompra</option>
-              </select>
+              <div>
+                <div style="font-size:11px;color:var(--text-sec);margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:.08em">Link da reunião (Meet / Zoom)</div>
+                <input type="url" id="cpm-inp-link" class="obs-field" style="padding:8px 12px" placeholder="https://meet.google.com/..." oninput="saveCPMeeting()">
+              </div>
             </div>
             <div id="cpm-status" style="font-size:12px;color:var(--text-dim)"></div>
           </div>
@@ -1440,24 +1428,45 @@ let _cpmTimer=null;
 function saveCPMeeting(){
   if(_cpmTimer)clearTimeout(_cpmTimer);
   _cpmTimer=setTimeout(async()=>{
-    const date=document.getElementById('cpm-inp-date')?.value||'';
-    const time=document.getElementById('cpm-inp-time')?.value||'';
+    const time=document.getElementById('cpm-inp-time')?.value||'19:00';
     const link=document.getElementById('cpm-inp-link')?.value||'';
-    const cp=parseInt(document.getElementById('cpm-inp-cp')?.value)||1;
-    S.checkpointMeeting={date,time,link,cp};
+    S.checkpointMeeting={time,link};
     await save({checkpointMeeting:S.checkpointMeeting});
-    const st=document.getElementById('cpm-status');
-    if(st) st.textContent=date&&link?'✓ Aviso ativado na visão do cliente':'Preencha data e link para ativar o aviso';
+    renderCPMeetingFields();
   },600);
+}
+function calcCPDates(){
+  if(!S.startDate) return [];
+  const start=new Date(S.startDate+'T12:00:00');
+  const CP_WEEKS=[4,12,20,24];
+  const labels=['CP1 — Primeira venda','CP2 — Consistência','CP3 — Comercial + metas','CP4 — Escala'];
+  return CP_WEEKS.map((w,i)=>{
+    const d=new Date(start.getTime()+w*7*24*60*60*1000);
+    return{label:labels[i],date:d};
+  });
 }
 function renderCPMeetingFields(){
   const m=S.checkpointMeeting||{};
-  const d=document.getElementById('cpm-inp-date'); if(d) d.value=m.date||'';
-  const t=document.getElementById('cpm-inp-time'); if(t) t.value=m.time||'';
+  const t=document.getElementById('cpm-inp-time'); if(t) t.value=m.time||'19:00';
   const l=document.getElementById('cpm-inp-link'); if(l) l.value=m.link||'';
-  const c=document.getElementById('cpm-inp-cp'); if(c) c.value=m.cp||1;
+  const preview=document.getElementById('cpm-dates-preview');
+  if(preview){
+    const dates=calcCPDates();
+    if(!dates.length){
+      preview.innerHTML='<div style="grid-column:1/-1;font-size:12px;color:var(--text-dim)">Defina a data de início do programa para ver as datas calculadas.</div>';
+    } else {
+      const DIAS=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+      preview.innerHTML=dates.map(({label,date})=>{
+        const d=`${DIAS[date.getDay()]} ${date.getDate().toString().padStart(2,'0')}/${(date.getMonth()+1).toString().padStart(2,'0')}/${date.getFullYear()}`;
+        return`<div style="background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:8px 12px">
+          <div style="font-size:10px;color:var(--text-dim);font-weight:600;text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px">${label}</div>
+          <div style="font-size:13px;font-weight:700;color:var(--amber)">${d}</div>
+        </div>`;
+      }).join('');
+    }
+  }
   const st=document.getElementById('cpm-status');
-  if(st) st.textContent=m.date&&m.link?'✓ Aviso ativado na visão do cliente':'Preencha data e link para ativar o aviso';
+  if(st) st.textContent=m.link?'✓ Aviso ativado na visão do cliente':'Adicione o link para ativar o aviso';
 }
 function saveStartDate(v){
   S.startDate=v;
