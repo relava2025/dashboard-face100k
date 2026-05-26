@@ -838,6 +838,11 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
             <div class="sc-sub" id="journey-sub">—</div>
           </div>
           <div class="sc-body">
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;padding:10px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:8px">
+              <span style="font-size:12px;color:var(--text-sec);white-space:nowrap;font-weight:600">Data de início:</span>
+              <input type="date" id="inp-start-date" style="background:transparent;border:none;outline:none;color:var(--text);font-size:13px;font-family:'Inter',sans-serif;cursor:pointer;flex:1" onchange="saveStartDate(this.value)">
+              <span style="font-size:11px;color:var(--text-dim)" id="start-date-week-info"></span>
+            </div>
             <div class="timeline-wrap">
               <div class="timeline-line"></div>
               <div class="timeline-steps" id="timeline-steps"></div>
@@ -1389,7 +1394,22 @@ let fatChart = null;
 let hsChart = null;
 
 // ── HELPERS ──
-function getW(){ return S.currentWeek||1; }
+function getW(){
+  if(S.startDate){
+    const start=new Date(S.startDate+'T12:00:00');
+    const diffDays=Math.floor((new Date()-start)/86400000);
+    const totalW=S.program==='ativacao'?12:24;
+    return Math.min(Math.max(1,Math.floor(diffDays/7)+1),totalW);
+  }
+  return S.currentWeek||1;
+}
+function saveStartDate(v){
+  S.startDate=v;
+  save({startDate:v});
+  renderAll();
+  const info=document.getElementById('start-date-week-info');
+  if(info) info.textContent=v?'Semana '+getW()+' calculada automaticamente':'';
+}
 function getWeekState(w){ return (S.weekStates&&S.weekStates[w])||{}; }
 function ini(name){ return (name||'?').split(' ').filter(Boolean).slice(0,2).map(x=>x[0]).join('').toUpperCase(); }
 function fmtCurrency(v){ if(!v) return 'R$ —'; return 'R$'+Number(v).toLocaleString('pt-BR'); }
@@ -1466,6 +1486,10 @@ function renderClientInfo(){
   document.getElementById('ci-name').textContent=name;
   document.getElementById('ci-spec').textContent=spec+(S.ig?' · '+S.ig:'');
   document.getElementById('journey-sub').textContent=`Semana ${w} de ${S.program==='ativacao'?12:24} · CP${cp}`;
+  const sdInp=document.getElementById('inp-start-date');
+  if(sdInp&&S.startDate) sdInp.value=S.startDate;
+  const info=document.getElementById('start-date-week-info');
+  if(info) info.textContent=S.startDate?'Semana '+w+' calculada automaticamente':'';
   const badges=document.getElementById('ci-badges');
   const prog=S.program==='ativacao'?'Ativação 17K':'Aceleração 42K';
   badges.innerHTML=`<span class="badge b-amber">CP${cp} · S${w}</span><span class="badge b-green">${prog}</span>`;

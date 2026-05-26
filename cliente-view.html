@@ -828,7 +828,15 @@ function ini(n){return(n||'?').split(' ').filter(Boolean).slice(0,2).map(x=>x[0]
 function fmtCurrency(v){if(!v&&v!==0)return'R$ —';return'R$ '+Number(v).toLocaleString('pt-BR')}
 function fmtShort(v){if(!v&&v!==0)return'—';const n=Number(v);if(n>=1000000)return'R$'+(n/1000000).toFixed(1)+'M';if(n>=1000)return'R$'+(n/1000).toFixed(0)+'k';return'R$'+n}
 function fmtMes(k){const[y,m]=k.split('-');const n=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];return n[Number(m)-1]+'/'+y.slice(2)}
-function getW(){return S.currentWeek||1}
+function getW(){
+  if(S.startDate){
+    const start=new Date(S.startDate+'T12:00:00');
+    const diffDays=Math.floor((new Date()-start)/86400000);
+    const totalW=S.program==='ativacao'?12:24;
+    return Math.min(Math.max(1,Math.floor(diffDays/7)+1),totalW);
+  }
+  return S.currentWeek||1;
+}
 function getWeekState(w){return(S.weekStates&&S.weekStates[w])||{}}
 function getHealthLabel(s){if(s>=80)return s+' · Saudável';if(s>=60)return s+' · Em atenção';return s+' · Em risco'}
 function getHealthClass(s){if(s>=80)return'hc-green';if(s>=60)return'hc-yellow';return'hc-red'}
