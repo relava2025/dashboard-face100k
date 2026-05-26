@@ -395,6 +395,21 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .tut-tipo-prevendas{background:rgba(59,130,246,0.12);color:#60A5FA;border:1px solid rgba(59,130,246,0.25)}
 .cv-empty{color:var(--text-sec);font-size:14px;padding:4px 0}
 
+/* REUNIÃO CHECKPOINT */
+.cpm-wrap{background:linear-gradient(135deg,rgba(245,166,35,0.12),rgba(245,166,35,0.04));border:1.5px solid var(--amber);border-radius:14px;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;gap:20px;position:relative;overflow:hidden;animation:cpmPulse 3s ease-in-out infinite}
+.cpm-wrap::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(245,166,35,0.06),transparent,rgba(245,166,35,0.06));pointer-events:none}
+@keyframes cpmPulse{0%,100%{box-shadow:0 0 0 0 rgba(245,166,35,0.15)}50%{box-shadow:0 0 0 6px rgba(245,166,35,0)}}
+.cpm-badge-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.cpm-badge{background:var(--amber);color:#000;font-size:11px;font-weight:800;font-family:'Montserrat',sans-serif;padding:3px 10px;border-radius:20px;letter-spacing:.06em}
+.cpm-tag{font-size:11px;color:var(--amber);font-weight:700;font-family:'Montserrat',sans-serif;text-transform:uppercase;letter-spacing:.1em;opacity:.8}
+.cpm-title{font-size:18px;font-weight:800;font-family:'Montserrat',sans-serif;color:var(--text);margin-bottom:4px;line-height:1.3}
+.cpm-meta{font-size:13px;color:var(--text-sec)}
+.cpm-right{display:flex;flex-direction:column;align-items:flex-end;gap:10px;flex-shrink:0}
+.cpm-countdown{font-size:13px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--amber);text-align:right}
+.cpm-btn{display:inline-flex;align-items:center;gap:8px;background:var(--amber);color:#000;border:none;border-radius:8px;padding:11px 20px;font-size:13px;font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:.04em;text-decoration:none;transition:opacity .15s;white-space:nowrap}
+.cpm-btn:hover{opacity:.88}
+@media(max-width:600px){.cpm-wrap{flex-direction:column;align-items:flex-start}.cpm-right{align-items:flex-start;width:100%}.cpm-btn{width:100%;justify-content:center}}
+
 /* FLASHBOARD cliente-view */
 .cv-fb-stat{background:var(--surface2);border:.5px solid var(--border);border-radius:10px;padding:12px 14px;text-align:center}
 .cv-fb-stat-val{font-size:21px;font-weight:800;font-family:'Montserrat',sans-serif;line-height:1;margin-bottom:3px}
@@ -492,6 +507,27 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
   </div>
 
   <div class="content">
+
+    <!-- REUNIÃO CHECKPOINT -->
+    <div id="cp-meeting-card" style="display:none">
+      <div class="cpm-wrap">
+        <div class="cpm-left">
+          <div class="cpm-badge-row">
+            <span class="cpm-badge" id="cpm-badge">CP1</span>
+            <span class="cpm-tag">Reunião de Checkpoint</span>
+          </div>
+          <div class="cpm-title" id="cpm-title">—</div>
+          <div class="cpm-meta" id="cpm-meta">—</div>
+        </div>
+        <div class="cpm-right">
+          <div class="cpm-countdown" id="cpm-countdown"></div>
+          <a class="cpm-btn" id="cpm-btn" href="#" target="_blank" rel="noopener">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="10" height="10" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M11 6l4-2v8l-4-2V6z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+            Entrar na reunião
+          </a>
+        </div>
+      </div>
+    </div>
 
     <!-- MENSAGEM -->
     <div class="msg-card" id="msg-card" style="display:none">
@@ -924,6 +960,7 @@ function renderAll(){
   document.getElementById('st-fat').textContent=fmtShort(lastFat);
   document.getElementById('st-fat-sub').textContent=fatMeses.length?fmtMes(fatMeses[0]):'sem registro';
 
+  renderCPMeeting();
   renderMsg();
   renderTeam();
   renderTimeline(cp.id,w,activeCPs);
@@ -971,6 +1008,30 @@ function renderConquistas(){
     </div>`;
   }).join('');
   body.innerHTML=summaryHtml+`<div class="conquistas-grid">${cardsHtml}</div>`;
+}
+
+function renderCPMeeting(){
+  const m=S.checkpointMeeting;
+  const card=document.getElementById('cp-meeting-card');
+  if(!m||!m.date||!m.link){card.style.display='none';return;}
+  const meetingDate=new Date(m.date+'T'+(m.time||'00:00')+':00');
+  const now=new Date();
+  const diffMs=meetingDate-now;
+  if(diffMs<-3600000){card.style.display='none';return;} // oculta 1h após a reunião
+  card.style.display='block';
+  const DIAS=['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
+  const MESES=['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+  const dStr=`${DIAS[meetingDate.getDay()]}, ${meetingDate.getDate()} de ${MESES[meetingDate.getMonth()]} de ${meetingDate.getFullYear()}`;
+  document.getElementById('cpm-badge').textContent='CP'+(m.cp||getW()<=4?1:getW()<=12?2:getW()<=20?3:4);
+  document.getElementById('cpm-title').textContent=dStr;
+  document.getElementById('cpm-meta').textContent=m.time?`Horário: ${m.time}${m.extra?' · '+m.extra:''}`:'';
+  document.getElementById('cpm-btn').href=m.link;
+  const diffDias=Math.ceil(diffMs/86400000);
+  const cd=document.getElementById('cpm-countdown');
+  if(diffMs<=0) cd.textContent='Acontecendo agora!';
+  else if(diffDias===0) cd.textContent='Hoje!';
+  else if(diffDias===1) cd.textContent='Amanhã';
+  else cd.textContent=`Em ${diffDias} dias`;
 }
 
 function renderMsg(){

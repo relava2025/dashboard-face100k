@@ -862,6 +862,39 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 
         <div class="section-card">
           <div class="sc-header">
+            <div class="sc-title">Reunião de Checkpoint</div>
+            <div class="sc-sub">aviso exibido na visão do cliente</div>
+          </div>
+          <div style="padding:14px 18px;display:flex;flex-direction:column;gap:10px">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+              <div>
+                <div style="font-size:11px;color:var(--text-sec);margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:.08em">Data</div>
+                <input type="date" id="cpm-inp-date" class="obs-field" style="padding:8px 12px" onchange="saveCPMeeting()">
+              </div>
+              <div>
+                <div style="font-size:11px;color:var(--text-sec);margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:.08em">Horário</div>
+                <input type="time" id="cpm-inp-time" class="obs-field" style="padding:8px 12px" onchange="saveCPMeeting()">
+              </div>
+            </div>
+            <div>
+              <div style="font-size:11px;color:var(--text-sec);margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:.08em">Link da reunião (Meet / Zoom)</div>
+              <input type="url" id="cpm-inp-link" class="obs-field" style="padding:8px 12px" placeholder="https://meet.google.com/..." oninput="saveCPMeeting()">
+            </div>
+            <div>
+              <div style="font-size:11px;color:var(--text-sec);margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:.08em">Checkpoint</div>
+              <select id="cpm-inp-cp" class="obs-field" style="padding:8px 12px" onchange="saveCPMeeting()">
+                <option value="1">CP1 — Primeira venda</option>
+                <option value="2">CP2 — Consistência de vendas</option>
+                <option value="3">CP3 — Comercial + metas</option>
+                <option value="4">CP4 — Escala e recompra</option>
+              </select>
+            </div>
+            <div id="cpm-status" style="font-size:12px;color:var(--text-dim)"></div>
+          </div>
+        </div>
+
+        <div class="section-card">
+          <div class="sc-header">
             <div class="sc-title">Health Score semanal</div>
             <div class="sc-sub" id="health-score-week">semana atual</div>
           </div>
@@ -1403,6 +1436,29 @@ function getW(){
   }
   return S.currentWeek||1;
 }
+let _cpmTimer=null;
+function saveCPMeeting(){
+  if(_cpmTimer)clearTimeout(_cpmTimer);
+  _cpmTimer=setTimeout(async()=>{
+    const date=document.getElementById('cpm-inp-date')?.value||'';
+    const time=document.getElementById('cpm-inp-time')?.value||'';
+    const link=document.getElementById('cpm-inp-link')?.value||'';
+    const cp=parseInt(document.getElementById('cpm-inp-cp')?.value)||1;
+    S.checkpointMeeting={date,time,link,cp};
+    await save({checkpointMeeting:S.checkpointMeeting});
+    const st=document.getElementById('cpm-status');
+    if(st) st.textContent=date&&link?'✓ Aviso ativado na visão do cliente':'Preencha data e link para ativar o aviso';
+  },600);
+}
+function renderCPMeetingFields(){
+  const m=S.checkpointMeeting||{};
+  const d=document.getElementById('cpm-inp-date'); if(d) d.value=m.date||'';
+  const t=document.getElementById('cpm-inp-time'); if(t) t.value=m.time||'';
+  const l=document.getElementById('cpm-inp-link'); if(l) l.value=m.link||'';
+  const c=document.getElementById('cpm-inp-cp'); if(c) c.value=m.cp||1;
+  const st=document.getElementById('cpm-status');
+  if(st) st.textContent=m.date&&m.link?'✓ Aviso ativado na visão do cliente':'Preencha data e link para ativar o aviso';
+}
 function saveStartDate(v){
   S.startDate=v;
   save({startDate:v});
@@ -1450,6 +1506,7 @@ function renderAll(){
   renderClientInfo();
   renderTimeline();
   renderCurrentWeek();
+  renderCPMeetingFields();
   renderHealthScore();
   renderMetas();
   renderResources();
