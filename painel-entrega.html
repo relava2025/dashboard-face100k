@@ -711,6 +711,7 @@ function renderCPMeetings(){
   const list=document.getElementById('cp-meetings-list');
   const countEl=document.getElementById('cp-meetings-count');
   if(!section||!list) return;
+  if(currentFilter!=='cp-call'){section.style.display='none';return;}
   const now=new Date();
   const in14=new Date(now.getTime()+14*24*60*60*1000);
   const DIAS=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
@@ -728,7 +729,7 @@ function renderCPMeetings(){
   list.innerHTML=upcoming.map(({c,next})=>{
     const diffMs=next.date-now;
     const diffDias=Math.ceil(diffMs/86400000);
-    const dStr=`${DIAS[next.date.getDay()]} ${next.date.getDate().toString().padStart(2,'0')}/${MESES[next.date.getMonth()]} ${next.date.getHours().toString().padStart(2,'0')}:${next.date.getMinutes().toString().padStart(2,'0')}`;
+    const dStr=`${DIAS[next.date.getDay()]} ${next.date.getDate().toString().padStart(2,'0')}/${MESES[next.date.getMonth()]}`;
     const daysLbl=diffMs<=0?'Agora!':diffDias===0?'Hoje':diffDias===1?'Amanhã':`Em ${diffDias} dias`;
     const linkBtn=next.link?`<a class="cpm-row-btn" href="${next.link}" target="_blank" rel="noopener">Entrar</a>`:'';
     return`<div class="cpm-row">
@@ -911,6 +912,7 @@ function setFilter(f,btn){
   currentFilter=f;
   document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
+  renderCPMeetings();
   renderClients();
 }
 
