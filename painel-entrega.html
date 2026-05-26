@@ -609,6 +609,13 @@ function getHealthColor(score){
   if(score>=60) return {cls:'sp-yellow',accentCls:'ca-yellow',fillCls:'cpf-yellow',dotColor:'#EAB308',label:'Em atenção'};
   return {cls:'sp-red',accentCls:'ca-red',fillCls:'cpf-red',dotColor:'#EF4444',label:'Em risco'};
 }
+function getHealthStatusLabel(s){
+  if(s>=100) return '⭐ Excelente';
+  if(s>=80)  return '🟢 Bom';
+  if(s>=60)  return '🟡 Atenção';
+  if(s>=40)  return '🟠 Em risco';
+  return '🔴 Em crise';
+}
 
 function getClientAlerts(c){
   const alerts = c.alerts || [];
@@ -838,7 +845,7 @@ function renderClients(){
     const progLabel = prog==='ativacao'?'Ativação':prog==='mentoria'?'Mentoria':'Aceleração';
     const progBadgeCls = prog==='ativacao'?'prog-badge-ativ':prog==='mentoria'?'prog-badge-ment':'prog-badge-acel';
     const alertBanner = hasAlert
-      ? `<div class="c-alert-banner cab-red"><div class="cab-dot" style="background:#EF4444"></div><span class="cab-txt" style="color:#EF4444">${alerts.length} tarefa${alerts.length!==1?'s':''} não cumprida${alerts.length!==1?'s':''} — semana ${c.currentWeek||'?'}</span><span class="cab-btn" style="border:0.5px solid rgba(239,68,68,0.3);border-radius:3px;color:#EF4444" onclick="event.stopPropagation();toggleAlertSection()">Ver alertas</span></div>`
+      ? `<div class="c-alert-banner cab-red"><div class="cab-dot" style="background:#EF4444"></div><span class="cab-txt" style="color:#EF4444">${alerts.length} tarefa${alerts.length!==1?'s':''} não cumprida${alerts.length!==1?'s':''} — semana ${calcQPWeek(c.startDate,c.program)}</span><span class="cab-btn" style="border:0.5px solid rgba(239,68,68,0.3);border-radius:3px;color:#EF4444" onclick="event.stopPropagation();toggleAlertSection()">Ver alertas</span></div>`
       : `<div class="c-alert-banner cab-green"><div class="cab-dot" style="background:#22C55E;animation:none"></div><span class="cab-txt" style="color:#22C55E">Todas as tarefas desta semana em dia</span></div>`;
     const cpCall = getCheckpointCallStatus(c);
     const cpCallBanner = cpCall
@@ -869,12 +876,12 @@ function renderClients(){
           <div class="c-prog-pct">${pct}%</div>
         </div>
         <div class="c-meta">
-          <div class="c-meta-item"><strong>S${c.currentWeek||'?'} / ${c.program==='ativacao'?'12':'24'}</strong>semana</div>
+          <div class="c-meta-item"><strong>S${calcQPWeek(c.startDate,c.program)} / ${c.program==='ativacao'?'12':'24'}</strong>semana</div>
           <div class="c-meta-item"><strong><span class="cp-badge">CP${c.checkpoint||1}</span></strong>checkpoint</div>
           <div class="c-meta-item"><strong>${startDate}</strong>início</div>
           ${endDateStr?`<div class="c-meta-item"><strong style="color:${contractSt.status==='expired'?'#EF4444':contractSt.status==='expiring'?'#F5A623':'var(--text)'}">${endDateStr}</strong>término</div>`:''}
         </div>
-        <div class="health-chip"><div class="h-dot" style="background:${h.dotColor}"></div>Health Score: ${score}</div>
+        <div class="health-chip"><div class="h-dot" style="background:${h.dotColor}"></div>${score?getHealthStatusLabel(score):'Sem health score'}</div>
         ${(c.metaBase||c.metaAlvo||c.metaSuper)?`<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">${c.metaBase?`<div style="font-size:11px;color:var(--text-sec)">Meta Base <strong style="color:var(--text);font-family:'JetBrains Mono',monospace">R$ ${Number(c.metaBase).toLocaleString('pt-BR')}</strong></div>`:''}${c.metaAlvo?`<div style="font-size:11px;color:var(--text-sec)">Meta Alvo <strong style="color:var(--amber);font-family:'JetBrains Mono',monospace">R$ ${Number(c.metaAlvo).toLocaleString('pt-BR')}</strong></div>`:''}${c.metaSuper?`<div style="font-size:11px;color:var(--text-sec)">Super Meta <strong style="color:var(--green);font-family:'JetBrains Mono',monospace">R$ ${Number(c.metaSuper).toLocaleString('pt-BR')}</strong></div>`:''}</div>`: ''}
         ${(()=>{
           const ms = c.marcos||{};
