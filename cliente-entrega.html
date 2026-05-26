@@ -245,6 +245,13 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .sat-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 4px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface2);cursor:pointer;transition:all .18s;font-family:inherit}
 .sat-btn:hover{border-color:var(--amber-border);background:var(--amber-dim)}
 .sat-btn.selected{border-color:var(--amber);background:var(--amber-dim)}
+.hs-status-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:4px}
+.hs-status-btn{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 8px;border-radius:10px;border:2px solid var(--border);background:var(--surface2);cursor:pointer;transition:all .2s;font-family:inherit;color:var(--text);width:100%}
+.hs-status-btn:hover{border-color:var(--amber-border);background:var(--surface3);transform:translateY(-2px)}
+.hs-status-btn.selected{border-color:var(--amber);background:var(--amber-dim);box-shadow:0 0 0 2px rgba(245,166,35,0.18)}
+.hs-emoji{font-size:26px;line-height:1}
+.hs-lbl{font-size:12px;font-weight:700;text-align:center;color:var(--text)}
+.hs-desc{font-size:10px;color:var(--text-sec);text-align:center;line-height:1.3}
 .sat-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;font-family:'Montserrat',sans-serif;background:var(--surface3);transition:background .18s}
 .sat-btn.selected .sat-num{background:var(--amber);color:#000}
 .sat-lbl{font-size:10px;color:var(--text-sec);text-align:center;font-family:'Montserrat',sans-serif;font-weight:600;letter-spacing:.03em;line-height:1.3}
@@ -485,6 +492,10 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
   .sat-btns{gap:4px}
   .sat-btn{padding:8px 2px}
   .sat-num{width:25px;height:25px;font-size:13px}
+  .hs-status-grid{grid-template-columns:1fr 1fr;gap:6px}
+  .hs-status-btn:last-child{grid-column:1/-1}
+  .hs-emoji{font-size:22px}
+  .hs-desc{display:none}
   .fb-stats-grid{grid-template-columns:repeat(2,1fr)!important}
   .rotina-card{padding:14px 14px}
   .onb-overall{padding:14px 16px}
@@ -887,79 +898,35 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
             <div class="sc-sub" id="health-score-week">semana atual</div>
           </div>
           <div class="sc-body">
-            <div class="health-section">
-              <div class="health-num-wrap">
-                <div class="health-num" id="health-num">—</div>
-                <div class="health-label">de 100</div>
-                <div class="health-pill" id="health-pill">—</div>
-              </div>
-              <div class="health-bars">
-                <div class="hbar-row">
-                  <div class="hbar-label" style="color:var(--amber)">Execução</div>
-                  <span class="hbar-auto-tag" style="background:var(--amber-dim);color:var(--amber);border:0.5px solid var(--amber-border)">CS preenche</span>
-                  <div class="hbar-bg"><div class="hbar-fill" id="hbar-exec" style="width:0%;background:var(--amber)"></div></div>
-                  <div class="hbar-val" id="hval-exec">0pt</div>
-                </div>
-                <div class="hbar-row">
-                  <div class="hbar-label">Funil</div>
-                  <span class="hbar-auto-tag">Auto</span>
-                  <div class="hbar-bg"><div class="hbar-fill" id="hbar-funil" style="width:0%;background:var(--blue)"></div></div>
-                  <div class="hbar-val" id="hval-funil">0pt</div>
-                </div>
-                <div class="hbar-row">
-                  <div class="hbar-label" style="color:var(--amber)">Satisfação</div>
-                  <span class="hbar-auto-tag" style="background:var(--amber-dim);color:var(--amber);border:0.5px solid var(--amber-border)">CS preenche</span>
-                  <div class="hbar-bg"><div class="hbar-fill" id="hbar-sat" style="width:0%;background:var(--green)"></div></div>
-                  <div class="hbar-val" id="hval-sat">0pt</div>
-                </div>
-              </div>
+            <div class="hs-status-grid" id="hs-status-grid">
+              <button class="hs-status-btn" data-score="20" onclick="selectHealthStatus(20)">
+                <span class="hs-emoji">🔴</span>
+                <span class="hs-lbl">Em crise</span>
+                <span class="hs-desc">Sem execução ou resultados</span>
+              </button>
+              <button class="hs-status-btn" data-score="40" onclick="selectHealthStatus(40)">
+                <span class="hs-emoji">🟠</span>
+                <span class="hs-lbl">Em risco</span>
+                <span class="hs-desc">Execução fraca, funil travado</span>
+              </button>
+              <button class="hs-status-btn" data-score="60" onclick="selectHealthStatus(60)">
+                <span class="hs-emoji">🟡</span>
+                <span class="hs-lbl">Atenção</span>
+                <span class="hs-desc">Progredindo, mas com gaps</span>
+              </button>
+              <button class="hs-status-btn" data-score="80" onclick="selectHealthStatus(80)">
+                <span class="hs-emoji">🟢</span>
+                <span class="hs-lbl">Bom</span>
+                <span class="hs-desc">Executando bem, resultados chegando</span>
+              </button>
+              <button class="hs-status-btn" data-score="100" onclick="selectHealthStatus(100)">
+                <span class="hs-emoji">⭐</span>
+                <span class="hs-lbl">Excelente</span>
+                <span class="hs-desc">Alta performance, batendo metas</span>
+              </button>
             </div>
-
-            <div class="chart-wrap" id="hs-chart-wrap" style="display:none;margin-top:16px;height:160px"><canvas id="hs-chart"></canvas></div>
-
-            <div style="margin-top:16px;border-top:1px solid var(--border);padding-top:16px">
-              <div style="font-size:11px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.12em;font-weight:700;font-family:'Montserrat',sans-serif;margin-bottom:8px">Execução desta semana (0–40pt)</div>
-              <div class="sat-btns" id="exec-buttons" style="margin-bottom:16px">
-                <button class="sat-btn" data-exec="0"  onclick="selectExec(0)"><div class="sat-num">0</div><div class="sat-lbl">Sem exe&shy;cução</div><div class="sat-pts">0pt</div></button>
-                <button class="sat-btn" data-exec="10" onclick="selectExec(10)"><div class="sat-num">10</div><div class="sat-lbl">Fraco</div><div class="sat-pts">10pt</div></button>
-                <button class="sat-btn" data-exec="20" onclick="selectExec(20)"><div class="sat-num">20</div><div class="sat-lbl">Regular</div><div class="sat-pts">20pt</div></button>
-                <button class="sat-btn" data-exec="30" onclick="selectExec(30)"><div class="sat-num">30</div><div class="sat-lbl">Bom</div><div class="sat-pts">30pt</div></button>
-                <button class="sat-btn" data-exec="40" onclick="selectExec(40)"><div class="sat-num">40</div><div class="sat-lbl">Excelente</div><div class="sat-pts">40pt</div></button>
-              </div>
-              <div style="font-size:11px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.12em;font-weight:700;font-family:'Montserrat',sans-serif;margin-bottom:8px">Satisfação do cliente (0–20pt)</div>
-              <div style="font-size:13px;color:var(--text-sec);line-height:1.6;margin-bottom:12px;padding:10px 12px;background:var(--surface2);border-radius:6px;border-left:2px solid var(--amber)">
-                <strong style="color:var(--text)">Pergunta para o cliente esta semana:</strong><br>
-                "Em uma escala de 1 a 5, como você está se sentindo com os resultados do programa?"
-              </div>
-              <div class="sat-btns" id="sat-buttons">
-                <button class="sat-btn" data-val="4" onclick="selectSat(4)">
-                  <div class="sat-num">1</div>
-                  <div class="sat-lbl">Muito ruim</div>
-                  <div class="sat-pts">4pt</div>
-                </button>
-                <button class="sat-btn" data-val="8" onclick="selectSat(8)">
-                  <div class="sat-num">2</div>
-                  <div class="sat-lbl">Ruim</div>
-                  <div class="sat-pts">8pt</div>
-                </button>
-                <button class="sat-btn" data-val="12" onclick="selectSat(12)">
-                  <div class="sat-num">3</div>
-                  <div class="sat-lbl">Regular</div>
-                  <div class="sat-pts">12pt</div>
-                </button>
-                <button class="sat-btn" data-val="16" onclick="selectSat(16)">
-                  <div class="sat-num">4</div>
-                  <div class="sat-lbl">Bom</div>
-                  <div class="sat-pts">16pt</div>
-                </button>
-                <button class="sat-btn" data-val="20" onclick="selectSat(20)">
-                  <div class="sat-num">5</div>
-                  <div class="sat-lbl">Otimo</div>
-                  <div class="sat-pts">20pt</div>
-                </button>
-              </div>
-              <button class="btn-primary" onclick="saveHealthScore()">Salvar Health Score desta semana</button>
-            </div>
+            <div id="hs-saved-msg" style="display:none;font-size:12px;color:var(--green);margin-top:10px;font-weight:600">✓ Salvo</div>
+            <div class="chart-wrap" id="hs-chart-wrap" style="display:none;margin-top:16px;height:140px"><canvas id="hs-chart"></canvas></div>
           </div>
         </div>
 
@@ -1598,24 +1565,11 @@ function renderCurrentWeek(){
 
 function renderHealthScore(){
   const score=S.healthScore||0;
-  const exec=S.healthExec||0;
-  const funil=S.healthFunil||0;
-  const sat=S.healthSat||0;
-  const h=getHealthColor(score);
-  const el=document.getElementById('health-num'); if(el){ el.textContent=score||'—'; el.style.color=score?h.color:'var(--text-sec)'; }
-  const pill=document.getElementById('health-pill'); if(pill){ pill.textContent=score?h.label:'Sem dados'; pill.style.background=score>=80?'var(--green-dim)':score>=60?'var(--yellow-dim)':score>0?'var(--red-dim)':'transparent'; pill.style.color=score?h.color:'var(--text-sec)'; }
-  const hbE=document.getElementById('hbar-exec'); if(hbE) hbE.style.width=(exec/40*100)+'%';
-  const hbF=document.getElementById('hbar-funil'); if(hbF) hbF.style.width=(funil/40*100)+'%';
-  const hbS=document.getElementById('hbar-sat'); if(hbS) hbS.style.width=(sat/20*100)+'%';
-  const ve=document.getElementById('hval-exec'); if(ve) ve.textContent=exec+'pt';
-  const vf=document.getElementById('hval-funil'); if(vf) vf.textContent=funil+'pt';
-  const vs=document.getElementById('hval-sat'); if(vs) vs.textContent=sat+'pt';
-  document.querySelectorAll('#sat-buttons .sat-btn').forEach(btn=>{
-    btn.classList.toggle('selected', parseInt(btn.dataset.val)===sat);
+  document.querySelectorAll('.hs-status-btn').forEach(btn=>{
+    btn.classList.toggle('selected', parseInt(btn.dataset.score)===score);
   });
-  document.querySelectorAll('#exec-buttons .sat-btn').forEach(btn=>{
-    btn.classList.toggle('selected', parseInt(btn.dataset.exec)===(S.healthExec||0));
-  });
+  const wLabel=document.getElementById('health-score-week');
+  if(wLabel) wLabel.textContent=score?`Semana ${getW()} — ${getHealthColor(score).label}`:'semana atual';
   renderHsChart();
 }
 
@@ -2040,31 +1994,14 @@ function scheduleObsSave(){
   },1200);
 }
 
-function selectExec(pts){
-  S.healthExec=pts;
-  S.healthScore=pts+(S.healthFunil||0)+(S.healthSat||0);
-  document.querySelectorAll('#exec-buttons .sat-btn').forEach(b=>b.classList.toggle('selected',parseInt(b.dataset.exec)===pts));
-  renderHealthScore();
-}
-
-function selectSat(pts){
-  S.healthSat=pts;
-  S.healthScore=(S.healthExec||0)+(S.healthFunil||0)+pts;
-  renderHealthScore();
-}
-
-function updateHealthScore(){
-  S.healthScore=(S.healthExec||0)+(S.healthFunil||0)+(S.healthSat||0);
-  renderHealthScore();
-}
-
-async function saveHealthScore(){
-  updateHealthScore();
+async function selectHealthStatus(score){
+  S.healthScore=score;
   if(!S.healthHistory) S.healthHistory={};
-  S.healthHistory[getW()]=S.healthScore;
-  await save({healthScore:S.healthScore,healthExec:S.healthExec,healthFunil:S.healthFunil,healthSat:S.healthSat,healthHistory:S.healthHistory});
-  showToast('Health Score salvo!','success');
-  renderHsChart();
+  S.healthHistory[getW()]=score;
+  renderHealthScore();
+  await save({healthScore:score,healthHistory:S.healthHistory});
+  const msg=document.getElementById('hs-saved-msg');
+  if(msg){ msg.style.display='block'; setTimeout(()=>msg.style.display='none',1800); }
 }
 
 async function saveFaturamento(){
@@ -2255,36 +2192,6 @@ function renderFlashboard(rows, hoje){
     }
   }
 
-  // ─── Health Score automático via Flashboard ───
-  // Apenas atualiza se tiver dados suficientes (>= 5 registros no mês)
-  if(rows.length >= 5){
-    const diaDoMes = hoje.getDate();
-    const freqPct = diaDoMes > 0 ? rows.length / diaDoMes : 0;
-    const pLead   = leads > 0 ? agend / leads : 0;
-    const pAgend  = agend > 0 ? compar / agend : 0;
-    const pCompar = compar > 0 ? vendas / compar : 0;
-
-    // healthExec (0–40): frequência de preenchimento + leads chegando
-    const execScore = Math.round(
-      Math.min(freqPct, 1) * 20 +           // 20pts frequência
-      Math.min(leads / 30, 1) * 20           // 20pts volume de leads (30+ = máx)
-    );
-    // healthFunil (0–40): taxas de conversão do funil
-    const funilScore = Math.round(
-      Math.min(pLead / 0.4, 1) * 15 +       // 15pts lead→agend (40%+ = máx)
-      Math.min(pAgend / 0.6, 1) * 15 +      // 15pts agend→compar (60%+ = máx)
-      Math.min(pCompar / 0.3, 1) * 10       // 10pts compar→venda (30%+ = máx)
-    );
-    const totalAuto = execScore + funilScore + (S.healthSat||0);
-
-    S.healthExec  = execScore;
-    S.healthFunil = funilScore;
-    S.healthScore = totalAuto;
-    renderHealthScore();
-    // Indicador visual sutil no card do Flashboard
-    const sub = document.getElementById('fb-sub');
-    if(sub) sub.textContent += ' · Health auto-calculado';
-  }
 
   // ─── Auto-sync faturamento mensal ───
   const fatFlashboard = rows.reduce((s,r)=>s

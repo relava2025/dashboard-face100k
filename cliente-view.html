@@ -874,7 +874,13 @@ function getW(){
   return S.currentWeek||1;
 }
 function getWeekState(w){return(S.weekStates&&S.weekStates[w])||{}}
-function getHealthLabel(s){if(s>=80)return s+' · Saudável';if(s>=60)return s+' · Em atenção';return s+' · Em risco'}
+function getHealthLabel(s){
+  if(s>=100)return'⭐ Excelente';
+  if(s>=80)return'🟢 Bom';
+  if(s>=60)return'🟡 Atenção';
+  if(s>=40)return'🟠 Em risco';
+  return'🔴 Em crise';
+}
 function getHealthClass(s){if(s>=80)return'hc-green';if(s>=60)return'hc-yellow';return'hc-red'}
 function getCPForWeek(w){for(const cp of CPS){if(cp.weeks.includes(w))return cp}return CPS[0]}
 function getActiveCPs(){return S.program==='ativacao'?CPS.slice(0,2):CPS}
