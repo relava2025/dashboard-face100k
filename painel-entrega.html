@@ -248,6 +248,20 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .qp-btn-secondary{background:var(--surface2);color:var(--text-sec);border:1px solid var(--border)}
 .qp-btn-secondary:hover{border-color:var(--amber);color:var(--amber)}
 
+/* OBS PREVIEW NO CARD */
+.c-obs-preview{font-size:11px;color:var(--text-sec);margin-top:7px;line-height:1.4;padding:6px 10px;background:var(--surface2);border-radius:5px;border-left:2px solid var(--amber-border)}
+/* STALE BADGE */
+.c-stale-badge{display:inline-flex;align-items:center;gap:3px;font-size:9px;color:var(--yellow);font-weight:700;font-family:'Montserrat',sans-serif;background:var(--yellow-dim);border:0.5px solid var(--yellow-border);border-radius:3px;padding:1px 6px;margin-left:5px;vertical-align:middle}
+/* HEALTH HISTORY NO QUICK PANEL */
+.qp-hist-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:4px}
+.qp-hist-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 2px;background:var(--surface2);border-radius:6px;border:1px solid var(--border)}
+.qp-hist-week{font-size:9px;color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-weight:500}
+.qp-hist-emoji{font-size:15px;line-height:1}
+.qp-hist-empty{font-size:12px;color:var(--text-dim);text-align:center;padding:10px 0}
+/* EXPORT MODAL */
+.export-modal{background:var(--surface);border:1px solid var(--border);border-radius:12px;width:520px;max-width:100%;padding:24px;max-height:82vh;overflow-y:auto}
+.export-textarea{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:12px;padding:12px;outline:none;resize:none;line-height:1.6;min-height:300px}
+
 @media(max-width:768px){
   .stats-row{grid-template-columns:repeat(3,1fr)}
   .topbar{padding:0 12px;gap:8px;height:auto;min-height:56px;flex-wrap:wrap}
@@ -262,6 +276,9 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
   .form-grid{grid-template-columns:1fr}
   .modal{width:100%!important;padding:20px 16px}
   .stat-val{font-size:27px}
+  #quick-panel{width:100%;right:-100%}
+  #quick-panel.open{right:0}
+  .export-modal{width:100%;padding:20px 16px}
 }
 @media(max-width:560px){
   .stats-row{grid-template-columns:1fr 1fr;gap:8px}
@@ -310,6 +327,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
     <div class="sync-dot" id="sync-dot"></div>
     <span class="sync-txt" id="sync-txt">Conectando...</span>
     <button class="btn-admin" onclick="openTutoriasModal()" style="margin-right:4px">📅 Tutorias</button>
+    <button class="btn-admin" onclick="openExportModal()">📋 Resumo</button>
     <a href="painel-excluidos.html" class="btn-admin" style="text-decoration:none;color:var(--text-sec)">🗂 Excluídos</a>
     <button class="btn-new" onclick="openModal()">+ Novo cliente</button>
   </div>
@@ -344,6 +362,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
     <button class="filter-btn" onclick="setFilter('cp4',this)">CP4</button>
     <button class="filter-btn" onclick="setFilter('cp-call',this)" data-filter="cp-call">CP Call</button>
     <button class="filter-btn" onclick="setFilter('risk',this)">Em risco</button>
+    <button class="filter-btn" onclick="setFilter('expiring',this)">Vencendo</button>
     <button class="filter-btn" onclick="setFilter('aceleracao',this)">Aceleração</button>
     <button class="filter-btn" onclick="setFilter('ativacao',this)">Ativação</button>
     <input class="search-input" id="search" type="text" placeholder="Buscar cliente..." oninput="renderClients()">
@@ -438,6 +457,11 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
       </div>
     </div>
 
+    <div class="qp-section" id="qp-hist-section" style="display:none">
+      <div class="qp-lbl">Histórico health score</div>
+      <div class="qp-hist-grid" id="qp-hist-grid"></div>
+    </div>
+
     <div class="qp-section">
       <div class="qp-lbl">Checkpoint atual</div>
       <div class="qp-cp-grid">
@@ -476,6 +500,22 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 </div>
 
 <div class="toast" id="toast"></div>
+
+<!-- MODAL RESUMO SEMANAL -->
+<div class="modal-overlay" id="export-modal" onclick="if(event.target===this)closeExportModal()" style="display:none;align-items:center;justify-content:center;padding:16px">
+  <div class="export-modal">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+      <div class="modal-title" style="margin:0">Resumo Semanal</div>
+      <button onclick="closeExportModal()" style="background:transparent;border:none;cursor:pointer;color:var(--text-dim);font-size:22px;line-height:1">×</button>
+    </div>
+    <div class="modal-sub" id="export-date" style="margin-bottom:14px"></div>
+    <textarea class="export-textarea" id="export-text" readonly></textarea>
+    <div style="display:flex;gap:8px;margin-top:14px;justify-content:flex-end">
+      <button class="btn-cancel" onclick="closeExportModal()">Fechar</button>
+      <button class="btn-save" onclick="copyExport()">Copiar texto</button>
+    </div>
+  </div>
+</div>
 
 <script>
 const DASHBOARD_URL = 'cliente-entrega.html';
@@ -649,6 +689,7 @@ function renderClients(){
       currentFilter==='all' ||
       (currentFilter==='cp-call' && !!getCheckpointCallStatus(c)) ||
       (currentFilter==='risk' && score<60) ||
+      (currentFilter==='expiring' && (()=>{ const st=getContractStatus(c); return st&&(st.status==='expiring'||st.status==='expired'); })()) ||
       (currentFilter==='aceleracao' && prog==='aceleracao') ||
       (currentFilter==='ativacao' && prog==='ativacao') ||
       currentFilter===cp;
@@ -686,8 +727,13 @@ function renderClients(){
     const score = c.healthScore||0;
     const h = getHealthColor(score);
     const pct = Math.min(100,Math.max(0,c.progress||0));
-    const ini = (c.name||'?').split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase();
+    const ini = (c.name||'?').split(' ').slice(0,2).map(x=>x[0]).join('').toUpperCase();
+    const curW = calcQPWeek(c.startDate, c.program);
     const startDate = c.startDate ? new Date(c.startDate).toLocaleDateString('pt-BR') : '—';
+    const cardObs = (c.weekStates&&c.weekStates[curW]&&c.weekStates[curW]._obs)||'';
+    const obsPreview = cardObs ? `<div class="c-obs-preview">${cardObs.length>60?cardObs.substring(0,60)+'…':cardObs}</div>` : '';
+    const updatedThisWeek = !!(c.healthHistory&&c.healthHistory[curW]!==undefined);
+    const staleBadge = (!updatedThisWeek && score>0 && curW>1) ? `<span class="c-stale-badge">desatualizado</span>` : '';
     const contractSt = getContractStatus(c);
     const endDateStr = contractSt ? contractSt.endDate.toLocaleDateString('pt-BR') : null;
     const contractBanner = contractSt && contractSt.status !== 'ok'
@@ -726,12 +772,13 @@ function renderClients(){
           <div class="c-prog-pct">${pct}%</div>
         </div>
         <div class="c-meta">
-          <div class="c-meta-item"><strong>S${calcQPWeek(c.startDate,c.program)} / ${c.program==='ativacao'?'12':'24'}</strong>semana</div>
+          <div class="c-meta-item"><strong>S${curW} / ${c.program==='ativacao'?'12':'24'}</strong>semana</div>
           <div class="c-meta-item"><strong><span class="cp-badge">CP${c.checkpoint||1}</span></strong>checkpoint</div>
           <div class="c-meta-item"><strong>${startDate}</strong>início</div>
           ${endDateStr?`<div class="c-meta-item"><strong style="color:${contractSt.status==='expired'?'#EF4444':contractSt.status==='expiring'?'#F5A623':'var(--text)'}">${endDateStr}</strong>término</div>`:''}
         </div>
-        <div class="health-chip"><div class="h-dot" style="background:${h.dotColor}"></div>${score?getHealthStatusLabel(score):'Sem health score'}</div>
+        <div class="health-chip"><div class="h-dot" style="background:${h.dotColor}"></div>${score?getHealthStatusLabel(score):'Sem health score'}${staleBadge}</div>
+        ${obsPreview}
         ${(c.metaBase||c.metaAlvo||c.metaSuper)?`<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">${c.metaBase?`<div style="font-size:11px;color:var(--text-sec)">Meta Base <strong style="color:var(--text);font-family:'JetBrains Mono',monospace">R$ ${Number(c.metaBase).toLocaleString('pt-BR')}</strong></div>`:''}${c.metaAlvo?`<div style="font-size:11px;color:var(--text-sec)">Meta Alvo <strong style="color:var(--amber);font-family:'JetBrains Mono',monospace">R$ ${Number(c.metaAlvo).toLocaleString('pt-BR')}</strong></div>`:''}${c.metaSuper?`<div style="font-size:11px;color:var(--text-sec)">Super Meta <strong style="color:var(--green);font-family:'JetBrains Mono',monospace">R$ ${Number(c.metaSuper).toLocaleString('pt-BR')}</strong></div>`:''}</div>`: ''}
         ${(()=>{
           const ms = c.marcos||{};
@@ -1274,6 +1321,19 @@ function openQuickPanel(id){
   document.getElementById('qp-cs2').value = c.cs2||'';
   document.getElementById('qp-cs3').value = c.cs3||'';
 
+  // Histórico health score
+  const hist = c.healthHistory||{};
+  const histSection = document.getElementById('qp-hist-section');
+  const histGrid = document.getElementById('qp-hist-grid');
+  const histKeys = Object.keys(hist).map(Number).sort((a,b)=>b-a).slice(0,6).reverse();
+  const HS_EMOJI = {20:'🔴',40:'🟠',60:'🟡',80:'🟢',100:'⭐'};
+  if(histKeys.length){
+    histSection.style.display='';
+    histGrid.innerHTML = histKeys.map(wk=>`<div class="qp-hist-item"><span class="qp-hist-week">S${wk}</span><span class="qp-hist-emoji">${HS_EMOJI[hist[wk]]||'—'}</span></div>`).join('');
+  } else {
+    histSection.style.display='none';
+  }
+
   document.getElementById('qp-link-full').href = `cliente-entrega.html?cliente=${encodeURIComponent(id)}`;
   document.getElementById('qp-link-view').href = `cliente-view.html?cliente=${encodeURIComponent(id)}`;
 
@@ -1351,7 +1411,51 @@ async function saveQPObs(){
   if(msg){ msg.classList.add('show'); setTimeout(()=>msg.classList.remove('show'),2000); }
 }
 
-document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeQuickPanel(); });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ closeQuickPanel(); closeExportModal(); } });
+
+function openExportModal(){
+  const HS_LABEL = {20:'🔴 Em crise',40:'🟠 Em risco',60:'🟡 Atenção',80:'🟢 Bom',100:'⭐ Excelente'};
+  const today = new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+  document.getElementById('export-date').textContent = today.charAt(0).toUpperCase()+today.slice(1);
+  const lines = [];
+  lines.push(`RESUMO SEMANAL — FACE 100K`);
+  lines.push(`System Digital · ${new Date().toLocaleDateString('pt-BR')}`);
+  lines.push('');
+  const sorted = [...allClients].sort((a,b)=>(a.healthScore||0)-(b.healthScore||0));
+  sorted.forEach(c=>{
+    const score = c.healthScore||0;
+    const label = HS_LABEL[score]||'— Sem health score';
+    const curW = calcQPWeek(c.startDate,c.program);
+    const prog = c.program==='ativacao'?'Ativação':c.program==='mentoria'?'Mentoria':'Aceleração';
+    const obs = (c.weekStates&&c.weekStates[curW]&&c.weekStates[curW]._obs)||'';
+    lines.push(`${label}`);
+    lines.push(`${c.name||'—'} · ${prog} · S${curW}`);
+    if(obs) lines.push(`Obs: ${obs}`);
+    const contractSt = getContractStatus(c);
+    if(contractSt&&contractSt.status==='expiring') lines.push(`⚠ Contrato vence em ${contractSt.daysLeft} dias`);
+    if(contractSt&&contractSt.status==='expired') lines.push(`⛔ Contrato encerrado`);
+    lines.push('');
+  });
+  document.getElementById('export-text').value = lines.join('\n');
+  const m = document.getElementById('export-modal');
+  m.style.display='flex';
+}
+
+function closeExportModal(){
+  document.getElementById('export-modal').style.display='none';
+}
+
+async function copyExport(){
+  const txt = document.getElementById('export-text').value;
+  try{
+    await navigator.clipboard.writeText(txt);
+    showToast('Resumo copiado!','success');
+  } catch(e){
+    document.getElementById('export-text').select();
+    document.execCommand('copy');
+    showToast('Resumo copiado!','success');
+  }
+}
 </script>
 </body>
 </html>
