@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Script de Venda — Consulta | System Digital</title>
+<style>
+  :root{
+    --bg:#0e0f13;
+    --panel:#16181f;
+    --panel-2:#1d2028;
+    --line:#2a2e39;
+    --gold:#c8a45c;
+    --gold-soft:#e3c98c;
+    --text:#e8e9ec;
+    --muted:#9aa0ac;
+    --dra:#7bb5ff;
+    --pac:#8be0a4;
+    --warn:#ffce7a;
+    --radius:16px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+    background:radial-gradient(1200px 600px at 80% -10%,#1a1d27 0%,var(--bg) 60%);
+    color:var(--text);
+    line-height:1.6;
+    min-height:100vh;
+  }
+  .layout{display:flex;max-width:1280px;margin:0 auto}
+
+  /* SIDEBAR NAV */
+  nav{
+    position:sticky;top:0;align-self:flex-start;
+    width:260px;height:100vh;overflow-y:auto;
+    padding:28px 18px;border-right:1px solid var(--line);
+    background:rgba(14,15,19,.6);backdrop-filter:blur(6px);
+  }
+  nav .brand{font-size:13px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:6px}
+  nav h1{font-size:20px;font-weight:700;margin-bottom:24px;line-height:1.25}
+  nav a{
+    display:flex;gap:10px;align-items:center;
+    color:var(--muted);text-decoration:none;font-size:14px;
+    padding:9px 12px;border-radius:10px;margin-bottom:4px;transition:.2s;
+  }
+  nav a:hover{background:var(--panel-2);color:var(--text)}
+  nav a .num{
+    width:24px;height:24px;flex:none;border-radius:50%;
+    border:1px solid var(--gold);color:var(--gold);
+    display:grid;place-items:center;font-size:12px;font-weight:700;
+  }
+
+  /* MAIN */
+  main{flex:1;padding:48px 56px 120px;min-width:0}
+  .hero{margin-bottom:48px}
+  .hero .kicker{color:var(--gold);letter-spacing:4px;font-size:13px;text-transform:uppercase}
+  .hero h2{font-size:38px;font-weight:800;margin:8px 0 14px;background:linear-gradient(90deg,#fff,var(--gold-soft));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero p{color:var(--muted);max-width:680px}
+
+  section{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:32px 34px;margin-bottom:28px;
+    scroll-margin-top:24px;
+  }
+  .step-head{display:flex;align-items:center;gap:16px;margin-bottom:22px}
+  .step-head .badge{
+    width:46px;height:46px;flex:none;border-radius:14px;
+    background:linear-gradient(135deg,var(--gold),#8a6d2f);
+    color:#1a1a1a;font-weight:800;font-size:20px;
+    display:grid;place-items:center;
+  }
+  .step-head h3{font-size:24px;font-weight:700}
+  .step-head .sub{color:var(--muted);font-size:13px;text-transform:uppercase;letter-spacing:2px}
+
+  /* DIALOGUE */
+  .line{display:flex;gap:12px;margin:14px 0;align-items:flex-start}
+  .tag{
+    flex:none;font-size:11px;font-weight:800;letter-spacing:1px;
+    padding:4px 10px;border-radius:8px;text-transform:uppercase;margin-top:3px;min-width:62px;text-align:center;
+  }
+  .tag.dra{background:rgba(123,181,255,.12);color:var(--dra);border:1px solid rgba(123,181,255,.3)}
+  .tag.pac{background:rgba(139,224,164,.1);color:var(--pac);border:1px solid rgba(139,224,164,.28)}
+  .line p{flex:1}
+  .line.pac p{color:var(--muted);font-style:italic}
+  .edit{color:var(--gold-soft);font-weight:600;border-bottom:1px dashed var(--gold);cursor:text;outline:none;padding:0 2px;border-radius:3px}
+  .edit:focus{background:rgba(200,164,92,.12)}
+
+  /* REMINDER / CALLOUT */
+  .note{
+    border-left:3px solid var(--warn);
+    background:rgba(255,206,122,.07);
+    padding:14px 18px;border-radius:0 10px 10px 0;margin:18px 0;
+    color:var(--warn);font-size:14.5px;
+  }
+  .note strong{color:#ffe2ad}
+  .action{
+    border-left:3px solid var(--gold);
+    background:rgba(200,164,92,.07);
+    padding:14px 18px;border-radius:0 10px 10px 0;margin:18px 0;font-size:14.5px;
+  }
+  .action b{color:var(--gold-soft)}
+
+  .divider{height:1px;background:var(--line);margin:26px 0}
+  .pill{display:inline-block;font-size:12px;color:var(--gold);border:1px solid var(--gold);border-radius:20px;padding:3px 12px;margin-bottom:14px;letter-spacing:1px}
+
+  ul.checks{list-style:none;margin:10px 0}
+  ul.checks li{padding:8px 0 8px 30px;position:relative;border-bottom:1px solid var(--line)}
+  ul.checks li:last-child{border:none}
+  ul.checks li::before{content:"✓";position:absolute;left:0;color:var(--pac);font-weight:800}
+
+  .yes-grid{display:grid;gap:14px;margin-top:6px}
+  .yes-card{background:var(--panel-2);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+  .yes-card .q{color:var(--text)}
+  .yes-card .a{color:var(--pac);font-weight:700;margin-top:6px;font-size:14px}
+
+  .tip-print{margin-top:40px;text-align:center;color:var(--muted);font-size:13px}
+  button.print{background:var(--gold);color:#1a1a1a;border:none;padding:12px 26px;border-radius:30px;font-weight:700;cursor:pointer;font-size:14px;margin-bottom:10px}
+  button.print:hover{background:var(--gold-soft)}
+
+  @media (max-width:880px){
+    nav{display:none}
+    main{padding:28px 20px 90px}
+    .hero h2{font-size:28px}
+  }
+  @media print{
+    nav{display:none}body{background:#fff;color:#000}
+    section{break-inside:avoid;border-color:#ccc;background:#fff}
+    .hero h2{color:#000;-webkit-text-fill-color:#000}
+    .tip-print{display:none}
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+
+  <nav>
+    <div class="brand">System Digital</div>
+    <h1>Script de Venda<br>da Consulta</h1>
+    <a href="#s1"><span class="num">1</span> Conexão &amp; Autoridade</a>
+    <a href="#s2"><span class="num">2</span> Abertura do problema</a>
+    <a href="#s3"><span class="num">3</span> SPIN / Investigação</a>
+    <a href="#s4"><span class="num">4</span> Implicação (emocional)</a>
+    <a href="#s5"><span class="num">5</span> O Combinado</a>
+    <a href="#s6"><span class="num">6</span> Apresentação do método</a>
+    <a href="#s7"><span class="num">7</span> Os 3 SIM</a>
+    <a href="#s8"><span class="num">8</span> Fechamento &amp; Valores</a>
+  </nav>
+
+  <main>
+    <div class="hero">
+      <div class="kicker">Roteiro Estratégico</div>
+      <h2>Condução da Consulta de Estética</h2>
+      <p>Roteiro completo para conduzir a consulta com autoridade, gerar conexão real e levar a paciente à decisão. Os campos em <span style="color:var(--gold-soft)">dourado</span> são editáveis — clique e personalize com seu nome, anos de atuação e procedimentos.</p>
+    </div>
+
+    <!-- 1 -->
+    <section id="s1">
+      <div class="step-head">
+        <div class="badge">1</div>
+        <div><div class="sub">Primeira etapa</div><h3>Conexão &amp; Autoridade</h3></div>
+      </div>
+      <span class="pill">Mostre quem está na frente dela</span>
+      <p style="color:var(--muted);margin-bottom:8px">Conexão não é perguntar da família ou algo superficial — é mostrar à paciente quem está na frente dela. <strong style="color:var(--text)">Mostre a sua autoridade!</strong></p>
+
+      <div class="line"><span class="tag dra">Dra.</span><p>Bom dia / boa tarde! Antes de iniciarmos a nossa consulta, me permita me apresentar para você?</p></div>
+      <div class="line"><span class="tag dra">Dra.</span><p>Muito prazer, sou a <span class="edit" contenteditable="true">Dra. [Nome]</span>, sou <span class="edit" contenteditable="true">Dentista / Médica</span>, atuo na área da estética há <span class="edit" contenteditable="true">[X]</span> anos e venho me dedicando a <span class="edit" contenteditable="true">[principais procedimentos]</span>. Tenho ajudado milhares de pacientes a se sentirem mais bonitas, mais confiantes e mais seguras. Então, seja muito bem-vinda à sua consulta.</p></div>
+      <div class="line"><span class="tag dra">Dra.</span><p>Separei <span class="edit" contenteditable="true">30 min / 1h</span> para essa consulta. Tudo bem em relação à duração?</p></div>
+      <div class="line pac"><span class="tag pac">Paciente</span><p>Claro, tudo certo.</p></div>
+
+      <div class="note"><strong>Por quê?</strong> Alinhar o tempo demonstra organização e te dá o controle da consulta desde o início.</div>
+
+      <div class="line"><span class="tag dra">Dra.</span><p>Me fala, <span class="edit" contenteditable="true">[nome]</span>: o que precisa acontecer aqui hoje, nessa consulta, para que você saia feliz e satisfeita, dizendo que valeu a pena vir se consultar com a <span class="edit" contenteditable="true">Dra. [Nome]</span>?</p></div>
+      <div class="line pac"><span class="tag pac">Paciente</span><p>Alcançar meu sonho, aumentar minha autoestima… <em>(aqui ela abre o coração)</em></p></div>
+
+      <div class="line"><span class="tag dra">Dra.</span><p>Vou precisar te fazer algumas perguntas para entender como vou conseguir te ajudar, tudo bem?</p></div>
+      <div class="line pac"><span class="tag pac">Paciente</span><p>Certo, tudo bem!</p></div>
+
+      <div class="note"><strong>Lembrete:</strong> O domínio da consulta é seu. <strong>Não perca o domínio da consulta!</strong></div>
+    </section>
+
+    <!-- 2 -->
+    <section id="s2">
+      <div class="step-head">
+        <div class="badge">2</div>
+        <div><div class="sub">Segunda etapa</div><h3>Abertura do problema</h3></div>
+      </div>
+      <div class="line"><span class="tag dra">Dra.</span><p>Então, <span class="edit" contenteditable="true">[nome]</span>, o que te motivou a agendar um horário comigo aqui hoje?</p></div>
+      <div class="line pac"><span class="tag pac">Paciente</span><p>Vai abrir o coração. <em>— Depois disso, entramos no SPIN.</em></p></div>
+    </section>
+
+    <!-- 3 -->
+    <section id="s3">
+      <div class="step-head">
+        <div class="badge">3</div>
+        <div><div class="sub">Terceira etapa</div><h3>SPIN / Investigação</h3></div>
+      </div>
+
+      <div class="line"><span class="tag dra">Dra.</span><p>Há quanto tempo isso está te incomodando?</p></div>
+      <div class="line"><span class="tag dra">Dra.</span><p>Já fez algum tratamento para resolver isso que está te incomodando?</p></div>
+
+      <div class="action"><b>Se SIM →</b> "Ok, o que você fez?"</div>
+      <div class="action"><b>Se NÃO →</b> "Mas, se isso te incomoda há tanto tempo, por que você ainda não procurou um tratamento?"</div>
+
+      <div class="line pac"><span class="tag pac">Paciente</span><p>Podem dizer que a prioridade não eram elas — eram os filhos, o marido, as coisas da casa, o carro…</p></div>
+
+      <div class="line"><span class="tag dra">Dra.</span><p>Certo, entendi. Mas e agora, a prioridade é você? Agora você resolveu se priorizar, é isso?</p></div>
+      <div class="line pac"><span class="tag pac">Paciente</span><p>Sim, agora é a minha vez. Ainda bem que chegou a minha vez.</p></div>
+
+      <div class="line"><span class="tag dra">Dra.</span><p>E você percebeu que, com o passar do tempo, está piorando?</p></div>
+      <div class="line pac"><span class="tag pac">Paciente</span><p>Sim, está piorando.</p></div>
+
+      <div class="line"><span class="tag dra">Dra.</span><p>Há quanto tempo está piorando?</p></div>
+      <div class="line pac"><span class="tag pac">Paciente</span><p>2 / 3 anos.</p></div>
+
+      <div class="line"><span class="tag dra">Dra.</span><p>Entendi. E se nada for feito agora, como você imagina que vai estar daqui a 3 anos?</p></div>
+      <div class="line pac"><span class="tag pac">Paciente</span><p>Muito pior.</p></div>
+
+      <div class="line"><span class="tag dra">Dra.</span><p>Consegue me trazer um pouco de clareza: o quanto isso está te incomodando, de 0 a 10?</p></div>
+      <div class="line pac"><span class="tag pac">Paciente</span><p>10 — 8.</p></div>
+      <div class="note">Se for <strong>8</strong>, pergunte: <strong>"E por que não um 10?"</strong> — ela vai aprofundar a dor.</div>
+    </section>
+
+    <!-- 4 -->
+    <section id="s4">
+      <div class="step-head">
+        <div class="badge">4</div>
+        <div><div class="sub">Quarta etapa</div><h3>Implicação — lado emocional</h3></div>
+      </div>
+
+      <div class="line"><span class="tag dra">Dra.</span><p>Esse problema afeta a sua autoestima?</p></div>
+      <div class="line pac"><span class="tag pac">Paciente</span><p>Sim, afeta. Não gosto de tirar foto, não gosto de me olhar no espelho.</p></div>
+
+      <div class="line"><span class="tag dra">Dra.</span><p>E o que você sente quando se olha no espelho? O que sente quando foge das fotos? O que sente quando deixa de sair por causa da sua aparência?</p></div>
+
+      <div class="note"><strong>Puxe o lado emocional da paciente.</strong> É aqui que a dor fica consciente e a decisão começa a nascer.</div>
+
+      <div class="action"><b>Use uma tela</b> e peça para a paciente mostrar os pontos no rosto que mais a incomodam. Ela vai mostrar.</div>
+      <div class="action"><b>Explique o quê / por quê / consequência:</b> diga o que é, por que acontece e a consequência se não for tratado. <u>Evite falar de tratamento até aqui.</u> Sempre com linguagem clara para a paciente entender.</div>
+
+      <div class="divider"></div>
+
+      <span class="pill">O Combinado virá logo a seguir</span>
+      <p style="color:var(--muted)">Essa é a parte da <strong style="color:var(--text)">implicação</strong>. Quando a dor estiver clara e dimensionada, faça o combinado 👇</p>
+    </section>
+
+    <!-- 5 -->
+    <section id="s5">
+      <div class="step-head">
+        <div class="badge">5</div>
+        <div><div class="sub">Quinta etapa</div><h3>O Combinado</h3></div>
+      </div>
+      <div class="line"><span class="tag dra">Dra.</span><p>Eu gostaria de fazer um combinado com você: de acordo com o que eu te apresentar e te explicar aqui, se fizer sentido para você resolver essa questão que te afeta comigo, eu gostaria de um <strong style="color:var(--pac)">"SIM, quero fazer"</strong>. Ou, caso não faça sentido, um <strong style="color:#ff9a9a">"NÃO quero fazer"</strong>, de forma bem clara. De toda forma, vai ser um prazer te atender. Posso contar com o seu sim ou não hoje?</p></div>
+      <div class="note"><strong>Por quê?</strong> O combinado elimina o "vou pensar". Você ganha um compromisso de decisão antes mesmo de apresentar o tratamento.</div>
+    </section>
+
+    <!-- 6 -->
+    <section id="s6">
+      <div class="step-head">
+        <div class="badge">6</div>
+        <div><div class="sub">Sexta etapa</div><h3>Apresentação do método</h3></div>
+      </div>
+      <div class="line"><span class="tag dra">Dra.</span><p><span class="edit" contenteditable="true">[Nome]</span>, não tenho dúvidas de que o tratamento indicado para você é o <span class="edit" contenteditable="true">[Arquitetura do Olhar]</span>. E a minha certeza é baseada na minha experiência profissional — por tratar centenas de casos — e também na minha avaliação clínica e no que você está me trazendo. O método <span class="edit" contenteditable="true">[Arquitetura do Olhar]</span> funciona tão bem e tem alto índice de sucesso porque segue algumas etapas. Vou te explicar cada uma delas. Estou aqui para te trazer muita clareza e, se tiver qualquer dúvida, pode me perguntar.</p></div>
+
+      <div class="action"><b>Explique as etapas do tratamento:</b> anestesia (que não será entubada), processo, recuperação, etc. Traga segurança e clareza.</div>
+
+      <ul class="checks">
+        <li>Apresente o <b>método</b> (ex.: Lapidar) e pincele sobre a blefaro</li>
+        <li>Mostre os <b>antes e depois</b> — inclua pessoas <b>5 anos mais novas</b> e <b>5 a 10 anos mais velhas</b> no "antes" e no resultado</li>
+        <li>Exiba <b>depoimentos em vídeo</b> de pacientes elogiando o tratamento ("mudou a minha vida") ao final dessa parte</li>
+      </ul>
+    </section>
+
+    <!-- 7 -->
+    <section id="s7">
+      <div class="step-head">
+        <div class="badge">7</div>
+        <div><div class="sub">Sétima etapa</div><h3>Buscar os 3 SIM</h3></div>
+      </div>
+      <div class="yes-grid">
+        <div class="yes-card">
+          <div class="q"><strong>1.</strong> <span class="edit" contenteditable="true">[Nome]</span>, quando você agendou um horário comigo, quando entrou por aquela porta, era isso que você estava buscando?</div>
+          <div class="a">→ Sim</div>
+        </div>
+        <div class="yes-card">
+          <div class="q"><strong>2.</strong> Consegui te trazer clareza para entender tudo o que te expliquei?</div>
+          <div class="a">→ Sim, doutor(a)</div>
+        </div>
+        <div class="yes-card">
+          <div class="q"><strong>3.</strong> Que bom! Então, digamos que haja um preço justo que caiba no seu orçamento — posso te considerar minha nova paciente?</div>
+          <div class="a">→ Sim, doutor(a)</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8 -->
+    <section id="s8">
+      <div class="step-head">
+        <div class="badge">8</div>
+        <div><div class="sub">Oitava etapa</div><h3>Fechamento &amp; Valores</h3></div>
+      </div>
+      <div class="line"><span class="tag dra">Dra.</span><p>Ficou alguma dúvida?</p></div>
+      <div class="line pac"><span class="tag pac">Paciente</span><p>Geralmente dizem que só precisam saber os valores.</p></div>
+      <div class="line"><span class="tag dra">Dra.</span><p>Então, agora, vamos falar sobre os valores.</p></div>
+      <div class="action"><b>Abra a apresentação de valores.</b> 🎯 A decisão já foi construída ao longo de toda a consulta — aqui você apenas conduz o investimento.</div>
+    </section>
+
+    <div class="tip-print">
+      <button class="print" onclick="window.print()">🖨️ Imprimir / Salvar em PDF</button>
+      <div>Dica: clique nos campos dourados para personalizar antes de imprimir.</div>
+    </div>
+  </main>
+</div>
+</body>
+</html>
