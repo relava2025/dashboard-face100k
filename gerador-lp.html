@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gerador de LP · Clínica</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Hanken+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--cream:#F4EEE1;--camel:#A8856A;--camel-dark:#8c6b51;--espresso:#2B231B;--muted:#7B6C5B;--line:#e2d6c2;--ok:#3FA66A;--danger:#c0584f}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Hanken Grotesk',sans-serif;background:#efe9dd;color:var(--espresso)}
+.app{display:grid;grid-template-columns:440px 1fr;height:100vh}
+/* ---- form panel ---- */
+.form{background:#fff;overflow-y:auto;border-right:1px solid var(--line)}
+.form-head{padding:22px 26px;border-bottom:1px solid var(--line);position:sticky;top:0;background:#fff;z-index:5}
+.form-head h1{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:600}
+.form-head p{font-size:.82rem;color:var(--muted);margin-top:2px}
+.sec{padding:18px 26px;border-bottom:1px solid var(--line)}
+.sec h2{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--camel-dark);font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.sec h2 .chev{margin-left:auto;transition:.2s;font-size:.9rem}
+.sec.collapsed .sec-body{display:none}
+.sec.collapsed h2 .chev{transform:rotate(-90deg)}
+.sec h2.clk{cursor:pointer;user-select:none}
+label{display:block;font-size:.78rem;font-weight:600;color:#5f544a;margin:12px 0 5px}
+label:first-of-type{margin-top:0}
+input[type=text],textarea{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-family:inherit;font-size:.88rem;color:var(--espresso);background:#fcfaf6;transition:.2s}
+input[type=text]:focus,textarea:focus{outline:none;border-color:var(--camel);background:#fff}
+textarea{resize:vertical;min-height:72px;line-height:1.5}
+.hint{font-size:.72rem;color:#a99a86;margin-top:4px}
+.uploader{border:1.5px dashed var(--line);border-radius:10px;padding:16px;text-align:center;cursor:pointer;transition:.2s;background:#fcfaf6}
+.uploader:hover{border-color:var(--camel);background:#fff}
+.uploader input{display:none}
+.uploader .u-ic{width:34px;height:34px;margin:0 auto 8px;color:var(--camel)}
+.uploader .u-t{font-size:.84rem;font-weight:600}
+.uploader .u-s{font-size:.72rem;color:var(--muted);margin-top:2px}
+.thumbs{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.thumb{position:relative}
+.thumb img{width:48px;height:48px;object-fit:cover;border-radius:6px;border:1px solid var(--line);display:block}
+.thumb .x{position:absolute;top:-6px;right:-6px;width:18px;height:18px;border-radius:50%;background:var(--danger);color:#fff;border:none;font-size:.7rem;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.thumbs .ph-empty{font-size:.74rem;color:#b3a690;font-style:italic}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.testi-block{border:1px solid var(--line);border-radius:8px;padding:12px;margin-bottom:10px;background:#fcfaf6}
+.pair-block{border:1px solid var(--line);border-radius:8px;padding:10px;margin-bottom:10px;background:#fcfaf6}
+.pair-up{min-height:74px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px}
+.pair-up .pair-th{width:100%;height:74px;object-fit:cover;border-radius:6px;border:1px solid var(--line)}
+/* color grid */
+.colors{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.color-field{display:flex;align-items:center;gap:9px;background:#fcfaf6;border:1px solid var(--line);border-radius:8px;padding:7px 10px}
+.color-field input[type=color]{width:30px;height:30px;border:none;background:none;padding:0;cursor:pointer;border-radius:6px;flex:none}
+.color-field span{font-size:.74rem;font-weight:600;color:#5f544a}
+/* toggles */
+.toggle{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid #f1eadc}
+.toggle:last-child{border-bottom:none}
+.toggle span{font-size:.82rem;font-weight:600;color:#5f544a}
+.sw{position:relative;width:40px;height:22px;flex:none}
+.sw input{opacity:0;width:0;height:0}
+.sw .track{position:absolute;inset:0;background:#d9cdb8;border-radius:20px;transition:.2s;cursor:pointer}
+.sw .track::before{content:"";position:absolute;width:16px;height:16px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s}
+.sw input:checked + .track{background:var(--ok)}
+.sw input:checked + .track::before{transform:translateX(18px)}
+/* ---- preview panel ---- */
+.preview{display:flex;flex-direction:column;min-width:0}
+.pv-bar{display:flex;align-items:center;gap:10px;padding:14px 20px;background:#fff;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.pv-bar .spacer{flex:1}
+.btn{display:inline-flex;align-items:center;gap:8px;border:none;border-radius:8px;padding:11px 18px;font-family:inherit;font-size:.84rem;font-weight:600;cursor:pointer;transition:.2s}
+.btn-primary{background:var(--camel);color:#fff}
+.btn-primary:hover{background:var(--camel-dark)}
+.btn-ghost{background:#f0e9dc;color:var(--espresso)}
+.btn-ghost:hover{background:#e7dcc8}
+.btn-ok{background:var(--ok);color:#fff}
+.btn-ok:hover{filter:brightness(.94)}
+.btn-sm{padding:8px 13px;font-size:.78rem}
+.size-tag{font-size:.74rem;color:var(--muted)}
+.size-tag b{color:var(--espresso)}
+.pv-frame-wrap{flex:1;overflow:hidden;background:#ddd2bf;display:flex;justify-content:center;padding:18px}
+.pv-frame{width:100%;max-width:1100px;height:100%;border:none;background:#fff;border-radius:8px;box-shadow:0 20px 50px -30px rgba(0,0,0,.5)}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--espresso);color:#fff;padding:12px 22px;border-radius:30px;font-size:.85rem;opacity:0;transition:.3s;pointer-events:none;z-index:50;max-width:80vw;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.err{background:var(--danger)}
+.toast.ok{background:var(--ok)}
+.seg{display:inline-flex;background:#f0e9dc;border-radius:8px;padding:3px}
+.seg button{border:none;background:none;padding:7px 14px;border-radius:6px;font-family:inherit;font-size:.8rem;font-weight:600;color:var(--muted);cursor:pointer}
+.seg button.on{background:#fff;color:var(--espresso);box-shadow:0 2px 6px -3px rgba(0,0,0,.3)}
+.btn-group{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.btn-group .btn{flex:1;justify-content:center}
+.gh-log{font-size:.76rem;margin-top:10px;padding:10px 12px;border-radius:8px;background:#fcfaf6;border:1px solid var(--line);color:#5f544a;display:none;line-height:1.5}
+.gh-log.show{display:block}
+.gh-log a{color:var(--camel-dark);font-weight:700;border-bottom:1px solid var(--camel)}
+.warn{font-size:.72rem;color:#9a6b4a;background:#fbf1e6;border:1px solid #ecd9c2;border-radius:8px;padding:9px 11px;margin-top:8px;line-height:1.45}
+input[type=password]{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-family:inherit;font-size:.88rem;background:#fcfaf6}
+input[type=password]:focus{outline:none;border-color:var(--camel);background:#fff}
+@media(max-width:900px){.app{grid-template-columns:1fr;height:auto}.preview{height:80vh;position:sticky;top:0}}
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- ============ FORM ============ -->
+  <div class="form">
+    <div class="form-head">
+      <h1>Gerador de LP · Clínica</h1>
+      <p>Tudo editável: textos, cores, seções, fotos. Salve o projeto e publique direto.</p>
+    </div>
+
+    <div class="sec">
+      <h2 class="clk">Identidade <span class="chev">▾</span></h2>
+      <div class="sec-body">
+      <label>Nome completo (profissional)</label>
+      <input type="text" id="name" value="Daliene Electo Fernandes">
+      <label>Logo (opcional — substitui o monograma)</label>
+      <label class="uploader"><input type="file" id="f_logo" accept="image/*">
+        <div class="u-t">Escolher logo</div><div class="u-s">PNG com fundo transparente, de preferência clara</div></label>
+      <div class="thumbs" id="t_logo"><span class="ph-empty">sem logo — usando monograma</span></div>
+      <div class="hint">A logo aparece sobre a foto do topo (fundo escuro). Logos brancas/claras ficam melhores.</div>
+      <label>Iniciais do monograma (usado se não houver logo)</label>
+      <input type="text" id="mono" value="DE">
+      <div class="row2">
+        <div><label>Nome curto (topo)</label><input type="text" id="short" value="Daliene Electo · Harmonização Facial"></div>
+        <div><label>Especialidade (role)</label><input type="text" id="role" value="Harmonização Facial"></div>
+      </div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <h2 class="clk">Hero <span class="chev">▾</span></h2>
+      <div class="sec-body">
+      <label>Pergunta de impacto (headline)</label>
+      <textarea id="headline">Você também se incomoda com os sinais do tempo no seu rosto?</textarea>
+      <label>Texto do botão</label>
+      <input type="text" id="cta" value="Fale conosco">
+      </div>
+    </div>
+
+    <div class="sec">
+      <h2 class="clk">Contato &amp; Localização <span class="chev">▾</span></h2>
+      <div class="sec-body">
+      <label>WhatsApp (com DDD)</label>
+      <input type="text" id="wpp" value="49 8900-1311">
+      <div class="hint">O link wa.me é montado automaticamente.</div>
+      <label>Instagram (sem @)</label>
+      <input type="text" id="insta" value="dra.dalienelecto">
+      <label>Endereço completo</label>
+      <input type="text" id="addr" value="R. Mal. Deodoro, 718 E – Sala 01 – Jardim Itália, Chapecó – SC, 89802-141">
+      <label>Link do Google Maps</label>
+      <input type="text" id="maps" value="https://www.google.com/maps?cid=971907991773561674">
+      <div class="row2">
+        <div><label>Telefone</label><input type="text" id="phone" value="(49) 99141-1546"></div>
+        <div><label>Horário</label><input type="text" id="hours" value="Atendimento até às 18h"></div>
+      </div>
+      <label>E-mail (opcional)</label>
+      <input type="text" id="email" value="">
+      </div>
+    </div>
+
+    <div class="sec">
+      <h2 class="clk">Sobre <span class="chev">▾</span></h2>
+      <div class="sec-body">
+      <label>Credencial</label>
+      <input type="text" id="cred" value="Cirurgiã-Dentista · Harmonização Facial &amp; Odontologia">
+      <label>Registro CRO/CRM (opcional)</label>
+      <input type="text" id="reg" value="">
+      <label>Bio — parágrafo 1</label>
+      <textarea id="bio1">Ao longo de sua trajetória na área da estética, a Dra. Daliene se tornou referência por entregar resultados naturais, sofisticados e que respeitam a individualidade de cada paciente.</textarea>
+      <label>Bio — parágrafo 2</label>
+      <textarea id="bio2">Seu trabalho une técnica, sensibilidade estética e atendimento personalizado, oferecendo uma experiência de cuidado que transforma a forma como cada paciente se vê.</textarea>
+      </div>
+    </div>
+
+    <div class="sec">
+      <h2 class="clk">Fotos <span class="chev">▾</span></h2>
+      <div class="sec-body">
+      <label>Retrato da profissional (hero e sobre)</label>
+      <label class="uploader"><input type="file" id="f_portrait" accept="image/*">
+        <div class="u-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg></div>
+        <div class="u-t">Escolher retrato</div><div class="u-s">1 foto vertical</div></label>
+      <div class="thumbs" id="t_portrait"><span class="ph-empty">nenhuma foto</span></div>
+
+      <label style="margin-top:16px">Antes &amp; Depois — comparador interativo (arrastar)</label>
+      <div class="hint">Envie a foto <b>antes</b> e a <b>depois</b> de cada caso. Vira um slider que o paciente arrasta. Use fotos do mesmo enquadramento.</div>
+      <div id="pairs"></div>
+      <button class="btn btn-ghost" id="addPair" style="width:100%;justify-content:center;margin-top:8px">+ Adicionar par antes/depois</button>
+
+      <label style="margin-top:16px">Antes &amp; Depois (imagem já montada) — opcional</label>
+      <label class="uploader"><input type="file" id="f_ba" accept="image/*" multiple>
+        <div class="u-t">Escolher antes/depois</div><div class="u-s">pode selecionar várias</div></label>
+      <div class="thumbs" id="t_ba"><span class="ph-empty">nenhuma foto</span></div>
+
+      <label style="margin-top:16px">Fotos de procedimento (doutora atendendo)</label>
+      <label class="uploader"><input type="file" id="f_proc" accept="image/*" multiple>
+        <div class="u-t">Escolher procedimentos</div><div class="u-s">ideal 3 fotos verticais</div></label>
+      <div class="thumbs" id="t_proc"><span class="ph-empty">nenhuma foto</span></div>
+
+      <label style="margin-top:16px">Fotos da clínica (ambiente)</label>
+      <label class="uploader"><input type="file" id="f_clinic" accept="image/*" multiple>
+        <div class="u-t">Escolher fotos da clínica</div><div class="u-s">2 a 6 fotos</div></label>
+      <div class="thumbs" id="t_clinic"><span class="ph-empty">nenhuma foto</span></div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <h2 class="clk">Depoimentos <span class="chev">▾</span></h2>
+      <div class="sec-body">
+      <div id="testis"></div>
+      <button class="btn btn-ghost" id="addTesti" style="width:100%;justify-content:center">+ Adicionar depoimento</button>
+      </div>
+    </div>
+
+    <!-- ===== NOVO: CORES ===== -->
+    <div class="sec">
+      <h2 class="clk">Cores da marca <span class="chev">▾</span></h2>
+      <div class="sec-body">
+      <div class="colors">
+        <label class="color-field"><input type="color" id="c_cream" value="#F4EEE1"><span>Fundo creme</span></label>
+        <label class="color-field"><input type="color" id="c_cream2" value="#EFE7D7"><span>Faixa CTA</span></label>
+        <label class="color-field"><input type="color" id="c_camel" value="#A8856A"><span>Botões / destaque</span></label>
+        <label class="color-field"><input type="color" id="c_camelDark" value="#977459"><span>Botão (hover)</span></label>
+        <label class="color-field"><input type="color" id="c_tan" value="#B08D6E"><span>Faixa procedimentos</span></label>
+        <label class="color-field"><input type="color" id="c_bluegray" value="#DFE4E2"><span>Fundo "Sobre"</span></label>
+        <label class="color-field"><input type="color" id="c_heading" value="#7C6B5C"><span>Títulos</span></label>
+        <label class="color-field"><input type="color" id="c_text" value="#6E6055"><span>Texto</span></label>
+        <label class="color-field"><input type="color" id="c_dark" value="#463C33"><span>Texto forte</span></label>
+      </div>
+      <button class="btn btn-ghost btn-sm" id="resetColors" style="width:100%;justify-content:center;margin-top:10px">↺ Restaurar cores padrão</button>
+      </div>
+    </div>
+
+    <!-- ===== NOVO: TEXTOS DAS SEÇÕES ===== -->
+    <div class="sec">
+      <h2 class="clk">Textos das seções <span class="chev">▾</span></h2>
+      <div class="sec-body">
+      <label>Chamada acima do 1º botão (resultados)</label>
+      <input type="text" id="t_resCta" value="Tire suas dúvidas ou faça seu agendamento">
+      <label>Título da faixa de procedimentos</label>
+      <input type="text" id="t_tend" value="Tendência no mercado da beleza!">
+      <label>Frase da seção ambiente/clínica</label>
+      <input type="text" id="t_amb" value="Um lugar, várias sensações. A experiência que você tanto procurava!">
+      <label>Chamada da faixa CTA (creme)</label>
+      <input type="text" id="t_band" value="Tire suas dúvidas ou faça seu agendamento">
+      <label>Prefixo do botão do Instagram</label>
+      <input type="text" id="t_igPrefix" value="Conheça mais em">
+      <label>Título dos depoimentos</label>
+      <input type="text" id="t_testi" value="O que dizem por aí...">
+      <label>Título da localização</label>
+      <input type="text" id="t_loc" value="Localização">
+      </div>
+    </div>
+
+    <!-- ===== NOVO: SEÇÕES (liga/desliga) ===== -->
+    <div class="sec">
+      <h2 class="clk">Seções da página <span class="chev">▾</span></h2>
+      <div class="sec-body">
+      <div class="toggle"><span>Resultados (antes &amp; depois)</span><label class="sw"><input type="checkbox" id="s_results" checked><span class="track"></span></label></div>
+      <div class="toggle"><span>Tendência / procedimentos</span><label class="sw"><input type="checkbox" id="s_tend" checked><span class="track"></span></label></div>
+      <div class="toggle"><span>Ambiente da clínica</span><label class="sw"><input type="checkbox" id="s_amb" checked><span class="track"></span></label></div>
+      <div class="toggle"><span>Faixa CTA (creme)</span><label class="sw"><input type="checkbox" id="s_band" checked><span class="track"></span></label></div>
+      <div class="toggle"><span>Sobre a profissional</span><label class="sw"><input type="checkbox" id="s_about" checked><span class="track"></span></label></div>
+      <div class="toggle"><span>Depoimentos</span><label class="sw"><input type="checkbox" id="s_testi" checked><span class="track"></span></label></div>
+      <div class="toggle"><span>Localização</span><label class="sw"><input type="checkbox" id="s_loc" checked><span class="track"></span></label></div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <h2 class="clk">Rastreamento <span class="chev">▾</span></h2>
+      <div class="sec-body">
+      <label>ID do Meta Pixel (opcional)</label>
+      <input type="text" id="pixel" value="1336226165142849">
+      <div class="hint">Deixe vazio para não incluir o pixel.</div>
+      </div>
+    </div>
+
+    <!-- ===== NOVO: PROJETO (salvar/carregar) ===== -->
+    <div class="sec">
+      <h2 class="clk">Projeto <span class="chev">▾</span></h2>
+      <div class="sec-body">
+      <div class="hint">Salva automaticamente neste navegador. Exporte um arquivo para levar o projeto (com fotos) pra outro PC.</div>
+      <div class="btn-group">
+        <button class="btn btn-ghost btn-sm" id="btnExport">⬇ Exportar projeto</button>
+        <button class="btn btn-ghost btn-sm" id="btnImport">⬆ Importar projeto</button>
+      </div>
+      <input type="file" id="importFile" accept=".json,application/json" style="display:none">
+      <button class="btn btn-ghost btn-sm" id="btnReset" style="width:100%;justify-content:center;margin-top:8px;color:var(--danger)">🗑 Limpar tudo (novo projeto)</button>
+      </div>
+    </div>
+
+    <!-- ===== NOVO: PUBLICAR NO GITHUB ===== -->
+    <div class="sec">
+      <h2 class="clk">Publicar no GitHub <span class="chev">▾</span></h2>
+      <div class="sec-body">
+      <label>Repositório (usuário/nome)</label>
+      <input type="text" id="ghRepo" placeholder="relava2025/dra-fulana">
+      <div class="row2">
+        <div><label>Arquivo</label><input type="text" id="ghPath" value="index.html"></div>
+        <div><label>Branch</label><input type="text" id="ghBranch" value="main"></div>
+      </div>
+      <label>Token de acesso (classic, escopo repo)</label>
+      <input type="password" id="ghToken" placeholder="ghp_...">
+      <div class="warn">⚠️ O token é uma senha. Ele fica salvo só neste navegador (não vai no arquivo exportado). Recomendado revogar depois em github.com/settings/tokens.</div>
+      <button class="btn btn-ok" id="btnPublish" style="width:100%;justify-content:center;margin-top:10px">🚀 Publicar no GitHub Pages</button>
+      <div class="gh-log" id="ghLog"></div>
+      </div>
+    </div>
+    <div style="height:30px"></div>
+  </div>
+
+  <!-- ============ PREVIEW ============ -->
+  <div class="preview">
+    <div class="pv-bar">
+      <div class="seg"><button id="vdesk" class="on">🖥 Desktop</button><button id="vmob">📱 Mobile</button></div>
+      <div class="spacer"></div>
+      <span class="size-tag">Código: <b id="sizeTag">—</b></span>
+      <button class="btn btn-ghost" id="btnFull">Baixar HTML</button>
+      <button class="btn btn-primary" id="btnCopy">Copiar código (GHL)</button>
+    </div>
+    <div class="pv-frame-wrap"><iframe class="pv-frame" id="frame" title="Prévia"></iframe></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ---------------- estado ----------------
+const DEFAULT_TESTIS = [
+  {n:"Sirlene Ferreira", p:"Avaliação Google", t:"Profissional excepcional! Atendimento humanizado, resultado natural e um cuidado que faz toda a diferença. Recomendo de olhos fechados."}
+];
+const state = { logo:"", portrait:"", ba:[], pairs:[], proc:[], clinic:[], testis: JSON.parse(JSON.stringify(DEFAULT_TESTIS)) };
+const DEFAULT_COLORS = {cream:"#F4EEE1",cream2:"#EFE7D7",camel:"#A8856A",camelDark:"#977459",tan:"#B08D6E",bluegray:"#DFE4E2",heading:"#7C6B5C",text:"#6E6055",dark:"#463C33"};
+const LS_KEY = "gerador-lp-clinica-v2";
+
+// ---------------- helpers ----------------
+const $ = id => document.getElementById(id);
+function esc(s){ return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function waLink(raw){ let d=(raw||"").replace(/\D/g,""); if(d && d.length<=11) d="55"+d; return "https://wa.me/"+d+"?text=Ol%C3%A1!%20Gostaria%20de%20agendar%20uma%20avalia%C3%A7%C3%A3o."; }
+function waPlain(raw){ let d=(raw||"").replace(/\D/g,""); if(d && d.length<=11) d="55"+d; return "https://wa.me/"+d; }
+function b64utf8(str){ return btoa(unescape(encodeURIComponent(str))); }
+
+async function fileToData(file,maxW,q,mime){
+  let bmp;
+  try{ bmp=await createImageBitmap(file,{imageOrientation:"from-image"}); }
+  catch(e){ try{ bmp=await createImageBitmap(file);}catch(e2){ return ""; } }
+  let w=bmp.width,h=bmp.height; if(w>maxW){ h=Math.round(h*maxW/w); w=maxW; }
+  const c=document.createElement("canvas"); c.width=w; c.height=h;
+  c.getContext("2d").drawImage(bmp,0,0,w,h);
+  return c.toDataURL(mime||"image/jpeg", mime==="image/png"?undefined:q);
+}
+function renderThumbs(id,key,single){
+  const el=$(id); const arr = single ? (state[key]?[state[key]]:[]) : state[key];
+  if(!arr.length){ el.innerHTML='<span class="ph-empty">nenhuma foto</span>'; return; }
+  el.innerHTML = arr.map((u,i)=>`<div class="thumb"><img src="${u}"><button class="x" data-k="${key}" data-i="${i}">&times;</button></div>`).join("");
+  el.querySelectorAll(".x").forEach(b=>b.addEventListener("click",e=>{
+    const k=e.target.dataset.k;
+    if(single){ state[k]=""; } else { state[k].splice(+e.target.dataset.i,1); }
+    renderThumbs(id,k,single); render(); save();
+  }));
+}
+function renderAllThumbs(){
+  renderThumbs("t_logo","logo",true);
+  renderThumbs("t_portrait","portrait",true);
+  renderThumbs("t_ba","ba",false);
+  renderThumbs("t_proc","proc",false);
+  renderThumbs("t_clinic","clinic",false);
+}
+
+// ---------------- uploads ----------------
+async function handleFiles(input, key, maxW, q, thumbId, single, mime){
+  const files=[...input.files]; if(!files.length) return;
+  const out=[];
+  for(const f of files){ const d=await fileToData(f,maxW,q,mime); if(d) out.push(d); }
+  if(single){ state[key]=out[0]||""; }
+  else{ state[key]=state[key].concat(out); }
+  renderThumbs(thumbId,key,single); render(); save(); input.value="";
+}
+$("f_logo").addEventListener("change",e=>handleFiles(e.target,"logo",520,0.9,"t_logo",true,"image/png"));
+$("f_portrait").addEventListener("change",e=>handleFiles(e.target,"portrait",700,0.8,"t_portrait",true));
+$("f_ba").addEventListener("change",e=>handleFiles(e.target,"ba",760,0.72,"t_ba",false));
+$("f_proc").addEventListener("change",e=>handleFiles(e.target,"proc",480,0.72,"t_proc",false));
+$("f_clinic").addEventListener("change",e=>handleFiles(e.target,"clinic",560,0.72,"t_clinic",false));
+
+// ---------------- depoimentos ----------------
+function renderTestis(){
+  const wrap=$("testis"); wrap.innerHTML="";
+  state.testis.forEach((t,i)=>{
+    const b=document.createElement("div"); b.className="testi-block";
+    b.innerHTML=`<input type="text" placeholder="Nome" value="${esc(t.n)}" data-i="${i}" data-k="n" style="margin-bottom:6px">
+      <input type="text" placeholder="Procedimento / fonte" value="${esc(t.p)}" data-i="${i}" data-k="p" style="margin-bottom:6px">
+      <textarea placeholder="Depoimento" data-i="${i}" data-k="t" style="min-height:54px">${esc(t.t)}</textarea>
+      <button class="btn btn-ghost" data-del="${i}" style="margin-top:6px;font-size:.74rem;padding:6px 12px">Remover</button>`;
+    wrap.appendChild(b);
+  });
+  wrap.querySelectorAll("input,textarea").forEach(el=>el.addEventListener("input",e=>{
+    state.testis[e.target.dataset.i][e.target.dataset.k]=e.target.value; render(); save();
+  }));
+  wrap.querySelectorAll("[data-del]").forEach(el=>el.addEventListener("click",e=>{
+    state.testis.splice(+e.target.dataset.del,1); renderTestis(); render(); save();
+  }));
+}
+$("addTesti").addEventListener("click",()=>{ state.testis.push({n:"",p:"",t:""}); renderTestis(); render(); save(); });
+
+// ---------------- antes/depois (comparador) ----------------
+function renderPairs(){
+  const wrap=$("pairs"); wrap.innerHTML="";
+  state.pairs.forEach((p,i)=>{
+    const b=document.createElement("div"); b.className="pair-block";
+    b.innerHTML=`<div class="row2">
+      <label class="uploader pair-up" data-i="${i}" data-side="a">${p.a?`<img class="pair-th" src="${p.a}">`:`<div class="u-t">Antes</div><div class="u-s">enviar foto</div>`}<input type="file" accept="image/*"></label>
+      <label class="uploader pair-up" data-i="${i}" data-side="b">${p.b?`<img class="pair-th" src="${p.b}">`:`<div class="u-t">Depois</div><div class="u-s">enviar foto</div>`}<input type="file" accept="image/*"></label>
+    </div>
+    <button class="btn btn-ghost" data-delp="${i}" style="margin-top:8px;font-size:.74rem;padding:6px 12px;width:100%;justify-content:center">Remover par</button>`;
+    wrap.appendChild(b);
+  });
+  wrap.querySelectorAll(".pair-up input").forEach(inp=>inp.addEventListener("change",async e=>{
+    const lab=e.target.closest(".pair-up"); const i=+lab.dataset.i, side=lab.dataset.side;
+    const f=e.target.files[0]; if(!f) return;
+    const d=await fileToData(f,760,0.74); if(d){ state.pairs[i][side]=d; renderPairs(); render(); save(); }
+  }));
+  wrap.querySelectorAll("[data-delp]").forEach(btn=>btn.addEventListener("click",e=>{
+    state.pairs.splice(+e.target.dataset.delp,1); renderPairs(); render(); save();
+  }));
+}
+$("addPair").addEventListener("click",()=>{ state.pairs.push({a:"",b:""}); renderPairs(); render(); save(); });
+
+// ---------------- montagem do HTML ----------------
+function cfg(){
+  return {
+    name:$("name").value, mono:$("mono").value, short:$("short").value, role:$("role").value,
+    headline:$("headline").value, cta:$("cta").value,
+    wpp:$("wpp").value, insta:$("insta").value.replace("@","").trim(),
+    addr:$("addr").value, maps:$("maps").value, phone:$("phone").value, hours:$("hours").value, email:$("email").value,
+    cred:$("cred").value, reg:$("reg").value, bio1:$("bio1").value, bio2:$("bio2").value,
+    pixel:$("pixel").value.replace(/\D/g,""),
+    colors:{cream:$("c_cream").value,cream2:$("c_cream2").value,camel:$("c_camel").value,camelDark:$("c_camelDark").value,tan:$("c_tan").value,bluegray:$("c_bluegray").value,heading:$("c_heading").value,text:$("c_text").value,dark:$("c_dark").value},
+    txt:{resCta:$("t_resCta").value,tend:$("t_tend").value,amb:$("t_amb").value,band:$("t_band").value,igPrefix:$("t_igPrefix").value,testi:$("t_testi").value,loc:$("t_loc").value},
+    sec:{results:$("s_results").checked,tend:$("s_tend").checked,amb:$("s_amb").checked,band:$("s_band").checked,about:$("s_about").checked,testi:$("s_testi").checked,loc:$("s_loc").checked}
+  };
+}
+
+function styleBlock(col){ return `<style>
+:root{--cream:${col.cream};--cream2:${col.cream2};--camel:${col.camel};--camel-dark:${col.camelDark};--tan:${col.tan};--bluegray:${col.bluegray};--text:${col.text};--heading:${col.heading};--dark:${col.dark};--white:#fff}
+*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
+body{font-family:'Hanken Grotesk',sans-serif;color:var(--text);background:var(--cream);-webkit-font-smoothing:antialiased;overflow-x:hidden;line-height:1.6}
+img{display:block;max-width:100%}a{text-decoration:none;color:inherit}
+h1,h2,h3{font-family:'Cormorant Garamond',serif;font-weight:500;color:var(--heading);line-height:1.12}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+.btn{display:inline-block;background:var(--camel);color:#fff;font-size:.92rem;font-weight:500;letter-spacing:.04em;padding:15px 46px;border:none;border-radius:4px;cursor:pointer;transition:.3s;box-shadow:0 10px 24px -14px rgba(70,60,51,.6)}
+.btn:hover{background:var(--camel-dark);transform:translateY(-2px)}
+.topbar{position:absolute;top:0;left:0;right:0;z-index:10;padding:22px 0;text-align:center}
+.topbar-logo{display:inline-block}.topbar-logo img{height:64px;width:auto;max-width:230px;object-fit:contain;filter:drop-shadow(0 2px 10px rgba(0,0,0,.45))}
+.f-logo{max-height:60px;width:auto;max-width:200px;object-fit:contain;margin:0 auto 22px;display:block}
+.mono{display:inline-flex;flex-direction:column;align-items:center;gap:6px;color:#fff}
+.mono .m-box{width:46px;height:46px;border:1px solid rgba(255,255,255,.7);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1.3rem}
+.mono .m-name{font-family:'Cormorant Garamond',serif;font-size:.72rem;letter-spacing:.42em;text-transform:uppercase;font-weight:500}
+.hero{position:relative;min-height:94vh;display:flex;align-items:flex-end;justify-content:center;text-align:center;overflow:hidden}
+.hero-bg{position:absolute;inset:0}.hero-bg img{width:100%;height:100%;object-fit:cover;object-position:center 16%}
+.hero-bg.ph2{background:linear-gradient(160deg,#8C7C73,#5d524a)}
+.hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(70,60,51,.10) 0%,rgba(70,60,51,.06) 38%,rgba(70,60,51,.42) 72%,rgba(70,60,51,.78) 100%)}
+.hero-inner{position:relative;z-index:2;color:#fff;padding:0 24px 9vh;max-width:680px}
+.hero h1{color:#fff;font-style:italic;font-weight:500;font-size:clamp(1.9rem,4.4vw,3rem);line-height:1.25;text-shadow:0 2px 22px rgba(0,0,0,.45)}
+.hero .btn{margin-top:28px}
+.s-title{text-align:center;font-style:italic;font-weight:500;font-size:clamp(1.5rem,3vw,2.1rem);color:var(--heading);margin-bottom:8px}
+.s-sub{text-align:center;font-style:italic;font-size:1.25rem;color:var(--heading);font-family:'Cormorant Garamond',serif}
+.results{background:var(--cream);padding:60px 0 70px}
+.ba-grid{display:grid;grid-template-columns:1fr;gap:18px;max-width:600px;margin:0 auto}
+.ba-item{border-radius:6px;overflow:hidden;background:#e9e1d2;box-shadow:0 16px 38px -24px rgba(70,60,51,.5)}
+.ba-item img{width:100%;height:auto;display:block}
+@media(min-width:821px){.ba-grid{grid-template-columns:1fr 1fr;max-width:900px;gap:20px}}
+.ba-compare-grid{display:grid;grid-template-columns:1fr;gap:18px;max-width:600px;margin:0 auto}
+@media(min-width:821px){.ba-compare-grid{grid-template-columns:1fr 1fr;max-width:900px;gap:20px}}
+.bac{--pos:50%;position:relative;aspect-ratio:3/4;border-radius:6px;overflow:hidden;background:#e9e1d2;box-shadow:0 16px 38px -24px rgba(70,60,51,.5);user-select:none;-webkit-user-select:none;touch-action:none;cursor:ew-resize}
+.bac img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
+.bac .bac-before{position:absolute;inset:0;clip-path:inset(0 calc(100% - var(--pos)) 0 0)}
+.bac-line{position:absolute;top:0;bottom:0;left:var(--pos);width:2px;background:rgba(255,255,255,.92);transform:translateX(-1px);box-shadow:0 0 10px rgba(0,0,0,.35);pointer-events:none}
+.bac-handle{position:absolute;top:50%;left:var(--pos);width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.96);transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;color:var(--camel-dark);box-shadow:0 4px 16px rgba(0,0,0,.35);pointer-events:none}
+.bac-lbl{position:absolute;bottom:16px;font-size:.72rem;letter-spacing:.16em;font-weight:600;color:#fff;background:rgba(70,60,51,.62);padding:8px 16px;border-radius:30px;pointer-events:none}
+.bac-lbl.la{left:14px}.bac-lbl.lb{right:14px}
+.bac-hint{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);font-size:.76rem;color:#fff;background:var(--camel);padding:8px 16px;border-radius:30px;white-space:nowrap;box-shadow:0 6px 16px -6px rgba(0,0,0,.45);pointer-events:none}
+.tend{background:var(--tan);padding:64px 0}.tend .s-title{color:#fff}
+.grid-proc{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:760px;margin:34px auto 0}
+.proc-item{border-radius:4px;overflow:hidden;aspect-ratio:3/4.4;background:#a07d60;box-shadow:0 16px 36px -22px rgba(70,60,51,.6)}
+.proc-item img{width:100%;height:100%;object-fit:cover}
+.amb{background:var(--cream);padding:64px 0}
+.grid3{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:720px;margin:34px auto 0}
+.amb-item{border-radius:4px;overflow:hidden;aspect-ratio:3/4;background:#e9e1d2;box-shadow:0 14px 34px -24px rgba(70,60,51,.5)}
+.amb-item img{width:100%;height:100%;object-fit:cover}
+.ph{background:linear-gradient(150deg,#e7ddcb,#d8c9b2);border-radius:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:#9a8a72;text-align:center;padding:14px;aspect-ratio:4/3}
+.ph svg{width:34px;height:34px;opacity:.6}.ph span{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase}
+.proc-item.ph,.amb-item.ph{aspect-ratio:3/4}
+.band-cream{background:var(--cream2);text-align:center;padding:56px 0}.band-cream .s-sub{margin-bottom:24px}
+.about{background:var(--bluegray);padding:70px 0}
+.about-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:center}
+.about h2{font-style:italic;font-size:2rem;margin-bottom:4px}
+.about .crm{font-style:italic;font-family:'Cormorant Garamond',serif;color:var(--camel-dark);font-size:1.05rem;margin-bottom:20px}
+.about p{font-size:.92rem;margin-bottom:16px;color:#5f554c}
+.about .ig-btn{display:inline-flex;align-items:center;gap:10px;background:var(--camel);color:#fff;padding:13px 26px;border-radius:4px;font-size:.86rem;margin-top:8px;transition:.3s}
+.about .ig-btn:hover{background:var(--camel-dark)}
+.about-photo{border-radius:4px;overflow:hidden;aspect-ratio:4/4.6;box-shadow:0 24px 50px -28px rgba(70,60,51,.5);background:linear-gradient(150deg,#e7ddcb,#d8c9b2)}
+.about-photo img{width:100%;height:100%;object-fit:cover;object-position:center top}
+.testi{background:var(--cream);padding:64px 0 74px;text-align:center}.testi .s-title{margin-bottom:34px}
+.review{max-width:520px;margin:0 auto 14px;background:#fbf8f1;border:1px solid #e6ddcc;border-radius:10px;padding:24px 26px;text-align:left;box-shadow:0 14px 34px -24px rgba(70,60,51,.5)}
+.review .rv-top{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+.review .rv-av{width:40px;height:40px;border-radius:50%;background:var(--camel);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1.2rem}
+.review .rv-name{font-weight:600;color:var(--dark);font-size:.95rem}.review .rv-src{font-size:.72rem;color:#aa9a85}
+.review .stars{color:#E5A93B;letter-spacing:2px;font-size:.85rem;margin-bottom:8px}.review p{font-size:.9rem;color:#5f554c}
+.loc{padding:54px 0 64px;text-align:center}.loc .s-title{margin-bottom:26px}
+.map-card{display:flex;flex-direction:column;align-items:center;gap:16px;max-width:560px;margin:0 auto;padding:46px 30px;border-radius:14px;color:var(--dark);text-decoration:none;background:repeating-linear-gradient(0deg,rgba(168,133,106,.06) 0 1px,transparent 1px 38px),repeating-linear-gradient(90deg,rgba(168,133,106,.06) 0 1px,transparent 1px 38px),linear-gradient(150deg,#F1E8DB,#E7DAC8);border:1px solid #e2d5c0;box-shadow:0 18px 40px -28px rgba(70,60,51,.5);transition:.3s}
+.map-card:hover{transform:translateY(-4px)}
+.map-pin{width:58px;height:58px;border-radius:50%;background:var(--camel);color:#fff;display:flex;align-items:center;justify-content:center}
+.map-addr{font-family:'Cormorant Garamond',serif;font-size:1.4rem;line-height:1.4;color:var(--heading)}
+.map-go{font-size:.82rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600;color:var(--camel-dark)}
+footer{background:var(--cream);text-align:center;padding:40px 24px 30px;color:var(--text)}
+.f-mono{width:42px;height:42px;border:1px solid var(--camel);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 22px;font-family:'Cormorant Garamond',serif;color:var(--camel-dark)}
+.f-addr{font-size:.9rem;margin-bottom:18px}.f-row{font-size:.86rem;margin-bottom:8px}.f-row b{display:block;font-weight:600;color:var(--dark)}
+.f-copy{font-size:.74rem;color:#aa9a85;margin-top:24px}
+.wpp{position:fixed;bottom:22px;right:22px;z-index:50;width:56px;height:56px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;color:#fff;box-shadow:0 12px 28px -8px rgba(37,211,102,.6)}
+@media(max-width:820px){.about-grid{grid-template-columns:1fr;gap:32px}.about-photo{max-width:360px;margin:0 auto;order:-1}}
+@media(max-width:520px){.grid3{grid-template-columns:1fr}.grid-proc{grid-template-columns:1fr 1fr}.hero{min-height:88vh}}
+</style>`; }
+
+const FONTS='<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Hanken+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">';
+const WSVG='<svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.82 11.82 0 018.413 3.488 11.82 11.82 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 001.51 5.26l-.999 3.648 3.978-1.515z"/></svg>';
+const PHSVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M3 17l5-4 4 3 3-2 6 5"/></svg>';
+const HANDLE_SVG='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 7l-4 5 4 5M14.5 7l4 5-4 5"/></svg>';
+const BA_JS='<scr'+'ipt>(function(){function cl(v){return Math.max(2,Math.min(98,v));}document.querySelectorAll(".bac").forEach(function(el){function setX(x){var r=el.getBoundingClientRect();el.style.setProperty("--pos",cl((x-r.left)/r.width*100)+"%");}var down=false;function st(e){down=true;setX((e.touches?e.touches[0]:e).clientX);if(e.cancelable)e.preventDefault();}function mv(e){if(!down)return;setX((e.touches?e.touches[0]:e).clientX);if(e.cancelable)e.preventDefault();}function en(){down=false;}el.addEventListener("mousedown",st);el.addEventListener("touchstart",st,{passive:false});window.addEventListener("mousemove",mv);window.addEventListener("touchmove",mv,{passive:false});window.addEventListener("mouseup",en);window.addEventListener("touchend",en);});})();<\/scr'+'ipt>';
+function sliderHTML(p){
+  if(p.a && p.b) return `<div class="bac"><div class="bac-after"><img src="${p.b}" alt="Depois"></div><div class="bac-before"><img src="${p.a}" alt="Antes"></div><div class="bac-line"></div><div class="bac-handle">${HANDLE_SVG}</div><span class="bac-lbl la">ANTES</span><span class="bac-lbl lb">DEPOIS</span><div class="bac-hint">Arraste para ver o antes e depois do caso</div></div>`;
+  const u=p.a||p.b; return `<div class="ba-item"><img src="${u}" alt="Antes e depois"></div>`;
+}
+
+function bodyContent(c){
+  const wa=waLink(c.wpp), wap=waPlain(c.wpp);
+  const heroImg = state.portrait ? `<div class="hero-bg"><img src="${state.portrait}" alt="${esc(c.name)}"></div>` : `<div class="hero-bg ph2"></div>`;
+  const aboutImg = state.portrait ? `<div class="about-photo"><img src="${state.portrait}" alt="${esc(c.name)}"></div>` : `<div class="about-photo"></div>`;
+  const baItems = state.ba.length ? state.ba.map(u=>`<div class="ba-item"><img src="${u}" alt="Antes e depois"></div>`).join("") : `<div class="ba-item ph" style="aspect-ratio:1.3">${PHSVG}<span>Antes e depois</span></div>`.repeat(2);
+  const procItems = state.proc.length ? state.proc.map(u=>`<div class="proc-item"><img src="${u}" alt="Atendimento"></div>`).join("") : `<div class="proc-item ph">${PHSVG}<span>Procedimento</span></div>`.repeat(3);
+  const ambItems = state.clinic.length ? state.clinic.map(u=>`<div class="amb-item"><img src="${u}" alt="Clínica"></div>`).join("") : `<div class="amb-item ph">${PHSVG}<span>Clínica</span></div>`.repeat(4);
+  const reviews = state.testis.filter(t=>t.t.trim()).map(t=>`<div class="review"><div class="rv-top"><div class="rv-av">${esc((t.n||"?").trim().charAt(0))}</div><div><div class="rv-name">${esc(t.n)}</div><div class="rv-src">${esc(t.p)}</div></div></div><div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><p>${esc(t.t)}</p></div>`).join("");
+  const credLine = esc(c.cred) + (c.reg.trim()? ` &nbsp;|&nbsp; ${esc(c.reg)}`:"");
+  const emailRow = c.email.trim()? `<div class="f-row"><b>Email:</b> ${esc(c.email)}</div>`:"";
+  const hoursRow = c.hours.trim()? `<div class="f-row"><b>Horário:</b> ${esc(c.hours)}</div>`:"";
+  const igText = c.insta? "@"+esc(c.insta) : "Instagram";
+  const igUrl = c.insta? "https://www.instagram.com/"+encodeURIComponent(c.insta)+"/" : "#";
+  const S = c.sec;
+  const validPairs = state.pairs.filter(p=>p.a||p.b);
+  const compItems = validPairs.map(sliderHTML).join("");
+  let resultsInner = "";
+  if(compItems) resultsInner += `<div class="ba-compare-grid">${compItems}</div>`;
+  if(state.ba.length) resultsInner += `<div class="ba-grid"${compItems?' style="margin-top:20px"':''}>${baItems}</div>`;
+  if(!compItems && !state.ba.length) resultsInner = `<div class="ba-grid">${baItems}</div>`;
+
+  const secResults = S.results ? `<section class="results"><div class="wrap">
+  ${resultsInner}
+  <div style="text-align:center;padding:46px 0 6px"><div class="s-sub" style="margin-bottom:22px">${esc(c.txt.resCta)}</div><a href="${wa}" class="btn">${esc(c.cta)}</a></div>
+</div></section>` : "";
+  const secTend = S.tend ? `<section class="tend"><div class="wrap"><div class="s-title">${esc(c.txt.tend)}</div><div class="grid-proc">${procItems}</div></div></section>` : "";
+  const secAmb = S.amb ? `<section class="amb"><div class="wrap"><div class="s-sub">${esc(c.txt.amb)}</div><div class="grid3">${ambItems}</div></div></section>` : "";
+  const secBand = S.band ? `<section class="band-cream"><div class="wrap"><div class="s-sub">${esc(c.txt.band)}</div><a href="${wa}" class="btn">${esc(c.cta)}</a></div></section>` : "";
+  const secAbout = S.about ? `<section class="about"><div class="wrap"><div class="about-grid">
+  <div><h2>${esc(c.name)}</h2><div class="crm">${credLine}</div>
+  <p>${esc(c.bio1)}</p><p>${esc(c.bio2)}</p>
+  <a class="ig-btn" href="${igUrl}" target="_blank" rel="noopener"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg> ${esc(c.txt.igPrefix)} ${igText}</a></div>
+  ${aboutImg}
+</div></div></section>` : "";
+  const secTesti = (S.testi && reviews) ? `<section class="testi"><div class="wrap"><div class="s-title">${esc(c.txt.testi)}</div>${reviews}</div></section>` : "";
+  const secLoc = S.loc ? `<section class="loc"><div class="s-title">${esc(c.txt.loc)}</div><div class="wrap">
+  <a class="map-card" href="${esc(c.maps)}" target="_blank" rel="noopener">
+    <span class="map-pin"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 1118 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
+    <span class="map-addr">${esc(c.addr)}</span>
+    <span class="map-go">Abrir no Google Maps &rsaquo;</span>
+  </a></div></section>` : "";
+
+  const topBrand = state.logo
+    ? `<div class="topbar-logo"><img src="${state.logo}" alt="${esc(c.name)}"></div>`
+    : `<div class="mono"><div class="m-box">${esc(c.mono)}</div><div class="m-name">${esc(c.short)}</div></div>`;
+  const footBrand = state.logo
+    ? `<img class="f-logo" src="${state.logo}" alt="${esc(c.name)}">`
+    : `<div class="f-mono">${esc(c.mono)}</div>`;
+
+  return `
+<header class="topbar">${topBrand}</header>
+<section class="hero">${heroImg}<div class="hero-inner">
+  <h1>${esc(c.headline)}</h1>
+  <a href="${wa}" class="btn">${esc(c.cta)}</a>
+</div></section>
+${secResults}${secTend}${secAmb}${secBand}${secAbout}${secTesti}${secLoc}
+<footer>${footBrand}
+  <div class="f-addr"><a href="${esc(c.maps)}" target="_blank" rel="noopener" style="color:inherit;border-bottom:1px solid #d8cbb5">${esc(c.addr)}</a></div>
+  <div class="f-row"><b>Telefone:</b> ${esc(c.phone)}</div>
+  <div class="f-row"><b>WhatsApp:</b> ${esc(c.phone)}</div>
+  ${emailRow}${hoursRow}
+  <div class="f-copy">&copy; 2026 ${esc(c.name)}. Todos os direitos reservados.</div>
+</footer>
+<a class="wpp" href="${wa}" target="_blank" rel="noopener" aria-label="WhatsApp">${WSVG}</a>${compItems?BA_JS:""}`;
+}
+
+function pixelBlock(id){ if(!id) return ""; return `<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init','${id}');fbq('track','PageView');
+<\/script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=${id}&ev=PageView&noscript=1"/><\/noscript>
+<!-- End Meta Pixel Code -->`; }
+
+function buildFull(c, withPixel){
+  return `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${esc(c.name)}</title>${FONTS}${withPixel?pixelBlock(c.pixel):""}${styleBlock(c.colors)}</head><body>${bodyContent(c)}</body></html>`;
+}
+function buildEmbed(c){ return pixelBlock(c.pixel)+"\n"+FONTS+"\n"+styleBlock(c.colors)+"\n"+bodyContent(c); }
+
+// ---------------- render / preview ----------------
+let timer;
+function render(){
+  clearTimeout(timer);
+  timer=setTimeout(()=>{
+    const c=cfg();
+    $("frame").srcdoc=buildFull(c,false);
+    const emb=buildEmbed(c);
+    const kb=Math.round(new Blob([emb]).size/1024);
+    $("sizeTag").textContent = kb>1024 ? (kb/1024).toFixed(1)+" MB" : kb+" KB";
+  },150);
+}
+document.querySelectorAll(".form input, .form textarea").forEach(el=>{
+  if(el.type==="file") return;
+  el.addEventListener("input",()=>{ render(); save(); });
+});
+
+// ---------------- salvar / carregar (localStorage + arquivo) ----------------
+function serialize(includeToken){
+  const v={};
+  document.querySelectorAll(".form input, .form textarea").forEach(el=>{
+    if(el.type==="file") return;
+    if(!el.id) return;
+    if(el.id==="ghToken" && !includeToken) return;
+    v[el.id] = (el.type==="checkbox") ? el.checked : el.value;
+  });
+  return { v, state:{logo:state.logo,portrait:state.portrait,ba:state.ba,pairs:state.pairs,proc:state.proc,clinic:state.clinic,testis:state.testis} };
+}
+function applyData(data){
+  if(!data) return;
+  const v=data.v||{};
+  Object.keys(v).forEach(id=>{
+    const el=$(id); if(!el) return;
+    if(el.type==="checkbox") el.checked=!!v[id]; else el.value=v[id];
+  });
+  const s=data.state||{};
+  state.logo=s.logo||""; state.portrait=s.portrait||""; state.ba=s.ba||[]; state.pairs=Array.isArray(s.pairs)?s.pairs:[]; state.proc=s.proc||[]; state.clinic=s.clinic||[];
+  state.testis = Array.isArray(s.testis)? s.testis : JSON.parse(JSON.stringify(DEFAULT_TESTIS));
+  renderAllThumbs(); renderPairs(); renderTestis(); render();
+}
+function save(){
+  // token salvo à parte (sem ir no export)
+  try{ localStorage.setItem(LS_KEY+"-token", $("ghToken").value||""); }catch(e){}
+  try{ localStorage.setItem(LS_KEY, JSON.stringify(serialize(false))); }
+  catch(e){
+    // provável estouro de cota — salva sem imagens
+    try{ const d=serialize(false); d.state={testis:state.testis}; localStorage.setItem(LS_KEY, JSON.stringify(d)); }catch(e2){}
+  }
+}
+function load(){
+  try{
+    const raw=localStorage.getItem(LS_KEY);
+    if(raw) applyData(JSON.parse(raw));
+    const tk=localStorage.getItem(LS_KEY+"-token");
+    if(tk) $("ghToken").value=tk;
+  }catch(e){}
+}
+
+$("btnExport").addEventListener("click",()=>{
+  const data=serialize(false); // nunca exporta token
+  const c=cfg();
+  const blob=new Blob([JSON.stringify(data,null,0)],{type:"application/json"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob);
+  a.download="projeto-"+((c.name||"lp").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,""))+".json";
+  a.click(); URL.revokeObjectURL(a.href); toast("Projeto exportado.","ok");
+});
+$("btnImport").addEventListener("click",()=>$("importFile").click());
+$("importFile").addEventListener("change",e=>{
+  const f=e.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=()=>{ try{ applyData(JSON.parse(r.result)); save(); toast("Projeto importado!","ok"); }catch(err){ toast("Arquivo inválido.","err"); } };
+  r.readAsText(f); e.target.value="";
+});
+$("btnReset").addEventListener("click",()=>{
+  if(!confirm("Limpar tudo e começar um projeto novo? Isso apaga os dados atuais deste navegador.")) return;
+  try{ localStorage.removeItem(LS_KEY); }catch(e){}
+  state.logo="";state.portrait="";state.ba=[];state.pairs=[];state.proc=[];state.clinic=[];state.testis=JSON.parse(JSON.stringify(DEFAULT_TESTIS));
+  document.querySelectorAll(".form input, .form textarea").forEach(el=>{
+    if(el.type==="file") return;
+    if(el.type==="checkbox"){ el.checked=true; }
+    else if(el.id!=="ghToken"){ el.value=""; }
+  });
+  // restaura cores padrão
+  applyColors(DEFAULT_COLORS);
+  renderAllThumbs(); renderPairs(); renderTestis(); render(); save(); toast("Novo projeto em branco.","ok");
+});
+
+// ---------------- cores ----------------
+function applyColors(col){
+  $("c_cream").value=col.cream;$("c_cream2").value=col.cream2;$("c_camel").value=col.camel;$("c_camelDark").value=col.camelDark;
+  $("c_tan").value=col.tan;$("c_bluegray").value=col.bluegray;$("c_heading").value=col.heading;$("c_text").value=col.text;$("c_dark").value=col.dark;
+}
+$("resetColors").addEventListener("click",()=>{ applyColors(DEFAULT_COLORS); render(); save(); toast("Cores padrão restauradas.","ok"); });
+
+// ---------------- seções recolhíveis ----------------
+document.querySelectorAll(".sec h2.clk").forEach(h=>h.addEventListener("click",()=>h.parentElement.classList.toggle("collapsed")));
+
+// ---------------- export HTML / copiar ----------------
+function toast(m,kind){ const t=$("toast"); t.textContent=m; t.className="toast show"+(kind?(" "+kind):""); setTimeout(()=>t.classList.remove("show"),2600); }
+$("btnCopy").addEventListener("click",async()=>{
+  const code=buildEmbed(cfg());
+  try{ await navigator.clipboard.writeText(code); toast("Código copiado! Cole no bloco HTML do GoHighLevel.","ok"); }
+  catch(e){ const ta=document.createElement("textarea"); ta.value=code; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove(); toast("Código copiado!","ok"); }
+});
+$("btnFull").addEventListener("click",()=>{
+  const c=cfg(); const blob=new Blob([buildFull(c,true)],{type:"text/html"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob);
+  a.download=(c.name||"landing").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")+".html";
+  a.click(); URL.revokeObjectURL(a.href); toast("HTML completo baixado.","ok");
+});
+$("vdesk").addEventListener("click",()=>{ $("vdesk").classList.add("on");$("vmob").classList.remove("on");$("frame").style.maxWidth="1100px"; });
+$("vmob").addEventListener("click",()=>{ $("vmob").classList.add("on");$("vdesk").classList.remove("on");$("frame").style.maxWidth="400px"; });
+
+// ---------------- publicar no GitHub ----------------
+function ghMsg(html,kind){ const l=$("ghLog"); l.className="gh-log show"; l.innerHTML=html; l.style.borderColor = kind==="err"?"#e6b6b0":(kind==="ok"?"#bfe0c8":"var(--line)"); }
+$("btnPublish").addEventListener("click",async()=>{
+  const repo=$("ghRepo").value.trim().replace(/^https?:\/\/github\.com\//,"").replace(/\.git$/,"").replace(/\/$/,"");
+  const path=$("ghPath").value.trim()||"index.html";
+  const branch=$("ghBranch").value.trim()||"main";
+  const token=$("ghToken").value.trim();
+  if(!/^[\w.-]+\/[\w.-]+$/.test(repo)){ ghMsg("Informe o repositório no formato <b>usuario/nome</b>.","err"); return; }
+  if(!token){ ghMsg("Cole o token de acesso (escopo <b>repo</b>).","err"); return; }
+  const [owner,name]=repo.split("/");
+  const api="https://api.github.com/repos/"+repo+"/contents/"+encodeURIComponent(path).replace(/%2F/g,"/");
+  const headers={Authorization:"token "+token, Accept:"application/vnd.github+json"};
+  $("btnPublish").disabled=true; ghMsg("Publicando…");
+  try{
+    // 1. existe? pega sha
+    let sha=null;
+    const getRes=await fetch(api+"?ref="+encodeURIComponent(branch),{headers});
+    if(getRes.status===200){ const j=await getRes.json(); sha=j.sha; }
+    else if(getRes.status===401){ ghMsg("Token inválido ou sem permissão. Gere outro com escopo <b>repo</b>.","err"); $("btnPublish").disabled=false; return; }
+    else if(getRes.status===404){ /* arquivo novo, ok */ }
+    // 2. PUT conteúdo
+    const c=cfg();
+    const body={ message:"publica landing page via gerador", content:b64utf8(buildFull(c,true)), branch };
+    if(sha) body.sha=sha;
+    const putRes=await fetch(api,{method:"PUT",headers,body:JSON.stringify(body)});
+    if(!putRes.ok){
+      const er=await putRes.json().catch(()=>({}));
+      ghMsg("Erro ao publicar: "+(er.message||putRes.status)+(putRes.status===404?" — verifique se o repositório existe e o token tem acesso.":""),"err");
+      $("btnPublish").disabled=false; return;
+    }
+    // 3. tenta ativar Pages (ignora se já ativo)
+    try{
+      await fetch("https://api.github.com/repos/"+repo+"/pages",{method:"POST",headers,body:JSON.stringify({source:{branch,path:"/"}})});
+    }catch(e){}
+    const pagesUrl="https://"+owner.toLowerCase()+".github.io/"+name+"/"+(path==="index.html"?"":path);
+    ghMsg("✅ Publicado em <b>"+repo+"</b>!<br>O GitHub Pages leva ~1-2 min pra ficar no ar:<br><a href='"+pagesUrl+"' target='_blank' rel='noopener'>"+pagesUrl+"</a><br><span style='color:#9a6b4a'>Se for a 1ª vez, confira em Settings → Pages se a fonte é a branch <b>"+branch+"</b> / (root).</span>","ok");
+    toast("Publicado no GitHub!","ok");
+  }catch(e){
+    ghMsg("Falha de rede: "+e.message,"err");
+  }
+  $("btnPublish").disabled=false;
+});
+
+// ---------------- init ----------------
+load();
+renderAllThumbs(); renderPairs(); renderTestis(); render();
+</script>
+</body>
+</html>
