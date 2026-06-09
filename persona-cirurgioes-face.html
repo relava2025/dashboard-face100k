@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Persona Master — System Digital | Dr. Rodrigo Albuquerque (Cirurgião da Face)</title>
+<style>
+  :root{
+    --primary:#6366F1;--primary-light:#EEF2FF;--primary-dark:#4F46E5;--primary-glow:rgba(99,102,241,.15);
+    --accent:#8B5CF6;--accent-light:#F5F3FF;--danger:#EF4444;--danger-light:#FEF2F2;--danger-soft:#FECACA;
+    --success:#10B981;--success-light:#ECFDF5;--success-soft:#A7F3D0;--warning:#F59E0B;--warning-light:#FFFBEB;
+    --blue:#3B82F6;--blue-light:#EFF6FF;--cyan:#06B6D4;--cyan-light:#ECFEFF;--rose:#F43F5E;--rose-light:#FFF1F2;
+    --amber:#D97706;--emerald:#059669;
+    --slate-50:#F8FAFC;--slate-100:#F1F5F9;--slate-200:#E2E8F0;--slate-300:#CBD5E1;--slate-400:#94A3B8;
+    --slate-500:#64748B;--slate-600:#475569;--slate-700:#334155;--slate-800:#1E293B;--slate-900:#0F172A;
+    --radius:20px;--radius-md:14px;--radius-sm:10px;--radius-xs:6px;
+    --shadow:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+    --shadow-md:0 4px 6px -1px rgba(0,0,0,.06),0 2px 4px -2px rgba(0,0,0,.04);
+    --shadow-lg:0 10px 15px -3px rgba(0,0,0,.06),0 4px 6px -4px rgba(0,0,0,.04);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:linear-gradient(135deg,#F8FAFC 0%,#EEF2FF 50%,#F8FAFC 100%);color:var(--slate-800);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
+  /* HEADER */
+  .header{background:linear-gradient(135deg,var(--slate-900) 0%,#1a1a3e 50%,var(--primary-dark) 100%);color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 4px 30px rgba(0,0,0,.15)}
+  .header-top{display:flex;align-items:center;justify-content:space-between;padding:20px 32px 16px;max-width:1440px;margin:0 auto;flex-wrap:wrap;gap:16px}
+  .header-brand{display:flex;align-items:center;gap:16px}
+  .header-avatar{width:56px;height:56px;background:linear-gradient(135deg,var(--primary),var(--accent));border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;letter-spacing:-.5px;box-shadow:0 4px 15px rgba(99,102,241,.4)}
+  .header-brand h1{font-size:19px;font-weight:800;letter-spacing:-.3px}
+  .header-brand p{font-size:12.5px;color:var(--slate-300);margin-top:1px}
+  .header-stats{display:flex;gap:22px}
+  .hstat{text-align:center}
+  .hstat b{display:block;font-size:18px;font-weight:800;background:linear-gradient(135deg,#c4b5fd,#a5b4fc);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .hstat span{font-size:10.5px;color:var(--slate-400);text-transform:uppercase;letter-spacing:.5px}
+  /* TABS */
+  .tabs{display:flex;gap:4px;padding:0 32px;max-width:1440px;margin:0 auto;overflow-x:auto}
+  .tab{padding:12px 18px;font-size:13.5px;font-weight:600;color:var(--slate-400);cursor:pointer;border-bottom:2.5px solid transparent;white-space:nowrap;transition:.2s}
+  .tab:hover{color:#fff}
+  .tab.active{color:#fff;border-color:var(--primary)}
+  /* LAYOUT */
+  .container{max-width:1200px;margin:32px auto;padding:0 24px}
+  .panel{display:none;animation:fade .4s}
+  .panel.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  .section-title{display:flex;align-items:center;gap:12px;font-size:22px;font-weight:800;color:var(--slate-900);margin:8px 0 6px;letter-spacing:-.4px}
+  .section-sub{color:var(--slate-500);font-size:14px;margin-bottom:24px}
+  .card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow-md);padding:26px;margin-bottom:22px}
+  .grid{display:grid;gap:20px}
+  .g2{grid-template-columns:repeat(auto-fit,minmax(330px,1fr))}
+  .g3{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+  .card-head{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:800;color:var(--slate-900);margin-bottom:16px}
+  .card-head .ico{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+  /* HERO */
+  .hero{background:linear-gradient(135deg,#fff,var(--primary-light));border:1px solid var(--slate-200);position:relative;overflow:hidden}
+  .hero::before{content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;background:radial-gradient(circle,var(--primary-glow),transparent 70%)}
+  .hero-flex{display:flex;gap:26px;align-items:center;flex-wrap:wrap;position:relative}
+  .hero-av{width:96px;height:96px;border-radius:24px;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:800;color:#fff;box-shadow:0 8px 24px rgba(99,102,241,.4);flex-shrink:0}
+  .hero h2{font-size:26px;font-weight:800;color:var(--slate-900);letter-spacing:-.5px}
+  .hero .role{color:var(--primary-dark);font-weight:600;font-size:14.5px;margin-bottom:10px}
+  .hero .quote{font-style:italic;color:var(--slate-700);font-size:16px;border-left:3px solid var(--primary);padding-left:14px;margin-top:6px}
+  .badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+  .badge{background:#fff;border:1px solid var(--slate-200);border-radius:30px;padding:6px 13px;font-size:12.5px;font-weight:600;color:var(--slate-600);box-shadow:var(--shadow)}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-top:22px}
+  .kpi{background:#fff;border:1px solid var(--slate-200);border-radius:var(--radius-md);padding:16px;text-align:center}
+  .kpi b{display:block;font-size:22px;font-weight:800;color:var(--primary-dark)}
+  .kpi span{font-size:11.5px;color:var(--slate-500);text-transform:uppercase;letter-spacing:.4px}
+  /* RANKED LISTS */
+  .rank{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--slate-100)}
+  .rank:last-child{border:none}
+  .rank .txt{flex:1;font-size:14px;font-weight:500;color:var(--slate-700)}
+  .rank .bar{width:90px;height:7px;background:var(--slate-100);border-radius:4px;overflow:hidden}
+  .rank .fill{height:100%;border-radius:4px}
+  .rank .score{font-size:13px;font-weight:800;width:22px;text-align:right}
+  .fill-d{background:linear-gradient(90deg,var(--danger),#f87171)}
+  .fill-w{background:linear-gradient(90deg,var(--warning),#fbbf24)}
+  .fill-s{background:linear-gradient(90deg,var(--success),#34d399)}
+  .num-circ{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;flex-shrink:0}
+  /* PHRASES */
+  .phrase{background:var(--slate-50);border-left:3px solid var(--primary);border-radius:0 8px 8px 0;padding:11px 15px;margin-bottom:9px;font-size:14px;color:var(--slate-700);font-style:italic}
+  .headline{background:linear-gradient(135deg,var(--slate-900),#1a1a3e);color:#fff;border-radius:var(--radius-md);padding:16px 18px;margin-bottom:11px;font-size:15px;font-weight:600;line-height:1.5}
+  .qualify{background:linear-gradient(135deg,var(--primary-light),var(--accent-light));border:1px solid #ddd6fe;border-radius:var(--radius-md);padding:20px;font-size:15px;line-height:1.7;color:var(--slate-700)}
+  .qualify b{color:var(--primary-dark)}
+  /* TABLES */
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th{text-align:left;padding:10px 12px;background:var(--slate-50);color:var(--slate-500);font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.4px;border-bottom:2px solid var(--slate-100)}
+  td{padding:11px 12px;border-bottom:1px solid var(--slate-100);color:var(--slate-700);vertical-align:top}
+  tr:last-child td{border:none}
+  .pill{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11.5px;font-weight:700}
+  .pill-ok{background:var(--success-light);color:var(--emerald)}
+  .pill-mid{background:var(--warning-light);color:var(--amber)}
+  .pill-no{background:var(--danger-light);color:var(--danger)}
+  /* JOURNEY */
+  .journey{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px}
+  .stage{background:var(--slate-50);border-radius:var(--radius-md);padding:16px;border-top:3px solid var(--primary)}
+  .stage .emo{font-size:24px;margin-bottom:6px}
+  .stage h4{font-size:14px;font-weight:800;color:var(--slate-900);margin-bottom:6px}
+  .stage .think{font-style:italic;font-size:12.5px;color:var(--primary-dark);margin-bottom:6px}
+  .stage p{font-size:12.5px;color:var(--slate-500)}
+  /* DAY */
+  .day-item{display:flex;gap:16px;padding:13px 0;border-bottom:1px solid var(--slate-100)}
+  .day-item:last-child{border:none}
+  .day-time{font-weight:800;color:var(--primary-dark);font-size:14px;min-width:54px}
+  .day-txt{font-size:13.5px;color:var(--slate-600)}
+  .day-txt b{color:var(--slate-800)}
+  /* EMPATHY */
+  .emp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
+  .emp-card{background:#fff;border:1px solid var(--slate-200);border-radius:var(--radius-md);padding:18px;box-shadow:var(--shadow)}
+  .emp-card h4{font-size:14.5px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+  .emp-card ul{list-style:none}
+  .emp-card li{font-size:13px;color:var(--slate-600);padding:5px 0 5px 16px;position:relative}
+  .emp-card li::before{content:'›';position:absolute;left:2px;color:var(--primary);font-weight:800}
+  /* DIMENSIONS */
+  .dim-block{margin-bottom:14px}
+  .dim-head{display:flex;align-items:center;gap:12px;padding:15px 20px;background:#fff;border-radius:var(--radius-md);box-shadow:var(--shadow);cursor:pointer;border-left:4px solid var(--primary);transition:.2s}
+  .dim-head:hover{box-shadow:var(--shadow-md)}
+  .dim-head .blab{font-size:15px;font-weight:800;color:var(--slate-900);flex:1}
+  .dim-head .blab span{display:block;font-size:12px;font-weight:500;color:var(--slate-400)}
+  .dim-head .chev{font-size:13px;color:var(--slate-400);transition:.3s}
+  .dim-head.open .chev{transform:rotate(180deg)}
+  .dim-body{display:none;padding:8px 4px 4px}
+  .dim-body.open{display:block;animation:fade .3s}
+  .dim{background:#fff;border:1px solid var(--slate-200);border-radius:var(--radius-md);padding:18px 20px;margin:12px 0}
+  .dim h5{font-size:14.5px;font-weight:800;color:var(--slate-900);display:flex;align-items:center;gap:10px;margin-bottom:4px}
+  .dim h5 .dn{background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+  .dim .def{font-size:12px;color:var(--slate-400);margin-bottom:10px;margin-left:36px}
+  .dim ul{list-style:none;margin-left:36px}
+  .dim li{font-size:13.5px;color:var(--slate-600);padding:4px 0 4px 16px;position:relative}
+  .dim li::before{content:'•';position:absolute;left:2px;color:var(--accent);font-weight:800}
+  .dim .anchor{font-style:italic;color:var(--primary-dark);font-weight:600}
+  /* APPLY */
+  .apply-card{background:#fff;border-radius:var(--radius-md);box-shadow:var(--shadow);padding:20px;margin-bottom:16px;border-left:4px solid var(--accent)}
+  .apply-card h4{font-size:15px;font-weight:800;margin-bottom:10px;color:var(--slate-900)}
+  .apply-card p,.apply-card li{font-size:13.5px;color:var(--slate-600)}
+  .apply-card ul{margin-left:18px;margin-top:6px}
+  .apply-card li{padding:3px 0}
+  .footer{text-align:center;padding:40px 20px;color:var(--slate-400);font-size:13px}
+  @media(max-width:640px){.header-stats{display:none}.hero-av{width:72px;height:72px;font-size:26px}}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <div class="header-brand">
+      <div class="header-avatar">RA</div>
+      <div>
+        <h1>Persona Master — System Digital</h1>
+        <p>Dr. Rodrigo Albuquerque · Cirurgião da Face (Buco-Maxilo / Dentista) &amp; Dono de Clínica</p>
+      </div>
+    </div>
+    <div class="header-stats">
+      <div class="hstat"><b>30</b><span>Dimensões</span></div>
+      <div class="hstat"><b>300+</b><span>Insights</span></div>
+      <div class="hstat"><b>R$35k</b><span>Ticket</span></div>
+      <div class="hstat"><b>R$60-100k</b><span>Fat. cliente</span></div>
+    </div>
+  </div>
+  <div class="tabs">
+    <div class="tab active" data-tab="resumo">Resumo</div>
+    <div class="tab" data-tab="buyer">Buyer Persona</div>
+    <div class="tab" data-tab="empatia">Mapa de Empatia</div>
+    <div class="tab" data-tab="dim">30 Dimensões</div>
+    <div class="tab" data-tab="icp">ICP</div>
+    <div class="tab" data-tab="anti">Anti-Personas</div>
+    <div class="tab" data-tab="guia">Guia de Aplicação</div>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ===== RESUMO ===== -->
+<div class="panel active" id="resumo">
+  <div class="card hero">
+    <div class="hero-flex">
+      <div class="hero-av">RA</div>
+      <div style="flex:1">
+        <h2>Dr. Rodrigo Albuquerque</h2>
+        <div class="role">39 anos · Cirurgião Buco-Maxilo-Facial · Dono de clínica própria</div>
+        <div class="quote">"Eu tenho técnica, mas não consigo vender no valor que eu deveria."</div>
+        <div class="badges">
+          <span class="badge">👤 35-48 anos</span>
+          <span class="badge">🦷 Buco-maxilo / Dentista</span>
+          <span class="badge">📍 Capitais e cidades médias</span>
+          <span class="badge">💰 R$25k-60k/mês pessoal</span>
+          <span class="badge">🏢 4-12 funcionários</span>
+        </div>
+      </div>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><b>R$60-100k</b><span>Faturamento clínica/mês</span></div>
+      <div class="kpi"><b>R$8-30k</b><span>Ticket procedimento</span></div>
+      <div class="kpi"><b>14-30d</b><span>Ciclo de decisão</span></div>
+      <div class="kpi"><b>R$35.000</b><span>Investimento mentoria</span></div>
+    </div>
+  </div>
+
+  <div class="grid g2">
+    <div class="card">
+      <div class="card-head"><span class="ico" style="background:var(--danger-light)">⚡</span>Top 5 Dores</div>
+      <div class="rank"><span class="num-circ" style="background:var(--danger)">1</span><span class="txt">Faturamento sem previsibilidade apesar de estrutura cara</span><span class="bar"><span class="fill fill-d" style="width:100%"></span></span><span class="score" style="color:var(--danger)">10</span></div>
+      <div class="rank"><span class="num-circ" style="background:var(--danger)">2</span><span class="txt">Técnica excelente que não vira dinheiro / ticket baixo</span><span class="bar"><span class="fill fill-d" style="width:95%"></span></span><span class="score" style="color:var(--danger)">9.5</span></div>
+      <div class="rank"><span class="num-circ" style="background:var(--danger)">3</span><span class="txt">Time comercial que não converte alto ticket</span><span class="bar"><span class="fill fill-d" style="width:90%"></span></span><span class="score" style="color:var(--danger)">9</span></div>
+      <div class="rank"><span class="num-circ" style="background:var(--warning)">4</span><span class="txt">Dependência de indicação e tráfego pago</span><span class="bar"><span class="fill fill-w" style="width:88%"></span></span><span class="score" style="color:var(--amber)">8.8</span></div>
+      <div class="rank"><span class="num-circ" style="background:var(--warning)">5</span><span class="txt">Ver colegas com menos técnica faturando mais</span><span class="bar"><span class="fill fill-w" style="width:85%"></span></span><span class="score" style="color:var(--amber)">8.5</span></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><span class="ico" style="background:var(--success-light)">⭐</span>Top 5 Desejos</div>
+      <div class="rank"><span class="num-circ" style="background:var(--success)">1</span><span class="txt">Previsibilidade de faturamento alto, mês a mês</span><span class="bar"><span class="fill fill-s" style="width:100%"></span></span><span class="score" style="color:var(--emerald)">10</span></div>
+      <div class="rank"><span class="num-circ" style="background:var(--success)">2</span><span class="txt">Ser reconhecido como referência e pago como tal</span><span class="bar"><span class="fill fill-s" style="width:95%"></span></span><span class="score" style="color:var(--emerald)">9.5</span></div>
+      <div class="rank"><span class="num-circ" style="background:var(--success)">3</span><span class="txt">Cobrar caro sem culpa / vender alto ticket com segurança</span><span class="bar"><span class="fill fill-s" style="width:92%"></span></span><span class="score" style="color:var(--emerald)">9.2</span></div>
+      <div class="rank"><span class="num-circ" style="background:var(--success)">4</span><span class="txt">Time que vende sem depender dele</span><span class="bar"><span class="fill fill-s" style="width:88%"></span></span><span class="score" style="color:var(--emerald)">8.8</span></div>
+      <div class="rank"><span class="num-circ" style="background:var(--success)">5</span><span class="txt">Metodologia própria e posicionamento que diferencia</span><span class="bar"><span class="fill fill-s" style="width:85%"></span></span><span class="score" style="color:var(--emerald)">8.5</span></div>
+    </div>
+  </div>
+
+  <div class="grid g2">
+    <div class="card">
+      <div class="card-head"><span class="ico" style="background:var(--primary-light)">🎯</span>Top 5 Gatilhos de Compra</div>
+      <div class="rank"><span class="num-circ" style="background:var(--primary)">1</span><span class="txt">Fim do mês com folha apertando + caixa no vermelho</span></div>
+      <div class="rank"><span class="num-circ" style="background:var(--primary)">2</span><span class="txt">Sequência de consultas qualificadas sem fechamento</span></div>
+      <div class="rank"><span class="num-circ" style="background:var(--primary)">3</span><span class="txt">Ver colega do mesmo nível escalar com a System (case)</span></div>
+      <div class="rank"><span class="num-circ" style="background:var(--primary)">4</span><span class="txt">Precisar colocar dinheiro pessoal na clínica de novo</span></div>
+      <div class="rank"><span class="num-circ" style="background:var(--primary)">5</span><span class="txt">Conversa difícil com esposa, sócio ou contador</span></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><span class="ico" style="background:var(--warning-light)">⚠️</span>Top Objeções (com rebate)</div>
+      <div style="font-size:13.5px;color:var(--slate-600)">
+        <p style="margin-bottom:10px"><b style="color:var(--danger)">"Está caro / medo de não ter retorno"</b><br>→ 1 paciente de alto ticket recuperado já paga parte do investimento. Cases de R$66k em 1 dia.</p>
+        <p style="margin-bottom:10px"><b style="color:var(--danger)">"Já fiz mentoria e não funcionou"</b><br>→ Mentoria genérica ensina posicionamento. Nós estruturamos processo comercial + metodologia + time.</p>
+        <p style="margin-bottom:10px"><b style="color:var(--danger)">"Meu problema é falta de lead"</b><br>→ Você não tem problema de lead, tem de conversão de alto ticket. Mostramos onde o dinheiro vaza.</p>
+        <p><b style="color:var(--danger)">"Preciso organizar a clínica primeiro"</b><br>→ A organização É o trabalho. Esperar "estar pronto" é o que te mantém travado.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><span class="ico" style="background:var(--slate-100)">💬</span>Frases da Persona &amp; Headlines</div>
+    <div class="grid g2">
+      <div>
+        <p style="font-size:12px;font-weight:700;color:var(--slate-400);text-transform:uppercase;margin-bottom:10px">Frases que ele usa</p>
+        <div class="phrase">"Eu tenho técnica, mas não consigo vender no valor que deveria."</div>
+        <div class="phrase">"Minha agenda movimenta, mas o faturamento não acompanha."</div>
+        <div class="phrase">"Atraio muita gente curiosa e pouca gente pronta pra pagar."</div>
+        <div class="phrase">"Quando paro o tráfego, as consultas somem."</div>
+        <div class="phrase">"Tem profissional com menos técnica faturando mais que eu."</div>
+      </div>
+      <div>
+        <p style="font-size:12px;font-weight:700;color:var(--slate-400);text-transform:uppercase;margin-bottom:10px">Headlines que param o scroll</p>
+        <div class="headline">Você não tem um problema de técnica. Tem um problema de estrutura comercial.</div>
+        <div class="headline">Como cirurgiões da face estão saindo de R$80k para R$200k/mês — sem depender de tráfego.</div>
+        <div class="headline">O erro que faz cirurgiões excelentes faturarem como clínica mediana.</div>
+        <div class="headline">Pare de competir por preço com quem é pior que você no bisturi.</div>
+      </div>
+    </div>
+    <div class="qualify" style="margin-top:18px">
+      💡 <b>Frase de Qualificação Rápida:</b> "Meu cliente ideal é um <b>cirurgião da face (buco-maxilo ou dentista)</b> que fatura entre <b>R$60k e R$100k/mês</b>, tem técnica e autoridade mas sofre com <b>faturamento sem previsibilidade e ticket baixo</b>, e quer estruturar <b>processo comercial, posicionamento e metodologia própria</b> para vender alto ticket com segurança nos próximos <b>6 meses</b>, investindo <b>R$35.000</b> para resolver o que mentoria, agência e tráfego não resolveram."
+    </div>
+  </div>
+</div>
+
+<!-- ===== BUYER PERSONA ===== -->
+<div class="panel" id="buyer">
+  <div class="section-title">👤 Buyer Persona Estratégica</div>
+  <div class="section-sub">Perfil completo do comprador ideal</div>
+
+  <div class="grid g2">
+    <div class="card">
+      <div class="card-head"><span class="ico" style="background:var(--blue-light)">📋</span>Perfil Demográfico</div>
+      <table>
+        <tr><td><b>Nome fictício</b></td><td>Dr. Rodrigo Albuquerque</td></tr>
+        <tr><td><b>Idade</b></td><td>39 anos (faixa 35-48)</td></tr>
+        <tr><td><b>Gênero</b></td><td>Predominantemente masculino (65/35)</td></tr>
+        <tr><td><b>Localização</b></td><td>Capitais e cidades médias BR</td></tr>
+        <tr><td><b>Estado civil</b></td><td>Casado</td></tr>
+        <tr><td><b>Filhos</b></td><td>1-2 filhos</td></tr>
+        <tr><td><b>Formação</b></td><td>Odontologia + Residência/Especialização em CTBMF</td></tr>
+        <tr><td><b>Renda pessoal</b></td><td>R$25k a R$60k/mês</td></tr>
+        <tr><td><b>Profissão</b></td><td>Cirurgião da face / Diretor clínico</td></tr>
+        <tr><td><b>Empresa</b></td><td>Clínica própria, 4-12 funcionários</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-head"><span class="ico" style="background:var(--accent-light)">🧠</span>Perfil Psicográfico</div>
+      <table>
+        <tr><td><b>Valores</b></td><td>Excelência técnica, reconhecimento, legado, liberdade financeira, status profissional</td></tr>
+        <tr><td><b>Estilo de vida</b></td><td>Agenda cheia, pouco tempo, congressos e cursos de aperfeiçoamento</td></tr>
+        <tr><td><b>Informação</b></td><td>Instagram, YouTube, congressos, grupos de especialistas</td></tr>
+        <tr><td><b>Redes</b></td><td>Instagram (principal), WhatsApp, YouTube</td></tr>
+        <tr><td><b>Influências</b></td><td>Gurus do mercado, cirurgiões referência, mentores premium</td></tr>
+        <tr><td><b>Marcas admira</b></td><td>Apple, carros premium, clínicas/players de referência</td></tr>
+        <tr><td><b>Formato preferido</b></td><td>Reels de autoridade + bastidores de cirurgia</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><span class="ico" style="background:var(--primary-light)">🛠️</span>Jornada do Comprador</div>
+    <div class="journey">
+      <div class="stage"><div class="emo">😴</div><h4>Desconhecimento</h4><div class="think">"Minha clínica vai bem, só preciso de mais pacientes."</div><p>Acha que o problema é falta de lead/tráfego.</p></div>
+      <div class="stage"><div class="emo">💡</div><h4>Consciência</h4><div class="think">"Invisto em tráfego e os leads não convertem."</div><p>Muitos "quanto custa?" e pedidos de desconto.</p></div>
+      <div class="stage"><div class="emo">🔍</div><h4>Consideração</h4><div class="think">"Preciso de quem entenda clínica de alto ticket."</div><p>Vê conteúdo da System, compara com mentorias.</p></div>
+      <div class="stage"><div class="emo">⚖️</div><h4>Decisão</h4><div class="think">"R$35k é pesado fora do consultório."</div><p>Avalia cases, objeção principal: retorno.</p></div>
+      <div class="stage"><div class="emo">✔️</div><h4>Compra</h4><div class="think">"Se recuperar poucos altos tickets, já paga."</div><p>Gatilho: case do mesmo nível + mês fraco.</p></div>
+      <div class="stage"><div class="emo">🎉</div><h4>Pós-Compra</h4><div class="think">"Preciso ver resultado rápido."</div><p>Espera quick win nos primeiros 30-60 dias.</p></div>
+    </div>
+  </div>
+
+  <div class="grid g3">
+    <div class="card">
+      <div class="card-head"><span class="ico" style="background:var(--danger-light)">💔</span>Top 10 Dores</div>
+      <div class="rank"><span class="txt">Faturamento sem previsibilidade</span><span class="score" style="color:var(--danger)">10</span></div>
+      <div class="rank"><span class="txt">Técnica que não vira dinheiro</span><span class="score" style="color:var(--danger)">10</span></div>
+      <div class="rank"><span class="txt">Time comercial não converte alto ticket</span><span class="score" style="color:var(--danger)">9</span></div>
+      <div class="rank"><span class="txt">Dependência de indicação e tráfego</span><span class="score" style="color:var(--danger)">9</span></div>
+      <div class="rank"><span class="txt">Ticket baixo / sem cobrar caro</span><span class="score" style="color:var(--amber)">9</span></div>
+      <div class="rank"><span class="txt">Agenda cheia, caixa apertado</span><span class="score" style="color:var(--amber)">8</span></div>
+      <div class="rank"><span class="txt">Colegas piores faturando mais</span><span class="score" style="color:var(--amber)">8</span></div>
+      <div class="rank"><span class="txt">Não sabe o que postar</span><span class="score" style="color:var(--amber)">7</span></div>
+      <div class="rank"><span class="txt">Investiu em agência sem ROI</span><span class="score" style="color:var(--amber)">7</span></div>
+      <div class="rank"><span class="txt">Sem metodologia/processo próprio</span><span class="score" style="color:var(--slate-400)">7</span></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><span class="ico" style="background:var(--success-light)">💛</span>Top 10 Desejos</div>
+      <div class="rank"><span class="txt">Previsibilidade mês a mês</span><span class="score" style="color:var(--emerald)">10</span></div>
+      <div class="rank"><span class="txt">Ser referência e pago como tal</span><span class="score" style="color:var(--emerald)">10</span></div>
+      <div class="rank"><span class="txt">Cobrar caro sem culpa</span><span class="score" style="color:var(--emerald)">9</span></div>
+      <div class="rank"><span class="txt">Time que vende sem ele</span><span class="score" style="color:var(--emerald)">9</span></div>
+      <div class="rank"><span class="txt">Metodologia própria</span><span class="score" style="color:var(--emerald)">9</span></div>
+      <div class="rank"><span class="txt">Esteira de alto valor</span><span class="score" style="color:var(--emerald)">8</span></div>
+      <div class="rank"><span class="txt">Captação que não depende de tráfego</span><span class="score" style="color:var(--emerald)">8</span></div>
+      <div class="rank"><span class="txt">Liberdade financeira</span><span class="score" style="color:var(--emerald)">8</span></div>
+      <div class="rank"><span class="txt">Pacientes que valorizam técnica</span><span class="score" style="color:var(--emerald)">7</span></div>
+      <div class="rank"><span class="txt">Provar o próprio valor</span><span class="score" style="color:var(--emerald)">7</span></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><span class="ico" style="background:var(--warning-light)">⚠️</span>Top Objeções</div>
+      <p style="font-size:13px;color:var(--slate-600);margin-bottom:9px"><b>💰 "Está caro"</b><br>Rebater: 1-2 altos tickets recuperados pagam o investimento.</p>
+      <p style="font-size:13px;color:var(--slate-600);margin-bottom:9px"><b>💔 "Já fiz mentoria e não funcionou"</b><br>Rebater: Mentoria ensina, nós estruturamos o sistema comercial.</p>
+      <p style="font-size:13px;color:var(--slate-600);margin-bottom:9px"><b>📉 "Meu problema é falta de lead"</b><br>Rebater: É de conversão de alto ticket, não de volume.</p>
+      <p style="font-size:13px;color:var(--slate-600);margin-bottom:9px"><b>⏰ "Preciso organizar primeiro"</b><br>Rebater: Organizar É o trabalho que fazemos juntos.</p>
+      <p style="font-size:13px;color:var(--slate-600)"><b>🤔 "Não sei se é o momento"</b><br>Rebater: O custo de esperar 6 meses travado é maior.</p>
+    </div>
+  </div>
+
+  <div class="grid g2">
+    <div class="card">
+      <div class="card-head"><span class="ico" style="background:var(--cyan-light)">🌐</span>Mapa de Influência</div>
+      <p style="font-size:12px;font-weight:700;color:var(--emerald);text-transform:uppercase;margin-bottom:8px">✔ Influência Positiva</p>
+      <div class="rank"><span class="txt">👩 <b>Esposa(o)</b> — "Você trabalha demais e não vive melhor"</span></div>
+      <div class="rank"><span class="txt">👨‍⚕️ <b>Colega que escalou</b> — "Depois que estruturei, mudou tudo"</span></div>
+      <div class="rank"><span class="txt">🎓 <b>Mentor</b> — "Você é bom demais pra depender de indicação"</span></div>
+      <div class="rank"><span class="txt">📱 <b>Grupo de especialistas</b> — vê colegas crescendo (FOMO)</span></div>
+      <p style="font-size:12px;font-weight:700;color:var(--danger);text-transform:uppercase;margin:14px 0 8px">✖ Influência Negativa</p>
+      <div class="rank"><span class="txt">👨‍💼 <b>Sócio conservador</b> — "Já gastamos muito, vamos esperar"</span></div>
+      <div class="rank"><span class="txt">📊 <b>Contador</b> — "Corta esse gasto, o caixa tá apertado"</span></div>
+      <div class="rank"><span class="txt">💬 <b>Paciente que pede desconto</b> — reforça o trauma de preço</span></div>
+      <p style="margin-top:12px;font-size:13px;color:var(--primary-dark)"><b>💡 Decisor final:</b> o próprio cirurgião (75%) ou o casal em conjunto (25%).</p>
+    </div>
+    <div class="card">
+      <div class="card-head"><span class="ico" style="background:var(--primary-light)">📱</span>Comportamento Digital</div>
+      <div class="kpis" style="margin-top:0">
+        <div class="kpi"><b>6-7h<br>12-13h<br>21-23h</b><span>Horários online</span></div>
+        <div class="kpi"><b>85%</b><span>Mobile</span></div>
+        <div class="kpi"><b>R$2-5k</b><span>Ticket de impulso</span></div>
+        <div class="kpi"><b>14-30d</b><span>Ciclo decisão</span></div>
+      </div>
+      <p style="font-size:12px;font-weight:700;color:var(--slate-400);text-transform:uppercase;margin:18px 0 8px">Canais de aquisição (hoje)</p>
+      <div class="badges">
+        <span class="badge">Indicação</span><span class="badge">Instagram orgânico</span><span class="badge">Tráfego pago</span><span class="badge">Networking</span><span class="badge">Pacientes antigos</span><span class="badge">Eventos/cursos</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><span class="ico" style="background:var(--warning-light)">📅</span>Um Dia na Vida do Dr. Rodrigo</div>
+    <div class="day-item"><div class="day-time">5:50</div><div class="day-txt">O alarme toca. Pega o celular ainda na cama e abre o WhatsApp: mensagens da secretária sobre retornos e <b>um lead novo perguntando "quanto custa uma rino?"</b>. Suspira — mais um que só quer preço.</div></div>
+    <div class="day-item"><div class="day-time">6:40</div><div class="day-txt">Na academia, abre o Instagram. Vê um colega de especialização <b>postando que bateu R$200k no mês</b>. Sente admiração e incômodo: "O cara não opera melhor que eu, como fatura o dobro?"</div></div>
+    <div class="day-item"><div class="day-time">8:00</div><div class="day-txt">Chega na clínica. A secretária mostra a agenda: várias avaliações e retornos. Ele já sabe que <b>boa parte vai "pensar" e sumir</b>.</div></div>
+    <div class="day-item"><div class="day-time">10:30</div><div class="day-txt">Entre um atendimento e outro, olha o extrato. Mês fraco. <b>Aluguel, equipamentos e folha não esperam mês ruim.</b></div></div>
+    <div class="day-item"><div class="day-time">15:00</div><div class="day-txt">Avaliação veio do tráfego. Paciente interessado em procedimento de R$12k, mas <b>quando ouve o valor, recua: "Vou pesquisar."</b> Rodrigo pensa: "Preciso de gente que já chegue pronta pra comprar."</div></div>
+    <div class="day-item"><div class="day-time">19:30</div><div class="day-txt">Em casa, a esposa comenta: <b>"Você trabalha demais e o faturamento não acompanha. Precisa mudar."</b></div></div>
+    <div class="day-item"><div class="day-time">21:40</div><div class="day-txt">Filhos dormindo. Abre o Instagram, encontra o perfil da System, assiste 3 Reels: <b>"Esse cara fala a minha língua."</b> Antes de dormir: "Seria tão bom ter alguém que estruturasse tudo isso pra mim..."</div></div>
+  </div>
+</div>
+
+<!-- ===== EMPATIA ===== -->
+<div class="panel" id="empatia">
+  <div class="section-title">🧡 Mapa de Empatia Expandido</div>
+  <div class="section-sub">O que a persona pensa, sente, vê, ouve, diz, faz, pesquisa e esconde</div>
+  <div class="emp-grid">
+    <div class="emp-card"><h4>🧠 O que Pensa e Sente?</h4><ul>
+      <li>"Trabalho demais para o quanto faturo"</li>
+      <li>"Sou melhor tecnicamente que muitos que faturam mais"</li>
+      <li>"Deveria estar mais longe na carreira"</li>
+      <li>"Minha clínica não tem previsibilidade nenhuma"</li>
+      <li>"Preciso de ajuda mas não sei em quem confiar"</li>
+    </ul></div>
+    <div class="emp-card"><h4>👁 O que Vê?</h4><ul>
+      <li>Colegas com menos técnica crescendo no Instagram</li>
+      <li>Gurus vendendo alto ticket com facilidade</li>
+      <li>Anúncios de mentoria e marketing médico no feed</li>
+      <li>Antes/depois de colegas viralizando</li>
+      <li>Players com operação comercial organizada</li>
+    </ul></div>
+    <div class="emp-card"><h4>👂 O que Ouve?</h4><ul>
+      <li>Esposa: "Você trabalha demais e não vive"</li>
+      <li>Colega: "Estruturei o comercial e mudou tudo"</li>
+      <li>Contador: "Cuidado com os gastos"</li>
+      <li>Paciente: "Achei caro, vou pesquisar"</li>
+      <li>Grupo: "Fulano bateu R$200k esse mês"</li>
+    </ul></div>
+    <div class="emp-card"><h4>🗣 O que Diz e Faz?</h4><ul>
+      <li>Diz "está tudo bem" — mas o caixa está apertado</li>
+      <li>Posta caso clínico esperando virar paciente (não vira)</li>
+      <li>Participa de congressos buscando resposta (técnica, não comercial)</li>
+      <li>Reclama de lead frio mas não tem processo de qualificação</li>
+      <li>Diz "vou resolver sozinho" — segue no mesmo ciclo</li>
+    </ul></div>
+    <div class="emp-card"><h4>⚡ Dores</h4><ul>
+      <li>Faturamento imprevisível apesar da estrutura cara</li>
+      <li>Leads que só perguntam preço</li>
+      <li>Time comercial que não fecha alto ticket</li>
+      <li>Gastou com agência/tráfego sem ROI</li>
+      <li>Colegas vendem mais sendo piores</li>
+    </ul></div>
+    <div class="emp-card"><h4>⭐ Ganhos</h4><ul>
+      <li>Previsibilidade de receita alta</li>
+      <li>Ser referência reconhecida na especialidade</li>
+      <li>Time comercial autônomo</li>
+      <li>Cobrar caro sem culpa</li>
+      <li>Metodologia própria com nome</li>
+    </ul></div>
+    <div class="emp-card"><h4>🔍 O que Pesquisa no Google/YouTube</h4><ul>
+      <li>"como vender procedimento de alto ticket"</li>
+      <li>"marketing para cirurgião buco-maxilo"</li>
+      <li>"como aumentar ticket na odontologia"</li>
+      <li>"estrutura comercial para clínica"</li>
+      <li>"como cobrar mais caro sem perder paciente"</li>
+      <li>"script de vendas para clínica odontológica"</li>
+      <li>"como sair da dependência de indicação"</li>
+      <li>"como criar metodologia própria"</li>
+    </ul></div>
+    <div class="emp-card"><h4>😬 O que NÃO Admite Publicamente</h4><ul>
+      <li>Tem vergonha do faturamento real da clínica</li>
+      <li>Tem medo de investir R$35k e não ter retorno (trauma de mês ruim)</li>
+      <li>Sente inveja de colegas que crescem mais rápido</li>
+      <li>Esconde o resultado ruim do comercial da equipe e da família</li>
+      <li>Se sente fracasso como empresário, apesar de excelente cirurgião</li>
+    </ul></div>
+  </div>
+</div>
+
+<!-- ===== DIMENSÕES ===== -->
+<div class="panel" id="dim">
+  <div class="section-title">🧠 30 Dimensões Psicológicas</div>
+  <div class="section-sub">300+ insights em 5 blocos temáticos — clique para expandir</div>
+
+  <!-- BLOCO A -->
+  <div class="dim-block">
+    <div class="dim-head" onclick="toggleDim(this)"><span style="font-size:18px">🌑</span><span class="blab">Bloco A — Sombras e Medos<span>Dimensões 1-6</span></span><span class="chev">▼</span></div>
+    <div class="dim-body">
+      <div class="dim"><h5><span class="dn">01</span>Sombras Existenciais</h5><div class="def">Medos profundos de significado e propósito</div><ul>
+        <li class="anchor">"Estudei anos pra ser excelente no bisturi e virei refém de um comercial que não funciona."</li>
+        <li>Medo de que a dedicação técnica não garanta retorno financeiro</li>
+        <li>Sensação de que deveria estar "mais longe" na carreira</li>
+        <li>"Serei lembrado como ótimo cirurgião e péssimo empresário?"</li>
+        <li>Conflito entre identidade de cirurgião e necessidade de vender</li>
+        <li>Angústia de ver menos capacitados com mais sucesso financeiro</li>
+      </ul></div>
+      <div class="dim"><h5><span class="dn">02</span>Medos Fundamentais</h5><div class="def">Terrores que moldam decisões</div><ul>
+        <li>Investir R$35k e ser "mais um gasto sem retorno"</li>
+        <li>Terror de um mês com a folha apertando e o caixa no vermelho</li>
+        <li>Ser visto como "o cirurgião que precisa de marketing pra vender"</li>
+        <li>Depender de indicação que pode secar a qualquer momento</li>
+        <li>Time comercial despreparado destruir a reputação da clínica</li>
+        <li>Ficar para trás dos concorrentes que se estruturaram antes</li>
+      </ul></div>
+      <div class="dim"><h5><span class="dn">03</span>Medos Ocultos</h5><div class="def">Inseguranças raramente expressas</div><ul>
+        <li>"Não sei nada de vendas e tenho vergonha de admitir"</li>
+        <li>Pacientes perceberem que ele está "precisando vender"</li>
+        <li>Vergonha de não entender CAC, conversão, funil</li>
+        <li>Cobrar caro ou barato demais — sem parâmetro de mercado</li>
+        <li>Esposa descobrir quanto realmente gasta vs. quanto sobra</li>
+        <li>Sua técnica não ser tão diferenciada quanto ele acredita</li>
+      </ul></div>
+      <div class="dim"><h5><span class="dn">04</span>Medos Primordiais</h5><div class="def">Terrores fundamentais de existência</div><ul>
+        <li>Irrelevância — ser substituído por cirurgião mais jovem e digital</li>
+        <li>Ter que fechar a clínica e voltar a atender em clínica de terceiros</li>
+        <li>Adoecer sem uma estrutura que segure a operação</li>
+        <li>Falência silenciosa — fatura "alto", mas não sobra nada</li>
+        <li>Desperdiçar anos de habilidade sem monetização</li>
+        <li>Acordar daqui a 10 anos na mesma situação</li>
+      </ul></div>
+      <div class="dim"><h5><span class="dn">05</span>Feridas Ancestrais</h5><div class="def">Padrões familiares e crenças herdadas</div><ul>
+        <li>Cultura de que "vender é algo sujo" / médico não negocia</li>
+        <li>Família associa sucesso a horas trabalhadas, não a estrutura</li>
+        <li>"Ser doutor = estar resolvido" — pressão silenciosa</li>
+        <li>Perfeccionismo herdado que paralisa decisões comerciais</li>
+        <li>Pedir ajuda visto como fraqueza na cultura médica</li>
+        <li>"Gente honesta não fica rica" — sabotagem inconsciente</li>
+      </ul></div>
+      <div class="dim"><h5><span class="dn">06</span>Feridas Emocionais</h5><div class="def">Cicatrizes de rejeições e humilhações</div><ul>
+        <li class="anchor">O paciente que disse "achei caro" e fechou com um colega inferior.</li>
+        <li>Agência/tráfego que prometeu lotar a agenda e entregou lead ruim</li>
+        <li>Fazer uma consulta excelente e mesmo assim não vender</li>
+        <li>Cobrar menos do que gostaria só pra conseguir fechar</li>
+        <li>Funcionário que pediu demissão por falta de estrutura</li>
+        <li>Esposa: "Trabalha tanto e a gente não vive melhor"</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <!-- BLOCO B -->
+  <div class="dim-block">
+    <div class="dim-head" onclick="toggleDim(this)"><span style="font-size:18px">💛</span><span class="blab">Bloco B — Desejos e Necessidades<span>Dimensões 7-12</span></span><span class="chev">▼</span></div>
+    <div class="dim-body">
+      <div class="dim"><h5><span class="dn">07</span>Necessidades Primais</h5><div class="def">Desejos que impulsionam comportamentos</div><ul>
+        <li>Segurança financeira previsível mês a mês</li>
+        <li>Reconhecimento como referência na especialidade</li>
+        <li>Validação de que excelência técnica MERECE retorno alto</li>
+        <li>Autonomia — não depender de indicação nem de tráfego</li>
+        <li>Ordem no caos — processo comercial claro</li>
+        <li>Respeito do time e dos pares</li>
+      </ul></div>
+      <div class="dim"><h5><span class="dn">08</span>Fantasias Não Realizadas</h5><div class="def">Sonhos abandonados ou adiados</div><ul>
+        <li>Clínica de referência operando só casos de alto valor</li>
+        <li>Faturar R$300-500k/mês com metade rodando sem ele</li>
+        <li>Método próprio com nome: "Método [Sobrenome]"</li>
+        <li>Ser palestrante/autoridade em congressos pelo modelo de negócio</li>
+        <li>Pacientes de outros estados vindo pela marca pessoal</li>
+        <li>Olhar o dashboard numa terça e ver a meta batida</li>
+      </ul></div>
+      <div class="dim"><h5><span class="dn">09</span>Desejos Inconfessáveis</h5><div class="def">Anseios que hesita admitir</div><ul>
+        <li>Quer ganhar MUITO dinheiro — acha que doutor "não deveria" querer</li>
+        <li>Quer ser mais reconhecido que os colegas</li>
+        <li>Cobrar caro e ter fila de espera</li>
+        <li>Concorrentes verem o sucesso dele e sentirem inveja</li>
+        <li>Provar pra si mesmo e pros outros que "venceu"</li>
+        <li>Que alguém simplesmente resolva tudo isso por ele</li>
+      </ul></div>
+      <div class="dim"><h5><span class="dn">10</span>Desejos Nucleares</h5><div class="def">Anseios de conexão e transcendência</div><ul>
+        <li>Ser lembrado como transformador de vidas e de rostos</li>
+        <li>Pacientes que escolhem pela confiança, não pelo preço</li>
+        <li>Reconciliar o "eu cirurgião" com o "eu empresário"</li>
+        <li>Construir algo maior — uma clínica que é um negócio de verdade</li>
+        <li>Ser exemplo de sucesso para os filhos</li>
+        <li>Abundância sem culpa</li>
+      </ul></div>
+      <div class="dim"><h5><span class="dn">11</span>Necessidades Emocionais Não Expressas</h5><div class="def">Reconhecimento não verbalizado — frases que ele precisa ouvir</div><ul>
+        <li>"Você já tem a técnica. Só falta a estrutura comercial."</li>
+        <li>"Seu trabalho vale muito mais do que você cobra hoje."</li>
+        <li>"Não é incompetência. É falta de processo."</li>
+        <li>"Faz isso, depois isso. Nessa ordem. Confia."</li>
+        <li>"Outros cirurgiões passaram exatamente por isso."</li>
+        <li>"Não vou entregar e sumir. Vou caminhar com você."</li>
+      </ul></div>
+      <div class="dim"><h5><span class="dn">12</span>Buscas Infinitas</h5><div class="def">Anseios por transcendência</div><ul>
+        <li>A "fórmula" que faça a clínica vender alto ticket sem depender dele</li>
+        <li>Agenda só de pacientes prontos e premium</li>
+        <li>Equilíbrio entre ser cirurgião e ser empresário</li>
+        <li>Mentor que já passou pelo mesmo caminho</li>
+        <li>Simplificação — "deve existir um jeito mais simples"</li>
+        <li>Pertencimento a um grupo de pares de alto nível</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <!-- BLOCO C -->
+  <div class="dim-block">
+    <div class="dim-head" onclick="toggleDim(this)"><span style="font-size:18px">🔁</span><span class="blab">Bloco C — Mecanismos e Padrões<span>Dimensões 13-18</span></span><span class="chev">▼</span></div>
+    <div class="dim-body">
+      <div class="dim"><h5><span class="dn">13</span>Compensações Inconscientes</h5><div class="def">Proteção contra vulnerabilidades</div><ul>
+        <li>Foca na técnica e em mais cursos para evitar encarar o comercial</li>
+        <li>Acumula especializações como escudo de autoridade</li>
+        <li>Trabalha 12h pra compensar a falta de processo</li>
+        <li>Posta casos clínicos buscando validação</li>
+        <li>Aceita paciente de baixo ticket pra encher a agenda</li>
+        <li>Reclama de agência/tráfego pra justificar a estagnação</li>
+      </ul></div>
+      <div class="dim"><h5><span class="dn">14</span>Mecanismos de Defesa</h5><div class="def">Autoproteção psicológica</div><ul>
+        <li>Racionalização: "Vender alto ticket não funciona no meu nicho"</li>
+        <li>Negação: "Só preciso de mais leads"</li>
+        <li>Projeção: "A secretária é que não sabe vender"</li>
+        <li>Intelectualização: consome conteúdo sem aplicar</li>
+        <li>Evitação: adia a decisão esperando o "momento certo"</li>
+        <li>Formação reativa: "Não me importo tanto com dinheiro"</li>
+      </ul></div>
+      <div class="dim"><h5><span class="dn">15</span>Comportamentos Compensatórios</h5><div class="def">Ações que compensam inseguranças</div><ul>
+        <li>Dá desconto antes mesmo do paciente pedir</li>
+        <li>Faz follow-up pessoalmente porque não confia no time</li>
+        <li>Story de lifestyle pra parecer bem-sucedido</li>
+        <li>Contrata "o mais barato" e confirma o viés de que não funciona</li>
+        <li>Vai a todos os congressos — mas o gap é comercial, não técnico</li>
+        <li>Cria combos/promoções e compete por preço</li>
+      </ul></div>
+      <div class="dim"><h5><span class="dn">16</span>Ciclos Viciosos</h5><div class="def">Padrões repetitivos que limitam</div><ul>
+        <li><b>Ciclo da agência:</b> contrata → sem resultado → cancela → tenta sozinho → repete</li>
+        <li><b>Ciclo do desconto:</b> cobra caro → resiste → desconto → margem cai → precisa de volume</li>
+        <li><b>Ciclo da dependência:</b> faz tudo → sem tempo de treinar o time → ninguém aprende → faz tudo</li>
+        <li><b>Ciclo do conteúdo:</b> posta 2 semanas → sem resultado → para → repete</li>
+        <li><b>Ciclo do faturamento:</b> mês bom → relaxa → mês ruim → pânico → repete</li>
+        <li><b>Ciclo do "vou pensar":</b> avalia → não fecha → sem follow-up → perde</li>
+      </ul></div>
+      <div class="dim"><h5><span class="dn">17</span>Crenças Limitantes</h5><div class="def">Pensamentos que restringem potencial</div><ul>
+        <li>"Bom cirurgião não precisa de marketing"</li>
+        <li>"R$35k em mentoria é gasto, não investimento"</li>
+        <li>"Meu público é diferente, não paga caro"</li>
+        <li>"Se cobrar mais caro, ninguém fecha"</li>
+        <li>"Mentoria é tudo igual, já tentei"</li>
+        <li>"Preciso organizar tudo sozinho antes de começar"</li>
+      </ul></div>
+      <div class="dim"><h5><span class="dn">18</span>Prisões Invisíveis</h5><div class="def">Narrativas auto-impostas</div><ul>
+        <li>"Eu SOU a clínica" — identidade fundida com a operação</li>
+        <li>"Se eu não estiver presente, a qualidade cai"</li>
+        <li>"Cirurgião não é vendedor"</li>
+        <li>"Ninguém vende tão bem quanto eu o meu procedimento"</li>
+        <li>"Primeiro estabilizar, depois escalar"</li>
+        <li>"Deveria conseguir resolver sozinho — sou formado"</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <!-- BLOCO D -->
+  <div class="dim-block">
+    <div class="dim-head" onclick="toggleDim(this)"><span style="font-size:18px">⚔️</span><span class="blab">Bloco D — Identidade e Poder<span>Dimensões 19-24</span></span><span class="chev">▼</span></div>
+    <div class="dim-body">
+      <div class="dim"><h5><span class="dn">19</span>Questões de Identidade</h5><div class="def">Conflito entre o eu autêntico e as máscaras sociais</div><ul>
+        <li>No congresso: "cirurgião confiante". Na clínica às 22h: empresário inseguro</li>
+        <li>Para pacientes: "referência". Para si: "nem sei quantas vendas perdi"</li>
+        <li>Instagram: clínica impecável. Realidade: faltou processo comercial</li>
+        <li>Para a família: "sob controle". Por dentro: "não sei se fecho o mês"</li>
+        <li>"Curador" vs. "vendedor" — conflito não resolvido</li>
+        <li>Posta "excelência" sabendo que o comercial é amador</li>
+      </ul></div>
+      <div class="dim"><h5><span class="dn">20</span>Dinâmicas de Poder</h5><div class="def">Relação com controle e autoridade</div><ul>
+        <li>Na cirurgia: controle total, ninguém questiona</li>
+        <li>Na reunião comercial: inseguro, sem vocabulário de vendas</li>
+        <li>Quer delegar, mas não solta o controle do fechamento</li>
+        <li>Poderoso com o bisturi, impotente com a planilha</li>
+        <li>Compra por convicção (case concreto), não por pressão</li>
+        <li>Quer parceiro estratégico, não mais um fornecedor</li>
+      </ul></div>
+      <div class="dim"><h5><span class="dn">21</span>Traumas Profissionais</h5><div class="def">Experiências dolorosas no trabalho</div><ul>
+        <li>Agência: meses pagando e R$ jogados fora sem retorno</li>
+        <li>Mês que faturou pouco e pensou em fechar a clínica</li>
+        <li>Treinar a secretária em vendas → reclamação de paciente</li>
+        <li>Contador vetou uma proposta de crescimento</li>
+        <li>Colega copiou o formato e cresceu mais rápido</li>
+        <li>Período de agenda zerada — trauma de instabilidade</li>
+      </ul></div>
+      <div class="dim"><h5><span class="dn">22</span>Inseguranças Profissionais</h5><div class="def">Dúvidas sobre as próprias capacidades</div><ul>
+        <li>"Não sei gestão comercial de verdade"</li>
+        <li>"Não sei liderar e cobrar uma equipe de vendas"</li>
+        <li>"Não sei criar conteúdo que atraia paciente premium"</li>
+        <li>"Não sei quanto deveria faturar — sem benchmark"</li>
+        <li>"Não sei estruturar script, funil, esteira de produtos"</li>
+        <li>"Não sei dizer NÃO para paciente fora do perfil"</li>
+      </ul></div>
+      <div class="dim"><h5><span class="dn">23</span>Relacionamentos Tóxicos</h5><div class="def">Padrões disfuncionais nas relações de trabalho</div><ul>
+        <li>Secretária antiga que "sabe tudo" mas não converte</li>
+        <li>Sócio que quer lucro sem assumir risco</li>
+        <li>Contador que nunca sugere nada proativamente</li>
+        <li>Agência com desculpas eternas</li>
+        <li>Paciente VIP que exige tudo e ainda pede desconto</li>
+        <li>Colega que pede indicação mas nunca retribui</li>
+      </ul></div>
+      <div class="dim"><h5><span class="dn">24</span>Conflitos Internos</h5><div class="def">Dilemas entre valores e realidade</div><ul>
+        <li>Cobrar caro MAS medo de perder volume</li>
+        <li>Delegar MAS não aceita resultado diferente do dele</li>
+        <li>Investir MAS o trauma de mês ruim trava</li>
+        <li>Crescer MAS medo de perder a qualidade do atendimento</li>
+        <li>Ser premium MAS aceita qualquer paciente</li>
+        <li>Pedir ajuda MAS "eu deveria saber fazer isso"</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <!-- BLOCO E -->
+  <div class="dim-block">
+    <div class="dim-head" onclick="toggleDim(this)"><span style="font-size:18px">🌌</span><span class="blab">Bloco E — Existência e Transcendência<span>Dimensões 25-30</span></span><span class="chev">▼</span></div>
+    <div class="dim-body">
+      <div class="dim"><h5><span class="dn">25</span>Vazios Primordiais</h5><div class="def">Sensações de incompletude e desconexão</div><ul>
+        <li>Falta "a peça que conecta autoridade, conteúdo e venda"</li>
+        <li>Trabalhar o dia inteiro sem avançar estrategicamente</li>
+        <li>Desconexão entre o valor técnico e o resultado financeiro</li>
+        <li>Solidão do dono — ninguém entende a pressão dele</li>
+        <li>Construiu uma clínica, mas não um negócio</li>
+        <li>Sabe que tem potencial pra muito mais e não acessa</li>
+      </ul></div>
+      <div class="dim"><h5><span class="dn">26</span>Sombras Arquetípicas</h5><div class="def">Aspectos do poder pessoal que causam medo</div><ul>
+        <li>O "Impostor" — medo de descobrirem que improvisa o comercial</li>
+        <li>O "Mártir" que se sacrifica e cobra reconhecimento</li>
+        <li>O "Perfeccionista" — usa a qualidade como desculpa pra não agir</li>
+        <li>O "Solitário" orgulhoso de fazer "tudo sozinho"</li>
+        <li>O "Ganancioso" com vergonha de admitir que quer faturar muito</li>
+        <li>O "Juiz" que critica quem vende mas quer o mesmo resultado</li>
+      </ul></div>
+      <div class="dim"><h5><span class="dn">27</span>Feridas da Alma</h5><div class="def">Dores existenciais profundas</div><ul>
+        <li>Não foi preparado para empreender — anos de formação, zero de negócio</li>
+        <li>Talento puro não é suficiente, e isso dói</li>
+        <li>Ter que "provar valor" todos os dias</li>
+        <li>Competir com gente tecnicamente inferior e perder</li>
+        <li>Solidão decisória</li>
+        <li>"Fazer bem feito" não garante reconhecimento financeiro</li>
+      </ul></div>
+      <div class="dim"><h5><span class="dn">28</span>Abismos Existenciais</h5><div class="def">Vertigens diante da liberdade e responsabilidade</div><ul>
+        <li>PODERIA faturar 3x mais — o que separa é decisão, não talento</li>
+        <li>Abismo entre "sei o que fazer" e "não consigo executar"</li>
+        <li>100% responsável — se falha, a culpa é dele</li>
+        <li>Concorrentes investindo pesado enquanto ele hesita</li>
+        <li>Confiar em alguém externo com algo tão importante</li>
+        <li>Está a uma decisão de distância de mudar tudo</li>
+      </ul></div>
+      <div class="dim"><h5><span class="dn">29</span>Paradoxos Fundamentais</h5><div class="def">Contradições essenciais</div><ul>
+        <li>Quanto mais opera, menos tempo pra construir o que reduziria a dependência dele</li>
+        <li>Quer premium mas tem medo de perder volume</li>
+        <li>Precisa investir mas não cresce o suficiente pra se sentir seguro</li>
+        <li>Quer delegar mas só confia em si mesmo</li>
+        <li>Quanto melhor tecnicamente, mais frustra não conseguir vender</li>
+        <li>Especialista em transformar rostos, não consegue transformar o próprio negócio</li>
+      </ul></div>
+      <div class="dim"><h5><span class="dn">30</span>Tensões Primordiais</h5><div class="def">Polaridades que criam dinamismo</div><ul>
+        <li>Artista vs. Empresário — técnica vs. números</li>
+        <li>Cuidador vs. Vendedor — vocação vs. necessidade</li>
+        <li>Perfeição vs. Velocidade — perfeito vs. agora</li>
+        <li>Autossuficiência vs. Delegação — "eu faço" vs. "preciso de ajuda"</li>
+        <li>Segurança vs. Crescimento — manter vs. arriscar</li>
+        <li>Humildade vs. Ambição — "não sou vendedor" vs. "quero faturar muito"</li>
+      </ul></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ICP ===== -->
+<div class="panel" id="icp">
+  <div class="section-title">🎯 ICP — Perfil do Cliente Ideal</div>
+  <div class="section-sub">Critérios de qualificação e lead scoring</div>
+
+  <div class="card">
+    <div class="card-head"><span class="ico" style="background:var(--blue-light)">🏢</span>Perfil Firmográfico</div>
+    <table>
+      <tr><th>Atributo</th><th>✔ Ideal (A+)</th><th>⚠ Aceitável (B)</th><th>✖ Desqualifica</th></tr>
+      <tr><td><b>Segmento</b></td><td>Cirurgião da face (buco-maxilo / dentista) com procedimentos de alto valor</td><td>Dentista premium querendo migrar pra alto ticket</td><td>Clínica popular / volume / convênio</td></tr>
+      <tr><td><b>Faturamento</b></td><td>R$60k a R$100k/mês</td><td>R$40k a R$60k em crescimento</td><td>Abaixo de R$30k ou sem estrutura</td></tr>
+      <tr><td><b>Porte</b></td><td>4-12 funcionários, clínica própria</td><td>Solo com 1-2 funcionários</td><td>Recém-formado sem clínica</td></tr>
+      <tr><td><b>Autoridade</b></td><td>Já tem posicionamento e conteúdo, falta converter</td><td>Começando autoridade</td><td>Sem presença nem reputação</td></tr>
+      <tr><td><b>Time comercial</b></td><td>Tem secretária/equipe mas sem processo</td><td>Quer montar o time</td><td>Não quer ter time</td></tr>
+    </table>
+  </div>
+
+  <div class="grid g2">
+    <div class="card">
+      <div class="card-head"><span class="ico" style="background:var(--success-light)">✅</span>Sinais de Qualificação (compre AGORA)</div>
+      <ul style="list-style:none">
+        <li class="rank"><span class="num-circ" style="background:var(--success)">✓</span><span class="txt">Reclama de "técnica boa, faturamento baixo"</span></li>
+        <li class="rank"><span class="num-circ" style="background:var(--success)">✓</span><span class="txt">Já investiu em tráfego/agência e se frustrou</span></li>
+        <li class="rank"><span class="num-circ" style="background:var(--success)">✓</span><span class="txt">Tem agenda movimentada mas caixa apertado</span></li>
+        <li class="rank"><span class="num-circ" style="background:var(--success)">✓</span><span class="txt">Já fez mentoria de posicionamento (consciente)</span></li>
+        <li class="rank"><span class="num-circ" style="background:var(--success)">✓</span><span class="txt">Tem procedimentos de alto valor no portfólio</span></li>
+        <li class="rank"><span class="num-circ" style="background:var(--success)">✓</span><span class="txt">Fala em "previsibilidade" e "escalar"</span></li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-head"><span class="ico" style="background:var(--danger-light)">🚫</span>Critérios de Desqualificação (diga NÃO)</div>
+      <ul style="list-style:none">
+        <li class="rank"><span class="num-circ" style="background:var(--danger)">✕</span><span class="txt">Quer "lead barato" e não estrutura</span></li>
+        <li class="rank"><span class="num-circ" style="background:var(--danger)">✕</span><span class="txt">Modelo só de convênio / baixo ticket</span></li>
+        <li class="rank"><span class="num-circ" style="background:var(--danger)">✕</span><span class="txt">Procura fórmula mágica sem implementar</span></li>
+        <li class="rank"><span class="num-circ" style="background:var(--danger)">✕</span><span class="txt">Caixa sem fôlego pra investir os R$35k</span></li>
+        <li class="rank"><span class="num-circ" style="background:var(--danger)">✕</span><span class="txt">Não aceita ter processo nem ser cobrado</span></li>
+        <li class="rank"><span class="num-circ" style="background:var(--danger)">✕</span><span class="txt">Não tem nenhuma autoridade pra alavancar</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><span class="ico" style="background:var(--primary-light)">🎤</span>Frase de Qualificação (Elevator Pitch do ICP)</div>
+    <div class="qualify">
+      "Meu cliente ideal é um <b>cirurgião da face — buco-maxilo ou dentista</b> — que fatura entre <b>R$60k e R$100k/mês</b>, já tem <b>técnica e autoridade</b> mas vive sem previsibilidade, com <b>ticket travado e time comercial que não converte</b>. Ele quer <b>estruturar processo comercial, posicionamento e metodologia própria</b> para vender alto ticket com segurança nos <b>próximos 6 meses</b>, e está disposto a investir <b>R$35.000</b> para resolver o que mentoria genérica, agência e tráfego não resolveram."
+    </div>
+    <p style="margin-top:14px;font-size:13.5px;color:var(--slate-600)"><b>Para a equipe de SDR:</b> "Só avançamos com cirurgião da face que fatura R$60k+ e admite que o problema é conversão de alto ticket — não falta de lead."</p>
+  </div>
+</div>
+
+<!-- ===== ANTI-PERSONAS ===== -->
+<div class="panel" id="anti">
+  <div class="section-title">🚫 Anti-Personas</div>
+  <div class="section-sub">Quem NÃO é o cliente ideal — evite atrair, não venda para</div>
+  <div class="grid g3">
+    <div class="card" style="border-top:4px solid var(--danger)">
+      <div class="card-head"><span class="ico" style="background:var(--danger-light)">💸</span>O Caçador de Preço</div>
+      <p style="font-size:13.5px;color:var(--slate-600)">Recém-formado ou clínica de volume que quer "lead barato" e fórmula mágica. Não tem caixa, não quer estrutura e desvaloriza o investimento.</p>
+      <p style="font-size:13px;color:var(--danger);margin-top:10px"><b>Por que evitar:</b> não implementa, pede desconto, vira detrator. <br><b>Filtro:</b> "Qual seu faturamento hoje?" + "O que já investiu em estrutura?"</p>
+    </div>
+    <div class="card" style="border-top:4px solid var(--warning)">
+      <div class="card-head"><span class="ico" style="background:var(--warning-light)">🛒</span>O Turista de Mentoria</div>
+      <p style="font-size:13.5px;color:var(--slate-600)">Coleciona cursos e mentorias mas nunca aplica. Quer "mais uma informação", não transformação. Consome conteúdo e culpa o método.</p>
+      <p style="font-size:13px;color:var(--amber);margin-top:10px"><b>Por que evitar:</b> não executa, não tem resultado, reclama. <br><b>Filtro:</b> "O que você aplicou da última mentoria?"</p>
+    </div>
+    <div class="card" style="border-top:4px solid var(--slate-400)">
+      <div class="card-head"><span class="ico" style="background:var(--slate-100)">🏥</span>O Convênio-Dependente</div>
+      <p style="font-size:13.5px;color:var(--slate-600)">Modelo 100% baseado em volume e convênio, sem procedimentos de alto valor e sem intenção de migrar pra alto ticket. Estrutura incompatível.</p>
+      <p style="font-size:13px;color:var(--slate-500);margin-top:10px"><b>Por que evitar:</b> a metodologia não se aplica ao modelo dele. <br><b>Filtro:</b> "Você tem procedimentos de alto valor no portfólio?"</p>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-head"><span class="ico" style="background:var(--danger-light)">⛔</span>Sinais de Alerta na Conversa</div>
+    <div class="badges">
+      <span class="badge">"Quero garantia de resultado"</span>
+      <span class="badge">"Só topo se for no boleto longo sem entrada"</span>
+      <span class="badge">"Meu problema é só lead"</span>
+      <span class="badge">"Não quero ter que mexer no time"</span>
+      <span class="badge">"Quanto é o mais barato que dá?"</span>
+      <span class="badge">"Não tenho tempo pra implementar"</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== GUIA ===== -->
+<div class="panel" id="guia">
+  <div class="section-title">🧭 Guia de Aplicação</div>
+  <div class="section-sub">Como usar esta persona em copy, anúncios, conteúdo e SDR</div>
+
+  <div class="apply-card">
+    <h4>📢 Anúncios (Meta / Instagram)</h4>
+    <p>Use as headlines do Resumo. Ângulo central: <b>"Não é técnica, é estrutura comercial"</b>. Públicos: lookalike de pacientes de alto ticket + interesses em congressos de buco-maxilo, harmonização avançada, especializações.</p>
+    <ul>
+      <li>Criativo de dor: o lead que só pergunta preço</li>
+      <li>Criativo de status: colega faturando o dobro com menos técnica</li>
+      <li>Criativo de prova: cases Dr. Warley, Dra. Marjorie, Dra. Déborah</li>
+    </ul>
+  </div>
+
+  <div class="apply-card">
+    <h4>📝 Conteúdo Orgânico (Instagram)</h4>
+    <p>Fale a língua das frases da persona. Pilar de conteúdo:</p>
+    <ul>
+      <li><b>Autoridade comercial:</b> "Por que cirurgião excelente fatura como clínica mediana"</li>
+      <li><b>Quebra de objeção:</b> "Você não tem problema de lead, tem de conversão"</li>
+      <li><b>Bastidor/Prova:</b> cases reais + R$66k em 1 dia</li>
+      <li><b>Identificação:</b> o "dia na vida" como roteiro de Reels</li>
+    </ul>
+  </div>
+
+  <div class="apply-card">
+    <h4>📞 Roteiro de SDR / Qualificação</h4>
+    <ul>
+      <li>Abra pela dor #1: "Como está a previsibilidade de faturamento da clínica hoje?"</li>
+      <li>Qualifique faturamento (R$60k+) e procedimentos de alto valor</li>
+      <li>Use a objeção rebatida: 1-2 altos tickets recuperados pagam o investimento</li>
+      <li>Gatilho de fechamento: case do mesmo nível + custo de continuar travado 6 meses</li>
+      <li>Desqualifique caçador de preço e turista de mentoria (ver Anti-Personas)</li>
+    </ul>
+  </div>
+
+  <div class="apply-card">
+    <h4>✍️ Copy de VSL / Página de Vendas</h4>
+    <ul>
+      <li><b>Lead (gancho):</b> dor profunda — "Estudou anos, virou refém de um comercial que não funciona"</li>
+      <li><b>História:</b> o ciclo da agência/tráfego sem ROI</li>
+      <li><b>Mecanismo único:</b> processo + posicionamento + metodologia própria + esteira de alto valor</li>
+      <li><b>Prova:</b> cases reais com números</li>
+      <li><b>Oferta:</b> R$35k ancorado no custo de NÃO ter estrutura</li>
+      <li><b>Fechamento:</b> "Você está a uma decisão de distância de mudar tudo"</li>
+    </ul>
+  </div>
+</div>
+
+<div class="footer">Persona Master gerada por System Digital · Baseada no briefing de produto e dores · Avatar: Cirurgião da Face (Buco-Maxilo / Dentista)</div>
+</div>
+
+<script>
+  document.querySelectorAll('.tab').forEach(t=>{
+    t.addEventListener('click',()=>{
+      document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
+      t.classList.add('active');
+      document.getElementById(t.dataset.tab).classList.add('active');
+      window.scrollTo({top:0,behavior:'smooth'});
+    });
+  });
+  function toggleDim(el){
+    el.classList.toggle('open');
+    el.nextElementSibling.classList.toggle('open');
+  }
+  // abrir primeiro bloco de dimensões por padrão
+  document.querySelector('.dim-head').classList.add('open');
+  document.querySelector('.dim-body').classList.add('open');
+</script>
+</body>
+</html>
