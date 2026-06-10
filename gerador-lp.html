@@ -169,11 +169,17 @@ input[type=password]:focus{outline:none;border-color:var(--camel);background:#ff
     <div class="sec">
       <h2 class="clk">Fotos <span class="chev">▾</span></h2>
       <div class="sec-body">
-      <label>Retrato da profissional (hero e sobre)</label>
+      <label>Retrato da profissional (topo / hero)</label>
       <label class="uploader"><input type="file" id="f_portrait" accept="image/*">
         <div class="u-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg></div>
         <div class="u-t">Escolher retrato</div><div class="u-s">1 foto vertical</div></label>
       <div class="thumbs" id="t_portrait"><span class="ph-empty">nenhuma foto</span></div>
+
+      <label style="margin-top:16px">Foto da seção "Sobre" (individual)</label>
+      <label class="uploader"><input type="file" id="f_about" accept="image/*">
+        <div class="u-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg></div>
+        <div class="u-t">Escolher foto do "Sobre"</div><div class="u-s">opcional · se vazio, usa o retrato</div></label>
+      <div class="thumbs" id="t_about"><span class="ph-empty">nenhuma foto</span></div>
 
       <label style="margin-top:16px">Antes &amp; Depois — comparador interativo (arrastar)</label>
       <div class="hint">Envie a foto <b>antes</b> e a <b>depois</b> de cada caso. Vira um slider que o paciente arrasta. Use fotos do mesmo enquadramento.</div>
@@ -321,7 +327,8 @@ input[type=password]:focus{outline:none;border-color:var(--camel);background:#ff
 const DEFAULT_TESTIS = [
   {n:"Sirlene Ferreira", p:"Avaliação Google", t:"Profissional excepcional! Atendimento humanizado, resultado natural e um cuidado que faz toda a diferença. Recomendo de olhos fechados."}
 ];
-const state = { logo:"", portrait:"", ba:[], pairs:[], proc:[], clinic:[], testis: JSON.parse(JSON.stringify(DEFAULT_TESTIS)) };
+const state = { logo:"", portrait:"", aboutPhoto:"", ba:[], pairs:[], proc:[], clinic:[], testis: JSON.parse(JSON.stringify(DEFAULT_TESTIS)) };
+let previewMode = "desktop";
 const DEFAULT_COLORS = {cream:"#F4EEE1",cream2:"#EFE7D7",camel:"#A8856A",camelDark:"#977459",tan:"#B08D6E",bluegray:"#DFE4E2",heading:"#7C6B5C",text:"#6E6055",dark:"#463C33"};
 const LS_KEY = "gerador-lp-clinica-v2";
 
@@ -332,14 +339,28 @@ function waLink(raw){ let d=(raw||"").replace(/\D/g,""); if(d && d.length<=11) d
 function waPlain(raw){ let d=(raw||"").replace(/\D/g,""); if(d && d.length<=11) d="55"+d; return "https://wa.me/"+d; }
 function b64utf8(str){ return btoa(unescape(encodeURIComponent(str))); }
 
+function loadViaImg(file){
+  return new Promise(res=>{
+    const url=URL.createObjectURL(file);
+    const img=new Image();
+    img.onload=()=>res({img,url});
+    img.onerror=()=>{ URL.revokeObjectURL(url); res(null); };
+    img.src=url;
+  });
+}
 async function fileToData(file,maxW,q,mime){
-  let bmp;
-  try{ bmp=await createImageBitmap(file,{imageOrientation:"from-image"}); }
-  catch(e){ try{ bmp=await createImageBitmap(file);}catch(e2){ return ""; } }
-  let w=bmp.width,h=bmp.height; if(w>maxW){ h=Math.round(h*maxW/w); w=maxW; }
+  let src=null,w=0,h=0,cleanup=null;
+  // 1) tentativa rápida com createImageBitmap (respeita orientação EXIF)
+  try{ const bmp=await createImageBitmap(file,{imageOrientation:"from-image"}); src=bmp;w=bmp.width;h=bmp.height; }
+  catch(e){ try{ const bmp=await createImageBitmap(file); src=bmp;w=bmp.width;h=bmp.height; }catch(e2){} }
+  // 2) fallback: carrega como <img> (cobre formatos que o createImageBitmap recusa)
+  if(!src){ const r=await loadViaImg(file); if(r){ src=r.img;w=r.img.naturalWidth;h=r.img.naturalHeight;cleanup=r.url; } }
+  if(!src || !w || !h) return "";
+  if(w>maxW){ h=Math.round(h*maxW/w); w=maxW; }
   const c=document.createElement("canvas"); c.width=w; c.height=h;
-  c.getContext("2d").drawImage(bmp,0,0,w,h);
-  return c.toDataURL(mime||"image/jpeg", mime==="image/png"?undefined:q);
+  c.getContext("2d").drawImage(src,0,0,w,h);
+  if(cleanup) URL.revokeObjectURL(cleanup);
+  try{ return c.toDataURL(mime||"image/jpeg", mime==="image/png"?undefined:q); }catch(e){ return ""; }
 }
 function renderThumbs(id,key,single){
   const el=$(id); const arr = single ? (state[key]?[state[key]]:[]) : state[key];
@@ -354,6 +375,7 @@ function renderThumbs(id,key,single){
 function renderAllThumbs(){
   renderThumbs("t_logo","logo",true);
   renderThumbs("t_portrait","portrait",true);
+  renderThumbs("t_about","aboutPhoto",true);
   renderThumbs("t_ba","ba",false);
   renderThumbs("t_proc","proc",false);
   renderThumbs("t_clinic","clinic",false);
@@ -362,14 +384,17 @@ function renderAllThumbs(){
 // ---------------- uploads ----------------
 async function handleFiles(input, key, maxW, q, thumbId, single, mime){
   const files=[...input.files]; if(!files.length) return;
-  const out=[];
-  for(const f of files){ const d=await fileToData(f,maxW,q,mime); if(d) out.push(d); }
-  if(single){ state[key]=out[0]||""; }
+  const out=[]; let fail=0;
+  for(const f of files){ const d=await fileToData(f,maxW,q,mime); if(d) out.push(d); else fail++; }
+  if(single){ if(out[0]) state[key]=out[0]; }
   else{ state[key]=state[key].concat(out); }
   renderThumbs(thumbId,key,single); render(); save(); input.value="";
+  if(fail){ toast(fail+" foto(s) em formato não suportado (HEIC?). Converta para JPG/PNG.","err"); }
+  else if(out.length){ toast(out.length+" foto(s) adicionada(s).","ok"); }
 }
 $("f_logo").addEventListener("change",e=>handleFiles(e.target,"logo",520,0.9,"t_logo",true,"image/png"));
 $("f_portrait").addEventListener("change",e=>handleFiles(e.target,"portrait",700,0.8,"t_portrait",true));
+$("f_about").addEventListener("change",e=>handleFiles(e.target,"aboutPhoto",700,0.8,"t_about",true));
 $("f_ba").addEventListener("change",e=>handleFiles(e.target,"ba",760,0.72,"t_ba",false));
 $("f_proc").addEventListener("change",e=>handleFiles(e.target,"proc",480,0.72,"t_proc",false));
 $("f_clinic").addEventListener("change",e=>handleFiles(e.target,"clinic",560,0.72,"t_clinic",false));
@@ -410,6 +435,7 @@ function renderPairs(){
     const lab=e.target.closest(".pair-up"); const i=+lab.dataset.i, side=lab.dataset.side;
     const f=e.target.files[0]; if(!f) return;
     const d=await fileToData(f,760,0.74); if(d){ state.pairs[i][side]=d; renderPairs(); render(); save(); }
+    else toast("Foto em formato não suportado (HEIC?). Converta para JPG/PNG.","err");
   }));
   wrap.querySelectorAll("[data-delp]").forEach(btn=>btn.addEventListener("click",e=>{
     state.pairs.splice(+e.target.dataset.delp,1); renderPairs(); render(); save();
@@ -526,7 +552,8 @@ function sliderHTML(p){
 function bodyContent(c){
   const wa=waLink(c.wpp), wap=waPlain(c.wpp);
   const heroImg = state.portrait ? `<div class="hero-bg"><img src="${state.portrait}" alt="${esc(c.name)}"></div>` : `<div class="hero-bg ph2"></div>`;
-  const aboutImg = state.portrait ? `<div class="about-photo"><img src="${state.portrait}" alt="${esc(c.name)}"></div>` : `<div class="about-photo"></div>`;
+  const aboutSrc = state.aboutPhoto || state.portrait;
+  const aboutImg = aboutSrc ? `<div class="about-photo"><img src="${aboutSrc}" alt="${esc(c.name)}"></div>` : `<div class="about-photo"></div>`;
   const baItems = state.ba.length ? state.ba.map(u=>`<div class="ba-item"><img src="${u}" alt="Antes e depois"></div>`).join("") : `<div class="ba-item ph" style="aspect-ratio:1.3">${PHSVG}<span>Antes e depois</span></div>`.repeat(2);
   const procItems = state.proc.length ? state.proc.map(u=>`<div class="proc-item"><img src="${u}" alt="Atendimento"></div>`).join("") : `<div class="proc-item ph">${PHSVG}<span>Procedimento</span></div>`.repeat(3);
   const ambItems = state.clinic.length ? state.clinic.map(u=>`<div class="amb-item"><img src="${u}" alt="Clínica"></div>`).join("") : `<div class="amb-item ph">${PHSVG}<span>Clínica</span></div>`.repeat(4);
@@ -597,8 +624,14 @@ fbq('init','${id}');fbq('track','PageView');
 <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=${id}&ev=PageView&noscript=1"/><\/noscript>
 <!-- End Meta Pixel Code -->`; }
 
-function buildFull(c, withPixel){
-  return `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${esc(c.name)}</title>${FONTS}${withPixel?pixelBlock(c.pixel):""}${styleBlock(c.colors)}</head><body>${bodyContent(c)}</body></html>`;
+function buildFull(c, withPixel, preview){
+  // preview "mobile": força viewport de 400px -> garante 1 coluna fiel ao celular.
+  // preview "desktop": sem viewport -> iframe usa a largura real dele.
+  // export (sem preview): device-width normal.
+  let vp='<meta name="viewport" content="width=device-width, initial-scale=1.0">';
+  if(preview==="mobile") vp='<meta name="viewport" content="width=400, initial-scale=1">';
+  else if(preview==="desktop") vp="";
+  return `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">${vp}<title>${esc(c.name)}</title>${FONTS}${withPixel?pixelBlock(c.pixel):""}${styleBlock(c.colors)}</head><body>${bodyContent(c)}</body></html>`;
 }
 function buildEmbed(c){ return pixelBlock(c.pixel)+"\n"+FONTS+"\n"+styleBlock(c.colors)+"\n"+bodyContent(c); }
 
@@ -608,7 +641,7 @@ function render(){
   clearTimeout(timer);
   timer=setTimeout(()=>{
     const c=cfg();
-    $("frame").srcdoc=buildFull(c,false);
+    $("frame").srcdoc=buildFull(c,false,previewMode);
     const emb=buildEmbed(c);
     const kb=Math.round(new Blob([emb]).size/1024);
     $("sizeTag").textContent = kb>1024 ? (kb/1024).toFixed(1)+" MB" : kb+" KB";
@@ -628,7 +661,7 @@ function serialize(includeToken){
     if(el.id==="ghToken" && !includeToken) return;
     v[el.id] = (el.type==="checkbox") ? el.checked : el.value;
   });
-  return { v, state:{logo:state.logo,portrait:state.portrait,ba:state.ba,pairs:state.pairs,proc:state.proc,clinic:state.clinic,testis:state.testis} };
+  return { v, state:{logo:state.logo,portrait:state.portrait,aboutPhoto:state.aboutPhoto,ba:state.ba,pairs:state.pairs,proc:state.proc,clinic:state.clinic,testis:state.testis} };
 }
 function applyData(data){
   if(!data) return;
@@ -638,17 +671,19 @@ function applyData(data){
     if(el.type==="checkbox") el.checked=!!v[id]; else el.value=v[id];
   });
   const s=data.state||{};
-  state.logo=s.logo||""; state.portrait=s.portrait||""; state.ba=s.ba||[]; state.pairs=Array.isArray(s.pairs)?s.pairs:[]; state.proc=s.proc||[]; state.clinic=s.clinic||[];
+  state.logo=s.logo||""; state.portrait=s.portrait||""; state.aboutPhoto=s.aboutPhoto||""; state.ba=s.ba||[]; state.pairs=Array.isArray(s.pairs)?s.pairs:[]; state.proc=s.proc||[]; state.clinic=s.clinic||[];
   state.testis = Array.isArray(s.testis)? s.testis : JSON.parse(JSON.stringify(DEFAULT_TESTIS));
   renderAllThumbs(); renderPairs(); renderTestis(); render();
 }
+let quotaWarned=false;
 function save(){
   // token salvo à parte (sem ir no export)
   try{ localStorage.setItem(LS_KEY+"-token", $("ghToken").value||""); }catch(e){}
   try{ localStorage.setItem(LS_KEY, JSON.stringify(serialize(false))); }
   catch(e){
-    // provável estouro de cota — salva sem imagens
+    // provável estouro de cota — salva sem imagens (texto/cores ainda persistem)
     try{ const d=serialize(false); d.state={testis:state.testis}; localStorage.setItem(LS_KEY, JSON.stringify(d)); }catch(e2){}
+    if(!quotaWarned){ quotaWarned=true; toast("Muitas fotos para salvar automático. Use “Exportar projeto” para não perder.","err"); }
   }
 }
 function load(){
@@ -678,7 +713,7 @@ $("importFile").addEventListener("change",e=>{
 $("btnReset").addEventListener("click",()=>{
   if(!confirm("Limpar tudo e começar um projeto novo? Isso apaga os dados atuais deste navegador.")) return;
   try{ localStorage.removeItem(LS_KEY); }catch(e){}
-  state.logo="";state.portrait="";state.ba=[];state.pairs=[];state.proc=[];state.clinic=[];state.testis=JSON.parse(JSON.stringify(DEFAULT_TESTIS));
+  state.logo="";state.portrait="";state.aboutPhoto="";state.ba=[];state.pairs=[];state.proc=[];state.clinic=[];state.testis=JSON.parse(JSON.stringify(DEFAULT_TESTIS));
   document.querySelectorAll(".form input, .form textarea").forEach(el=>{
     if(el.type==="file") return;
     if(el.type==="checkbox"){ el.checked=true; }
@@ -712,8 +747,8 @@ $("btnFull").addEventListener("click",()=>{
   a.download=(c.name||"landing").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")+".html";
   a.click(); URL.revokeObjectURL(a.href); toast("HTML completo baixado.","ok");
 });
-$("vdesk").addEventListener("click",()=>{ $("vdesk").classList.add("on");$("vmob").classList.remove("on");$("frame").style.maxWidth="1100px"; });
-$("vmob").addEventListener("click",()=>{ $("vmob").classList.add("on");$("vdesk").classList.remove("on");$("frame").style.maxWidth="400px"; });
+$("vdesk").addEventListener("click",()=>{ previewMode="desktop"; $("vdesk").classList.add("on");$("vmob").classList.remove("on");$("frame").style.maxWidth="1100px"; render(); });
+$("vmob").addEventListener("click",()=>{ previewMode="mobile"; $("vmob").classList.add("on");$("vdesk").classList.remove("on");$("frame").style.maxWidth="400px"; render(); });
 
 // ---------------- publicar no GitHub ----------------
 function ghMsg(html,kind){ const l=$("ghLog"); l.className="gh-log show"; l.innerHTML=html; l.style.borderColor = kind==="err"?"#e6b6b0":(kind==="ok"?"#bfe0c8":"var(--line)"); }
