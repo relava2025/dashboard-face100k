@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-  import { getFirestore, collection, onSnapshot, addDoc, doc, updateDoc }
+  import { getFirestore, collection, onSnapshot, doc, setDoc }
     from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -28,6 +28,10 @@
   let statusFilter = 'todos'; // todos | ativos | inativos
 
   function esc(s){ return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+  function slugify(str){
+    return str.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+  }
 
   function handle(text) {
     try {
@@ -66,7 +70,7 @@
       const temIg = !!(c.ig && c.ig.trim());
       const hdl = temIg ? handle(c.ig) : '';
       const url = temIg ? (c.ig.startsWith('http') ? c.ig : 'https://instagram.com/' + c.ig.replace('@','')) : '';
-      const initials = (c.nome||'?').split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();
+      const initials = (c.name||'?').split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();
       const ativo = isAtivo(c);
       const procs = Array.isArray(c.procedimentos) ? c.procedimentos : [];
 
@@ -75,13 +79,14 @@
         <div class="ig-card-top">
           <div class="ig-avatar">${esc(initials)}</div>
           <div class="ig-info">
-            <div class="ig-nome">${esc(c.nome||'—')}</div>
+            <div class="ig-nome">${esc(c.name||'—')}</div>
             <div class="ig-handle">${temIg ? esc(hdl) : '<span class="sem-ig">sem instagram</span>'}</div>
           </div>
           <span class="badge ${ativo?'badge-on':'badge-off'}">${ativo?'Ativo':'Inativo'}</span>
         </div>
 
-        ${c.nicho ? `<div class="ig-meta"><span class="meta-label">Nicho</span> ${esc(c.nicho)}</div>` : ''}
+        ${c.spec ? `<div class="ig-meta"><span class="meta-label">Nicho</span> ${esc(c.spec)}</div>` : ''}
+        ${c.resp ? `<div class="ig-meta"><span class="meta-label">Gestor</span> ${esc(c.resp)}</div>` : ''}
         ${procs.length ? `<div class="proc-chips">${procs.map(p=>`<span class="proc-chip">${esc(p)}</span>`).join('')}</div>` : ''}
         ${c.contato ? `<div class="ig-meta"><span class="meta-label">Contato</span> ${esc(c.contato)}</div>` : ''}
         ${c.obs ? `<div class="ig-obs">${esc(c.obs)}</div>` : ''}
@@ -103,9 +108,10 @@
     if (statusFilter === 'inativos') result = result.filter(c => !isAtivo(c));
     if (q) {
       result = result.filter(c =>
-        (c.nome||'').toLowerCase().includes(q) ||
+        (c.name||'').toLowerCase().includes(q) ||
         (c.ig||'').toLowerCase().includes(q) ||
-        (c.nicho||'').toLowerCase().includes(q) ||
+        (c.spec||'').toLowerCase().includes(q) ||
+        (c.resp||'').toLowerCase().includes(q) ||
         (Array.isArray(c.procedimentos)?c.procedimentos.join(' '):'').toLowerCase().includes(q)
       );
     }
@@ -140,16 +146,16 @@
   window.openModal = function(client){
     editingId = client ? client.id : null;
     document.getElementById('modal-title').textContent = client ? 'Editar cliente' : 'Adicionar cliente';
-    document.getElementById('f-nome').value    = client?.nome    || '';
+    document.getElementById('f-name').value    = client?.name    || '';
     document.getElementById('f-ig').value       = client?.ig      || '';
-    document.getElementById('f-nicho').value   = client?.nicho   || '';
+    document.getElementById('f-spec').value    = client?.spec    || '';
     document.getElementById('f-contato').value = client?.contato || '';
     document.getElementById('f-obs').value     = client?.obs     || '';
     document.getElementById('f-ativo').checked = client ? (client.ativo !== false) : true;
     document.getElementById('f-procs').innerHTML = buildProcOptions(client?.procedimentos);
     document.getElementById('modal-error').textContent = '';
     document.getElementById('modal-overlay').classList.add('show');
-    document.getElementById('f-nome').focus();
+    document.getElementById('f-name').focus();
   };
 
   window.editClient = function(id){
@@ -163,27 +169,25 @@
   };
 
   window.saveClient = async function(){
-    const nome    = document.getElementById('f-nome').value.trim();
+    const name    = document.getElementById('f-name').value.trim();
     const ig      = document.getElementById('f-ig').value.trim();
-    const nicho   = document.getElementById('f-nicho').value.trim();
+    const spec    = document.getElementById('f-spec').value.trim();
     const contato = document.getElementById('f-contato').value.trim();
     const obs     = document.getElementById('f-obs').value.trim();
     const ativo   = document.getElementById('f-ativo').checked;
     const procedimentos = Array.from(document.querySelectorAll('#f-procs .proc-opt.on')).map(b=>b.dataset.proc);
 
     const errEl = document.getElementById('modal-error');
-    if (!nome) { errEl.textContent = 'Informe o nome do cliente.'; return; }
+    if (!name) { errEl.textContent = 'Informe o nome do cliente.'; return; }
 
     const btn = document.getElementById('btn-salvar');
     btn.disabled = true; btn.textContent = 'Salvando…';
 
-    const data = { nome, ig, nicho, contato, obs, ativo, procedimentos };
+    // grava apenas estes campos; merge:true preserva tasks/checklist/progress/startDate/waiting/etc. dos outros painéis
+    const data = { name, ig, spec, contato, obs, ativo, procedimentos };
+    const id = editingId || (slugify(name) + '-' + Date.now().toString(36));
     try {
-      if (editingId) {
-        await updateDoc(doc(db, "dashboards", editingId), data);
-      } else {
-        await addDoc(collection(db, "dashboards"), data);
-      }
+      await setDoc(doc(db, "dashboards", id), data, { merge: true });
       closeModal();
     } catch (e) {
       errEl.textContent = 'Erro ao salvar: ' + (e?.message || e);
@@ -196,7 +200,7 @@
     onSnapshot(collection(db, "dashboards"), snap => {
       allClients = [];
       snap.forEach(d => allClients.push({ id: d.id, ...d.data() }));
-      allClients.sort((a,b) => (a.nome||'').localeCompare(b.nome||''));
+      allClients.sort((a,b) => (a.name||'').localeCompare(b.name||''));
       document.getElementById('loading-screen').classList.add('hidden');
       applyFilters();
     }, err => {
@@ -419,16 +423,16 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
     </div>
 
     <div class="field">
-      <label for="f-nome">Nome do cliente</label>
-      <input type="text" id="f-nome" placeholder="Ex: Dr. João Silva">
+      <label for="f-name">Nome do cliente</label>
+      <input type="text" id="f-name" placeholder="Ex: Dr. João Silva">
     </div>
     <div class="field">
       <label for="f-ig">Instagram (link ou @handle)</label>
       <input type="text" id="f-ig" placeholder="@usuario ou https://instagram.com/usuario">
     </div>
     <div class="field">
-      <label for="f-nicho">Nicho / Especialidade</label>
-      <input type="text" id="f-nicho" placeholder="Ex: Cirurgião bucomaxilo, Dermatologista…">
+      <label for="f-spec">Nicho / Especialidade</label>
+      <input type="text" id="f-spec" placeholder="Ex: Cirurgia da Face, Dermatologia…">
     </div>
     <div class="field">
       <label>Procedimentos</label>
