@@ -55,11 +55,14 @@ window.setModo = function(modo) {
   } else {
     document.getElementById("page-title-txt").textContent = "Editar Ficha Existente";
   }
+  atualizarResumoPreview();
 };
 
 function prefillForm(f) {
   setVal("inp-insta", f.insta);
   setVal("inp-programa", f.programa);
+  setVal("inp-whatsapp", f.contato?.whatsapp);
+  setVal("inp-inicio", f.inicio);
   setVal("inp-faturamento", f.estrutura?.faturamento);
   setVal("inp-equipe", f.estrutura?.equipe);
   setVal("inp-segmento", f.estrutura?.segmento);
@@ -94,7 +97,8 @@ function prefillForm(f) {
 }
 
 function clearForm() {
-  ["inp-insta","inp-programa","inp-faturamento","inp-equipe","inp-segmento",
+  ["inp-insta","inp-programa","inp-whatsapp","inp-inicio",
+   "inp-faturamento","inp-equipe","inp-segmento",
    "inp-meta","inp-prazo","inp-valor-total","inp-closer","inp-sdr","inp-obs",
    "inp-avista-data","inp-nparcelas","inp-vparcela","inp-data1",
    "inp-entrada-valor","inp-entrada-data","inp-nparcelas-e","inp-vparcela-e","inp-data1-e"
@@ -243,6 +247,10 @@ async function salvar() {
   const ficha = {
     insta: document.getElementById("inp-insta").value.trim(),
     programa: document.getElementById("inp-programa").value.trim(),
+    contato: {
+      whatsapp: document.getElementById("inp-whatsapp").value.trim()
+    },
+    inicio: document.getElementById("inp-inicio").value,
     estrutura: {
       faturamento: document.getElementById("inp-faturamento").value.trim(),
       equipe: document.getElementById("inp-equipe").value.trim(),
@@ -265,7 +273,7 @@ async function salvar() {
   try {
     let clientId = isNovo ? ("c_" + Date.now()) : selVal;
     if (isNovo) {
-      await setDoc(doc(db, "entrega", clientId), { name: novoNome, ficha }, { merge: true });
+      await setDoc(doc(db, "entrega", clientId), { name: novoNome, status: "ativo", criadoEm: new Date().toISOString(), ficha }, { merge: true });
     } else {
       await setDoc(doc(db, "entrega", clientId), { ficha }, { merge: true });
     }
@@ -287,6 +295,95 @@ function showMsg(txt, type) {
   msg.className = "save-msg " + type;
 }
 
+function getNomeAtual() {
+  if (currentModo === "novo") return document.getElementById("inp-novo-nome").value.trim();
+  const sel = document.getElementById("sel-cliente");
+  const opt = sel.options[sel.selectedIndex];
+  return opt ? opt.textContent.replace(" ✓", "").trim() : "";
+}
+
+function descNegociacao() {
+  const total = Number(document.getElementById("inp-valor-total").value);
+  const forma = document.querySelector("input[name='forma']:checked")?.value;
+  if (!total && !forma) return "";
+  let txt = total ? fmt(total) : "";
+  if (forma === "avista") {
+    const d = document.getElementById("inp-avista-data").value;
+    txt += " — à vista" + (d ? ` (em ${fmtDate(d)})` : "");
+  } else if (forma === "parcelado") {
+    const n = document.getElementById("inp-nparcelas").value;
+    const v = Number(document.getElementById("inp-vparcela").value);
+    const d = document.getElementById("inp-data1").value;
+    if (n && v) txt += ` — ${n}x de ${fmt(v)}` + (d ? ` (1ª em ${fmtDate(d)})` : "");
+  } else if (forma === "entrada_parcelas") {
+    const ev = Number(document.getElementById("inp-entrada-valor").value);
+    const ed = document.getElementById("inp-entrada-data").value;
+    const n = document.getElementById("inp-nparcelas-e").value;
+    const v = Number(document.getElementById("inp-vparcela-e").value);
+    const d = document.getElementById("inp-data1-e").value;
+    if (ev) txt += ` — entrada ${fmt(ev)}` + (ed ? ` (${fmtDate(ed)})` : "");
+    if (n && v) txt += ` + ${n}x de ${fmt(v)}` + (d ? ` (1ª em ${fmtDate(d)})` : "");
+  }
+  return txt;
+}
+
+function montarResumo() {
+  const g = id => document.getElementById(id).value.trim();
+  const linhas = [];
+  const push = (label, val) => { if (val) linhas.push(`*${label}:* ${val}`); };
+
+  const fat = g("inp-faturamento"), eq = g("inp-equipe");
+  const estrutura = [fat, eq].filter(Boolean).join(" · ");
+  const meta = g("inp-meta"), prazo = g("inp-prazo");
+  const objetivo = meta ? (prazo ? `${meta} em ${prazo}` : meta) : "";
+  const contato = g("inp-whatsapp");
+
+  push("Cliente", getNomeAtual());
+  push("Insta", g("inp-insta"));
+  push("Especialidade", g("inp-segmento"));
+  push("Estrutura", estrutura);
+  push("Objetivo", objetivo);
+  push("Programa", g("inp-programa"));
+  push("Negociação", descNegociacao());
+  push("WhatsApp", contato);
+  push("Início", fmtDate(g("inp-inicio")));
+  const closer = g("inp-closer"), sdr = g("inp-sdr");
+  if (closer || sdr) {
+    const eq2 = [closer && `*Closer:* ${closer}`, sdr && `*SDR:* ${sdr}`].filter(Boolean).join(" · ");
+    linhas.push(eq2);
+  }
+
+  let texto = "Informações para o CS 👇🏻\n\n" + linhas.join("\n");
+  const obs = g("inp-obs");
+  if (obs) texto += `\n\n*Obs:* ${obs}`;
+  return texto;
+}
+
+function atualizarResumoPreview() {
+  const el = document.getElementById("resumo-preview");
+  if (!el) return;
+  const txt = montarResumo();
+  const vazio = txt.trim() === "Informações para o CS 👇🏻";
+  el.textContent = vazio ? "Preencha a ficha para ver o resumo que será copiado…" : txt;
+  el.classList.toggle("vazio", vazio);
+}
+
+async function copiarResumo() {
+  const btn = document.getElementById("btn-copiar");
+  if (!getNomeAtual()) { showMsg("Informe o cliente antes de copiar o resumo.", "error"); return; }
+  const texto = montarResumo();
+  try {
+    await navigator.clipboard.writeText(texto);
+  } catch(e) {
+    const ta = document.createElement("textarea");
+    ta.value = texto; document.body.appendChild(ta); ta.select();
+    document.execCommand("copy"); document.body.removeChild(ta);
+  }
+  const orig = btn.innerHTML;
+  btn.innerHTML = "✓ Copiado!";
+  setTimeout(() => { btn.innerHTML = orig; }, 2000);
+}
+
 window.addEventListener("DOMContentLoaded", () => {
   loadClients();
 
@@ -296,6 +393,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const c = clients.find(x => x.id === val);
     if (c?.ficha) prefillForm(c.ficha);
     else clearForm();
+    atualizarResumoPreview();
   });
 
   document.querySelectorAll("input[name='forma']").forEach(r => {
@@ -312,6 +410,12 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 
   document.getElementById("btn-salvar").addEventListener("click", salvar);
+  document.getElementById("btn-copiar").addEventListener("click", copiarResumo);
+
+  const wrap = document.querySelector(".wrap");
+  wrap.addEventListener("input", atualizarResumoPreview);
+  wrap.addEventListener("change", atualizarResumoPreview);
+  atualizarResumoPreview();
 });
 </script>
 <style>
@@ -396,10 +500,14 @@ option{background:#1A2025}
 .valor-destaque input{padding-left:34px;font-size:18px;font-weight:700;color:var(--amber)}
 
 /* SAVE BUTTON */
-.save-row{display:flex;align-items:center;gap:16px;margin-top:8px}
+.save-row{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-top:8px}
 #btn-salvar{background:var(--amber);color:#000;border:none;border-radius:8px;padding:14px 32px;font-size:15px;font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:.04em;cursor:pointer;transition:opacity .15s}
 #btn-salvar:hover{opacity:.88}
 #btn-salvar:disabled{opacity:.5;cursor:not-allowed}
+.btn-copiar{background:transparent;color:var(--amber);border:1px solid var(--amber-border);border-radius:8px;padding:14px 24px;font-size:14px;font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:.04em;cursor:pointer;transition:all .15s}
+.btn-copiar:hover{background:var(--amber-dim);border-color:var(--amber)}
+.resumo-preview{white-space:pre-wrap;word-break:break-word;font-family:'Inter',sans-serif;font-size:13.5px;line-height:1.65;color:var(--text);background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:16px;margin:0}
+.resumo-preview.vazio{color:var(--text-dim);font-style:italic}
 .save-msg{font-size:13px;font-weight:600}
 .save-msg.success{color:var(--green)}
 .save-msg.error{color:var(--red)}
@@ -485,6 +593,24 @@ option{background:#1A2025}
       <div class="form-group">
         <label class="f-label" for="inp-programa">Programa vendido</label>
         <input type="text" id="inp-programa" placeholder="Ex: Aceleração 6 meses">
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTATO & INÍCIO -->
+  <div class="form-card">
+    <div class="form-card-title">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 2.5c0 5 3.5 8.5 8.5 8.5l.5-2.2-2.4-.8-.9 1c-1.5-.7-2.7-1.9-3.4-3.4l1-.9-.8-2.4L3 2.5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+      Contato &amp; Início
+    </div>
+    <div class="form-row" style="margin-bottom:0">
+      <div class="form-group">
+        <label class="f-label" for="inp-whatsapp">WhatsApp</label>
+        <input type="text" id="inp-whatsapp" placeholder="(62) 99999-9999">
+      </div>
+      <div class="form-group">
+        <label class="f-label" for="inp-inicio">Data de início do programa</label>
+        <input type="date" id="inp-inicio">
       </div>
     </div>
   </div>
@@ -652,8 +778,18 @@ option{background:#1A2025}
     </div>
   </div>
 
+  <!-- PRÉVIA DO RESUMO -->
+  <div class="form-card">
+    <div class="form-card-title">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 2h10v8H8l-2 2-2-2H2V2z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M4 5h6M4 7h4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      Prévia do resumo (CS)
+    </div>
+    <pre id="resumo-preview" class="resumo-preview"></pre>
+  </div>
+
   <div class="save-row">
     <button id="btn-salvar">Salvar Ficha</button>
+    <button id="btn-copiar" class="btn-copiar">📋 Copiar para o grupo</button>
     <span id="save-msg" class="save-msg"></span>
   </div>
 </div>
