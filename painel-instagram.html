@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-  import { getFirestore, collection, onSnapshot, doc, setDoc }
+  import { getFirestore, collection, onSnapshot, doc, setDoc, deleteDoc }
     from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -96,6 +96,7 @@
             ? `<a href="${esc(url)}" target="_blank" rel="noopener" class="btn-abrir">Abrir no Instagram</a>`
             : `<span class="btn-abrir disabled">Sem Instagram</span>`}
           <button class="btn-editar" onclick="editClient('${c.id}')">Editar</button>
+          <button class="btn-excluir" onclick="deleteClient('${c.id}')" title="Excluir card">Excluir</button>
         </div>
       </div>`;
     }).join('');
@@ -161,6 +162,17 @@
   window.editClient = function(id){
     const c = allClients.find(x => x.id === id);
     if (c) openModal(c);
+  };
+
+  window.deleteClient = async function(id){
+    const c = allClients.find(x => x.id === id);
+    const nome = c?.name || 'este cliente';
+    if (!confirm(`Excluir o card de "${nome}" do painel Instagram?\n\nEssa ação remove o cliente desta lista e não pode ser desfeita.`)) return;
+    try {
+      await deleteDoc(doc(db, "dashboards", id));
+    } catch (e) {
+      alert('Erro ao excluir: ' + (e?.message || e));
+    }
   };
 
   window.closeModal = function(){
@@ -293,6 +305,8 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .btn-abrir.disabled{background:var(--surface2);color:var(--text-dim);border-color:var(--border);cursor:default}
 .btn-editar{background:var(--surface2);color:var(--text-sec);border:1px solid var(--border);border-radius:6px;padding:8px 14px;font-size:13px;font-weight:600;font-family:'Montserrat',sans-serif;cursor:pointer;transition:all .15s}
 .btn-editar:hover{border-color:var(--amber-border);color:var(--amber)}
+.btn-excluir{background:var(--surface2);color:var(--text-sec);border:1px solid var(--border);border-radius:6px;padding:8px 14px;font-size:13px;font-weight:600;font-family:'Montserrat',sans-serif;cursor:pointer;transition:all .15s}
+.btn-excluir:hover{border-color:var(--red-border,rgba(239,68,68,0.4));color:var(--red,#EF4444)}
 
 /* EMPTY */
 .empty-state{display:none;text-align:center;padding:60px 20px;color:var(--text-sec)}

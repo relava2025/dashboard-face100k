@@ -626,7 +626,9 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .calls-extra-count{font-size:12px;font-family:'JetBrains Mono',monospace;color:var(--text-sec)}
 
 /* DIAGNÓSTICO */
-.diag-header{display:flex;align-items:center;gap:16px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px 22px;margin-bottom:20px;position:relative;overflow:hidden}
+.diag-header{display:flex;align-items:center;flex-wrap:wrap;gap:16px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px 22px;margin-bottom:20px;position:relative;overflow:hidden}
+.btn-copiar-diag{flex-shrink:0;padding:9px 16px;border-radius:6px;font-size:12.5px;font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:.03em;background:var(--amber);color:#000;border:none;cursor:pointer;transition:opacity .15s}
+.btn-copiar-diag:hover{opacity:.88}
 .diag-header::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,rgba(245,166,35,0) 0%,var(--amber) 40%,var(--amber) 60%,rgba(245,166,35,0) 100%)}
 .diag-score-num{font-size:48px;font-weight:800;font-family:'Montserrat',sans-serif;color:var(--amber);line-height:1;min-width:72px}
 .diag-score-right{flex:1}
@@ -1799,6 +1801,7 @@ function renderDiagnostico(){
       <div class="diag-score-sub">${doneCnt} de ${totalItems} etapas concluídas · ${partialCnt} em preenchimento · ${stageLabel}</div>
       <div class="diag-score-bar"><div class="diag-score-fill" style="width:${pct}%;background:${doneCnt===totalItems?'var(--green)':'linear-gradient(90deg,var(--amber),rgba(245,166,35,0.5))'}"></div></div>
     </div>
+    <button id="btn-copiar-diag" class="btn-copiar-diag" onclick="copiarDiagnostico()">📋 Copiar para o cliente</button>
   </div>`;
 
   CALLS_ONB.forEach(c=>{
@@ -1867,6 +1870,34 @@ function renderDiagnostico(){
 
   container.innerHTML=html;
 }
+
+window.copiarDiagnostico=async function(){
+  const onbData=S.callsOnb||{};
+  const blocos=[];
+  CALLS_ONB.forEach(c=>{
+    const d=onbData[c.id]||{};
+    const resps=d.respostas||{};
+    const linhasQA=c.perguntas.map(q=>{
+      const v=(resps[q.id]||'').trim();
+      return v?`• ${q.label}: ${v}`:'';
+    }).filter(Boolean);
+    if(!d.realizada && !linhasQA.length) return;
+    const tipo=c.type==='delivery'?'Entrega':('Call '+(c.num||''));
+    const titulo=c.diagTitle||c.title;
+    let bloco=`*${titulo}* (${tipo}${d.data?(' · '+d.data):''})`;
+    bloco+= linhasQA.length?('\n'+linhasQA.join('\n')):'\n_Realizada — sem respostas registradas._';
+    blocos.push(bloco);
+  });
+  (S.calls||[]).forEach(c=>{
+    if(c.summary||c.type) blocos.push(`*Call Extra*${c.date?(' ('+c.date+')'):''}\n• ${c.type||'Call'}: ${c.summary||''}`.trim());
+  });
+  if(!blocos.length){ alert('Ainda não há diagnóstico ou entregas preenchidos para copiar.'); return; }
+  const texto=`📋 *Diagnóstico & Entregas — ${S.name||'Cliente'}*\n\n`+blocos.join('\n\n');
+  try{ await navigator.clipboard.writeText(texto); }
+  catch(e){ const ta=document.createElement('textarea'); ta.value=texto; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); }
+  const btn=document.getElementById('btn-copiar-diag');
+  if(btn){ const o=btn.innerHTML; btn.innerHTML='✓ Copiado!'; setTimeout(()=>{btn.innerHTML=o;},2000); }
+};
 
 function engScore(eng){
   let total=0,filled=0;

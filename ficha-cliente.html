@@ -272,11 +272,15 @@ async function salvar() {
 
   try {
     let clientId = isNovo ? ("c_" + Date.now()) : selVal;
+    const clientName = isNovo ? novoNome : (clients.find(x => x.id === selVal)?.name || "");
     if (isNovo) {
       await setDoc(doc(db, "entrega", clientId), { name: novoNome, status: "ativo", criadoEm: new Date().toISOString(), ficha }, { merge: true });
     } else {
       await setDoc(doc(db, "entrega", clientId), { ficha }, { merge: true });
     }
+    // Espelha pro painel Instagram (coleção dashboards), sem duplicar nem apagar dados de outros painéis
+    try { await espelharInstagram(clientId, clientName, ficha); }
+    catch(err) { console.warn("Falha ao espelhar no painel Instagram:", err); }
     showMsg("Ficha salva com sucesso!", "success");
     btn.textContent = "Salvo!";
     setTimeout(() => { btn.textContent = "Salvar Ficha"; btn.disabled = false; }, 2000);
@@ -286,6 +290,36 @@ async function salvar() {
     showMsg("Erro ao salvar: " + e.message, "error");
     btn.textContent = "Salvar Ficha";
     btn.disabled = false;
+  }
+}
+
+function normNome(s) {
+  return (s || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim().replace(/\s+/g, " ");
+}
+
+// Espelha os dados da ficha no card do painel Instagram (coleção "dashboards").
+// Casa pelo vínculo entregaId; se não houver, casa pelo nome normalizado; senão cria o card.
+// Grava só campos preenchidos, com merge — nunca apaga procedimentos/ativo/dados de outros painéis.
+async function espelharInstagram(clientId, clientName, ficha) {
+  const snap = await getDocs(collection(db, "dashboards"));
+  let targetId = null;
+  const wantName = normNome(clientName);
+  snap.forEach(d => { if (!targetId && d.data().entregaId === clientId) targetId = d.id; });
+  if (!targetId && wantName) {
+    snap.forEach(d => { if (!targetId && normNome(d.data().name) === wantName) targetId = d.id; });
+  }
+
+  const payload = { entregaId: clientId };
+  if (clientName) payload.name = clientName;
+  if (ficha.insta) payload.ig = ficha.insta;
+  if (ficha.estrutura?.segmento) payload.spec = ficha.estrutura.segmento;
+  if (ficha.contato?.whatsapp) payload.contato = ficha.contato.whatsapp;
+  if (ficha.obs) payload.obs = ficha.obs;
+
+  if (targetId) {
+    await setDoc(doc(db, "dashboards", targetId), payload, { merge: true });
+  } else {
+    await setDoc(doc(db, "dashboards", clientId), { ...payload, ativo: true, procedimentos: [] }, { merge: true });
   }
 }
 
