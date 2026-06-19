@@ -1378,9 +1378,18 @@ function renderFlashboardCV(rows,hoje){
 window.addEventListener('fb-ready',()=>{
   const cid=window._clientId;
   const show404=()=>{document.getElementById('loading').classList.add('hidden');document.getElementById('not-found').classList.add('show')};
+  const showBlocked=()=>{
+    const nf=document.getElementById('not-found');
+    const t=nf.querySelector('.nf-title'); if(t)t.textContent='Acesso encerrado';
+    const s=nf.querySelector('.nf-sub'); if(s)s.textContent='Seu acompanhamento com a System Digital foi encerrado. Em caso de dúvida, fale com sua equipe.';
+    document.getElementById('loading').classList.add('hidden');
+    document.getElementById('app').style.display='none';
+    nf.classList.add('show');
+  };
   if(!cid||!window._fb){show404();return}
   window._fb.listen(data=>{
     if(!data){show404();return}
+    if(data.status==='excluido'){showBlocked();return}
     Object.assign(S,data);
     document.getElementById('loading').classList.add('hidden');
     document.getElementById('app').style.display='block';
