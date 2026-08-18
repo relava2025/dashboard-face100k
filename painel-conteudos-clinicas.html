@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Central de Clínicas — FACE 100K</title>
+<title>Central de Clínicas — FACE SCALE</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
@@ -17,10 +17,10 @@ window.dispatchEvent(new Event('db-ready'));
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#0D1117;--surface:#1A2025;--surface2:#212830;
-  --amber:#F5A623;--amber-dim:rgba(245,166,35,0.10);--amber-border:rgba(245,166,35,0.20);
-  --border:#3E4249;--border-light:rgba(62,66,73,0.5);
-  --text:#F0F0F0;--text-sec:#A0A0A8;--text-dim:rgba(255,255,255,0.2);
+  --bg:#071228;--surface:#0C1E3F;--surface2:#0F2449;
+  --amber:#C9A45C;--amber-dim:rgba(201,164,92,0.10);--amber-border:rgba(201,164,92,0.20);
+  --border:#23406E;--border-light:rgba(35,64,110,0.5);
+  --text:#F7F3EA;--text-sec:#A0A0A8;--text-dim:rgba(255,255,255,0.2);
   --teal:#06B6D4;--teal-dim:rgba(6,182,212,0.10);--teal-border:rgba(6,182,212,0.22);
   --red:#EF4444;--red-dim:rgba(239,68,68,0.10);--red-border:rgba(239,68,68,0.22);
   --blue:#3B82F6;--blue-dim:rgba(59,130,246,0.10);--blue-border:rgba(59,130,246,0.22);
@@ -119,7 +119,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .preview-table-wrap{overflow-x:auto;border-radius:8px;border:1px solid var(--border);margin-bottom:14px;max-height:280px;overflow-y:auto}
 .preview-table{width:100%;border-collapse:collapse;background:var(--surface);font-size:11px}
 .preview-table th{background:var(--surface2);padding:8px 12px;text-align:left;font-size:9px;font-weight:700;font-family:'Montserrat',sans-serif;text-transform:uppercase;letter-spacing:.1em;color:var(--text-sec);white-space:nowrap;border-bottom:1px solid var(--border);position:sticky;top:0}
-.preview-table td{padding:8px 12px;border-bottom:.5px solid rgba(62,66,73,.4);max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text-sec)}
+.preview-table td{padding:8px 12px;border-bottom:.5px solid rgba(35,64,110,.4);max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text-sec)}
 .preview-table td:first-child{color:var(--text);font-weight:500}
 .import-progress{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:16px}
 .progress-bar{height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;margin:10px 0}
@@ -287,8 +287,8 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 
 <!-- APP -->
 <div class="topbar">
-  <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect width="22" height="22" rx="5" fill="#1A2025"/><path d="M5.5 7.5L11 6L16.5 7.5V13C16.5 16 14.2 17.8 11 18.5C7.8 17.8 5.5 16 5.5 13Z" stroke="#F5A623" stroke-width="1.3" fill="none"/><path d="M8.5 12L10.5 14L14.5 10" stroke="#F5A623" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-  <div class="t-logo">FACE <span>100K</span></div>
+  <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect width="22" height="22" rx="5" fill="#0C1E3F"/><path d="M5.5 7.5L11 6L16.5 7.5V13C16.5 16 14.2 17.8 11 18.5C7.8 17.8 5.5 16 5.5 13Z" stroke="#C9A45C" stroke-width="1.3" fill="none"/><path d="M8.5 12L10.5 14L14.5 10" stroke="#C9A45C" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  <div class="t-logo">FACE <span>SCALE</span></div>
   <div class="t-sep"></div>
   <div class="t-sub">Central de Clínicas</div>
 </div>

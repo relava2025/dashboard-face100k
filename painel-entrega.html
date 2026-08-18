@@ -45,17 +45,17 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#0D1117;--surface:#1A2025;--surface2:#212830;--surface3:#272F38;
-  --amber:#F5A623;--amber-dim:rgba(245,166,35,0.10);--amber-border:rgba(245,166,35,0.20);
-  --border:#3E4249;--border-light:rgba(62,66,73,0.5);
-  --text:#F0F0F0;--text-sec:#B8B8C0;--text-dim:rgba(255,255,255,0.25);
+  --bg:#071228;--surface:#0C1E3F;--surface2:#0F2449;--surface3:#1B3A6B;
+  --amber:#C9A45C;--amber-dim:rgba(201,164,92,0.10);--amber-border:rgba(201,164,92,0.20);
+  --border:#23406E;--border-light:rgba(35,64,110,0.5);
+  --text:#F7F3EA;--text-sec:#AEBBD0;--text-dim:rgba(255,255,255,0.25);
   --green:#22C55E;--green-dim:rgba(34,197,94,0.10);--green-border:rgba(34,197,94,0.22);
   --red:#EF4444;--red-dim:rgba(239,68,68,0.10);--red-border:rgba(239,68,68,0.22);
   --yellow:#EAB308;--yellow-dim:rgba(234,179,8,0.10);--yellow-border:rgba(234,179,8,0.22);
   --blue:#3B82F6;--blue-dim:rgba(59,130,246,0.10);--blue-border:rgba(59,130,246,0.22);
 }
 html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:15px;line-height:1.5}
-body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(0deg,transparent 24%,rgba(245,166,35,0.03) 25%,rgba(245,166,35,0.03) 26%,transparent 27%),linear-gradient(90deg,transparent 24%,rgba(245,166,35,0.03) 25%,rgba(245,166,35,0.03) 26%,transparent 27%);background-size:50px 50px;pointer-events:none;z-index:0}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(0deg,transparent 24%,rgba(201,164,92,0.03) 25%,rgba(201,164,92,0.03) 26%,transparent 27%),linear-gradient(90deg,transparent 24%,rgba(201,164,92,0.03) 25%,rgba(201,164,92,0.03) 26%,transparent 27%);background-size:50px 50px;pointer-events:none;z-index:0}
 
 /* TOPBAR */
 .topbar{background:var(--surface);border-bottom:1px solid var(--border);height:56px;display:flex;align-items:center;padding:0 28px;gap:14px;position:sticky;top:0;z-index:50}
@@ -91,15 +91,15 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .stat-sub{font-size:11px;color:var(--text-sec);margin-top:5px}
 
 /* BRAND RAIL */
-.brand-rail{height:2px;background:linear-gradient(90deg,rgba(245,166,35,0) 0%,var(--amber) 40%,var(--amber) 60%,rgba(245,166,35,0) 100%);margin-bottom:22px}
+.brand-rail{height:2px;background:linear-gradient(90deg,rgba(201,164,92,0) 0%,var(--amber) 40%,var(--amber) 60%,rgba(201,164,92,0) 100%);margin-bottom:22px}
 
 /* ALERT SECTION */
-.cp-meetings-section{background:rgba(245,166,35,0.06);border:1px solid rgba(245,166,35,0.3);border-radius:10px;padding:16px 18px;margin-bottom:16px}
+.cp-meetings-section{background:rgba(201,164,92,0.06);border:1px solid rgba(201,164,92,0.3);border-radius:10px;padding:16px 18px;margin-bottom:16px}
 .cpm-hdr{display:flex;align-items:center;gap:8px;margin-bottom:12px}
 .cpm-hdr-title{font-size:13px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--amber);flex:1}
 .cpm-hdr-count{font-size:11px;color:var(--text-sec);background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:2px 8px}
 .cpm-list{display:flex;flex-direction:column;gap:6px}
-.cpm-row{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--surface);border:1px solid rgba(245,166,35,0.2);border-radius:8px}
+.cpm-row{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--surface);border:1px solid rgba(201,164,92,0.2);border-radius:8px}
 .cpm-row-cp{font-size:10px;font-weight:800;font-family:'Montserrat',sans-serif;background:var(--amber);color:#000;padding:2px 8px;border-radius:10px;white-space:nowrap}
 .cpm-row-name{font-size:14px;font-weight:600;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .cpm-row-date{font-size:12px;color:var(--amber);font-weight:700;font-family:'Montserrat',sans-serif;white-space:nowrap}
@@ -196,7 +196,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 #loading.hidden{display:none}
 .loading-logo{font-family:'Montserrat',sans-serif;font-size:23px;font-weight:800;color:var(--text)}
 .loading-logo span{color:var(--amber);font-style:italic}
-.spinner{width:36px;height:36px;border:3px solid rgba(245,166,35,0.15);border-top-color:var(--amber);border-radius:50%;animation:spin .8s linear infinite}
+.spinner{width:36px;height:36px;border:3px solid rgba(201,164,92,0.15);border-top-color:var(--amber);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loading-txt{font-size:14px;color:var(--text-sec)}
 
@@ -228,7 +228,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .qp-hs-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}
 .qp-hs-btn{display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 3px;border-radius:8px;border:2px solid var(--border);background:var(--surface2);cursor:pointer;transition:all .18s;font-family:inherit;color:var(--text);width:100%}
 .qp-hs-btn:hover{border-color:var(--amber-border);background:var(--surface3)}
-.qp-hs-btn.selected{border-color:var(--amber);background:var(--amber-dim);box-shadow:0 0 0 2px rgba(245,166,35,0.15)}
+.qp-hs-btn.selected{border-color:var(--amber);background:var(--amber-dim);box-shadow:0 0 0 2px rgba(201,164,92,0.15)}
 .qp-hs-emoji{font-size:18px;line-height:1}
 .qp-hs-lbl{font-size:9px;font-weight:700;text-align:center;line-height:1.2}
 .qp-cp-grid{display:flex;gap:6px}
@@ -241,6 +241,28 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .qp-textarea:focus{border-color:var(--amber)}
 .qp-week-pill{display:inline-flex;align-items:center;padding:3px 10px;background:var(--amber-dim);border:1px solid var(--amber-border);border-radius:20px;font-size:12px;font-weight:700;color:var(--amber);font-family:'JetBrains Mono',monospace}
 .qp-team-row{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+/* HISTÓRICO DE CALLS NO QUICK PANEL */
+.qp-call-add{width:100%;padding:8px;border-radius:7px;border:1px dashed var(--border);background:transparent;color:var(--text-sec);cursor:pointer;font-size:12px;font-weight:600;font-family:'Montserrat',sans-serif;transition:all .18s}
+.qp-call-add:hover{border-color:var(--amber);color:var(--amber)}
+.qp-call-form{display:flex;flex-direction:column;gap:7px;padding:12px;background:var(--surface2);border:1px solid var(--amber-border);border-radius:8px}
+.qp-call-row{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.qp-call-actions{display:flex;gap:6px;margin-top:2px}
+.qp-call-btn{flex:1;padding:8px;border-radius:6px;border:none;cursor:pointer;font-size:12px;font-weight:700;font-family:'Montserrat',sans-serif;transition:opacity .15s}
+.qp-call-btn:hover{opacity:.85}
+.qp-call-save{background:var(--amber);color:#000}
+.qp-call-cancel{background:var(--surface3);color:var(--text-sec)}
+.qp-call-list{display:flex;flex-direction:column;gap:7px}
+.qp-call-item{padding:10px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;position:relative}
+.qp-call-hdr{display:flex;align-items:center;gap:7px;margin-bottom:5px;flex-wrap:wrap}
+.qp-call-tipo{font-size:9px;font-weight:700;font-family:'Montserrat',sans-serif;padding:2px 7px;border-radius:4px;background:var(--amber-dim);color:var(--amber);border:.5px solid var(--amber-border)}
+.qp-call-data{font-size:11px;color:var(--text-sec);font-family:'JetBrains Mono',monospace}
+.qp-call-quem{font-size:11px;color:var(--text-dim)}
+.qp-call-del{margin-left:auto;background:transparent;border:none;color:var(--text-dim);cursor:pointer;font-size:13px;line-height:1;padding:0 2px}
+.qp-call-del:hover{color:#EF4444}
+.qp-call-resumo{font-size:12px;color:var(--text);line-height:1.5;white-space:pre-wrap}
+.qp-call-prox{font-size:11px;color:var(--text-sec);margin-top:6px;padding-top:6px;border-top:.5px solid var(--border);line-height:1.45}
+.qp-call-prox strong{color:var(--amber);font-weight:700}
+.qp-call-empty{font-size:12px;color:var(--text-dim);text-align:center;padding:10px 0}
 .qp-footer{padding:14px 20px;border-top:1px solid var(--border);display:flex;gap:8px}
 .qp-btn{flex:1;padding:9px;border-radius:7px;font-size:13px;font-weight:600;font-family:'Montserrat',sans-serif;cursor:pointer;transition:all .15s;text-decoration:none;text-align:center;display:block}
 .qp-btn-primary{background:var(--amber);color:#000;border:none}
@@ -303,24 +325,24 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 }
 </style>
   <link rel="manifest" href="/manifest.json">
-  <meta name="theme-color" content="#F5A623">
+  <meta name="theme-color" content="#C9A45C">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="FACE 100K">
+  <meta name="apple-mobile-web-app-title" content="FACE SCALE">
   <link rel="apple-touch-icon" href="/icon-192.png">
 </head>
 <body>
 
 <div id="loading">
-  <div class="loading-logo">FACE <span>100K</span></div>
+  <div class="loading-logo">FACE <span>SCALE</span></div>
   <div class="spinner"></div>
   <div class="loading-txt">Carregando painel de entrega...</div>
 </div>
 
 <div class="topbar">
-  <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect width="22" height="22" rx="5" fill="#1A2025"/><path d="M5.5 7.5L11 6L16.5 7.5V13C16.5 16 14.2 17.8 11 18.5C7.8 17.8 5.5 16 5.5 13Z" stroke="#F5A623" stroke-width="1.3" fill="none"/><path d="M8.5 12L10.5 14L14.5 10" stroke="#F5A623" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-  <div class="t-logo">FACE <span>100K</span></div>
+  <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect width="22" height="22" rx="5" fill="#0C1E3F"/><path d="M5.5 7.5L11 6L16.5 7.5V13C16.5 16 14.2 17.8 11 18.5C7.8 17.8 5.5 16 5.5 13Z" stroke="#C9A45C" stroke-width="1.3" fill="none"/><path d="M8.5 12L10.5 14L14.5 10" stroke="#C9A45C" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  <div class="t-logo">FACE <span>SCALE</span></div>
   <div class="t-sep"></div>
   <div class="t-sub">Painel de Entrega — System Digital</div>
   <div class="t-right">
@@ -340,14 +362,14 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
     <div class="stat-card sc-total"><div class="stat-label">Total de clientes</div><div class="stat-val sv-amber" id="st-total">0</div><div class="stat-sub">ativos no programa</div></div>
     <div class="stat-card sc-attention"><div class="stat-label">Em atenção</div><div class="stat-val sv-yellow" id="st-attention">0</div><div class="stat-sub">health score 40–79</div></div>
     <div class="stat-card sc-healthy"><div class="stat-label">Health boa</div><div class="stat-val sv-green" id="st-healthy">0</div><div class="stat-sub">score 80 ou mais</div></div>
-    <div class="stat-card" style="border-color:rgba(245,166,35,0.25);cursor:pointer" onclick="setFilter('cp-call',document.querySelector('[data-filter=cp-call]'))"><div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--amber)"></div><div class="stat-label">Call de Checkpoint</div><div class="stat-val sv-amber" id="st-cp-call">0</div><div class="stat-sub">aguardando chamada</div></div>
+    <div class="stat-card" style="border-color:rgba(201,164,92,0.25);cursor:pointer" onclick="setFilter('cp-call',document.querySelector('[data-filter=cp-call]'))"><div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--amber)"></div><div class="stat-label">Call de Checkpoint</div><div class="stat-val sv-amber" id="st-cp-call">0</div><div class="stat-sub">aguardando chamada</div></div>
     <div class="stat-card" style="border-color:rgba(34,197,94,0.25)"><div class="stat-card" style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--green)"></div><div class="stat-label">Bônus desbloqueado</div><div class="stat-val sv-green" id="st-bonus">R$ 0</div><div class="stat-sub" id="st-bonus-sub">0 marcos atingidos</div></div>
   </div>
 
   <!-- REUNIÕES DE CHECKPOINT -->
   <div class="cp-meetings-section" id="cp-meetings-section" style="display:none">
     <div class="cpm-hdr">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="10" height="10" rx="1.5" stroke="#F5A623" stroke-width="1.3"/><path d="M11 6l4-2v8l-4-2V6z" stroke="#F5A623" stroke-width="1.3" stroke-linejoin="round"/></svg>
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="10" height="10" rx="1.5" stroke="#C9A45C" stroke-width="1.3"/><path d="M11 6l4-2v8l-4-2V6z" stroke="#C9A45C" stroke-width="1.3" stroke-linejoin="round"/></svg>
       <div class="cpm-hdr-title">Reuniões de Checkpoint</div>
       <div class="cpm-hdr-count" id="cp-meetings-count">—</div>
     </div>
@@ -460,6 +482,34 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
     <div class="qp-section" id="qp-hist-section" style="display:none">
       <div class="qp-lbl">Histórico health score</div>
       <div class="qp-hist-grid" id="qp-hist-grid"></div>
+    </div>
+
+    <div class="qp-section">
+      <div class="qp-lbl">Histórico de calls <span class="qp-saved" id="qp-call-saved">✓ Salvo</span></div>
+      <button class="qp-call-add" id="qp-call-add-btn" onclick="openQPCallForm()">+ Registrar call realizada</button>
+      <div class="qp-call-form" id="qp-call-form" style="display:none">
+        <div class="qp-call-row">
+          <input class="qp-input" type="date" id="qp-call-data">
+          <select class="qp-input" id="qp-call-tipo">
+            <option value="Boas-vindas">Boas-vindas</option>
+            <option value="Diagnóstico">Diagnóstico</option>
+            <option value="Plano de Ação Pré-vendas">Plano Ação Pré-vendas</option>
+            <option value="Plano de Ação Vendas">Plano Ação Vendas</option>
+            <option value="Checkpoint 01">Checkpoint 01</option>
+            <option value="Checkpoint 02">Checkpoint 02</option>
+            <option value="Consolidação">Consolidação</option>
+            <option value="Outra">Outra</option>
+          </select>
+        </div>
+        <input class="qp-input" type="text" id="qp-call-quem" placeholder="Quem conduziu (ex: Mari)">
+        <textarea class="qp-textarea" id="qp-call-resumo" placeholder="O que foi tratado na call..."></textarea>
+        <textarea class="qp-textarea" id="qp-call-prox" style="min-height:52px" placeholder="Próxima ação combinada..."></textarea>
+        <div class="qp-call-actions">
+          <button class="qp-call-btn qp-call-cancel" onclick="closeQPCallForm()">Cancelar</button>
+          <button class="qp-call-btn qp-call-save" onclick="saveQPCall()">Salvar call</button>
+        </div>
+      </div>
+      <div class="qp-call-list" id="qp-call-list"></div>
     </div>
 
     <div class="qp-section">
@@ -739,13 +789,16 @@ function renderClients(){
     const contractBanner = contractSt && contractSt.status !== 'ok'
       ? contractSt.status === 'expired'
         ? `<div class="c-alert-banner" style="background:rgba(239,68,68,0.08);border-top:.5px solid rgba(239,68,68,0.2)"><div class="cab-dot" style="background:#EF4444"></div><span class="cab-txt" style="color:#EF4444">Contrato encerrado em ${endDateStr}</span></div>`
-        : `<div class="c-alert-banner" style="background:rgba(245,166,35,0.08);border-top:.5px solid rgba(245,166,35,0.2)"><div class="cab-dot" style="background:#F5A623;animation:none"></div><span class="cab-txt" style="color:#F5A623">Contrato vence em ${contractSt.daysLeft}d — ${endDateStr}</span></div>`
+        : `<div class="c-alert-banner" style="background:rgba(201,164,92,0.08);border-top:.5px solid rgba(201,164,92,0.2)"><div class="cab-dot" style="background:#C9A45C;animation:none"></div><span class="cab-txt" style="color:#C9A45C">Contrato vence em ${contractSt.daysLeft}d — ${endDateStr}</span></div>`
       : '';
     const progLabel = prog==='ativacao'?'Ativação':prog==='mentoria'?'Mentoria':'Aceleração';
     const progBadgeCls = prog==='ativacao'?'prog-badge-ativ':prog==='mentoria'?'prog-badge-ment':'prog-badge-acel';
+    const lastCall = ((c.callsLog||[]).slice().sort((a,b)=>(b.data||'').localeCompare(a.data||''))[0])||null;
+    const lcDias = (lastCall&&lastCall.data) ? Math.floor((Date.now()-new Date(lastCall.data+'T12:00:00').getTime())/86400000) : null;
+    const lcLabel = lcDias===null ? '' : lcDias<=0 ? 'hoje' : lcDias===1 ? 'ontem' : 'há '+lcDias+'d';
     const cpCall = getCheckpointCallStatus(c);
     const cpCallBanner = cpCall
-      ? `<div class="c-alert-banner" style="background:rgba(245,166,35,0.08);border-top:.5px solid rgba(245,166,35,0.2)"><div class="cab-dot" style="background:#F5A623"></div><span class="cab-txt" style="color:#F5A623">📞 Call de Checkpoint CP${cpCall.cpNum} — Semana ${cpCall.week}</span></div>`
+      ? `<div class="c-alert-banner" style="background:rgba(201,164,92,0.08);border-top:.5px solid rgba(201,164,92,0.2)"><div class="cab-dot" style="background:#C9A45C"></div><span class="cab-txt" style="color:#C9A45C">📞 Call de Checkpoint CP${cpCall.cpNum} — Semana ${cpCall.week}</span></div>`
       : '';
     const dias=fbDiasMap[c.id];
     const fbBanner=c.flashboardContaId
@@ -775,7 +828,8 @@ function renderClients(){
           <div class="c-meta-item"><strong>S${curW} / ${c.program==='ativacao'?'12':'24'}</strong>semana</div>
           <div class="c-meta-item"><strong><span class="cp-badge">CP${c.checkpoint||1}</span></strong>checkpoint</div>
           <div class="c-meta-item"><strong>${startDate}</strong>início</div>
-          ${endDateStr?`<div class="c-meta-item"><strong style="color:${contractSt.status==='expired'?'#EF4444':contractSt.status==='expiring'?'#F5A623':'var(--text)'}">${endDateStr}</strong>término</div>`:''}
+          ${lastCall?`<div class="c-meta-item"><strong>${lcLabel}</strong>última call</div>`:''}
+          ${endDateStr?`<div class="c-meta-item"><strong style="color:${contractSt.status==='expired'?'#EF4444':contractSt.status==='expiring'?'#C9A45C':'var(--text)'}">${endDateStr}</strong>término</div>`:''}
         </div>
         <div class="health-chip"><div class="h-dot" style="background:${h.dotColor}"></div>${score?getHealthStatusLabel(score):'Sem health score'}${staleBadge}</div>
         ${obsPreview}
@@ -1029,7 +1083,7 @@ document.addEventListener('keydown',e=>{
 
 <!-- MODAL CRONOGRAMA -->
 <div id="cron-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:300;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto" onclick="if(event.target===this)closeCronModal()">
-  <div style="background:#1A2025;border:1px solid #3E4249;border-radius:12px;width:820px;max-width:100%;padding:28px;margin:auto">
+  <div style="background:#0C1E3F;border:1px solid #23406E;border-radius:12px;width:820px;max-width:100%;padding:28px;margin:auto">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
       <div>
         <div style="font-family:'Montserrat',sans-serif;font-size:16px;font-weight:700" id="cron-modal-title">Cronograma</div>
@@ -1038,9 +1092,9 @@ document.addEventListener('keydown',e=>{
       <button onclick="closeCronModal()" style="background:none;border:none;color:#A0A0A8;font-size:21px;cursor:pointer;padding:4px 8px;line-height:1">✕</button>
     </div>
     <div id="cron-modal-body" style="margin-top:20px"></div>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:20px;padding-top:16px;border-top:1px solid #3E4249">
-      <button onclick="resetCronograma()" style="background:none;border:1px solid #3E4249;border-radius:6px;padding:8px 16px;font-size:13px;color:#A0A0A8;cursor:pointer;font-family:'Montserrat',sans-serif">Restaurar padrão</button>
-      <button onclick="closeCronModal()" style="background:#F5A623;color:#000;border:none;border-radius:6px;padding:10px 28px;font-size:14px;font-weight:700;font-family:'Montserrat',sans-serif;cursor:pointer;letter-spacing:.04em">Fechar</button>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:20px;padding-top:16px;border-top:1px solid #23406E">
+      <button onclick="resetCronograma()" style="background:none;border:1px solid #23406E;border-radius:6px;padding:8px 16px;font-size:13px;color:#A0A0A8;cursor:pointer;font-family:'Montserrat',sans-serif">Restaurar padrão</button>
+      <button onclick="closeCronModal()" style="background:#C9A45C;color:#000;border:none;border-radius:6px;padding:10px 28px;font-size:14px;font-weight:700;font-family:'Montserrat',sans-serif;cursor:pointer;letter-spacing:.04em">Fechar</button>
     </div>
   </div>
 </div>
@@ -1086,7 +1140,7 @@ async function resetCronograma(){
 
 function renderCronModal(){
   const checkSvg=`<svg width="9" height="7" viewBox="0 0 9 7" fill="none"><path d="M1 3.5L3 5.5L8 1" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-  const colors=['#F5A623','rgba(245,166,35,0.6)','#5A6270'];
+  const colors=['#C9A45C','rgba(201,164,92,0.6)','#5A6270'];
   let grandDone=0,grandTotal=0;
   _cronPhases.forEach(p=>p.steps.forEach(s=>{ grandTotal++; if(s.done)grandDone++; }));
   const totalPct=grandTotal?Math.round(grandDone/grandTotal*100):0;
@@ -1098,36 +1152,36 @@ function renderCronModal(){
 
     const stepsHtml=phase.steps.map((st,si)=>{
       const isDone=st.done;
-      const checkStyle=isDone?`background:${col};border-color:${col};border:none`:'background:transparent;border:1.5px solid #3E4249';
+      const checkStyle=isDone?`background:${col};border-color:${col};border:none`:'background:transparent;border:1.5px solid #23406E';
       const txtStyle=isDone?'text-decoration:line-through;color:rgba(255,255,255,0.25)':'color:#C0C0C8';
-      return`<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(62,66,73,0.4)">
+      return`<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(35,64,110,0.4)">
         <div onclick="toggleCronStep_pe(${pi},${si})" style="width:16px;height:16px;border-radius:3px;flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;${checkStyle}">${isDone?checkSvg:''}</div>
-        <input value="${st.text.replace(/"/g,'&quot;')}" onchange="editCronStep(${pi},${si},this.value)" style="flex:1;background:transparent;border:none;outline:none;color:#F0F0F0;font-size:14px;font-family:'Inter',sans-serif;${isDone?'text-decoration:line-through;opacity:.4':''}">
+        <input value="${st.text.replace(/"/g,'&quot;')}" onchange="editCronStep(${pi},${si},this.value)" style="flex:1;background:transparent;border:none;outline:none;color:#F7F3EA;font-size:14px;font-family:'Inter',sans-serif;${isDone?'text-decoration:line-through;opacity:.4':''}">
         <button onclick="removeCronStep(${pi},${si})" style="background:none;border:none;color:rgba(239,68,68,0.5);cursor:pointer;font-size:15px;padding:0 4px;line-height:1;flex-shrink:0" title="Remover passo">✕</button>
       </div>`;
     }).join('');
 
-    return`<div style="background:#212830;border:1px solid #3E4249;border-radius:8px;padding:16px 18px;margin-bottom:14px;border-top:2px solid ${col}">
+    return`<div style="background:#0F2449;border:1px solid #23406E;border-radius:8px;padding:16px 18px;margin-bottom:14px;border-top:2px solid ${col}">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-        <div style="font-family:'Montserrat',sans-serif;font-size:15px;font-weight:700;color:${pi===0?'#F5A623':'#F0F0F0'}">${phase.badge||'0'+(pi+1)} — ${phase.title}</div>
+        <div style="font-family:'Montserrat',sans-serif;font-size:15px;font-weight:700;color:${pi===0?'#C9A45C':'#F7F3EA'}">${phase.badge||'0'+(pi+1)} — ${phase.title}</div>
         <div style="font-size:11px;color:#A0A0A8">${phDone}/${phase.steps.length} · ${phPct}%</div>
       </div>
       <div style="height:2px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;margin-bottom:12px"><div style="height:100%;width:${phPct}%;background:${col};border-radius:2px;transition:width .3s"></div></div>
       ${stepsHtml}
       <div style="margin-top:10px;display:flex;gap:8px">
-        <input id="new-step-${pi}" placeholder="Novo passo..." style="flex:1;background:#1A2025;border:1px solid #3E4249;border-radius:5px;color:#F0F0F0;font-size:13px;padding:6px 10px;outline:none;font-family:'Inter',sans-serif" onkeydown="if(event.key==='Enter')addCronStep(${pi})">
-        <button onclick="addCronStep(${pi})" style="background:#F5A623;color:#000;border:none;border-radius:5px;padding:6px 12px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Montserrat',sans-serif">+ Add</button>
+        <input id="new-step-${pi}" placeholder="Novo passo..." style="flex:1;background:#0C1E3F;border:1px solid #23406E;border-radius:5px;color:#F7F3EA;font-size:13px;padding:6px 10px;outline:none;font-family:'Inter',sans-serif" onkeydown="if(event.key==='Enter')addCronStep(${pi})">
+        <button onclick="addCronStep(${pi})" style="background:#C9A45C;color:#000;border:none;border-radius:5px;padding:6px 12px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Montserrat',sans-serif">+ Add</button>
       </div>
     </div>`;
   }).join('');
 
   document.getElementById('cron-modal-body').innerHTML=`
     ${phasesHtml}
-    <div style="background:#1A2025;border:1px solid #3E4249;border-radius:8px;padding:16px;display:flex;align-items:center;gap:16px">
-      <div style="font-family:'Montserrat',sans-serif;font-size:36px;font-weight:800;color:#F5A623;line-height:1">${totalPct}%</div>
+    <div style="background:#0C1E3F;border:1px solid #23406E;border-radius:8px;padding:16px;display:flex;align-items:center;gap:16px">
+      <div style="font-family:'Montserrat',sans-serif;font-size:36px;font-weight:800;color:#C9A45C;line-height:1">${totalPct}%</div>
       <div style="flex:1">
         <div style="font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,0.3);font-family:'Montserrat',sans-serif;margin-bottom:6px">Progresso total</div>
-        <div style="height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden"><div style="height:100%;width:${totalPct}%;background:linear-gradient(90deg,#F5A623,rgba(245,166,35,0.5));border-radius:2px;transition:width .4s"></div></div>
+        <div style="height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden"><div style="height:100%;width:${totalPct}%;background:linear-gradient(90deg,#C9A45C,rgba(201,164,92,0.5));border-radius:2px;transition:width .4s"></div></div>
       </div>
     </div>`;
 }
@@ -1334,6 +1388,9 @@ function openQuickPanel(id){
     histSection.style.display='none';
   }
 
+  closeQPCallForm();
+  renderQPCalls();
+
   document.getElementById('qp-link-full').href = `cliente-entrega.html?cliente=${encodeURIComponent(id)}`;
   document.getElementById('qp-link-view').href = `cliente-view.html?cliente=${encodeURIComponent(id)}`;
 
@@ -1343,6 +1400,100 @@ function openQuickPanel(id){
 function closeQuickPanel(){
   document.getElementById('quick-panel').classList.remove('open');
   qpClientId = null;
+}
+
+/* ── HISTÓRICO DE CALLS ──
+   Guarda em c.callsLog (array). Campo novo: não toca em nenhum dado existente. */
+function fmtCallDate(iso){
+  if(!iso) return '—';
+  const [y,m,d] = iso.split('-');
+  return `${d}/${m}/${y.slice(2)}`;
+}
+
+function renderQPCalls(){
+  const list = document.getElementById('qp-call-list');
+  if(!list) return;
+  const c = allClients.find(x=>x.id===qpClientId);
+  const calls = ((c&&c.callsLog)||[]).slice().sort((a,b)=>(b.data||'').localeCompare(a.data||''));
+  if(!calls.length){
+    list.innerHTML = '<div class="qp-call-empty">Nenhuma call registrada ainda</div>';
+    return;
+  }
+  list.innerHTML = calls.map(cl=>`
+    <div class="qp-call-item">
+      <div class="qp-call-hdr">
+        <span class="qp-call-tipo">${esc(cl.tipo||'Call')}</span>
+        <span class="qp-call-data">${fmtCallDate(cl.data)}</span>
+        ${cl.quem?`<span class="qp-call-quem">${esc(cl.quem)}</span>`:''}
+        <button class="qp-call-del" onclick="deleteQPCall('${cl.id}')" title="Remover">✕</button>
+      </div>
+      ${cl.resumo?`<div class="qp-call-resumo">${esc(cl.resumo)}</div>`:''}
+      ${cl.prox?`<div class="qp-call-prox"><strong>Próxima ação:</strong> ${esc(cl.prox)}</div>`:''}
+    </div>`).join('');
+}
+
+function esc(s){
+  return String(s==null?'':s).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+}
+
+function openQPCallForm(){
+  document.getElementById('qp-call-form').style.display='flex';
+  document.getElementById('qp-call-add-btn').style.display='none';
+  document.getElementById('qp-call-data').value = new Date().toISOString().split('T')[0];
+  document.getElementById('qp-call-quem').value = '';
+  document.getElementById('qp-call-resumo').value = '';
+  document.getElementById('qp-call-prox').value = '';
+  document.getElementById('qp-call-resumo').focus();
+}
+
+function closeQPCallForm(){
+  const f = document.getElementById('qp-call-form');
+  if(f) f.style.display='none';
+  const b = document.getElementById('qp-call-add-btn');
+  if(b) b.style.display='';
+}
+
+async function saveQPCall(){
+  if(!qpClientId) return;
+  const c = allClients.find(x=>x.id===qpClientId);
+  if(!c) return;
+  const data = document.getElementById('qp-call-data').value;
+  if(!data){ showToast('Informe a data da call','error'); return; }
+  const call = {
+    id: 'call_'+Date.now(),
+    data,
+    tipo: document.getElementById('qp-call-tipo').value,
+    quem: document.getElementById('qp-call-quem').value.trim(),
+    resumo: document.getElementById('qp-call-resumo').value.trim(),
+    prox: document.getElementById('qp-call-prox').value.trim()
+  };
+  const log = (c.callsLog||[]).concat([call]);
+  try{
+    await window._fb.save(qpClientId,{callsLog:log});
+    c.callsLog = log;
+    closeQPCallForm();
+    renderQPCalls();
+    renderClients();
+    const msg = document.getElementById('qp-call-saved');
+    if(msg){ msg.classList.add('show'); setTimeout(()=>msg.classList.remove('show'),2000); }
+    showToast('Call registrada!','success');
+  } catch(e){ showToast('Erro ao salvar call','error'); setSyncStatus('error'); }
+}
+
+async function deleteQPCall(callId){
+  if(!qpClientId) return;
+  const c = allClients.find(x=>x.id===qpClientId);
+  if(!c) return;
+  const alvo = (c.callsLog||[]).find(x=>x.id===callId);
+  if(!confirm(`Remover a call "${alvo?alvo.tipo:''}" de ${alvo?fmtCallDate(alvo.data):''}?`)) return;
+  const log = (c.callsLog||[]).filter(x=>x.id!==callId);
+  try{
+    await window._fb.save(qpClientId,{callsLog:log});
+    c.callsLog = log;
+    renderQPCalls();
+    renderClients();
+    showToast('Call removida','');
+  } catch(e){ showToast('Erro ao remover','error'); setSyncStatus('error'); }
 }
 
 async function selectQPHealth(score){
@@ -1418,7 +1569,7 @@ function openExportModal(){
   const today = new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
   document.getElementById('export-date').textContent = today.charAt(0).toUpperCase()+today.slice(1);
   const lines = [];
-  lines.push(`RESUMO SEMANAL — FACE 100K`);
+  lines.push(`RESUMO SEMANAL — FACE SCALE`);
   lines.push(`System Digital · ${new Date().toLocaleDateString('pt-BR')}`);
   lines.push('');
   const sorted = [...allClients].sort((a,b)=>(a.healthScore||0)-(b.healthScore||0));

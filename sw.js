@@ -1,4 +1,4 @@
-const CACHE_NAME = 'face100k-v1';
+const CACHE_NAME = 'facescale-v1';
 const URLS_TO_CACHE = [
   '/',
   '/painel-entrega.html',

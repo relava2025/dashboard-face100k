@@ -1,11 +1,11 @@
 {
-  "name": "FACE 100K — System Digital",
-  "short_name": "FACE 100K",
+  "name": "FACE SCALE — System Digital",
+  "short_name": "FACE SCALE",
   "description": "Sistema operacional de entrega e tráfego — System Digital",
   "start_url": "/painel-entrega.html",
   "display": "standalone",
-  "background_color": "#0D1117",
-  "theme_color": "#F5A623",
+  "background_color": "#071228",
+  "theme_color": "#C9A45C",
   "orientation": "portrait-primary",
   "icons": [
     {

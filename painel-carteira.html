@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Carteira — FACE 100K</title>
+<title>Carteira — FACE SCALE</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
@@ -285,15 +285,15 @@ window.addEventListener("DOMContentLoaded", () => {
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#0D1117;--surface:#1A2025;--surface2:#212830;--surface3:#272F38;
-  --amber:#F5A623;--amber-dim:rgba(245,166,35,0.10);--amber-border:rgba(245,166,35,0.20);
-  --border:#3E4249;--text:#F0F0F0;--text-sec:#B8B8C0;--text-dim:rgba(255,255,255,0.25);
+  --bg:#071228;--surface:#0C1E3F;--surface2:#0F2449;--surface3:#1B3A6B;
+  --amber:#C9A45C;--amber-dim:rgba(201,164,92,0.10);--amber-border:rgba(201,164,92,0.20);
+  --border:#23406E;--text:#F7F3EA;--text-sec:#AEBBD0;--text-dim:rgba(255,255,255,0.25);
   --green:#22C55E;--green-dim:rgba(34,197,94,0.10);--green-border:rgba(34,197,94,0.22);
   --red:#EF4444;--red-dim:rgba(239,68,68,0.10);--red-border:rgba(239,68,68,0.22);
   --blue:#3B82F6;
 }
 html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:15px;line-height:1.5}
-body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(0deg,transparent 24%,rgba(245,166,35,0.03) 25%,rgba(245,166,35,0.03) 26%,transparent 27%),linear-gradient(90deg,transparent 24%,rgba(245,166,35,0.03) 25%,rgba(245,166,35,0.03) 26%,transparent 27%);background-size:50px 50px;pointer-events:none;z-index:0}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(0deg,transparent 24%,rgba(201,164,92,0.03) 25%,rgba(201,164,92,0.03) 26%,transparent 27%),linear-gradient(90deg,transparent 24%,rgba(201,164,92,0.03) 25%,rgba(201,164,92,0.03) 26%,transparent 27%);background-size:50px 50px;pointer-events:none;z-index:0}
 
 /* TOPBAR */
 .topbar{background:var(--surface);border-bottom:1px solid var(--border);height:52px;display:flex;align-items:center;padding:0 24px;gap:12px;position:sticky;top:0;z-index:50}
@@ -340,7 +340,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 /* CLIENT CARDS */
 .client-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:10px;overflow:hidden;transition:border-color .15s}
 .client-card.expanded{border-color:var(--amber-border)}
-.client-card:hover{border-color:rgba(62,66,73,0.9)}
+.client-card:hover{border-color:rgba(35,64,110,0.9)}
 .client-head{display:flex;align-items:center;gap:16px;padding:16px 18px;cursor:pointer;user-select:none}
 .client-head:hover{background:rgba(255,255,255,0.015)}
 .client-info{flex:1;min-width:0}
@@ -405,7 +405,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
     Voltar
   </a>
   <div class="t-sep"></div>
-  <div class="t-logo">FACE <span>100K</span></div>
+  <div class="t-logo">FACE <span>SCALE</span></div>
   <div class="t-sep"></div>
   <div class="t-title">Carteira</div>
   <div class="t-right">
