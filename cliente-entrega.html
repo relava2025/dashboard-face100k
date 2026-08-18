@@ -622,6 +622,15 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .cf-btn-mark:hover{background:var(--green);color:#fff;border-color:var(--green)}
 .cf-btn-unmark{padding:6px 14px;border-radius:5px;font-size:11px;font-weight:600;font-family:'Montserrat',sans-serif;cursor:pointer;transition:all .15s;border:1px solid var(--border);background:transparent;color:var(--text-sec);margin-left:8px}
 .cf-btn-unmark:hover{border-color:var(--red-border);color:var(--red)}
+/* SEPARADOR DE GRUPO (ex: PRÉ-VENDAS) */
+.cf-grupo{display:flex;align-items:center;gap:12px;margin:14px 2px 4px}
+.cf-grupo::after{content:'';flex:1;height:1px;background:var(--border)}
+.cf-grupo span{font-size:10px;color:var(--amber);text-transform:uppercase;letter-spacing:.18em;font-weight:700;font-family:'Montserrat',sans-serif;white-space:nowrap}
+/* CAMPO DE LINK */
+.cf-link-wrap{display:flex;align-items:center;gap:8px;flex:1;min-width:0}
+.cf-link-input{width:auto;flex:1;min-width:0;max-width:320px}
+.cf-link-open{font-size:11px;font-weight:600;font-family:'Montserrat',sans-serif;color:var(--amber);text-decoration:none;white-space:nowrap;padding:4px 8px;border:0.5px solid var(--amber-border);border-radius:5px;background:var(--amber-dim);transition:all .15s}
+.cf-link-open:hover{background:var(--amber);color:#000;border-color:var(--amber)}
 .calls-extra-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
 .calls-extra-count{font-size:12px;font-family:'JetBrains Mono',monospace;color:var(--text-sec)}
 
@@ -1703,6 +1712,11 @@ function renderCallsOnb(){
            </select>`
         : q.type==='textarea'
         ? `<textarea class="cf-notes" style="min-height:42px;margin-bottom:0" placeholder="${q.placeholder||''}" onclick="event.stopPropagation()" oninput="saveCallOnbResp('${c.id}','${q.id}',this.value)">${val}</textarea>`
+        : q.type==='link'
+        ? `<div class="cf-link-wrap">
+            <input class="cf-date-input cf-link-input" type="url" placeholder="${q.placeholder||'https://...'}" value="${val.replace(/"/g,'&quot;')}" onclick="event.stopPropagation()" oninput="saveCallOnbResp('${c.id}','${q.id}',this.value);syncLinkBtn(this)">
+            <a class="cf-link-open" target="_blank" rel="noopener" onclick="event.stopPropagation()" href="${val.replace(/"/g,'&quot;')||'#'}" style="${val?'':'display:none'}">abrir &#8599;</a>
+           </div>`
         : `<input class="cf-date-input" type="text" style="width:auto;flex:1;max-width:220px" placeholder="${q.placeholder||''}" value="${val.replace(/"/g,'&quot;')}" onclick="event.stopPropagation()" oninput="saveCallOnbResp('${c.id}','${q.id}',this.value)">`;
       return`<div class="cf-date-row" style="align-items:flex-start;gap:12px;margin-bottom:10px;flex-wrap:wrap">
         <span class="cf-date-label" style="min-width:180px;padding-top:${q.type==='textarea'?'6':'5'}px">${q.label}</span>
@@ -1710,7 +1724,7 @@ function renderCallsOnb(){
       </div>`;
     }).join('');
 
-    return`<div class="call-fixed${isDone?' cf-done':''}${isDelivery?' cf-delivery':''}${isOpen?' cf-open':''}" id="cf-item-${c.id}">
+    return (c.grupo?`<div class="cf-grupo"><span>${c.grupo}</span></div>`:'')+`<div class="call-fixed${isDone?' cf-done':''}${isDelivery?' cf-delivery':''}${isOpen?' cf-open':''}" id="cf-item-${c.id}">
       <div class="cf-hdr" onclick="toggleCallOnbOpen('${c.id}')">
         ${numHtml}
         <div class="cf-info">
@@ -1752,6 +1766,13 @@ function toggleCallOnbOpen(id){
   if(el) el.classList.toggle('cf-open',isOpen);
   const chev=document.getElementById('cf-chev-'+id);
   if(chev) chev.innerHTML=isOpen?'&#8963;':'&#8964;';
+}
+
+function syncLinkBtn(input){
+  const a=input.parentNode.querySelector('.cf-link-open'); if(!a) return;
+  const v=(input.value||'').trim();
+  a.href=v||'#';
+  a.style.display=v?'':'none';
 }
 
 function saveCallOnbResp(callId, qId, val){
@@ -1831,9 +1852,12 @@ function renderDiagnostico(){
     const qaRows=c.perguntas.map(q=>{
       const val=resps[q.id]||'';
       if(!val.trim()) return'';
+      const shown = q.type==='link'
+        ? `<a href="${val.replace(/"/g,'&quot;')}" target="_blank" rel="noopener" style="color:var(--amber);text-decoration:none;word-break:break-all">${val} &#8599;</a>`
+        : val;
       return`<div class="diag-qa-row">
         <div class="diag-qa-label">${q.label}</div>
-        <div class="diag-qa-value">${val}</div>
+        <div class="diag-qa-value">${shown}</div>
       </div>`;
     }).filter(Boolean).join('');
 
@@ -1841,7 +1865,7 @@ function renderDiagnostico(){
       <div style="display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--border-light)">
         <div class="diag-item-icon">${c.icon}</div>
         <div style="flex:1">
-          <div class="diag-item-call-ref">${c.type==='delivery'?'Entrega':('Call '+(c.num||''))} · ${c.resp}</div>
+          <div class="diag-item-call-ref">${c.type==='delivery'?'Entrega':('Call '+(c.num||''))}${c.resp?' · '+c.resp:''}</div>
           <div class="diag-item-title" style="margin-bottom:0">${c.diagTitle}</div>
         </div>
         <div style="text-align:right;flex-shrink:0">
@@ -2323,62 +2347,80 @@ const ONB_STAGES = [
 
 const ONB_CONC_DEFAULTS = ['Boas-Vindas realizada','Metas definidas','Cliente integrado ao ecossistema','Esteira de Produtos realizada','Produto foco definido','Apresentação de venda entregue','Call de vendas realizada pelo CS3','Call de marketing e tráfego realizada','Cliente sabe exatamente o que executar','Próximas ações registradas no acompanhamento interno'];
 
-// ── CALLS DE ONBOARDING FIXAS (7 calls + 1 entrega) ──────────────────────
+// ── CALLS DE ONBOARDING FIXAS (10 etapas — VENDAS 1-7 + PRÉ-VENDAS 8-10) ──
+// Estrutura definida no PDF "ALTERAÇÕES - HISTÓRICO DE CALLS".
+// Tipos de campo: text | textarea | select | link (input + botão abrir).
+// `grupo` insere um separador de seção antes do item.
 const CALLS_ONB = [
-  { id:'c1', num:1, type:'call', title:'Call de Boas-Vindas', resp:'Mari — CS1', dia:'Dia 7', sentimento:'"Fiz a escolha certa"',
+  { id:'c1', num:1, type:'call', title:'Call de Boas-vindas', resp:'', dia:'', sentimento:'',
     icon:'👋', diagTitle:'Diagnóstico Inicial do Cliente',
     perguntas:[
-      { id:'fat_atual',   label:'Faturamento atual (R$)',          type:'text',     placeholder:'Ex: 30.000' },
-      { id:'ticket',      label:'Ticket médio atual (R$)',          type:'text',     placeholder:'Ex: 1.200' },
-      { id:'gargalo',     label:'Principal gargalo identificado',   type:'textarea', placeholder:'Qual o maior problema atual da clínica?' },
-      { id:'meta_base',   label:'Meta Base definida (R$)',          type:'text',     placeholder:'Ex: 50.000' },
-      { id:'super_meta',  label:'Super Meta definida (R$)',         type:'text',     placeholder:'Ex: 150.000' },
-      { id:'sentimento',  label:'Sentimento do cliente na call',    type:'select',   options:['Animado','Engajado','Inseguro','Ansioso','Desconfiado'] },
+      { id:'fat_atual',   label:'Faturamento inicial (R$)',   type:'text',     placeholder:'Ex: 30.000' },
+      { id:'meta_base',   label:'Meta-base (R$)',             type:'text',     placeholder:'Ex: 50.000' },
+      { id:'meta_alvo',   label:'Meta-alvo (R$)',             type:'text',     placeholder:'Ex: 100.000' },
+      { id:'super_meta',  label:'Supermeta (R$)',             type:'text',     placeholder:'Ex: 150.000' },
+      { id:'link_grav',   label:'Link da gravação',           type:'link' },
     ]},
-  { id:'c2', num:2, type:'call', title:'Call com a Equipe', resp:'Alane + Mari', dia:'Dia 7', sentimento:'"Meu time vai ser acompanhado"',
-    icon:'🤝', diagTitle:'Diagnóstico de Acolhimento',
+  { id:'diag', num:2, type:'call', title:'Call de Diagnóstico', resp:'', dia:'', sentimento:'',
+    icon:'🔍', diagTitle:'Diagnóstico Comercial',
     perguntas:[
-      { id:'recepcao',    label:'Como o cliente recebeu a equipe?', type:'select',   options:['Muito bem','Com entusiasmo','Neutro','Com dúvidas','Resistente'] },
-      { id:'duvida',      label:'Principal dúvida levantada',       type:'textarea', placeholder:'O que o cliente mais questionou?' },
-      { id:'engajamento', label:'Nível de engajamento percebido',   type:'select',   options:['Alto','Médio','Baixo'] },
+      { id:'possui_sdr',  label:'Possui SDR?',                            type:'select',   options:['Sim','Não','Em contratação'] },
+      { id:'dificuldade', label:'Maior dificuldade identificada',         type:'textarea', placeholder:'O que mais trava a operação hoje?' },
+      { id:'diagnostico', label:'Diagnóstico definido',                   type:'textarea', placeholder:'Qual foi a conclusão do diagnóstico?' },
+      { id:'link_plan',   label:'Link da planilha de diagnóstico comercial', type:'link' },
+      { id:'link_grav',   label:'Link da gravação',                       type:'link' },
     ]},
-  { id:'c3', num:3, type:'call', title:'Call de Confiança', resp:'Dra. Déborah Caribé — Embaixadora', dia:'Após Dia 7', sentimento:'"Agora eu botei fé"',
-    icon:'💎', diagTitle:'Diagnóstico de Confiança',
+  { id:'c4', num:3, type:'call', title:'Call de Vendas — Esteira de Produtos', resp:'', dia:'', sentimento:'',
+    icon:'🎯', diagTitle:'Esteira de Produtos',
     perguntas:[
-      { id:'confianca',   label:'Cliente demonstrou confiança?',    type:'select',   options:['Sim, totalmente','Parcialmente','Não demonstrou'] },
-      { id:'virada',      label:'Ponto de virada percebido',        type:'textarea', placeholder:'O que mudou na percepção do cliente?' },
-      { id:'obs_embx',    label:'Observação da Dra. Déborah',       type:'textarea', placeholder:'Registro da embaixadora sobre o cliente...' },
+      { id:'link_esteira',label:'Link da esteira de produtos', type:'link' },
+      { id:'link_grav',   label:'Link da gravação',            type:'link' },
     ]},
-  { id:'c4', num:4, type:'call', title:'Call de Esteira', resp:'Alane — CS2', dia:'Dias 7–10', sentimento:'"Como vou aplicar isso?"',
-    icon:'🎯', diagTitle:'Diagnóstico Comercial',
+  { id:'apres', num:4, type:'call', title:'Apresentação de Vendas', resp:'', dia:'', sentimento:'',
+    icon:'📋', diagTitle:'Ferramenta Comercial',
     perguntas:[
-      { id:'prod_foco',   label:'Produto foco definido',            type:'text',     placeholder:'Ex: Implante dentário, Harmonização...' },
-      { id:'oferta',      label:'Oferta principal estruturada',     type:'textarea', placeholder:'Como será apresentada a oferta ao paciente?' },
-      { id:'ticket_ideal',label:'Ticket médio ideal (R$)',          type:'text',     placeholder:'Ex: 3.500' },
-      { id:'objecao',     label:'Principal objeção do cliente',     type:'textarea', placeholder:'O que o paciente mais resiste?' },
+      { id:'link_apres',  label:'Link da apresentação', type:'link' },
     ]},
-  { id:'c5', num:null, type:'delivery', title:'Entrega da Apresentação de Venda', resp:'Equipe System Digital', dia:'Após Esteira', sentimento:'',
-    icon:'📋', diagTitle:'Diagnóstico da Ferramenta Comercial',
+  { id:'cp1v', num:5, type:'call', title:'Checkpoint 1 — Vendas', resp:'', dia:'', sentimento:'',
+    icon:'✅', diagTitle:'Checkpoint de Vendas',
     perguntas:[
-      { id:'entregue',    label:'Apresentação entregue?',           type:'select',   options:['Sim','Em andamento','Não'] },
-      { id:'obs_apres',   label:'Observações sobre a apresentação', type:'textarea', placeholder:'Pontos de atenção ou ajustes necessários...' },
+      { id:'assistiu',    label:'Assistiu ao treinamento?',        type:'select',   options:['Sim','Parcialmente','Não'] },
+      { id:'objecoes',    label:'Principais objeções identificadas', type:'textarea', placeholder:'O que o paciente mais resiste?' },
+      { id:'link_grav',   label:'Link da gravação',                type:'link' },
     ]},
-  { id:'c6', num:5, type:'call', title:'Call de Implementação', resp:'Felipe — CS3', dia:'Dia 11', sentimento:'"Agora entendi"',
-    icon:'⚡', diagTitle:'Diagnóstico de Vendas',
+  { id:'consultas', num:6, type:'call', title:'Consultas Gravadas', resp:'', dia:'', sentimento:'',
+    icon:'🎥', diagTitle:'Consultas Gravadas',
     perguntas:[
-      { id:'entendeu',    label:'Cliente entendeu como usar a apresentação?', type:'select', options:['Sim, plenamente','Parcialmente','Precisa de mais suporte'] },
-      { id:'ajustes',     label:'Ajustes realizados na apresentação',        type:'textarea', placeholder:'O que foi adaptado após a call?' },
-      { id:'gargalo_vnd', label:'Gargalo comercial identificado',            type:'textarea', placeholder:'Onde o cliente trava mais nas vendas?' },
+      { id:'link_gravs',  label:'Links das gravações', type:'textarea', placeholder:'Cole um link por linha' },
     ]},
-  { id:'c7', num:6, type:'call', title:'Marketing e Vendas', resp:'Pedro — Head de Tráfego', dia:'Dia 12', sentimento:'"Perfeito"',
-    icon:'🚀', diagTitle:'Diagnóstico de Marketing e Tráfego',
+  { id:'cp2v', num:7, type:'call', title:'Checkpoint 2 — Vendas e Dúvidas', resp:'', dia:'', sentimento:'',
+    icon:'📈', diagTitle:'Checkpoint de Desempenho',
     perguntas:[
-      { id:'canais',      label:'Canais ativos do cliente',              type:'text',     placeholder:'Ex: Instagram, Google Ads, indicação...' },
-      { id:'invest_traf', label:'Investimento atual em tráfego (R$/mês)', type:'text',   placeholder:'Ex: 1.500' },
-      { id:'alinhado',    label:'Produto foco alinhado com tráfego?',    type:'select',   options:['Sim','Parcialmente','Não'] },
-      { id:'prox_traf',   label:'Próximos passos de tráfego definidos',  type:'textarea', placeholder:'O que será feito nas próximas semanas?' },
-      { id:'gestor',      label:'Possui gestor de tráfego externo?',     type:'select',   options:['Sim','Não','Em contratação'] },
-      { id:'avaliacao',   label:'Avaliação geral no onboarding',         type:'select',   options:['Excelente','Bom','Regular','Precisa de atenção'] },
+      { id:'desempenho',  label:'Como está o desempenho?', type:'textarea', placeholder:'Evolução observada desde o último checkpoint...' },
+      { id:'duvidas',     label:'Principais dúvidas',      type:'textarea', placeholder:'O que o cliente ainda não domina?' },
+      { id:'link_grav',   label:'Link da gravação',        type:'link' },
+    ]},
+  { id:'prev', num:8, type:'call', grupo:'PRÉ-VENDAS', title:'Call de Pré-vendas', resp:'', dia:'', sentimento:'',
+    icon:'📞', diagTitle:'Diagnóstico de Pré-vendas',
+    perguntas:[
+      { id:'link_social', label:'Playbook — Social Selling',     type:'link' },
+      { id:'link_lig',    label:'Playbook — Ligação',            type:'link' },
+      { id:'link_lendas', label:'Playbook — Lendas do WhatsApp', type:'link' },
+      { id:'link_crm',    label:'Link da planilha do CRM',       type:'link' },
+      { id:'dinheiro',    label:'Quanto dinheiro está na mesa hoje? (R$)', type:'text', placeholder:'Ex: 85.000' },
+      { id:'link_grav',   label:'Link da gravação',              type:'link' },
+    ]},
+  { id:'cp1p', num:9, type:'call', title:'Checkpoint 1 — Pré-vendas', resp:'', dia:'', sentimento:'',
+    icon:'✅', diagTitle:'Checkpoint de Pré-vendas',
+    perguntas:[
+      { id:'numeros',     label:'Números de evolução', type:'textarea', placeholder:'Leads trabalhados, agendamentos, comparecimento...' },
+      { id:'link_grav',   label:'Link da gravação',    type:'link' },
+    ]},
+  { id:'cp2p', num:10, type:'call', title:'Checkpoint 2 — Pré-vendas', resp:'', dia:'', sentimento:'',
+    icon:'📊', diagTitle:'Checkpoint de Pré-vendas',
+    perguntas:[
+      { id:'numeros_novos', label:'Novos números de evolução', type:'textarea', placeholder:'Comparativo com o checkpoint anterior...' },
+      { id:'link_grav',     label:'Link da gravação',          type:'link' },
     ]},
 ];
 
