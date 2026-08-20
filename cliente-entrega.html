@@ -151,6 +151,16 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .tl-name{font-size:11px;color:var(--text-sec);text-align:center;max-width:80px;line-height:1.4}
 .tl-weeks{font-size:10px;color:var(--text-dim);text-align:center}
 .tl-pct{font-size:11px;text-align:center;font-family:'JetBrains Mono',monospace}
+/* jornada alinhada as 10 calls */
+.timeline-steps{overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+.tl-step{min-width:74px;cursor:pointer}
+.tl-step:hover .tl-dot{transform:translateY(-2px)}
+.tl-step .tl-name{max-width:72px;font-size:10px}
+.tl-fase{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:0 10px;flex:0 0 auto;align-self:stretch}
+.tl-fase-line{width:1px;flex:1;background:var(--amber-border);margin-top:6px}
+.tl-fase-lbl{font-size:8px;color:var(--amber);font-family:'Montserrat',sans-serif;font-weight:700;letter-spacing:.12em;writing-mode:vertical-rl;text-orientation:mixed;white-space:nowrap;padding:4px 0}
+.tl-legend{display:flex;gap:16px;margin-top:12px;font-size:11px;color:var(--text-dim);flex-wrap:wrap}
+.tl-legend b{font-weight:600;color:var(--text-sec)}
 
 /* WEEKS GRID */
 .cp-block{background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:12px;overflow:hidden}
@@ -672,6 +682,54 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .diag-qa-row:last-child{border-bottom:none}
 .diag-qa-label{font-size:11px;color:var(--text-sec);font-weight:600;font-family:'Montserrat',sans-serif;letter-spacing:.03em;padding-top:1px}
 .diag-qa-value{font-size:13px;color:var(--text);line-height:1.5}
+/* MAPA DO CLIENTE (diagnostico consolidado) */
+.dmap-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:14px;margin-bottom:4px}
+.dmap-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.dmap-hdr{display:flex;align-items:center;gap:11px;padding:13px 16px;border-bottom:1px solid var(--border-light);background:var(--surface2)}
+.dmap-icon{font-size:17px;line-height:1;flex-shrink:0}
+.dmap-titulo{font-size:13px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--text)}
+.dmap-hint{font-size:11px;color:var(--text-dim);margin-top:1px}
+.dmap-cnt{font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--text-sec);background:var(--surface3);border:0.5px solid var(--border);border-radius:8px;padding:2px 8px;flex-shrink:0}
+.dmap-cnt-ok{color:var(--green);background:var(--green-dim);border-color:var(--green-border)}
+.dmap-body{padding:6px 16px 12px}
+.dmap-row{padding:9px 0;border-bottom:0.5px solid var(--border-light)}
+.dmap-row:last-child{border-bottom:none}
+.dmap-lbl{display:flex;align-items:baseline;gap:7px;font-size:11px;color:var(--text-sec);font-weight:600;font-family:'Montserrat',sans-serif;margin-bottom:3px}
+.dmap-origem{font-size:9px;color:var(--text-dim);font-weight:600;letter-spacing:.08em;text-transform:uppercase;flex-shrink:0}
+.dmap-val{font-size:13px;color:var(--text);line-height:1.5;white-space:pre-wrap;word-break:break-word}
+.dmap-vazio .dmap-lbl{opacity:.55}
+.dmap-pend{font-size:12px;color:var(--text-dim);font-style:italic}
+.dmat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px;padding:6px 0}
+.dmat-item{display:flex;flex-direction:column;gap:2px;padding:9px 11px;background:var(--surface2);border:1px solid var(--border);border-radius:7px;text-decoration:none;transition:all .15s}
+.dmat-item:hover{border-color:var(--amber);background:var(--amber-dim)}
+.dmat-nome{font-size:12px;color:var(--amber);font-weight:600}
+.dmat-call{font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em}
+.diag-sec-label{font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.18em;font-weight:700;font-family:'Montserrat',sans-serif;margin:22px 2px 10px}
+/* ESTUDO DE CASO */
+.case-hero{display:flex;align-items:center;gap:16px;padding:20px 22px;background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:16px}
+.case-hero.case-on{border-color:var(--amber-border);background:linear-gradient(135deg,var(--amber-dim),var(--surface))}
+.case-hero-icon{font-size:30px;line-height:1;flex-shrink:0;opacity:.85}
+.case-hero-title{font-size:16px;font-weight:800;font-family:'Montserrat',sans-serif;color:var(--text)}
+.case-hero.case-on .case-hero-title{color:var(--amber)}
+.case-hero-sub{font-size:12px;color:var(--text-sec);margin-top:3px}
+.case-toggle{padding:9px 18px;border-radius:6px;font-size:12px;font-weight:700;font-family:'Montserrat',sans-serif;cursor:pointer;transition:all .15s;border:1px solid var(--amber-border);background:var(--amber-dim);color:var(--amber);flex-shrink:0}
+.case-toggle:hover{background:var(--amber);color:#000;border-color:var(--amber)}
+.case-toggle-on{background:transparent;border-color:var(--border);color:var(--text-sec)}
+.case-toggle-on:hover{background:transparent;border-color:var(--red-border);color:var(--red)}
+.case-locked{padding:26px 22px;text-align:center;font-size:13px;color:var(--text-dim);line-height:1.6;background:var(--surface);border:1px dashed var(--border);border-radius:10px}
+.case-ba{display:flex;align-items:stretch;gap:12px;flex-wrap:wrap}
+.case-ba-box{flex:1;min-width:190px;padding:16px 18px;background:var(--surface2);border:1px solid var(--border);border-radius:9px}
+.case-ba-now{border-color:var(--amber-border);background:var(--amber-dim)}
+.case-ba-lbl{font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.12em;font-weight:700;font-family:'Montserrat',sans-serif;margin-bottom:7px}
+.case-ba-val{font-size:24px;font-weight:800;font-family:'Montserrat',sans-serif;color:var(--text);line-height:1.1}
+.case-ba-now .case-ba-val{color:var(--amber)}
+.case-ba-src{font-size:10px;color:var(--text-dim);margin-top:6px;text-transform:uppercase;letter-spacing:.08em}
+.case-ba-arrow{display:flex;align-items:center;justify-content:center;color:var(--text-dim);font-size:20px;flex-shrink:0;padding:0 4px}
+.case-mult{font-size:20px;font-weight:800;font-family:'Montserrat',sans-serif;color:var(--green);background:var(--green-dim);border:1px solid var(--green-border);border-radius:8px;padding:5px 12px;white-space:nowrap}
+.case-aviso{margin-top:12px;font-size:12px;color:var(--text-sec);line-height:1.55;padding:10px 13px;background:var(--surface2);border-left:2px solid var(--amber);border-radius:5px}
+.case-field{margin-bottom:14px}
+.case-field:last-child{margin-bottom:0}
+.case-field-lbl{font-size:11px;color:var(--text-sec);font-weight:600;font-family:'Montserrat',sans-serif;letter-spacing:.03em;margin-bottom:5px}
 @media(max-width:600px){.diag-qa-row{grid-template-columns:1fr}.diag-qa-label{padding-bottom:2px}}
 </style>
   <link rel="manifest" href="/manifest.json">
@@ -726,33 +784,21 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
         <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M3 13V9M6 13V6M9 13V4M12 13V8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
         Metas e faturamento
       </button>
-      <button class="nav-btn" onclick="showPage('recursos',this,'mnav-recursos')">
-        <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M3 4h10M3 8h10M3 12h6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-        Recursos
-      </button>
       <button class="nav-btn" onclick="showPage('calls',this,'mnav-calls')">
         <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.3"/><path d="M8 5v3l2 1.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
         Histórico de calls
-      </button>
-      <button class="nav-btn" onclick="showPage('engajamento',this,'mnav-eng')">
-        <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M8 3l1.5 3 3.5.5-2.5 2.5.5 3.5L8 11l-3 1.5.5-3.5L3 6.5 6.5 6z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
-        Engajamento
       </button>
       <button class="nav-btn" onclick="showPage('cronograma',this,'mnav-cron')">
         <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M8 2L9.5 5.5L13 6l-2.5 2.5.5 3.5L8 10.5 5 12l.5-3.5L3 6l3.5-.5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
         Marcos
       </button>
-      <button class="nav-btn" onclick="showPage('tutorias',this,'mnav-tut')">
-        <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="11" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M5 1v3M11 1v3M2 7h12" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><path d="M5 10.5l1.5 1.5L11 9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        Tutorias
-      </button>
-      <button class="nav-btn" onclick="showPage('onboarding',this,'mnav-onb')">
-        <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M3 4h4M3 8h3M3 12h2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><path d="M9 3l1.5 3 3.5.5-2.5 2 .5 3L9 10l-3 1.5.5-3L4 6l3.5-.5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
-        Onboarding
-      </button>
       <button class="nav-btn" onclick="showPage('diagnostico',this,'mnav-diag')">
         <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M4 2h8a1 1 0 011 1v10a1 1 0 01-1 1H4a1 1 0 01-1-1V3a1 1 0 011-1z" stroke="currentColor" stroke-width="1.3"/><path d="M6 6h4M6 9h4M6 12h2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="5" cy="6" r=".8" fill="currentColor"/><circle cx="5" cy="9" r=".8" fill="currentColor"/><circle cx="5" cy="12" r=".8" fill="currentColor"/></svg>
         Diagnóstico
+      </button>
+      <button class="nav-btn" onclick="showPage('case',this,'mnav-case')">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M8 1.8l1.9 3.9 4.3.6-3.1 3 .7 4.3L8 11.6l-3.8 2 .7-4.3-3.1-3 4.3-.6z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+        Estudo de caso
       </button>
     </nav>
     <div class="sb-client">
@@ -806,7 +852,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 
         <div class="section-card">
           <div class="sc-header">
-            <div class="sc-title">Jornada do programa — 24 semanas</div>
+            <div class="sc-title">Jornada do programa</div>
             <div class="sc-sub" id="journey-sub">—</div>
           </div>
           <div class="sc-body">
@@ -922,19 +968,6 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
           <div class="sc-body" id="cron-preview-body"></div>
         </div>
 
-        <!-- TUTORIAS PREVIEW -->
-        <div class="section-card">
-          <div class="sc-header" style="cursor:pointer" onclick="showPage('tutorias',document.querySelector('[onclick*=mnav-tut]'),'mnav-tut')">
-            <div>
-              <div class="sc-title">Tutorias do mês</div>
-              <div class="sc-sub" id="tut-prev-mes">—</div>
-            </div>
-            <span style="margin-left:auto;font-size:13px;color:var(--amber);font-weight:600">Ver todas →</span>
-          </div>
-          <div class="sc-body">
-            <div class="tut-list" id="tut-grid-preview"><p class="tut-empty">Carregando...</p></div>
-          </div>
-        </div>
 
       </div>
 
@@ -992,32 +1025,6 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
       </div>
 
       <!-- PAGE: RECURSOS -->
-      <div id="page-recursos" class="page">
-        <div class="brand-rail"></div>
-        <div class="section-card">
-          <div class="sc-header">
-            <div class="sc-title">Central de Recursos</div>
-            <div class="sc-sub">Links, drives e materiais do cliente</div>
-          </div>
-          <div class="sc-body">
-            <div class="resources-list" id="resources-list"></div>
-            <div style="margin-bottom:10px">
-  <div style="font-size:10px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.12em;font-weight:600;font-family:'Montserrat',sans-serif;margin-bottom:8px">Adicionar rápido</div>
-  <div style="display:flex;flex-wrap:wrap;gap:6px">
-    <button onclick="addResourceWithName('Flashboard')" style="padding:5px 12px;border-radius:16px;font-size:11px;font-weight:600;font-family:'Montserrat',sans-serif;background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border);cursor:pointer;transition:all .15s" onmouseover="this.style.background='var(--amber)';this.style.color='#000'" onmouseout="this.style.background='var(--amber-dim)';this.style.color='var(--amber)'">+ Flashboard</button>
-    <button onclick="addResourceWithName('Drive do Cliente')" style="padding:5px 12px;border-radius:16px;font-size:11px;font-weight:600;font-family:'Montserrat',sans-serif;background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border);cursor:pointer;transition:all .15s" onmouseover="this.style.background='var(--amber)';this.style.color='#000'" onmouseout="this.style.background='var(--amber-dim)';this.style.color='var(--amber)'">+ Drive</button>
-    <button onclick="addResourceWithName('CRM')" style="padding:5px 12px;border-radius:16px;font-size:11px;font-weight:600;font-family:'Montserrat',sans-serif;background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border);cursor:pointer;transition:all .15s" onmouseover="this.style.background='var(--amber)';this.style.color='#000'" onmouseout="this.style.background='var(--amber-dim)';this.style.color='var(--amber)'">+ CRM</button>
-    <button onclick="addResourceWithName('Apresentação de Vendas')" style="padding:5px 12px;border-radius:16px;font-size:11px;font-weight:600;font-family:'Montserrat',sans-serif;background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border);cursor:pointer;transition:all .15s" onmouseover="this.style.background='var(--amber)';this.style.color='#000'" onmouseout="this.style.background='var(--amber-dim)';this.style.color='var(--amber)'">+ Apresentação</button>
-    <button onclick="addResourceWithName('Plataforma de Aulas')" style="padding:5px 12px;border-radius:16px;font-size:11px;font-weight:600;font-family:'Montserrat',sans-serif;background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border);cursor:pointer;transition:all .15s" onmouseover="this.style.background='var(--amber)';this.style.color='#000'" onmouseout="this.style.background='var(--amber-dim)';this.style.color='var(--amber)'">+ Plataforma de Aulas</button>
-    <button onclick="addResourceWithName('Grupo do WhatsApp')" style="padding:5px 12px;border-radius:16px;font-size:11px;font-weight:600;font-family:'Montserrat',sans-serif;background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border);cursor:pointer;transition:all .15s" onmouseover="this.style.background='var(--amber)';this.style.color='#000'" onmouseout="this.style.background='var(--amber-dim)';this.style.color='var(--amber)'">+ WhatsApp</button>
-    <button onclick="addResourceWithName('Projeto ChatGPT')" style="padding:5px 12px;border-radius:16px;font-size:11px;font-weight:600;font-family:'Montserrat',sans-serif;background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border);cursor:pointer;transition:all .15s" onmouseover="this.style.background='var(--amber)';this.style.color='#000'" onmouseout="this.style.background='var(--amber-dim)';this.style.color='var(--amber)'">+ ChatGPT</button>
-    <button onclick="addResourceWithName('Aula — ')" style="padding:5px 12px;border-radius:16px;font-size:11px;font-weight:600;font-family:'Montserrat',sans-serif;background:rgba(239,68,68,0.1);color:#EF4444;border:1px solid rgba(239,68,68,0.25);cursor:pointer;transition:all .15s" onmouseover="this.style.background='#EF4444';this.style.color='#fff'" onmouseout="this.style.background='rgba(239,68,68,0.1)';this.style.color='#EF4444'">+ Aula (vídeo)</button>
-  </div>
-</div>
-<button class="btn-add-resource" onclick="addResource()">+ Adicionar recurso livre</button>
-          </div>
-        </div>
-      </div>
 
       <!-- PAGE: CALLS -->
       <div id="page-calls" class="page">
@@ -1053,45 +1060,6 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
         </div>
       </div>
 
-      <!-- PAGE: ENGAJAMENTO -->
-      <div id="page-engajamento" class="page">
-        <div class="brand-rail"></div>
-        <div class="section-card">
-          <div class="sc-header">
-            <div class="sc-title">Indicadores de engajamento</div>
-            <div class="sc-sub" id="eng-week-label">Semana atual</div>
-          </div>
-          <div class="sc-body">
-            <div id="eng-score-wrap" class="eng-score-wrap" style="display:none">
-              <div class="eng-score-num" id="eng-score-num">—</div>
-              <div class="eng-score-right">
-                <div class="eng-score-bar-outer"><div class="eng-score-bar-inner" id="eng-score-bar" style="width:0%"></div></div>
-                <div class="eng-score-label" id="eng-score-label">Preencha os indicadores abaixo</div>
-              </div>
-            </div>
-            <div class="eng-grid" id="eng-grid"></div>
-          </div>
-        </div>
-        <div class="section-card" id="cp2-decision-card" style="display:none">
-          <div class="sc-header">
-            <div class="sc-title">Decisão formal — CP2</div>
-            <div class="sc-sub">Obrigatória para concluir o Checkpoint 2</div>
-          </div>
-          <div class="sc-body">
-            <div class="decision-card">
-              <div class="decision-label">Decisão estratégica</div>
-              <div class="decision-options">
-                <button class="decision-btn" id="dec-renova" onclick="selectDecision('renova17k')">Renovação 17K</button>
-                <button class="decision-btn" id="dec-upgrade" onclick="selectDecision('upgrade42k')">Upgrade 42K</button>
-                <button class="decision-btn" id="dec-encerra" onclick="selectDecision('encerra')">Encerramento</button>
-              </div>
-              <label class="form-label">Justificativa</label>
-              <textarea class="decision-textarea" id="decision-just" placeholder="Descreva o motivo da decisão e os próximos passos..."></textarea>
-              <button class="btn-save-decision" onclick="saveDecision()">Salvar decisão</button>
-            </div>
-          </div>
-        </div>
-      </div><!-- /page-engajamento -->
 
       <!-- PAGE: CRONOGRAMA -->
       <div id="page-cronograma" class="page">
@@ -1099,29 +1067,19 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
         <div id="cron-container"></div>
       </div>
 
-      <div id="page-tutorias" class="page">
-        <div class="brand-rail"></div>
-        <div class="section-card">
-          <div class="sc-header">
-            <div class="sc-title">Tutorias do mês</div>
-            <div class="sc-sub" id="tut-mes-sub"></div>
-          </div>
-          <div class="sc-body">
-            <div class="tut-list" id="tut-grid"><p class="tut-empty">Carregando...</p></div>
-          </div>
-        </div>
-      </div>
 
       <!-- PAGE: ONBOARDING -->
-      <div id="page-onboarding" class="page">
-        <div class="brand-rail"></div>
-        <div id="onb-container"></div>
-      </div>
 
       <!-- PAGE: DIAGNÓSTICO -->
       <div id="page-diagnostico" class="page">
         <div class="brand-rail"></div>
         <div id="diag-container"></div>
+      </div>
+
+      <!-- PAGE: ESTUDO DE CASO -->
+      <div id="page-case" class="page">
+        <div class="brand-rail"></div>
+        <div id="case-container"></div>
       </div>
 
     </div>
@@ -1139,10 +1097,6 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
       <svg viewBox="0 0 16 16" fill="none"><path d="M3 13V9M6 13V6M9 13V4M12 13V8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
       Metas
     </button>
-    <button class="mobile-nav-btn" id="mnav-recursos" onclick="showPage('recursos',this,'mnav-recursos')">
-      <svg viewBox="0 0 16 16" fill="none"><path d="M3 4h10M3 8h10M3 12h6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-      Recursos
-    </button>
     <button class="mobile-nav-btn" id="mnav-calls" onclick="showPage('calls',this,'mnav-calls')">
       <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.3"/><path d="M8 5v3l2 1.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
       Calls
@@ -1151,17 +1105,13 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
       <svg viewBox="0 0 16 16" fill="none"><path d="M8 2L9.5 5.5L13 6l-2.5 2.5.5 3.5L8 10.5 5 12l.5-3.5L3 6l3.5-.5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
       Marcos
     </button>
-    <button class="mobile-nav-btn" id="mnav-tut" onclick="showPage('tutorias',this,'mnav-tut')">
-      <svg viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="11" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M5 1v3M11 1v3M2 7h12" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><path d="M5 10.5l1.5 1.5L11 9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      Tutorias
-    </button>
-    <button class="mobile-nav-btn" id="mnav-onb" onclick="showPage('onboarding',this,'mnav-onb')">
-      <svg viewBox="0 0 16 16" fill="none"><path d="M3 4h4M3 8h3M3 12h2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><path d="M9 3l1.5 3 3.5.5-2.5 2 .5 3L9 10l-3 1.5.5-3L4 6l3.5-.5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
-      Onboard
-    </button>
     <button class="mobile-nav-btn" id="mnav-diag" onclick="showPage('diagnostico',this,'mnav-diag')">
       <svg viewBox="0 0 16 16" fill="none"><path d="M4 2h8a1 1 0 011 1v10a1 1 0 01-1 1H4a1 1 0 01-1-1V3a1 1 0 011-1z" stroke="currentColor" stroke-width="1.3"/><path d="M6 6h4M6 9h4M6 12h2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="5" cy="6" r=".8" fill="currentColor"/><circle cx="5" cy="9" r=".8" fill="currentColor"/><circle cx="5" cy="12" r=".8" fill="currentColor"/></svg>
       Diagnóst.
+    </button>
+    <button class="mobile-nav-btn" id="mnav-case" onclick="showPage('case',this,'mnav-case')">
+      <svg viewBox="0 0 16 16" fill="none"><path d="M8 1.8l1.9 3.9 4.3.6-3.1 3 .7 4.3L8 11.6l-3.8 2 .7-4.3-3.1-3 4.3-.6z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+      Case
     </button>
   </div>
 </div>
@@ -1446,13 +1396,11 @@ function renderAll(){
   renderCPMeetingFields();
   renderHealthScore();
   renderMetas();
-  renderResources();
   renderCalls();
-  renderEngajamento();
   renderMarcos();
   renderMarcosPreview();
-  renderOnboarding();
   renderDiagnostico();
+  renderCase();
 }
 
 function renderTopbar(){
@@ -1493,21 +1441,60 @@ function renderClientInfo(){
 }
 
 function renderTimeline(){
-  const steps=document.getElementById('timeline-steps');
-  const currentCP=S.checkpoint||1;
-  steps.innerHTML=CPS.map(cp=>{
-    const pct=getCPProgress(cp);
-    const allDone=pct===100;
-    const isActive=cp.id===currentCP;
-    const dotCls=allDone?'td-done':isActive?'td-active':'td-future';
-    const inner=allDone?`<svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="#000" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`:cp.num;
-    return `<div class="tl-step">
-      <div class="tl-dot ${dotCls}">${inner}</div>
-      <div class="tl-name">CP${cp.id} — ${cp.title}</div>
-      <div class="tl-weeks">S${cp.weeks[0]}–S${cp.weeks[cp.weeks.length-1]}</div>
-      <div class="tl-pct" style="color:${allDone?'var(--green)':isActive?'var(--amber)':'var(--text-dim)'}">${pct}%</div>
+  const steps=document.getElementById('timeline-steps'); if(!steps) return;
+  const onb=S.callsOnb||{};
+  const feitas=CALLS_ONB.filter(c=>onb[c.id]?.realizada).length;
+
+  // etapa "em andamento" = primeira nao realizada que ja tem alguma resposta,
+  // senao a primeira pendente logo apos a ultima realizada
+  let atualId=null;
+  for(const c of CALLS_ONB){
+    if(onb[c.id]?.realizada) continue;
+    const r=onb[c.id]?.respostas||{};
+    if(Object.values(r).some(v=>v&&v.trim())){ atualId=c.id; break; }
+    if(atualId===null) atualId=c.id;
+  }
+
+  steps.innerHTML=CALLS_ONB.map(c=>{
+    const d=onb[c.id]||{};
+    const done=!!d.realizada;
+    const ativo=c.id===atualId;
+    const cls=done?'td-done':ativo?'td-active':'td-future';
+    const inner=done
+      ? `<svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="#000" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+      : c.num;
+    const quando=d.data ? fmtDataCurta(d.data) : (done?'—':'');
+    const sep=c.grupo
+      ? `<div class="tl-fase"><div class="tl-fase-lbl">${c.grupo}</div><div class="tl-fase-line"></div></div>`
+      : '';
+    return sep+`<div class="tl-step" onclick="irParaCall('${c.id}')" title="${c.title}">
+      <div class="tl-dot ${cls}">${inner}</div>
+      <div class="tl-name">${c.title}</div>
+      <div class="tl-weeks">${quando}</div>
     </div>`;
   }).join('');
+
+  const sub=document.getElementById('journey-sub');
+  if(sub) sub.textContent=`${feitas} de ${CALLS_ONB.length} etapas realizadas · ${Math.round(feitas/CALLS_ONB.length*100)}%`;
+}
+
+// dd/mm a partir de AAAA-MM-DD
+function fmtDataCurta(iso){
+  if(!iso||iso.length<10) return '';
+  return iso.slice(8,10)+'/'+iso.slice(5,7);
+}
+
+// clicar numa etapa da jornada abre a call correspondente
+function irParaCall(id){
+  const btn=document.querySelector("[onclick*=\"showPage('calls'\"]");
+  showPage('calls', btn, 'mnav-calls');
+  if(!window._callsOnbOpen) window._callsOnbOpen={};
+  window._callsOnbOpen[id]=true;
+  renderCallsOnb();
+  setTimeout(()=>{
+    const el=document.getElementById('cf-item-'+id);
+    if(el) el.scrollIntoView({behavior:'smooth',block:'center'});
+  },80);
 }
 
 function getCPProgress(cp){
@@ -1804,27 +1791,104 @@ function saveCallOnb(id,key,val){
 }
 function saveCallOnbNotes(id,val){ saveCallOnb(id,'notas',val); }
 
+const DIAG_CATS=[
+  {id:'numeros',   titulo:'Números e metas',      icon:'📊', hint:'onde o cliente estava e onde precisa chegar'},
+  {id:'comercial', titulo:'Estrutura comercial',  icon:'🔍', hint:'time, gargalo e diagnóstico definido'},
+  {id:'vendas',    titulo:'Vendas',               icon:'🎯', hint:'treinamento, objeções e desempenho'},
+  {id:'prevendas', titulo:'Pré-vendas',           icon:'📞', hint:'evolução dos números de pré-vendas'},
+];
+
+// percorre CALLS_ONB e devolve as respostas achatadas, com a call de origem
+function coletarRespostas(){
+  const onb=S.callsOnb||{};
+  const out=[];
+  CALLS_ONB.forEach(c=>{
+    const r=(onb[c.id]||{}).respostas||{};
+    c.perguntas.forEach(q=>{
+      const val=(r[q.id]||'').trim();
+      out.push({call:c, q, val, preenchido:!!val, cat:q.cat||(q.type==='link'?'material':null)});
+    });
+  });
+  return out;
+}
+
 function renderDiagnostico(){
   const container=document.getElementById('diag-container'); if(!container) return;
   const onbData=S.callsOnb||{};
   const totalItems=CALLS_ONB.length;
   const doneCnt=CALLS_ONB.filter(c=>onbData[c.id]?.realizada).length;
-  // count calls with at least 1 answer (partially filled)
   const partialCnt=CALLS_ONB.filter(c=>{ const r=onbData[c.id]?.respostas||{}; return Object.values(r).some(v=>v&&v.trim()); }).length;
   const pct=Math.round(doneCnt/totalItems*100);
   const stageColor=doneCnt===0?'var(--text-sec)':doneCnt===totalItems?'var(--green)':'var(--amber)';
   const stageLabel=doneCnt===0?'Não iniciado':doneCnt===totalItems?'Diagnóstico completo':'Em construção';
 
+  const dados=coletarRespostas();
+  const preenchidos=dados.filter(d=>d.preenchido).length;
+
   let html=`<div class="diag-header">
     <div class="diag-score-num" style="color:${stageColor}">${pct}%</div>
     <div class="diag-score-right">
-      <div class="diag-score-title">Diagnóstico do Cliente — ${S.name||'Cliente'}</div>
-      <div class="diag-score-sub">${doneCnt} de ${totalItems} etapas concluídas · ${partialCnt} em preenchimento · ${stageLabel}</div>
+      <div class="diag-score-title">Mapa do Cliente — ${S.name||'Cliente'}</div>
+      <div class="diag-score-sub">${doneCnt} de ${totalItems} calls realizadas · ${preenchidos} de ${dados.length} campos preenchidos · ${stageLabel}</div>
       <div class="diag-score-bar"><div class="diag-score-fill" style="width:${pct}%;background:${doneCnt===totalItems?'var(--green)':'linear-gradient(90deg,var(--amber),rgba(201,164,92,0.5))'}"></div></div>
     </div>
     <button id="btn-copiar-diag" class="btn-copiar-diag" onclick="copiarDiagnostico()">📋 Copiar para o cliente</button>
   </div>`;
 
+  // ── MAPA: respostas agrupadas por tema, independente da call de origem ──
+  html+=`<div class="dmap-grid">`;
+  DIAG_CATS.forEach(cat=>{
+    const itens=dados.filter(d=>d.cat===cat.id);
+    if(!itens.length) return;
+    const ok=itens.filter(d=>d.preenchido);
+    const linhas=itens.map(d=>{
+      const vazio=!d.preenchido;
+      return `<div class="dmap-row${vazio?' dmap-vazio':''}">
+        <div class="dmap-lbl">${d.q.label}<span class="dmap-origem">${d.call.num?'call '+d.call.num:d.call.title}</span></div>
+        <div class="dmap-val">${vazio?'<span class="dmap-pend">não preenchido</span>':escHtml(d.val)}</div>
+      </div>`;
+    }).join('');
+    html+=`<div class="dmap-card">
+      <div class="dmap-hdr">
+        <span class="dmap-icon">${cat.icon}</span>
+        <div style="flex:1">
+          <div class="dmap-titulo">${cat.titulo}</div>
+          <div class="dmap-hint">${cat.hint}</div>
+        </div>
+        <span class="dmap-cnt${ok.length===itens.length?' dmap-cnt-ok':''}">${ok.length}/${itens.length}</span>
+      </div>
+      <div class="dmap-body">${linhas}</div>
+    </div>`;
+  });
+  html+=`</div>`;
+
+  // ── MATERIAIS: todos os links de todas as calls num lugar so ──
+  const mats=dados.filter(d=>d.q.type==='link'||d.cat==='material');
+  const matsOk=mats.filter(d=>d.preenchido);
+  html+=`<div class="dmap-card" style="margin-top:14px">
+    <div class="dmap-hdr">
+      <span class="dmap-icon">🔗</span>
+      <div style="flex:1">
+        <div class="dmap-titulo">Materiais e gravações</div>
+        <div class="dmap-hint">tudo que foi entregue ou gravado ao longo do programa</div>
+      </div>
+      <span class="dmap-cnt${matsOk.length===mats.length?' dmap-cnt-ok':''}">${matsOk.length}/${mats.length}</span>
+    </div>
+    <div class="dmap-body">${
+      matsOk.length
+      ? `<div class="dmat-grid">`+matsOk.map(d=>{
+          const urls=d.val.split(/\s*\n\s*/).filter(Boolean);
+          return urls.map((u,ix)=>`<a class="dmat-item" href="${escAttr(u)}" target="_blank" rel="noopener">
+            <span class="dmat-nome">${d.q.label}${urls.length>1?' ('+(ix+1)+')':''}</span>
+            <span class="dmat-call">${d.call.num?'call '+d.call.num:d.call.title}</span>
+          </a>`).join('');
+        }).join('')+`</div>`
+      : `<div class="dmap-pend" style="padding:4px 0">Nenhum link registrado ainda.</div>`
+    }</div>
+  </div>`;
+
+  // ── REGISTRO POR CALL (detalhe, como antes) ──
+  html+=`<div class="diag-sec-label">Registro por call</div>`;
   CALLS_ONB.forEach(c=>{
     const d=onbData[c.id]||{};
     const resps=d.respostas||{};
@@ -1833,28 +1897,26 @@ function renderDiagnostico(){
     const filledCnt=c.perguntas.filter(q=>resps[q.id]&&resps[q.id].trim()).length;
 
     if(!hasAnyResp && !isRealizada){
-      // Locked card - minimal
       html+=`<div class="diag-item diag-locked" style="padding:14px 18px">
         <div class="diag-item-icon">${c.icon}</div>
         <div class="diag-item-body">
-          <div class="diag-item-call-ref">${c.type==='delivery'?'Entrega':'Call '+(c.num||'')}</div>
+          <div class="diag-item-call-ref">Call ${c.num||''}</div>
           <div class="diag-item-title">${c.title}</div>
-          <div class="diag-item-text" style="font-size:12px">Preencha as perguntas na aba <strong style="color:var(--amber)">Histórico de Calls</strong> para construir este diagnóstico.</div>
+          <div class="diag-item-text" style="font-size:12px">Preencha as perguntas na aba <strong style="color:var(--amber)">Histórico de calls</strong> para construir este diagnóstico.</div>
         </div>
         <span class="diag-badge diag-badge-lock">Aguardando</span>
       </div>`;
       return;
     }
 
-    // Unlocked — show Q&A report
     const statusColor=isRealizada?'var(--green)':'var(--amber)';
     const statusLabel=isRealizada?'Realizada':'Parcial';
     const qaRows=c.perguntas.map(q=>{
-      const val=resps[q.id]||'';
-      if(!val.trim()) return'';
+      const val=(resps[q.id]||'').trim();
+      if(!val) return'';
       const shown = q.type==='link'
-        ? `<a href="${val.replace(/"/g,'&quot;')}" target="_blank" rel="noopener" style="color:var(--amber);text-decoration:none;word-break:break-all">${val} &#8599;</a>`
-        : val;
+        ? `<a href="${escAttr(val)}" target="_blank" rel="noopener" style="color:var(--amber);text-decoration:none;word-break:break-all">${escHtml(val)} &#8599;</a>`
+        : escHtml(val);
       return`<div class="diag-qa-row">
         <div class="diag-qa-label">${q.label}</div>
         <div class="diag-qa-value">${shown}</div>
@@ -1865,7 +1927,7 @@ function renderDiagnostico(){
       <div style="display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--border-light)">
         <div class="diag-item-icon">${c.icon}</div>
         <div style="flex:1">
-          <div class="diag-item-call-ref">${c.type==='delivery'?'Entrega':('Call '+(c.num||''))}${c.resp?' · '+c.resp:''}</div>
+          <div class="diag-item-call-ref">Call ${c.num||''}${c.resp?' · '+c.resp:''}</div>
           <div class="diag-item-title" style="margin-bottom:0">${c.diagTitle}</div>
         </div>
         <div style="text-align:right;flex-shrink:0">
@@ -1874,26 +1936,141 @@ function renderDiagnostico(){
           <div style="font-size:11px;color:var(--text-dim);margin-top:2px">${filledCnt}/${c.perguntas.length} respostas</div>
         </div>
       </div>
-      <div style="padding:14px 18px">${qaRows||'<div style="font-size:13px;color:var(--text-sec)">Nenhuma resposta preenchida ainda.</div>'}</div>
+      <div style="padding:14px 18px">${qaRows}</div>
     </div>`;
   });
 
-  // Extra calls
-  const extraCalls=S.calls||[];
-  if(extraCalls.length>0){
-    html+=`<div class="diag-extra-section">
-      <div class="diag-extra-title">Calls Extra</div>
-      <div class="diag-extra-sub">${extraCalls.length} de 6 utilizadas</div>
-      ${extraCalls.map(c=>`<div class="diag-extra-item">
-        <div class="diag-extra-dot"></div>
-        <div class="diag-extra-text">${c.type||'Call'} — ${c.summary||'Sem resumo'}</div>
-        <div class="diag-extra-date">${c.date||'—'}</div>
-      </div>`).join('')}
-    </div>`;
-  }
-
   container.innerHTML=html;
 }
+
+// ── ESTUDO DE CASO ──────────────────────────────────────────────────────
+// Guarda em S.caseStudy. Faturamento inicial vem da call de Boas-vindas.
+const CASE_CAMPOS=[
+  {grupo:'Números', icon:'📈', hint:'de onde saiu e onde chegou',
+   campos:[
+     {id:'fatAtual',    label:'Faturamento atual (R$)',   type:'text',     ph:'Ex: 180.000'},
+     {id:'ticketAntes', label:'Ticket médio antes (R$)',  type:'text',     ph:'Ex: 1.200'},
+     {id:'ticketDepois',label:'Ticket médio depois (R$)', type:'text',     ph:'Ex: 4.500'},
+     {id:'tempo',       label:'Tempo até o resultado',    type:'text',     ph:'Ex: 4 meses'},
+   ]},
+  {grupo:'Depoimento e mídia', icon:'🎬', hint:'material que a equipe usa em anúncio e página',
+   campos:[
+     {id:'depoimento',  label:'Depoimento do cliente',    type:'textarea', ph:'Nas palavras dele...'},
+     {id:'linkVideo',   label:'Link do vídeo',            type:'link'},
+     {id:'prints',      label:'Links de prints e provas', type:'textarea', ph:'Cole um link por linha'},
+   ]},
+  {grupo:'A virada', icon:'🔑', hint:'a história por trás do número',
+   campos:[
+     {id:'antes',     label:'O que estava travado antes',   type:'textarea', ph:'Cenário do cliente quando entrou...'},
+     {id:'feito',     label:'O que foi feito na prática',   type:'textarea', ph:'As mudanças concretas que a equipe conduziu...'},
+     {id:'destravou', label:'O que destravou o resultado',  type:'textarea', ph:'O ponto de virada — o que fez a diferença...'},
+   ]},
+];
+
+// faturamento inicial: registrado na call de Boas-vindas
+function caseFatInicial(){
+  const r=((S.callsOnb||{})['c1']||{}).respostas||{};
+  return (r.fat_atual||'').trim();
+}
+
+// so os digitos, p/ conseguir calcular o multiplicador de "30.000" e "R$ 30 mil"
+function numBR(v){
+  const d=String(v||'').replace(/[^\d,]/g,'').replace(',','.');
+  const n=parseFloat(d);
+  return isNaN(n)?null:n;
+}
+
+function renderCase(){
+  const c=document.getElementById('case-container'); if(!c) return;
+  const cs=S.caseStudy||{};
+  const isCase=!!cs.isCase;
+  const ini=caseFatInicial();
+  const a=numBR(ini), b=numBR(cs.fatAtual);
+  const mult=(a&&b&&a>0)?(b/a):null;
+
+  const campos=CASE_CAMPOS.flatMap(g=>g.campos);
+  const preenchidos=campos.filter(f=>(cs[f.id]||'').trim()).length;
+
+  let html=`<div class="case-hero${isCase?' case-on':''}">
+    <div class="case-hero-icon">${isCase?'🏆':'☆'}</div>
+    <div style="flex:1">
+      <div class="case-hero-title">${isCase?'Este cliente é um case':'Ainda não é um case'}</div>
+      <div class="case-hero-sub">${isCase
+        ? `Marcado como case${cs.data?' em '+fmtDataCurta(cs.data)+'/'+cs.data.slice(0,4):''} · ${preenchidos} de ${campos.length} campos preenchidos`
+        : 'Marque quando o resultado do cliente virar prova social.'}</div>
+    </div>
+    <button class="case-toggle${isCase?' case-toggle-on':''}" onclick="toggleCase(${!isCase})">
+      ${isCase?'Desmarcar':'Marcar como case'}
+    </button>
+  </div>`;
+
+  if(!isCase){
+    c.innerHTML=html+`<div class="case-locked">
+      Assim que o cliente virar case, marque acima e registre aqui os números, o depoimento e a virada.
+      Fica salvo junto do cliente, sem depender de ninguém lembrar depois.
+    </div>`;
+    return;
+  }
+
+  html+=`<div class="section-card">
+    <div class="sc-header"><div><div class="sc-title">Antes e depois</div>
+    <div class="sc-sub">o faturamento inicial vem da call de Boas-vindas</div></div></div>
+    <div class="sc-body">
+      <div class="case-ba">
+        <div class="case-ba-box">
+          <div class="case-ba-lbl">Faturamento inicial</div>
+          <div class="case-ba-val">${ini?escHtml(ini):'<span style="color:var(--text-dim);font-size:15px">não registrado</span>'}</div>
+          <div class="case-ba-src">call 1 · Boas-vindas</div>
+        </div>
+        <div class="case-ba-arrow">${mult?`<span class="case-mult">${mult.toFixed(1)}x</span>`:'→'}</div>
+        <div class="case-ba-box case-ba-now">
+          <div class="case-ba-lbl">Faturamento atual</div>
+          <div class="case-ba-val">${cs.fatAtual?escHtml(cs.fatAtual):'<span style="color:var(--text-dim);font-size:15px">preencha abaixo</span>'}</div>
+          <div class="case-ba-src">${cs.tempo?escHtml(cs.tempo):'—'}</div>
+        </div>
+      </div>
+      ${!ini?`<div class="case-aviso">Sem o faturamento inicial na call de Boas-vindas não dá pra calcular o multiplicador. Preencha lá que ele aparece aqui sozinho.</div>`:''}
+    </div>
+  </div>`;
+
+  CASE_CAMPOS.forEach(g=>{
+    html+=`<div class="section-card">
+      <div class="sc-header"><div><div class="sc-title">${g.icon} ${g.grupo}</div><div class="sc-sub">${g.hint}</div></div></div>
+      <div class="sc-body">${g.campos.map(f=>{
+        const v=cs[f.id]||'';
+        const inp = f.type==='textarea'
+          ? `<textarea class="obs-field" style="min-height:64px" placeholder="${f.ph||''}" oninput="saveCase('${f.id}',this.value)">${escHtml(v)}</textarea>`
+          : f.type==='link'
+          ? `<div class="cf-link-wrap"><input class="obs-field cf-link-input" type="url" style="padding:8px 12px" placeholder="https://..." value="${escAttr(v)}" oninput="saveCase('${f.id}',this.value);syncLinkBtn(this)">
+             <a class="cf-link-open" target="_blank" rel="noopener" href="${escAttr(v)||'#'}" style="${v?'':'display:none'}">abrir &#8599;</a></div>`
+          : `<input class="obs-field" type="text" style="padding:8px 12px" placeholder="${f.ph||''}" value="${escAttr(v)}" oninput="saveCase('${f.id}',this.value)">`;
+        return `<div class="case-field"><div class="case-field-lbl">${f.label}</div>${inp}</div>`;
+      }).join('')}</div>
+    </div>`;
+  });
+
+  c.innerHTML=html;
+}
+
+let _caseTimer=null;
+function saveCase(key,val){
+  if(!S.caseStudy) S.caseStudy={};
+  S.caseStudy[key]=val;
+  clearTimeout(_caseTimer);
+  _caseTimer=setTimeout(()=>save({caseStudy:S.caseStudy}),800);
+}
+
+async function toggleCase(val){
+  if(!S.caseStudy) S.caseStudy={};
+  S.caseStudy.isCase=val;
+  if(val && !S.caseStudy.data) S.caseStudy.data=new Date().toISOString().split('T')[0];
+  await save({caseStudy:S.caseStudy});
+  renderCase();
+  showToast(val?'Cliente marcado como case!':'Case desmarcado', val?'success':'');
+}
+
+function escHtml(v){ return String(v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function escAttr(v){ return escHtml(v).replace(/"/g,'&quot;'); }
 
 window.copiarDiagnostico=async function(){
   const onbData=S.callsOnb||{};
@@ -1973,7 +2150,6 @@ async function selectEng(itemId, val){
   if(!S.engajamento) S.engajamento={};
   if(!S.engajamento[w]) S.engajamento[w]={};
   S.engajamento[w][itemId]=val;
-  renderEngajamento();
   await save({engajamento:S.engajamento});
 }
 
@@ -2287,7 +2463,6 @@ window.addEventListener('fb-ready',async()=>{
   setSyncStatus('connecting');
   document.getElementById('loading-txt').textContent='Sincronizando com Firebase...';
   await loadFromFirebase();
-  loadTutorias();
   loadFlashboard();
   document.getElementById('loading').classList.add('hidden');
   renderAll();
@@ -2355,18 +2530,18 @@ const CALLS_ONB = [
   { id:'c1', num:1, type:'call', title:'Call de Boas-vindas', resp:'', dia:'', sentimento:'',
     icon:'👋', diagTitle:'Diagnóstico Inicial do Cliente',
     perguntas:[
-      { id:'fat_atual',   label:'Faturamento inicial (R$)',   type:'text',     placeholder:'Ex: 30.000' },
-      { id:'meta_base',   label:'Meta-base (R$)',             type:'text',     placeholder:'Ex: 50.000' },
-      { id:'meta_alvo',   label:'Meta-alvo (R$)',             type:'text',     placeholder:'Ex: 100.000' },
-      { id:'super_meta',  label:'Supermeta (R$)',             type:'text',     placeholder:'Ex: 150.000' },
+      { id:'fat_atual',   label:'Faturamento inicial (R$)',   type:'text', cat:'numeros',     placeholder:'Ex: 30.000' },
+      { id:'meta_base',   label:'Meta-base (R$)',             type:'text', cat:'numeros',     placeholder:'Ex: 50.000' },
+      { id:'meta_alvo',   label:'Meta-alvo (R$)',             type:'text', cat:'numeros',     placeholder:'Ex: 100.000' },
+      { id:'super_meta',  label:'Supermeta (R$)',             type:'text', cat:'numeros',     placeholder:'Ex: 150.000' },
       { id:'link_grav',   label:'Link da gravação',           type:'link' },
     ]},
   { id:'diag', num:2, type:'call', title:'Call de Diagnóstico', resp:'', dia:'', sentimento:'',
     icon:'🔍', diagTitle:'Diagnóstico Comercial',
     perguntas:[
-      { id:'possui_sdr',  label:'Possui SDR?',                            type:'select',   options:['Sim','Não','Em contratação'] },
-      { id:'dificuldade', label:'Maior dificuldade identificada',         type:'textarea', placeholder:'O que mais trava a operação hoje?' },
-      { id:'diagnostico', label:'Diagnóstico definido',                   type:'textarea', placeholder:'Qual foi a conclusão do diagnóstico?' },
+      { id:'possui_sdr',  label:'Possui SDR?',                            type:'select', cat:'comercial',   options:['Sim','Não','Em contratação'] },
+      { id:'dificuldade', label:'Maior dificuldade identificada',         type:'textarea', cat:'comercial', placeholder:'O que mais trava a operação hoje?' },
+      { id:'diagnostico', label:'Diagnóstico definido',                   type:'textarea', cat:'comercial', placeholder:'Qual foi a conclusão do diagnóstico?' },
       { id:'link_plan',   label:'Link da planilha de diagnóstico comercial', type:'link' },
       { id:'link_grav',   label:'Link da gravação',                       type:'link' },
     ]},
@@ -2384,20 +2559,20 @@ const CALLS_ONB = [
   { id:'cp1v', num:5, type:'call', title:'Checkpoint 1 — Vendas', resp:'', dia:'', sentimento:'',
     icon:'✅', diagTitle:'Checkpoint de Vendas',
     perguntas:[
-      { id:'assistiu',    label:'Assistiu ao treinamento?',        type:'select',   options:['Sim','Parcialmente','Não'] },
-      { id:'objecoes',    label:'Principais objeções identificadas', type:'textarea', placeholder:'O que o paciente mais resiste?' },
+      { id:'assistiu',    label:'Assistiu ao treinamento?',        type:'select', cat:'vendas',   options:['Sim','Parcialmente','Não'] },
+      { id:'objecoes',    label:'Principais objeções identificadas', type:'textarea', cat:'vendas', placeholder:'O que o paciente mais resiste?' },
       { id:'link_grav',   label:'Link da gravação',                type:'link' },
     ]},
   { id:'consultas', num:6, type:'call', title:'Consultas Gravadas', resp:'', dia:'', sentimento:'',
     icon:'🎥', diagTitle:'Consultas Gravadas',
     perguntas:[
-      { id:'link_gravs',  label:'Links das gravações', type:'textarea', placeholder:'Cole um link por linha' },
+      { id:'link_gravs',  label:'Links das gravações', type:'textarea', cat:'material', placeholder:'Cole um link por linha' },
     ]},
   { id:'cp2v', num:7, type:'call', title:'Checkpoint 2 — Vendas e Dúvidas', resp:'', dia:'', sentimento:'',
     icon:'📈', diagTitle:'Checkpoint de Desempenho',
     perguntas:[
-      { id:'desempenho',  label:'Como está o desempenho?', type:'textarea', placeholder:'Evolução observada desde o último checkpoint...' },
-      { id:'duvidas',     label:'Principais dúvidas',      type:'textarea', placeholder:'O que o cliente ainda não domina?' },
+      { id:'desempenho',  label:'Como está o desempenho?', type:'textarea', cat:'vendas', placeholder:'Evolução observada desde o último checkpoint...' },
+      { id:'duvidas',     label:'Principais dúvidas',      type:'textarea', cat:'vendas', placeholder:'O que o cliente ainda não domina?' },
       { id:'link_grav',   label:'Link da gravação',        type:'link' },
     ]},
   { id:'prev', num:8, type:'call', grupo:'PRÉ-VENDAS', title:'Call de Pré-vendas', resp:'', dia:'', sentimento:'',
@@ -2407,19 +2582,19 @@ const CALLS_ONB = [
       { id:'link_lig',    label:'Playbook — Ligação',            type:'link' },
       { id:'link_lendas', label:'Playbook — Lendas do WhatsApp', type:'link' },
       { id:'link_crm',    label:'Link da planilha do CRM',       type:'link' },
-      { id:'dinheiro',    label:'Quanto dinheiro está na mesa hoje? (R$)', type:'text', placeholder:'Ex: 85.000' },
+      { id:'dinheiro',    label:'Quanto dinheiro está na mesa hoje? (R$)', type:'text', cat:'numeros', placeholder:'Ex: 85.000' },
       { id:'link_grav',   label:'Link da gravação',              type:'link' },
     ]},
   { id:'cp1p', num:9, type:'call', title:'Checkpoint 1 — Pré-vendas', resp:'', dia:'', sentimento:'',
     icon:'✅', diagTitle:'Checkpoint de Pré-vendas',
     perguntas:[
-      { id:'numeros',     label:'Números de evolução', type:'textarea', placeholder:'Leads trabalhados, agendamentos, comparecimento...' },
+      { id:'numeros',     label:'Números de evolução', type:'textarea', cat:'prevendas', placeholder:'Leads trabalhados, agendamentos, comparecimento...' },
       { id:'link_grav',   label:'Link da gravação',    type:'link' },
     ]},
   { id:'cp2p', num:10, type:'call', title:'Checkpoint 2 — Pré-vendas', resp:'', dia:'', sentimento:'',
     icon:'📊', diagTitle:'Checkpoint de Pré-vendas',
     perguntas:[
-      { id:'numeros_novos', label:'Novos números de evolução', type:'textarea', placeholder:'Comparativo com o checkpoint anterior...' },
+      { id:'numeros_novos', label:'Novos números de evolução', type:'textarea', cat:'prevendas', placeholder:'Comparativo com o checkpoint anterior...' },
       { id:'link_grav',     label:'Link da gravação',          type:'link' },
     ]},
 ];
@@ -2490,7 +2665,6 @@ async function addOnbItem(stageId){
   items.push({text:'', done:false});
   S.onboarding[stageId] = items;
   await save({onboarding:S.onboarding});
-  renderOnboarding();
   // focus new input
   const inp = document.getElementById(`onb-inp-${stageId}-${items.length-1}`);
   if(inp){ inp.focus(); }
@@ -2502,7 +2676,6 @@ async function addOnbConcItem(){
   items.push({text:'', done:false});
   S.onboarding.conclusao = items;
   await save({onboarding:S.onboarding});
-  renderOnboarding();
   const inp = document.getElementById(`onb-inp-conc-${items.length-1}`);
   if(inp){ inp.focus(); }
 }
