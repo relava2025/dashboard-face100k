@@ -221,24 +221,6 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .sat-lbl{font-size:10px;color:var(--text-sec);text-align:center;font-family:'Montserrat',sans-serif;font-weight:600;letter-spacing:.03em;line-height:1.3}
 .sat-pts{font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--text-dim)}
 
-/* ENGAJAMENTO */
-.eng-score-wrap{display:flex;align-items:center;gap:14px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:13px 16px;margin-bottom:14px}
-.eng-score-num{font-family:'Montserrat',sans-serif;font-size:25px;font-weight:800;min-width:40px;line-height:1}
-.eng-score-right{flex:1;display:flex;flex-direction:column;gap:5px}
-.eng-score-bar-outer{height:5px;background:var(--surface3);border-radius:3px;overflow:hidden}
-.eng-score-bar-inner{height:5px;border-radius:3px;transition:width .4s,background .3s}
-.eng-score-label{font-size:12px;color:var(--text-sec)}
-.eng-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.eng-item{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:13px 14px}
-.eng-label{font-size:14px;font-weight:600;color:var(--text);margin-bottom:3px}
-.eng-hint{font-size:12px;color:var(--text-sec);margin-bottom:10px;line-height:1.4}
-.eng-btns{display:flex;gap:6px}
-.eng-btn{flex:1;padding:8px 4px;border-radius:6px;border:1.5px solid var(--border);background:var(--surface3);cursor:pointer;font-size:12px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--text-sec);transition:all .15s;text-align:center;line-height:1.2}
-.eng-btn:hover{border-color:var(--amber-border);background:var(--amber-dim);color:var(--amber)}
-.eng-btn.eg{background:var(--green-dim);border-color:var(--green-border);color:var(--green)}
-.eng-btn.ey{background:var(--yellow-dim);border-color:var(--yellow-border);color:var(--yellow)}
-.eng-btn.er{background:var(--red-dim);border-color:var(--red-border);color:var(--red)}
-
 /* RECURSOS */
 .resources-list{display:flex;flex-direction:column;gap:8px}
 .resource-item{display:flex;align-items:center;gap:10px;background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:10px 14px;transition:border-color .15s}
@@ -431,7 +413,6 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
   .metas-grid{grid-template-columns:repeat(2,1fr)}
   .client-info-grid{grid-template-columns:1fr}
   .health-section{grid-template-columns:1fr}
-  .eng-grid{grid-template-columns:repeat(2,1fr)}
   .weeks-grid{grid-template-columns:repeat(2,1fr)}
   .timeline-steps{flex-wrap:wrap;gap:14px}
   .timeline-line{display:none}
@@ -463,7 +444,6 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 }
 @media(max-width:480px){
   .metas-grid{grid-template-columns:1fr 1fr}
-  .eng-grid{grid-template-columns:1fr}
   .form-grid-2{grid-template-columns:1fr}
   .weeks-grid{grid-template-columns:1fr 1fr}
   .mobile-nav-btn{padding:6px 2px 12px;font-size:8px}
@@ -479,7 +459,6 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
   .mobile-nav-btn svg{width:15px;height:15px}
   .modal-box{padding:16px 12px}
   .weeks-grid{grid-template-columns:1fr}
-  .eng-grid{grid-template-columns:1fr}
 }
 /* FLASHBOARD */
 .fb-stat{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;text-align:center}
@@ -1267,20 +1246,6 @@ const CPS = [
   {id:2,num:'02',title:'Consistência de vendas',weeks:[5,6,7,8,9,10,11,12]},
   {id:3,num:'03',title:'Comercial + metas',weeks:[13,14,15,16,17,18,19,20]},
   {id:4,num:'04',title:'Escala e recompra',weeks:[21,22,23,24]},
-];
-
-
-const ENG_ITEMS = [
-  {id:'tutorias', label:'Participação nas tutorias', hint:'Compareceu e participou ativamente da tutoria?',
-   opts:['Presente','Parcial','Ausente'], cls:['eg','ey','er'], scores:[2,1,0]},
-  {id:'crm', label:'Uso do CRM', hint:'Está registrando todos os atendimentos no CRM?',
-   opts:['Usando','Parcial','Não usando'], cls:['eg','ey','er'], scores:[2,1,0]},
-  {id:'flashboard', label:'Preenchimento Flashboard', hint:'Preenche os indicadores com frequência?',
-   opts:['Diário','Irregular','Não preenche'], cls:['eg','ey','er'], scores:[2,1,0]},
-  {id:'script', label:'Aplicação do script', hint:'Seguiu o script de atendimento nas consultas?',
-   opts:['Aplicando','Parcial','Não aplicando'], cls:['eg','ey','er'], scores:[2,1,0]},
-  {id:'tarefas', label:'Entrega das tarefas', hint:'Entregou tudo o que foi combinado na semana?',
-   opts:['Entregou tudo','Parcial','Não entregou'], cls:['eg','ey','er'], scores:[2,1,0]},
 ];
 
 // ── STATE ──
@@ -2100,57 +2065,16 @@ window.copiarDiagnostico=async function(){
   if(btn){ const o=btn.innerHTML; btn.innerHTML='✓ Copiado!'; setTimeout(()=>{btn.innerHTML=o;},2000); }
 };
 
-function engScore(eng){
-  let total=0,filled=0;
-  ENG_ITEMS.forEach(item=>{
-    const v=eng[item.id]; if(!v) return;
-    const idx=item.opts.indexOf(v); if(idx<0) return;
-    total+=item.scores[idx]; filled++;
-  });
-  return {total,filled,max:ENG_ITEMS.length*2};
-}
-
-function renderEngajamento(){
-  const grid=document.getElementById('eng-grid'); if(!grid) return;
-  const w=getW();
-  const eng=(S.engajamento&&S.engajamento[w])||{};
-  grid.innerHTML=ENG_ITEMS.map(item=>`
-    <div class="eng-item">
-      <div class="eng-label">${item.label}</div>
-      <div class="eng-hint">${item.hint}</div>
-      <div class="eng-btns">
-        ${item.opts.map((o,i)=>`<button class="eng-btn${eng[item.id]===o?' '+item.cls[i]:''}" onclick="selectEng('${item.id}','${o}')">${o}</button>`).join('')}
-      </div>
-    </div>`).join('');
-  const el=document.getElementById('eng-week-label'); if(el) el.textContent=`Semana ${w} do programa`;
-  // score bar
-  const sc=engScore(eng);
-  const wrap=document.getElementById('eng-score-wrap');
-  if(wrap){ wrap.style.display=sc.filled>0?'flex':'none'; }
-  if(sc.filled>0){
-    const pct=Math.round((sc.total/sc.max)*100);
-    const col=pct>=70?'var(--green)':pct>=40?'var(--yellow)':'var(--red)';
-    const lbl=pct>=70?'Engajamento alto':pct>=40?'Engajamento médio':'Engajamento baixo';
-    const numEl=document.getElementById('eng-score-num'); if(numEl){numEl.textContent=pct+'%';numEl.style.color=col;}
-    const barEl=document.getElementById('eng-score-bar'); if(barEl){barEl.style.width=pct+'%';barEl.style.background=col;}
-    const lblEl=document.getElementById('eng-score-label'); if(lblEl) lblEl.textContent=lbl+' — '+sc.total+'/'+sc.max+' pts';
-  }
+function renderDecisaoCP2(){
   const decCard=document.getElementById('cp2-decision-card');
-  if(decCard) decCard.style.display=(S.checkpoint||1)>=2?'block':'none';
+  if(!decCard) return;
+  decCard.style.display=(S.checkpoint||1)>=2?'block':'none';
   if((S.checkpoint||1)>=2){
     const dec=S.cp2Decision||{};
     currentDecision=dec.choice||null;
     ['renova','upgrade','encerra'].forEach(k=>{ const b=document.getElementById('dec-'+k); if(b) b.classList.toggle('selected',dec.choice===(k==='renova'?'renova17k':k==='upgrade'?'upgrade42k':'encerra')); });
     const just=document.getElementById('decision-just'); if(just) just.value=dec.justificativa||'';
   }
-}
-
-async function selectEng(itemId, val){
-  const w=getW();
-  if(!S.engajamento) S.engajamento={};
-  if(!S.engajamento[w]) S.engajamento[w]={};
-  S.engajamento[w][itemId]=val;
-  await save({engajamento:S.engajamento});
 }
 
 // ── ACTIONS ──
