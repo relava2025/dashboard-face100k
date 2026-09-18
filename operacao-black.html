@@ -723,7 +723,7 @@ body.menu-oculto .t-logo,body.menu-oculto .t-sep{display:block}
   .step-body{padding:2px 14px 15px 14px}
   .step-meta{display:none}
   .dr-lanc{gap:10px}
-  .dr-lanc .btn-primary{width:auto;flex:1;padding:10px 14px;font-size:12.5px}
+  .dr-lanc .btn-primary{flex:1 1 100%;width:100%;padding:11px;font-size:12.5px}
 
   /* alvos de toque maiores */
   .side-item{padding:12px 11px}
@@ -756,6 +756,27 @@ body.menu-oculto .t-logo,body.menu-oculto .t-sep{display:block}
   .cal-ev-nome,.cal-ev-meta{display:none}
   .cal-mais{font-size:8.5px;padding-left:0;text-align:center}
   .cal-sem-data{padding:11px 14px;gap:8px}
+}
+
+/* ficha do cliente no celular */
+@media(max-width:760px){
+  .dr-hdr-top{flex-wrap:wrap;gap:10px}
+  .dr-hdr-top>div:first-child{flex:1 1 100%;order:1;padding-right:34px}
+  .dr-name{font-size:20px;line-height:1.2}
+  .dr-resp{font-size:12px;margin-top:5px}
+  .dr-hdr-acts{order:2;margin-left:0;width:100%;justify-content:flex-start}
+  .dr-hdr-acts .x-btn{position:absolute;top:16px;right:14px}
+  .dr-sec-lbl{flex-wrap:wrap}
+  .dr-sec-lbl::after{min-width:24px}
+  .part-hdr{gap:9px;padding:12px 14px}
+  .part-t{font-size:11px;letter-spacing:.02em}
+  .part-num{font-size:9px;padding:3px 7px}
+  .dr-lanc{padding:13px 14px;gap:10px 12px}
+  .dr-lanc-l{flex:1 1 auto;min-width:0}
+  .dr-lanc-val{font-size:17px}
+  .dr-lanc>div:nth-child(2){text-align:right}
+  .step-name{font-size:13.5px;line-height:1.35}
+  .step-grupo{padding:10px 14px 8px}
 }
 
 /* ============ RESPONSIVO ============ */
@@ -1796,7 +1817,7 @@ function renderDrawer(){
         const atrasada = !isDone && x.fase==='prep' && prev && prev < hojeISO();
         const metaTxt = isDone ? (et.dataConclusao ? 'concluída em '+fmtData(et.dataConclusao) : 'concluída')
                        : atrasada ? 'atrasada · vencia '+fmtData(prev)
-                       : prev ? (auto ? 'prevista '+fmtData(prev) : 'prevista '+fmtData(prev)+' ·')
+                       : prev ? 'prevista '+fmtData(prev)+(auto ? '' : ' · manual')
                        : (STATUS_ETAPA.find(s=>s.v===et.status)||{}).l.toLowerCase();
         return sub + `
         <div class="step" data-k="${x.key}">
@@ -1874,7 +1895,7 @@ function renderDrawer(){
     </div>
 
     <div>
-      <div class="dr-sec-lbl">Caixa <span class="n">·</span> venda, recebido e o que falta entrar</div>
+      <div class="dr-sec-lbl">Caixa<span class="so-desktop"> <span class="n">·</span> venda, recebido e o que falta entrar</span></div>
       <div class="fin-strip">
         <div class="fin-card fc-sale"><div class="fin-lbl">Valor da venda</div><div class="fin-val kv-gold">${brl(f.venda)}</div></div>
         <div class="fin-card fc-in"><div class="fin-lbl">Recebido</div><div class="fin-val kv-money">${brl(f.receb)}</div></div>
@@ -1894,7 +1915,7 @@ function renderDrawer(){
     </div>
 
     <div>
-      <div class="dr-sec-lbl">Etapas da operação ${temLanc(c)?`<span style="text-transform:none;letter-spacing:0;font-weight:400;font-size:11px;color:var(--text-dim)">— prazos calculados a partir de ${fmtData(c.dataLancamento)}</span>`:''}</div>
+      <div class="dr-sec-lbl">Etapas da operação ${temLanc(c)?`<span class="so-desktop" style="text-transform:none;letter-spacing:0;font-weight:400;font-size:11px;color:var(--text-dim)">— prazos calculados a partir de ${fmtData(c.dataLancamento)}</span>`:''}</div>
       <div style="display:flex;flex-direction:column;gap:11px">${etapasHTML}</div>
     </div>
 
