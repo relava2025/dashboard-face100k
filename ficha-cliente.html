@@ -34,7 +34,9 @@ async function loadClients() {
       const o = document.createElement("option");
       o.value = c.id;
       o.textContent = c.name || c.id;
-      if (c.ficha) o.textContent += " ✓";
+      // closer só é preenchido por gente; ficha do sistema fica como parcial
+      if (c.ficha?.closer) o.textContent += " ✓";
+      else if (c.ficha) o.textContent += " ◍ parcial";
       sel.appendChild(o);
     });
   } catch(e) {

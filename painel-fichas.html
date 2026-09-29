@@ -163,6 +163,8 @@ function renderRow(c) {
 
   const formaTag = n.formaPagamento
     ? `<span class="tag ${formaClass(n.formaPagamento)}">${formaLabel(n.formaPagamento)}</span>`
+    : f.origem === "sistema"
+    ? `<span class="tag tag-parcial">Parcial — falta o closer</span>`
     : "";
 
   const closerBadge = f.closer ? `<span class="person-badge">${f.closer}</span>` : `<span class="person-empty">—</span>`;
@@ -332,6 +334,7 @@ option{background:#0C1E3F}
 .th{font-size:10px;font-weight:700;font-family:'Montserrat',sans-serif;text-transform:uppercase;letter-spacing:.12em;color:var(--text-dim)}
 
 /* ROWS */
+.tag-parcial{background:rgba(234,179,8,0.10);color:#EAB308;border:1px solid rgba(234,179,8,0.25)}
 .ficha-row{background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:8px;overflow:hidden;transition:border-color .15s}
 .ficha-row.expanded{border-color:var(--amber-border)}
 .row-main{display:grid;grid-template-columns:2fr 2fr 2fr 1.2fr 2fr 28px;gap:12px;align-items:center;padding:14px 18px;cursor:pointer;user-select:none;transition:background .12s}
