@@ -1794,6 +1794,13 @@ function coletarRespostas(){
 
 // ── FICHA DO CLOSER (somente leitura; preenchida em ficha-cliente.html) ──
 const FICHA_BLOCOS = [
+  {icon:'\u{1FAAA}', titulo:'Identificação', hint:'Programa, início e contato', campos:[
+    {lbl:'Programa contratado', get:f=>f.programa},
+    {lbl:'Início no programa',  get:f=>fichaData(f.inicio)},
+    {lbl:'Especialidade',       get:f=>f.estrutura?.segmento},
+    {lbl:'Instagram',           get:f=>f.insta, tipo:'insta'},
+    {lbl:'WhatsApp',            get:f=>f.contato?.whatsapp, tipo:'zap'},
+  ]},
   {icon:'\u{1F4B0}', titulo:'Faturamento', hint:'O que a clínica fatura hoje', campos:[
     {lbl:'Total da clínica', get:f=>f.estrutura?.faturamento},
     {lbl:'Só de cirurgias',  get:f=>f.estrutura?.faturamentoCirurgias},
@@ -1813,9 +1820,39 @@ const FICHA_BLOCOS = [
   {icon:'\u{1F3AF}', titulo:'Objetivo', hint:'O combinado na venda', campos:[
     {lbl:'Meta de faturamento', get:f=>f.objetivo?.meta},
     {lbl:'Prazo',               get:f=>f.objetivo?.prazo},
-    {lbl:'Especialidade',       get:f=>f.estrutura?.segmento},
   ]},
 ];
+
+function fichaData(iso){
+  if(!iso || !/^\d{4}-\d{2}-\d{2}/.test(String(iso))) return iso||'';
+  const [a,m,d]=String(iso).slice(0,10).split('-');
+  return `${d}/${m}/${a}`;
+}
+function fichaMoeda(v){
+  if(v===undefined || v===null || v==='') return null;
+  const n=Number(v); if(isNaN(n)) return null;
+  return 'R$ '+n.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+const FORMA_PGTO = {
+  entrada_parcelas:'Entrada + parcelas', avista:'À vista',
+  parcelado:'Parcelado', recorrente:'Recorrente'
+};
+/* valores digitados como link viram link clicável */
+function fichaValor(campo, f){
+  const bruto = campo.get(f);
+  const v = fichaTexto(bruto);
+  if(!v) return null;
+  if(campo.tipo==='insta'){
+    const user=String(bruto).trim().replace(/^@/,'').replace(/^https?:\/\/(www\.)?instagram\.com\//,'').replace(/\/$/,'');
+    return `<a href="https://instagram.com/${encodeURIComponent(user)}" target="_blank" rel="noopener" style="color:var(--amber);text-decoration:none">@${escHtml(user)}</a>`;
+  }
+  if(campo.tipo==='zap'){
+    const num=String(bruto).replace(/\D/g,'');
+    const full=num.length<=11 ? '55'+num : num;
+    return `<a href="https://wa.me/${full}" target="_blank" rel="noopener" style="color:var(--green);text-decoration:none">${escHtml(String(bruto).trim())}</a>`;
+  }
+  return v;
+}
 
 function fichaTexto(v){
   if(v===undefined||v===null||String(v).trim()==='') return null;
@@ -1856,7 +1893,7 @@ function renderFicha(){
   FICHA_BLOCOS.forEach(b=>{
     const preenchidos=b.campos.filter(c=>fichaTexto(c.get(f))).length;
     const linhas=b.campos.map(c=>{
-      const v=fichaTexto(c.get(f));
+      const v=fichaValor(c,f);
       return `<div class="dmap-row${v?'':' dmap-vazio'}">
         <div class="dmap-lbl">${c.lbl}</div>
         <div class="dmap-val">${v||'<span class="dmap-pend">não preenchido</span>'}</div>
@@ -1875,6 +1912,70 @@ function renderFicha(){
     </div>`;
   });
   html+=`</div>`;
+
+  /* ── Negociação: o que o closer fechou (valores e parcelas) ── */
+  const ng = f.negociacao;
+  if(ng){
+    const parcelas = Array.isArray(ng.parcelas) ? ng.parcelas : [];
+    const pagas = parcelas.filter(p=>p && p.recebido).length;
+    const entradaPaga = ng.entrada && ng.entrada.recebido;
+    const recebido = (entradaPaga ? Number(ng.entrada.valor||0) : 0)
+                   + parcelas.filter(p=>p && p.recebido).reduce((t,p)=>t+Number(p.valor||0),0);
+    const total = Number(ng.valorTotal||0)
+               || (Number(ng.entrada?.valor||0) + parcelas.reduce((t,p)=>t+Number(p.valor||0),0));
+
+    const linha = (lbl,val)=>`<div class="dmap-row${val?'':' dmap-vazio'}">
+        <div class="dmap-lbl">${lbl}</div>
+        <div class="dmap-val">${val||'<span class="dmap-pend">não preenchido</span>'}</div>
+      </div>`;
+
+    let corpo = '';
+    corpo += linha('Forma de pagamento', FORMA_PGTO[ng.formaPagamento] || fichaTexto(ng.formaPagamento));
+    corpo += linha('Valor total', fichaMoeda(total));
+    if(ng.entrada){
+      const ev = fichaMoeda(ng.entrada.valor);
+      const ed = fichaData(ng.entrada.data);
+      const tag = ng.entrada.recebido
+        ? '<span style="color:var(--green);font-weight:600"> · recebida</span>'
+        : '<span style="color:var(--yellow);font-weight:600"> · pendente</span>';
+      corpo += linha('Entrada', ev ? `${ev}${ed?' em '+ed:''}${tag}` : null);
+    }
+    if(parcelas.length || ng.nParcelas){
+      const n = ng.nParcelas || parcelas.length;
+      const vp = fichaMoeda(ng.valorParcela);
+      corpo += linha('Parcelas', n ? `${n}x${vp?' de '+vp:''}` : null);
+    }
+    corpo += linha('1ª parcela', fichaData(ng.data1Parcela));
+
+    let tabela = '';
+    if(parcelas.length){
+      tabela = `<div style="padding:2px 16px 14px">
+        <div style="font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-dim);margin:10px 0 8px">Cronograma de parcelas</div>
+        ${parcelas.map((p,i)=>{
+          const ok = p && p.recebido;
+          return `<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border-light);font-size:13px">
+            <span style="width:26px;color:var(--text-dim);font-family:'JetBrains Mono',monospace">${p?.n || (i+1)}</span>
+            <span style="flex:1;color:var(--text-sec)">${fichaData(p?.dataVenc)||'sem data'}</span>
+            <span style="font-family:'JetBrains Mono',monospace;color:var(--text)">${fichaMoeda(p?.valor)||'—'}</span>
+            <span style="width:76px;text-align:right;font-size:11px;font-weight:700;color:${ok?'var(--green)':'var(--yellow)'}">${ok?'RECEBIDA':'PENDENTE'}</span>
+          </div>`;
+        }).join('')}
+      </div>`;
+    }
+
+    html+=`<div class="dmap-card" style="margin-top:14px">
+      <div class="dmap-hdr">
+        <span class="dmap-icon">\u{1F4B3}</span>
+        <div style="flex:1">
+          <div class="dmap-titulo">Negociação</div>
+          <div class="dmap-hint">Como a venda foi fechada</div>
+        </div>
+        ${total ? `<span class="dmap-cnt${recebido>=total&&total>0?' dmap-cnt-ok':''}">${fichaMoeda(recebido)||'R$ 0,00'} de ${fichaMoeda(total)}</span>` : ''}
+      </div>
+      <div class="dmap-body">${corpo}</div>
+      ${tabela}
+    </div>`;
+  }
 
   const obs=fichaTexto(f.obs);
   if(obs){
