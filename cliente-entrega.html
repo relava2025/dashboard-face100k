@@ -1768,6 +1768,7 @@ function renderCallsOnb(){
             ${c.dia?`<span class="cf-dia">${c.dia}</span>`:''}
             <span class="cf-resp">${c.resp}</span>
             ${c.sentimento?`<span class="cf-sentimento">${c.sentimento}</span>`:''}
+            ${d.resumo?'<span class="cf-resumo-tag">resumo &#10003;</span>':''}
           </div>
         </div>
         ${progressHtml}
@@ -1777,6 +1778,10 @@ function renderCallsOnb(){
         <div class="cf-date-row" style="margin-bottom:14px">
           <span class="cf-date-label">Data realizada:</span>
           <input class="cf-date-input" type="date" value="${d.data||''}" onchange="saveCallOnb('${c.id}','data',this.value)" onclick="event.stopPropagation()">
+        </div>
+        <div class="mkt-resumo">
+          <div class="mkt-resumo-lbl">Resumo da call</div>
+          <textarea class="mkt-resumo-txt" placeholder="O que foi discutido, o que foi decidido e como o cliente reagiu." onclick="event.stopPropagation()" oninput="saveCallOnb('${c.id}','resumo',this.value)">${d.resumo||''}</textarea>
         </div>
         <div style="border-top:1px solid var(--border-light);padding-top:14px;margin-bottom:14px">
           <div style="font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.16em;font-weight:700;font-family:'Montserrat',sans-serif;margin-bottom:12px">Perguntas do diagnóstico</div>
