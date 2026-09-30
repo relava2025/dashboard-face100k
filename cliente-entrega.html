@@ -46,6 +46,14 @@
 html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:15px;line-height:1.5}
 body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(0deg,transparent 24%,rgba(201,164,92,0.025) 25%,rgba(201,164,92,0.025) 26%,transparent 27%),linear-gradient(90deg,transparent 24%,rgba(201,164,92,0.025) 25%,rgba(201,164,92,0.025) 26%,transparent 27%);background-size:50px 50px;pointer-events:none;z-index:0}
 
+/* RESUMO DA CALL */
+.mkt-resumo{border:1px solid var(--amber-border);background:rgba(201,164,92,0.05);border-radius:8px;padding:12px 14px;margin-bottom:16px}
+.mkt-resumo-lbl{font-size:10px;color:var(--amber);text-transform:uppercase;letter-spacing:.16em;font-weight:700;font-family:'Montserrat',sans-serif;margin-bottom:9px}
+.mkt-resumo-txt{width:100%;min-height:104px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'Inter',sans-serif;font-size:13.5px;line-height:1.6;padding:10px 12px;outline:none;resize:vertical;transition:border-color .15s}
+.mkt-resumo-txt:focus{border-color:var(--amber)}
+.mkt-resumo-txt::placeholder{color:var(--text-dim)}
+.cf-resumo-tag{font-size:11px;color:var(--green);font-weight:600}
+
 /* ITENS DAS FASES DE MARKETING */
 .mkt-item{display:flex;align-items:flex-start;gap:11px;padding:9px 0;border-bottom:1px solid var(--border-light)}
 .mkt-item:last-child{border-bottom:none}
@@ -1460,19 +1468,39 @@ function renderTimeline(){
     if(atualId===null) atualId=c.id;
   }
 
-  steps.innerHTML=CALLS_ONB.map(c=>{
-    const d=onb[c.id]||{};
-    const done=!!d.realizada;
-    const ativo=c.id===atualId;
+  /* as 3 fases de marketing entram como um grupo no fim da jornada */
+  const mkt=S.callsMkt||{};
+  const feitasMkt=FASES_MKT.filter(c=>mkt[c.id]?.realizada).length;
+  let atualMkt=null;
+  for(const c of FASES_MKT){
+    if(mkt[c.id]?.realizada) continue;
+    const it=mkt[c.id]?.itens||{};
+    if(Object.values(it).some(v=>v&&v.ok)){ atualMkt=c.id; break; }
+  }
+  const etapasMkt=FASES_MKT.map((c,i)=>({
+    id:c.id, num:CALLS_ONB.length+i+1, title:c.title.replace(/^Checkpoint (\d) — /,'CP$1 — '),
+    grupo: i===0 ? 'Marketing' : null, tipo:'mkt',
+    done: !!mkt[c.id]?.realizada, ativo: c.id===atualMkt, data: mkt[c.id]?.data||''
+  }));
+  const etapasOnb=CALLS_ONB.map(c=>({
+    id:c.id, num:c.num, title:c.title, grupo:c.grupo||null, tipo:'onb',
+    done: !!onb[c.id]?.realizada, ativo: c.id===atualId, data: onb[c.id]?.data||''
+  }));
+  const etapas=etapasOnb.concat(etapasMkt);
+
+  steps.innerHTML=etapas.map(c=>{
+    const done=c.done;
+    const ativo=c.ativo;
     const cls=done?'td-done':ativo?'td-active':'td-future';
     const inner=done
       ? `<svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="#000" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`
       : c.num;
-    const quando=d.data ? fmtDataCurta(d.data) : (done?'—':'');
+    const quando=c.data ? fmtDataCurta(c.data) : (done?'—':'');
     const sep=c.grupo
       ? `<div class="tl-fase"><div class="tl-fase-lbl">${c.grupo}</div><div class="tl-fase-line"></div></div>`
       : '';
-    return sep+`<div class="tl-step" onclick="irParaCall('${c.id}')" title="${c.title}">
+    const ir=c.tipo==='mkt'?`irParaFaseMkt('${c.id}')`:`irParaCall('${c.id}')`;
+    return sep+`<div class="tl-step" onclick="${ir}" title="${c.title}">
       <div class="tl-dot ${cls}">${inner}</div>
       <div class="tl-name">${c.title}</div>
       <div class="tl-weeks">${quando}</div>
@@ -1480,13 +1508,27 @@ function renderTimeline(){
   }).join('');
 
   const sub=document.getElementById('journey-sub');
-  if(sub) sub.textContent=`${feitas} de ${CALLS_ONB.length} etapas realizadas · ${Math.round(feitas/CALLS_ONB.length*100)}%`;
+  const totalEt=etapas.length, feitasEt=feitas+feitasMkt;
+  if(sub) sub.textContent=`${feitasEt} de ${totalEt} etapas realizadas · ${Math.round(feitasEt/totalEt*100)}%`;
 }
 
 // dd/mm a partir de AAAA-MM-DD
 function fmtDataCurta(iso){
   if(!iso||iso.length<10) return '';
   return iso.slice(8,10)+'/'+iso.slice(5,7);
+}
+
+// clicar numa fase de marketing abre o checkpoint correspondente
+function irParaFaseMkt(id){
+  const btn=document.querySelector("[onclick*=\"showPage('calls'\"]");
+  showPage('calls', btn, 'mnav-calls');
+  if(!window._mktOpen) window._mktOpen={};
+  window._mktOpen[id]=true;
+  renderMkt();
+  setTimeout(()=>{
+    const el=document.getElementById('cf-item-'+id);
+    if(el) el.scrollIntoView({behavior:'smooth',block:'center'});
+  },80);
 }
 
 // clicar numa etapa da jornada abre a call correspondente
@@ -1800,6 +1842,7 @@ function renderMkt(){
             ${d.data?`<span class="cf-dia">${fmtDataCurta(d.data)}</span>`:''}
             <span class="cf-resp">${d.resp?escHtml(d.resp):'sem responsável'}</span>
             <span class="cf-sentimento">${feitos}/${total} entregas</span>
+            ${(d.resumo||d.obs)?'<span class="cf-resumo-tag">resumo &#10003;</span>':''}
           </div>
         </div>
         ${progressHtml}
@@ -1812,13 +1855,13 @@ function renderMkt(){
           <span class="cf-date-label" style="margin-left:8px">Responsável:</span>
           <input class="cf-date-input" type="text" style="width:auto;flex:1;max-width:190px" placeholder="quem conduziu" value="${(d.resp||'').replace(/"/g,'&quot;')}" onclick="event.stopPropagation()" oninput="saveMkt('${c.id}','resp',this.value)">
         </div>
+        <div class="mkt-resumo">
+          <div class="mkt-resumo-lbl">Resumo da call</div>
+          <textarea class="mkt-resumo-txt" placeholder="O que foi discutido, o que foi decidido e como o cliente reagiu." onclick="event.stopPropagation()" oninput="saveMkt('${c.id}','resumo',this.value)">${d.resumo||d.obs||''}</textarea>
+        </div>
         <div style="border-top:1px solid var(--border-light);padding-top:14px;margin-bottom:14px">
           <div style="font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.16em;font-weight:700;font-family:'Montserrat',sans-serif;margin-bottom:12px">Entregas previstas — marque o que foi feito na call</div>
           ${itensHtml}
-        </div>
-        <div class="cf-date-row" style="align-items:flex-start;gap:12px;margin-bottom:12px;flex-wrap:wrap">
-          <span class="cf-date-label" style="min-width:150px;padding-top:6px">Observações da call</span>
-          <textarea class="cf-notes" style="min-height:52px;margin-bottom:0" placeholder="o que mais precisa ficar registrado" onclick="event.stopPropagation()" oninput="saveMkt('${c.id}','obs',this.value)">${d.obs||''}</textarea>
         </div>
         <div class="cf-date-row" style="margin-bottom:14px;gap:12px;flex-wrap:wrap">
           <span class="cf-date-label" style="min-width:150px">Link da gravação</span>
@@ -1845,7 +1888,7 @@ async function toggleMktItem(faseId, itemId){
   const atual=S.callsMkt[faseId].itens[itemId]||{};
   atual.ok=!atual.ok;
   S.callsMkt[faseId].itens[itemId]=atual;
-  renderMkt();
+  renderMkt(); renderTimeline();
   await save({callsMkt:S.callsMkt});
 }
 
@@ -1883,7 +1926,7 @@ async function toggleMkt(id, val){
   S.callsMkt[id].realizada=val;
   if(val && !S.callsMkt[id].data) S.callsMkt[id].data=new Date().toISOString().split('T')[0];
   await save({callsMkt:S.callsMkt});
-  renderMkt();
+  renderMkt(); renderTimeline();
 }
 
 function toggleCallOnbOpen(id){
