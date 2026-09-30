@@ -46,6 +46,19 @@
 html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:15px;line-height:1.5}
 body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(0deg,transparent 24%,rgba(201,164,92,0.025) 25%,rgba(201,164,92,0.025) 26%,transparent 27%),linear-gradient(90deg,transparent 24%,rgba(201,164,92,0.025) 25%,rgba(201,164,92,0.025) 26%,transparent 27%);background-size:50px 50px;pointer-events:none;z-index:0}
 
+/* ITENS DAS FASES DE MARKETING */
+.mkt-item{display:flex;align-items:flex-start;gap:11px;padding:9px 0;border-bottom:1px solid var(--border-light)}
+.mkt-item:last-child{border-bottom:none}
+.mkt-chk{width:19px;height:19px;flex-shrink:0;margin-top:2px;border-radius:5px;border:1.5px solid var(--border);background:var(--surface2);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;transition:background-color .15s,border-color .15s}
+.mkt-chk:hover{border-color:var(--amber)}
+.mkt-chk.on{background:var(--green);border-color:var(--green)}
+.mkt-corpo{flex:1;min-width:0}
+.mkt-lbl{font-size:13px;line-height:1.45;color:var(--text-sec);margin-bottom:5px}
+.mkt-ok .mkt-lbl{color:var(--text)}
+.mkt-nota{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'Inter',sans-serif;font-size:12.5px;padding:6px 9px;outline:none;transition:border-color .15s}
+.mkt-nota:focus{border-color:var(--amber)}
+.mkt-nota::placeholder{color:var(--text-dim)}
+
 /* LOADING */
 #loading{position:fixed;inset:0;background:var(--bg);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
 #loading.hidden{display:none}
@@ -1752,28 +1765,29 @@ function renderMkt(){
 
   container.innerHTML=FASES_MKT.map(c=>{
     const d=dados[c.id]||{};
-    const resps=d.respostas||{};
+    const it=d.itens||{};
     const isDone=!!d.realizada;
     const isOpen=!!window._mktOpen[c.id];
-    const filledCount=c.perguntas.filter(q=>resps[q.id]&&resps[q.id].trim()).length;
+    const feitos=c.itens.filter(i=>it[i.id]?.ok).length;
+    const total=c.itens.length;
 
-    const progressHtml=filledCount>0&&!isDone
-      ? `<span class="cf-status-pill cf-pill-pend" style="background:rgba(201,164,92,0.1);color:var(--amber);border-color:var(--amber-border)">${filledCount}/${c.perguntas.length} preench.</span>`
-      : `<span class="cf-status-pill ${isDone?'cf-pill-done':'cf-pill-pend'}">${isDone?'Realizada':'Pendente'}</span>`;
+    const progressHtml=isDone
+      ? `<span class="cf-status-pill cf-pill-done">Realizada</span>`
+      : feitos>0
+      ? `<span class="cf-status-pill cf-pill-pend" style="background:rgba(201,164,92,0.1);color:var(--amber);border-color:var(--amber-border)">${feitos}/${total} entregues</span>`
+      : `<span class="cf-status-pill cf-pill-pend">Pendente</span>`;
 
-    const pergsHtml=c.perguntas.map(q=>{
-      const val=resps[q.id]||'';
-      const inputEl= q.type==='textarea'
-        ? `<textarea class="cf-notes" style="min-height:52px;margin-bottom:0" placeholder="${q.placeholder||''}" onclick="event.stopPropagation()" oninput="saveMktResp('${c.id}','${q.id}',this.value)">${val}</textarea>`
-        : q.type==='link'
-        ? `<div class="cf-link-wrap">
-            <input class="cf-date-input cf-link-input" type="url" placeholder="${q.placeholder||'https://...'}" value="${val.replace(/"/g,'&quot;')}" onclick="event.stopPropagation()" oninput="saveMktResp('${c.id}','${q.id}',this.value);syncLinkBtn(this)">
-            <a class="cf-link-open" target="_blank" rel="noopener" onclick="event.stopPropagation()" href="${val.replace(/"/g,'&quot;')||'#'}" style="${val?'':'display:none'}">abrir &#8599;</a>
-           </div>`
-        : `<input class="cf-date-input" type="text" style="width:auto;flex:1;max-width:220px" placeholder="${q.placeholder||''}" value="${val.replace(/"/g,'&quot;')}" onclick="event.stopPropagation()" oninput="saveMktResp('${c.id}','${q.id}',this.value)">`;
-      return`<div class="cf-date-row" style="align-items:flex-start;gap:12px;margin-bottom:10px;flex-wrap:wrap">
-        <span class="cf-date-label" style="min-width:180px;padding-top:${q.type==='textarea'?'6':'5'}px">${q.label}</span>
-        ${inputEl}
+    const itensHtml=c.itens.map((i,idx)=>{
+      const v=it[i.id]||{};
+      const ok=!!v.ok;
+      const nota=(v.nota||'').replace(/"/g,'&quot;');
+      return `<div class="mkt-item${ok?' mkt-ok':''}">
+        <button class="mkt-chk${ok?' on':''}" onclick="event.stopPropagation();toggleMktItem('${c.id}','${i.id}')" title="${ok?'Marcar como não entregue':'Marcar como entregue'}">${ok?checkSvg:''}</button>
+        <div class="mkt-corpo">
+          <div class="mkt-lbl">${idx+1}. ${i.label}</div>
+          <input class="mkt-nota" type="text" placeholder="o que ficou definido (opcional)" value="${nota}"
+                 onclick="event.stopPropagation()" oninput="saveMktItemNota('${c.id}','${i.id}',this.value)">
+        </div>
       </div>`;
     }).join('');
 
@@ -1784,7 +1798,8 @@ function renderMkt(){
           <div class="cf-title">${c.title}</div>
           <div class="cf-meta">
             ${d.data?`<span class="cf-dia">${fmtDataCurta(d.data)}</span>`:''}
-            ${d.resp?`<span class="cf-resp">${escHtml(d.resp)}</span>`:'<span class="cf-resp">sem responsável</span>'}
+            <span class="cf-resp">${d.resp?escHtml(d.resp):'sem responsável'}</span>
+            <span class="cf-sentimento">${feitos}/${total} entregas</span>
           </div>
         </div>
         ${progressHtml}
@@ -1795,11 +1810,22 @@ function renderMkt(){
           <span class="cf-date-label">Data da call:</span>
           <input class="cf-date-input" type="date" value="${d.data||''}" onchange="saveMkt('${c.id}','data',this.value)" onclick="event.stopPropagation()">
           <span class="cf-date-label" style="margin-left:8px">Responsável:</span>
-          <input class="cf-date-input" type="text" style="width:auto;flex:1;max-width:200px" placeholder="quem conduziu" value="${(d.resp||'').replace(/"/g,'&quot;')}" onclick="event.stopPropagation()" oninput="saveMkt('${c.id}','resp',this.value)">
+          <input class="cf-date-input" type="text" style="width:auto;flex:1;max-width:190px" placeholder="quem conduziu" value="${(d.resp||'').replace(/"/g,'&quot;')}" onclick="event.stopPropagation()" oninput="saveMkt('${c.id}','resp',this.value)">
         </div>
         <div style="border-top:1px solid var(--border-light);padding-top:14px;margin-bottom:14px">
-          <div style="font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.16em;font-weight:700;font-family:'Montserrat',sans-serif;margin-bottom:12px">O que foi entregue nesta call</div>
-          ${pergsHtml}
+          <div style="font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.16em;font-weight:700;font-family:'Montserrat',sans-serif;margin-bottom:12px">Entregas previstas — marque o que foi feito na call</div>
+          ${itensHtml}
+        </div>
+        <div class="cf-date-row" style="align-items:flex-start;gap:12px;margin-bottom:12px;flex-wrap:wrap">
+          <span class="cf-date-label" style="min-width:150px;padding-top:6px">Observações da call</span>
+          <textarea class="cf-notes" style="min-height:52px;margin-bottom:0" placeholder="o que mais precisa ficar registrado" onclick="event.stopPropagation()" oninput="saveMkt('${c.id}','obs',this.value)">${d.obs||''}</textarea>
+        </div>
+        <div class="cf-date-row" style="margin-bottom:14px;gap:12px;flex-wrap:wrap">
+          <span class="cf-date-label" style="min-width:150px">Link da gravação</span>
+          <div class="cf-link-wrap">
+            <input class="cf-date-input cf-link-input" type="url" placeholder="https://..." value="${(d.link_grav||'').replace(/"/g,'&quot;')}" onclick="event.stopPropagation()" oninput="saveMkt('${c.id}','link_grav',this.value);syncLinkBtn(this)">
+            <a class="cf-link-open" target="_blank" rel="noopener" onclick="event.stopPropagation()" href="${(d.link_grav||'').replace(/"/g,'&quot;')||'#'}" style="${d.link_grav?'':'display:none'}">abrir &#8599;</a>
+          </div>
         </div>
         <div style="display:flex;align-items:center;gap:8px">
           ${!isDone
@@ -1812,6 +1838,27 @@ function renderMkt(){
   }).join('');
 }
 
+async function toggleMktItem(faseId, itemId){
+  if(!S.callsMkt) S.callsMkt={};
+  if(!S.callsMkt[faseId]) S.callsMkt[faseId]={};
+  if(!S.callsMkt[faseId].itens) S.callsMkt[faseId].itens={};
+  const atual=S.callsMkt[faseId].itens[itemId]||{};
+  atual.ok=!atual.ok;
+  S.callsMkt[faseId].itens[itemId]=atual;
+  renderMkt();
+  await save({callsMkt:S.callsMkt});
+}
+
+function saveMktItemNota(faseId, itemId, val){
+  if(!S.callsMkt) S.callsMkt={};
+  if(!S.callsMkt[faseId]) S.callsMkt[faseId]={};
+  if(!S.callsMkt[faseId].itens) S.callsMkt[faseId].itens={};
+  if(!S.callsMkt[faseId].itens[itemId]) S.callsMkt[faseId].itens[itemId]={};
+  S.callsMkt[faseId].itens[itemId].nota=val;
+  clearTimeout(_mktTimer);
+  _mktTimer=setTimeout(()=>{ save({callsMkt:S.callsMkt}); }, 900);
+}
+
 function toggleMktOpen(id){
   if(!window._mktOpen) window._mktOpen={};
   window._mktOpen[id]=!window._mktOpen[id];
@@ -1820,15 +1867,6 @@ function toggleMktOpen(id){
   if(el) el.classList.toggle('cf-open',isOpen);
   const chev=document.getElementById('cf-chev-'+id);
   if(chev) chev.innerHTML=isOpen?'&#8963;':'&#8964;';
-}
-
-function saveMktResp(faseId, qId, val){
-  if(!S.callsMkt) S.callsMkt={};
-  if(!S.callsMkt[faseId]) S.callsMkt[faseId]={};
-  if(!S.callsMkt[faseId].respostas) S.callsMkt[faseId].respostas={};
-  S.callsMkt[faseId].respostas[qId]=val;
-  clearTimeout(_mktTimer);
-  _mktTimer=setTimeout(()=>{ save({callsMkt:S.callsMkt}); }, 900);
 }
 
 function saveMkt(faseId, campo, val){
@@ -2787,28 +2825,39 @@ const ONB_CONC_DEFAULTS = ['Boas-Vindas realizada','Metas definidas','Cliente in
 // Estrutura definida no PDF "ALTERAÇÕES - HISTÓRICO DE CALLS".
 // Tipos de campo: text | textarea | select | link (input + botão abrir).
 // `grupo` insere um separador de seção antes do item.
-/* ── FASES DE MARKETING — o responsável preenche depois de cada call ── */
+/* ── FASES DE MARKETING — o responsável preenche depois de cada call ──
+   Cada item é uma entrega prevista em contrato: marca-se o que foi feito
+   e registra-se o que ficou definido. */
 const FASES_MKT = [
-  { id:'mkt1', num:1, icon:'\u{1F3AF}', title:'Checkpoint 1 — Posicionamento e Autoridade',
-    perguntas:[
-      { id:'icp',       label:'ICP',                                     type:'textarea', placeholder:'Quem é o cliente ideal definido nesta call' },
-      { id:'mecanismo', label:'Construção e ajuste do mecanismo único',  type:'textarea', placeholder:'Qual o mecanismo único e o que foi ajustado' },
-      { id:'entregue',  label:'Outras entregas desta call',              type:'textarea', placeholder:'O que mais foi entregue' },
-      { id:'link_grav', label:'Link da gravação',                        type:'link' },
-    ]},
-  { id:'mkt2', num:2, icon:'\u{1F4C8}', title:'Checkpoint 2 — Geração de Oportunidades',
-    perguntas:[
-      { id:'entregue',  label:'O que foi entregue nesta call',           type:'textarea', placeholder:'Entregas desta fase' },
-      { id:'proximos',  label:'Próximos passos definidos',               type:'textarea', placeholder:'O que o cliente precisa executar até a próxima call' },
-      { id:'link_grav', label:'Link da gravação',                        type:'link' },
-    ]},
-  { id:'mkt3', num:3, icon:'\u{1F50E}', title:'Checkpoint 3 — Análise de Implementação e Próximos Passos',
-    perguntas:[
-      { id:'analise',   label:'Análise da implementação',                type:'textarea', placeholder:'O que foi implementado e qual o resultado' },
-      { id:'ajustes',   label:'Ajustes definidos',                       type:'textarea', placeholder:'O que precisa ser corrigido' },
-      { id:'proximos',  label:'Próximos passos',                         type:'textarea', placeholder:'Encaminhamentos após a análise' },
-      { id:'link_grav', label:'Link da gravação',                        type:'link' },
-    ]},
+  { id:'mkt1', num:1, icon:'\u{1F3AF}', title:'Checkpoint 1 — Posicionamento e Autoridade', itens:[
+    { id:'icp',            label:'Definição e/ou validação do ICP (Perfil de Cliente Ideal)' },
+    { id:'mecanismo',      label:'Construção e ajuste do mecanismo único, com base no método e diferenciais da contratante' },
+    { id:'perfil',         label:'Estruturação estratégica do perfil digital (bio, destaques e demais elementos de posicionamento)' },
+    { id:'conteudos_icp',  label:'Direcionamento dos conteúdos do perfil para comunicação com o ICP definido' },
+    { id:'referencias',    label:'Disponibilização de referências e modelos de conteúdo para inspiração' },
+    { id:'plano_conteudo', label:'Plano de ação para produção e publicação de novos conteúdos até o próximo checkpoint' },
+    { id:'proximos',       label:'Próximos passos da implementação e agendamento do checkpoint subsequente' },
+  ]},
+  { id:'mkt2', num:2, icon:'\u{1F4C8}', title:'Checkpoint 2 — Geração de Oportunidades', itens:[
+    { id:'rotina',          label:'Estruturação de uma rotina de produção de conteúdo adequada à realidade da contratante' },
+    { id:'formatos',        label:'Direcionamento sobre formatos e estratégias de conteúdo voltados à geração de oportunidades' },
+    { id:'mecanismo_aplic', label:'Aplicação do mecanismo único na comunicação e nos conteúdos' },
+    { id:'cta',             label:'Orientação sobre conteúdos com chamadas para ação e estratégias de levantada de mão' },
+    { id:'referencias',     label:'Apresentação de referências e exemplos práticos de produção de conteúdo' },
+    { id:'midia_paga',      label:'Direcionamento sobre mídia paga e impulsionamento para potencializar a distribuição' },
+    { id:'analise_trafego', label:'Análise da estrutura existente de tráfego pago e das contas de anúncios, quando aplicável' },
+    { id:'testes',          label:'Definição dos testes e ações a serem executados até o próximo checkpoint' },
+  ]},
+  { id:'mkt3', num:3, icon:'\u{1F50E}', title:'Checkpoint 3 — Análise de Implementação e Próximos Passos', itens:[
+    { id:'revisao',        label:'Revisão das ações executadas nos checkpoints anteriores' },
+    { id:'anl_posic',      label:'Análise do posicionamento, comunicação e conteúdos implementados' },
+    { id:'anl_oportun',    label:'Análise das ações realizadas para geração de oportunidades e potenciais clientes' },
+    { id:'indicadores',    label:'Verificação dos resultados e indicadores obtidos durante o período de implementação' },
+    { id:'melhorias',      label:'Identificação de pontos de melhoria, gargalos e oportunidades' },
+    { id:'duvidas',        label:'Esclarecimento de dúvidas relacionadas à execução das estratégias apresentadas' },
+    { id:'ajustes',        label:'Direcionamento dos ajustes necessários para continuidade da estratégia' },
+    { id:'proximos',       label:'Definição dos próximos passos recomendados para evolução da operação' },
+  ]},
 ];
 
 const CALLS_ONB = [
