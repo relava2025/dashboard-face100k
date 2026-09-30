@@ -1013,6 +1013,18 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
       <div id="page-calls" class="page">
         <div class="brand-rail"></div>
 
+        <!-- Fases de Marketing -->
+        <div class="section-card">
+          <div class="sc-header">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="flex-shrink:0"><path d="M2 12.5V9M6 12.5V5.5M10 12.5V3M14 12.5V7" stroke="var(--green)" stroke-width="1.4" stroke-linecap="round"/></svg>
+            <div class="sc-title">Fases de Marketing</div>
+            <div class="sc-sub" id="mkt-sub">0 de 3 checkpoints</div>
+          </div>
+          <div class="sc-body">
+            <div class="call-fixed-wrap" id="mkt-list"></div>
+          </div>
+        </div>
+
         <!-- 7 Calls de Onboarding -->
         <div class="section-card">
           <div class="sc-header">
@@ -1643,6 +1655,7 @@ function renderCalls(){
     </div>`).join('');
   // Render fixed onboarding calls
   renderCallsOnb();
+  renderMkt();
 }
 
 function renderCallsOnb(){
@@ -1723,6 +1736,116 @@ function renderCallsOnb(){
       </div>
     </div>`;
   }).join('');
+}
+
+/* ── Fases de Marketing: mesmo formato das calls, estado próprio (S.callsMkt) ── */
+let _mktTimer=null;
+
+function renderMkt(){
+  const container=document.getElementById('mkt-list'); if(!container) return;
+  const dados=S.callsMkt||{};
+  if(!window._mktOpen) window._mktOpen={};
+  const done=FASES_MKT.filter(c=>dados[c.id]?.realizada).length;
+  const sub=document.getElementById('mkt-sub');
+  if(sub) sub.textContent=done+' de '+FASES_MKT.length+' checkpoints';
+  const checkSvg=`<svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L4 7.5L10 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+  container.innerHTML=FASES_MKT.map(c=>{
+    const d=dados[c.id]||{};
+    const resps=d.respostas||{};
+    const isDone=!!d.realizada;
+    const isOpen=!!window._mktOpen[c.id];
+    const filledCount=c.perguntas.filter(q=>resps[q.id]&&resps[q.id].trim()).length;
+
+    const progressHtml=filledCount>0&&!isDone
+      ? `<span class="cf-status-pill cf-pill-pend" style="background:rgba(201,164,92,0.1);color:var(--amber);border-color:var(--amber-border)">${filledCount}/${c.perguntas.length} preench.</span>`
+      : `<span class="cf-status-pill ${isDone?'cf-pill-done':'cf-pill-pend'}">${isDone?'Realizada':'Pendente'}</span>`;
+
+    const pergsHtml=c.perguntas.map(q=>{
+      const val=resps[q.id]||'';
+      const inputEl= q.type==='textarea'
+        ? `<textarea class="cf-notes" style="min-height:52px;margin-bottom:0" placeholder="${q.placeholder||''}" onclick="event.stopPropagation()" oninput="saveMktResp('${c.id}','${q.id}',this.value)">${val}</textarea>`
+        : q.type==='link'
+        ? `<div class="cf-link-wrap">
+            <input class="cf-date-input cf-link-input" type="url" placeholder="${q.placeholder||'https://...'}" value="${val.replace(/"/g,'&quot;')}" onclick="event.stopPropagation()" oninput="saveMktResp('${c.id}','${q.id}',this.value);syncLinkBtn(this)">
+            <a class="cf-link-open" target="_blank" rel="noopener" onclick="event.stopPropagation()" href="${val.replace(/"/g,'&quot;')||'#'}" style="${val?'':'display:none'}">abrir &#8599;</a>
+           </div>`
+        : `<input class="cf-date-input" type="text" style="width:auto;flex:1;max-width:220px" placeholder="${q.placeholder||''}" value="${val.replace(/"/g,'&quot;')}" onclick="event.stopPropagation()" oninput="saveMktResp('${c.id}','${q.id}',this.value)">`;
+      return`<div class="cf-date-row" style="align-items:flex-start;gap:12px;margin-bottom:10px;flex-wrap:wrap">
+        <span class="cf-date-label" style="min-width:180px;padding-top:${q.type==='textarea'?'6':'5'}px">${q.label}</span>
+        ${inputEl}
+      </div>`;
+    }).join('');
+
+    return `<div class="call-fixed${isDone?' cf-done':''}${isOpen?' cf-open':''}" id="cf-item-${c.id}">
+      <div class="cf-hdr" onclick="toggleMktOpen('${c.id}')">
+        <div class="cf-num">${isDone?checkSvg:c.num}</div>
+        <div class="cf-info">
+          <div class="cf-title">${c.title}</div>
+          <div class="cf-meta">
+            ${d.data?`<span class="cf-dia">${fmtDataCurta(d.data)}</span>`:''}
+            ${d.resp?`<span class="cf-resp">${escHtml(d.resp)}</span>`:'<span class="cf-resp">sem responsável</span>'}
+          </div>
+        </div>
+        ${progressHtml}
+        <span style="color:var(--text-sec);font-size:18px;padding-left:4px;flex-shrink:0;transition:transform .2s" id="cf-chev-${c.id}">${isOpen?'&#8963;':'&#8964;'}</span>
+      </div>
+      <div class="cf-body">
+        <div class="cf-date-row" style="margin-bottom:10px;gap:12px;flex-wrap:wrap">
+          <span class="cf-date-label">Data da call:</span>
+          <input class="cf-date-input" type="date" value="${d.data||''}" onchange="saveMkt('${c.id}','data',this.value)" onclick="event.stopPropagation()">
+          <span class="cf-date-label" style="margin-left:8px">Responsável:</span>
+          <input class="cf-date-input" type="text" style="width:auto;flex:1;max-width:200px" placeholder="quem conduziu" value="${(d.resp||'').replace(/"/g,'&quot;')}" onclick="event.stopPropagation()" oninput="saveMkt('${c.id}','resp',this.value)">
+        </div>
+        <div style="border-top:1px solid var(--border-light);padding-top:14px;margin-bottom:14px">
+          <div style="font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.16em;font-weight:700;font-family:'Montserrat',sans-serif;margin-bottom:12px">O que foi entregue nesta call</div>
+          ${pergsHtml}
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          ${!isDone
+            ?`<button class="cf-btn-mark" onclick="event.stopPropagation();toggleMkt('${c.id}',true)">Marcar como realizada</button>`
+            :`<button class="cf-btn-mark" style="background:var(--green);color:#fff;border-color:var(--green)">${checkSvg} Realizada</button>
+              <button class="cf-btn-unmark" onclick="event.stopPropagation();toggleMkt('${c.id}',false)">Desfazer</button>`}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleMktOpen(id){
+  if(!window._mktOpen) window._mktOpen={};
+  window._mktOpen[id]=!window._mktOpen[id];
+  const isOpen=window._mktOpen[id];
+  const el=document.getElementById('cf-item-'+id);
+  if(el) el.classList.toggle('cf-open',isOpen);
+  const chev=document.getElementById('cf-chev-'+id);
+  if(chev) chev.innerHTML=isOpen?'&#8963;':'&#8964;';
+}
+
+function saveMktResp(faseId, qId, val){
+  if(!S.callsMkt) S.callsMkt={};
+  if(!S.callsMkt[faseId]) S.callsMkt[faseId]={};
+  if(!S.callsMkt[faseId].respostas) S.callsMkt[faseId].respostas={};
+  S.callsMkt[faseId].respostas[qId]=val;
+  clearTimeout(_mktTimer);
+  _mktTimer=setTimeout(()=>{ save({callsMkt:S.callsMkt}); }, 900);
+}
+
+function saveMkt(faseId, campo, val){
+  if(!S.callsMkt) S.callsMkt={};
+  if(!S.callsMkt[faseId]) S.callsMkt[faseId]={};
+  S.callsMkt[faseId][campo]=val;
+  clearTimeout(_mktTimer);
+  _mktTimer=setTimeout(()=>{ save({callsMkt:S.callsMkt}); renderMkt(); }, 900);
+}
+
+async function toggleMkt(id, val){
+  if(!S.callsMkt) S.callsMkt={};
+  if(!S.callsMkt[id]) S.callsMkt[id]={};
+  S.callsMkt[id].realizada=val;
+  if(val && !S.callsMkt[id].data) S.callsMkt[id].data=new Date().toISOString().split('T')[0];
+  await save({callsMkt:S.callsMkt});
+  renderMkt();
 }
 
 function toggleCallOnbOpen(id){
@@ -2664,6 +2787,30 @@ const ONB_CONC_DEFAULTS = ['Boas-Vindas realizada','Metas definidas','Cliente in
 // Estrutura definida no PDF "ALTERAÇÕES - HISTÓRICO DE CALLS".
 // Tipos de campo: text | textarea | select | link (input + botão abrir).
 // `grupo` insere um separador de seção antes do item.
+/* ── FASES DE MARKETING — o responsável preenche depois de cada call ── */
+const FASES_MKT = [
+  { id:'mkt1', num:1, icon:'\u{1F3AF}', title:'Checkpoint 1 — Posicionamento e Autoridade',
+    perguntas:[
+      { id:'icp',       label:'ICP',                                     type:'textarea', placeholder:'Quem é o cliente ideal definido nesta call' },
+      { id:'mecanismo', label:'Construção e ajuste do mecanismo único',  type:'textarea', placeholder:'Qual o mecanismo único e o que foi ajustado' },
+      { id:'entregue',  label:'Outras entregas desta call',              type:'textarea', placeholder:'O que mais foi entregue' },
+      { id:'link_grav', label:'Link da gravação',                        type:'link' },
+    ]},
+  { id:'mkt2', num:2, icon:'\u{1F4C8}', title:'Checkpoint 2 — Geração de Oportunidades',
+    perguntas:[
+      { id:'entregue',  label:'O que foi entregue nesta call',           type:'textarea', placeholder:'Entregas desta fase' },
+      { id:'proximos',  label:'Próximos passos definidos',               type:'textarea', placeholder:'O que o cliente precisa executar até a próxima call' },
+      { id:'link_grav', label:'Link da gravação',                        type:'link' },
+    ]},
+  { id:'mkt3', num:3, icon:'\u{1F50E}', title:'Checkpoint 3 — Análise de Implementação e Próximos Passos',
+    perguntas:[
+      { id:'analise',   label:'Análise da implementação',                type:'textarea', placeholder:'O que foi implementado e qual o resultado' },
+      { id:'ajustes',   label:'Ajustes definidos',                       type:'textarea', placeholder:'O que precisa ser corrigido' },
+      { id:'proximos',  label:'Próximos passos',                         type:'textarea', placeholder:'Encaminhamentos após a análise' },
+      { id:'link_grav', label:'Link da gravação',                        type:'link' },
+    ]},
+];
+
 const CALLS_ONB = [
   { id:'c1', num:1, type:'call', title:'Call de Boas-vindas', resp:'', dia:'', sentimento:'',
     icon:'👋', diagTitle:'Diagnóstico Inicial do Cliente',
