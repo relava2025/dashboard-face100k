@@ -80,18 +80,55 @@ button,input,select,textarea{font-family:inherit}
 .sec-label::after{content:'';flex:1;height:1px;background:var(--border)}
 .sec-label:first-of-type{margin-top:0}
 
-/* KPIs */
-.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
-.kpi{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 18px;position:relative;overflow:hidden}
-.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
-.k-amber::before{background:var(--amber)}.k-green::before{background:var(--green)}
-.k-yellow::before{background:var(--yellow)}.k-red::before{background:var(--red)}
-.k-blue::before{background:var(--blue)}.k-blue2::before{background:var(--blue)}.k-purple::before{background:var(--purple)}
-.kpi-lbl{font-size:10px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.14em;margin-bottom:8px;font-family:'Montserrat',sans-serif;font-weight:600}
-.kpi-val{font-size:23px;font-weight:800;font-family:'JetBrains Mono',monospace;line-height:1.1;letter-spacing:-.04em}
-.kpi-val.big{font-family:'Montserrat',sans-serif;font-size:30px;letter-spacing:-.03em}
+/* HERO FINANCEIRO */
+.fin-hero{display:grid;grid-template-columns:1.15fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:13px;overflow:hidden;box-shadow:0 2px 4px rgba(0,0,0,.2),0 12px 30px rgba(0,0,0,.18)}
+.fh-caixa{background:linear-gradient(150deg,#0E2348,#0A1A33);padding:22px 24px}
+.fh-lbl{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--text-sec);margin-bottom:10px}
+.fh-fig{font-family:'JetBrains Mono',monospace;font-size:clamp(30px,4vw,44px);font-weight:700;letter-spacing:-.045em;line-height:1;color:var(--green)}
+.fh-de{font-size:13px;color:var(--text-sec);margin-top:9px}
+.fh-de b{color:var(--text);font-family:'JetBrains Mono',monospace;font-weight:500}
+.fh-meter{height:13px;border-radius:100px;background:rgba(255,255,255,.07);overflow:hidden;margin-top:17px}
+.fh-fill{height:100%;border-radius:100px;background:linear-gradient(90deg,#15803D,var(--green));box-shadow:2px 0 0 0 #0A1A33;transition:width .6s cubic-bezier(.34,1.1,.64,1)}
+.fh-legenda{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:9px;font-size:12px;color:var(--text-sec)}
+.fh-legenda b{font-family:'JetBrains Mono',monospace;font-weight:700}
+.fh-in{display:flex;align-items:center;gap:6px}
+.fh-in i{width:9px;height:9px;border-radius:3px;background:var(--green);flex-shrink:0}
+.fh-in b{color:var(--green)}
+.fh-out b{color:var(--yellow)}
+.fh-tiles{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border)}
+.ft{background:linear-gradient(150deg,#0C1E3F,#0A182F);padding:16px 19px;display:flex;flex-direction:column;justify-content:center}
+.ft-lbl{font-family:'Montserrat',sans-serif;font-size:9.5px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--text-sec);margin-bottom:7px}
+.ft-val{font-family:'JetBrains Mono',monospace;font-size:19px;font-weight:700;letter-spacing:-.035em;line-height:1.1}
+.ft-sub{font-size:11px;color:var(--text-dim);margin-top:5px}
 .v-amber{color:var(--amber)}.v-green{color:var(--green)}.v-yellow{color:var(--yellow)}.v-red{color:var(--red)}.v-blue{color:var(--blue)}.v-purple{color:var(--purple)}.v-text{color:var(--text)}
-.kpi-sub{font-size:11px;color:var(--text-dim);margin-top:5px}
+
+/* CHIPS DE ATALHO */
+.chips{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}
+.chip{display:inline-flex;align-items:center;gap:7px;padding:7px 14px;border-radius:100px;border:1px solid var(--border);background:var(--surface);color:var(--text-sec);font-family:'Montserrat',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:border-color .15s,color .15s,background-color .15s}
+.chip:hover{border-color:var(--text-sec);color:var(--text)}
+.chip.on{background:var(--amber-dim);border-color:var(--amber-border);color:var(--amber)}
+.chip b{font-family:'JetBrains Mono',monospace;font-size:11px;background:rgba(255,255,255,.06);border-radius:20px;padding:1px 7px;font-weight:700}
+.chip.on b{background:rgba(201,164,92,.18)}
+.chip.crit.on{background:var(--red-dim);border-color:var(--red-border);color:var(--red)}
+.chip.crit.on b{background:rgba(239,68,68,.18)}
+.f-export{background:transparent;border:1px solid var(--border);color:var(--text-sec);border-radius:6px;padding:8px 13px;font-size:12.5px;cursor:pointer;font-family:'Montserrat',sans-serif;font-weight:600}
+.f-export:hover{border-color:var(--green);color:var(--green)}
+
+/* RESUMO POR CLOSER */
+.por-closer{border:1px solid var(--border);border-radius:11px;overflow:hidden;margin-bottom:16px;background:var(--surface)}
+.pc-hdr{display:flex;align-items:center;gap:10px;padding:11px 16px;cursor:pointer;user-select:none}
+.pc-hdr:hover{background:var(--surface2)}
+.pc-t{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-sec)}
+.pc-sub{font-size:12px;color:var(--text-dim)}
+.pc-chev{margin-left:auto;color:var(--text-dim);font-size:13px;transition:transform .2s}
+.por-closer.aberto .pc-chev{transform:rotate(180deg)}
+.pc-corpo{display:none;border-top:1px solid var(--border-light)}
+.por-closer.aberto .pc-corpo{display:block}
+.pc-row{display:grid;grid-template-columns:1fr repeat(4,minmax(96px,120px));gap:12px;align-items:center;padding:10px 16px;border-bottom:1px solid var(--border-light);font-size:13px}
+.pc-row:last-child{border-bottom:none}
+.pc-row.cab{font-family:'Montserrat',sans-serif;font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);background:var(--surface2)}
+.pc-nome{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc-num{font-family:'JetBrains Mono',monospace;text-align:right;white-space:nowrap}
 
 /* BUCKETS (cobrança e encerramento) */
 .bucket-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
@@ -330,14 +367,24 @@ table.tbl{width:100%;border-collapse:collapse;min-width:1080px}
 
   <!-- 3. DASHBOARD FINANCEIRO GERAL -->
   <div class="sec-label">Dashboard financeiro geral</div>
-  <div class="kpi-row">
-    <div class="kpi k-amber"><div class="kpi-lbl">Total vendido</div><div class="kpi-val v-amber" id="k-vendido">R$ 0,00</div><div class="kpi-sub" id="k-vendido-sub">—</div></div>
-    <div class="kpi k-green"><div class="kpi-lbl">Total recebido</div><div class="kpi-val v-green" id="k-recebido">R$ 0,00</div><div class="kpi-sub" id="k-recebido-sub">—</div></div>
-    <div class="kpi k-yellow"><div class="kpi-lbl">Total a receber</div><div class="kpi-val v-yellow" id="k-areceber">R$ 0,00</div><div class="kpi-sub" id="k-areceber-sub">—</div></div>
-    <div class="kpi k-red"><div class="kpi-lbl">Total inadimplente</div><div class="kpi-val v-red" id="k-inad">R$ 0,00</div><div class="kpi-sub" id="k-inad-sub">—</div></div>
-    <div class="kpi k-blue"><div class="kpi-lbl">Clientes ativos</div><div class="kpi-val big v-blue" id="k-ativos">0</div><div class="kpi-sub" id="k-ativos-sub">—</div></div>
-    <div class="kpi k-purple"><div class="kpi-lbl">Total de comissões</div><div class="kpi-val v-purple" id="k-comissoes">R$ 0,00</div><div class="kpi-sub" id="k-comissoes-sub">—</div></div>
-    <div class="kpi k-blue2"><div class="kpi-lbl">Contratos quitados</div><div class="kpi-val v-blue" id="k-quitado">R$ 0,00</div><div class="kpi-sub" id="k-quitado-sub">—</div></div>
+
+  <div class="fin-hero">
+    <div class="fh-caixa">
+      <div class="fh-lbl">Caixa recebido</div>
+      <div class="fh-fig" id="k-recebido">R$ 0,00</div>
+      <div class="fh-de">de <b id="k-vendido">R$ 0,00</b> contratados em <span id="k-contratos">0</span> contratos</div>
+      <div class="fh-meter"><div class="fh-fill" id="k-meter" style="width:0%"></div></div>
+      <div class="fh-legenda">
+        <span class="fh-in"><i></i> <b id="k-pct">0%</b> em caixa</span>
+        <span class="fh-out"><b id="k-areceber">R$ 0,00</b> a receber</span>
+      </div>
+    </div>
+    <div class="fh-tiles">
+      <div class="ft"><div class="ft-lbl">Inadimplente</div><div class="ft-val v-red" id="k-inad">R$ 0,00</div><div class="ft-sub" id="k-inad-sub">—</div></div>
+      <div class="ft"><div class="ft-lbl">Contratos quitados</div><div class="ft-val v-blue" id="k-quitado">R$ 0,00</div><div class="ft-sub" id="k-quitado-sub">—</div></div>
+      <div class="ft"><div class="ft-lbl">Comissões</div><div class="ft-val v-purple" id="k-comissoes">R$ 0,00</div><div class="ft-sub" id="k-comissoes-sub">—</div></div>
+      <div class="ft"><div class="ft-lbl">Clientes ativos</div><div class="ft-val v-text" id="k-ativos">0</div><div class="ft-sub" id="k-ativos-sub">—</div></div>
+    </div>
   </div>
 
   <!-- 4. ALERTAS DE COBRANÇA -->
@@ -350,6 +397,7 @@ table.tbl{width:100%;border-collapse:collapse;min-width:1080px}
 
   <!-- 6. PAINEL DE TODOS OS CLIENTES -->
   <div class="sec-label">Todos os clientes</div>
+  <div class="chips" id="chips"></div>
   <div class="filtros">
     <input class="f-inp busca" id="f-nome" type="text" placeholder="Buscar por nome..." oninput="render()">
     <select class="f-sel" id="f-programa" onchange="render()"><option value="">Todos os programas</option></select>
@@ -367,10 +415,19 @@ table.tbl{width:100%;border-collapse:collapse;min-width:1080px}
     </select>
     <label class="f-lbl">Vence até <input class="f-inp" id="f-venc" type="date" onchange="render()"></label>
     <label class="f-lbl">Encerra até <input class="f-inp" id="f-enc" type="date" onchange="render()"></label>
+    <select class="f-sel" id="f-ordem" onchange="render()">
+      <option value="urgencia">Ordenar: mais urgente</option>
+      <option value="receber">Maior valor a receber</option>
+      <option value="venc">Vencimento mais próximo</option>
+      <option value="encerra">Encerramento mais próximo</option>
+      <option value="nome">Nome (A-Z)</option>
+    </select>
     <button class="f-limpar" onclick="limparFiltros()">Limpar</button>
+    <button class="f-export" onclick="exportarCSV()" title="Baixar o que está filtrado em CSV">↓ CSV</button>
   </div>
 
   <div class="totais-bar" id="totais-bar"></div>
+  <div class="por-closer" id="por-closer"></div>
   <div id="cards-grid"></div>
 </div>
 
@@ -517,21 +574,91 @@ function renderKPIs(todos){
     if(c.quitado && c.total>0){ quit+=c.total; qtdQuit++; } });
   const pct = vendido>0 ? Math.round(recebido/vendido*100) : 0;
 
-  $('k-vendido').textContent   = brl(vendido);
   $('k-recebido').textContent  = brl(recebido);
+  $('k-vendido').textContent   = brl(vendido);
+  $('k-contratos').textContent = todos.length;
+  $('k-meter').style.width     = Math.min(100,pct)+'%';
+  $('k-pct').textContent       = pct+'%';
   $('k-areceber').textContent  = brl(aReceber);
+
   $('k-inad').textContent      = brl(inad);
-  $('k-ativos').textContent    = ativos.length;
-  $('k-comissoes').textContent = brl(com);
+  $('k-inad-sub').textContent  = qtdInad ? `${qtdInad} ${qtdInad===1?'cliente em atraso':'clientes em atraso'}` : 'ninguém em atraso';
   $('k-quitado').textContent   = brl(quit);
   $('k-quitado-sub').textContent = qtdQuit ? `${qtdQuit} ${qtdQuit===1?'contrato pago por inteiro':'contratos pagos por inteiro'}` : 'nenhum quitado ainda';
+  $('k-comissoes').textContent = brl(com);
+  $('k-comissoes-sub').textContent = com>0&&vendido>0 ? `${Math.round(com/vendido*100)}% do vendido` : 'a lançar';
+  $('k-ativos').textContent    = ativos.length;
+  $('k-ativos-sub').textContent = `${todos.length-ativos.length} encerrados`;
+}
 
-  $('k-vendido-sub').textContent   = `${todos.length} ${todos.length===1?'contrato':'contratos'}`;
-  $('k-recebido-sub').textContent  = `${pct}% do contratado`;
-  $('k-areceber-sub').textContent  = vendido>0 ? `${100-pct}% em aberto` : '—';
-  $('k-inad-sub').textContent      = qtdInad ? `${qtdInad} ${qtdInad===1?'cliente':'clientes'}` : 'nenhum vencido';
-  $('k-ativos-sub').textContent    = `${todos.length-ativos.length} encerrados`;
-  $('k-comissoes-sub').textContent = com>0 && vendido>0 ? `${Math.round(com/vendido*100)}% do vendido` : 'a lançar';
+/* atalhos de um clique acima dos filtros */
+let atalho = '';
+const ATALHOS = [
+  { k:'',            lbl:'Todos',            cls:'',     teste:()=>true },
+  { k:'inad',        lbl:'Inadimplentes',    cls:'crit', teste:c=>c.inadimplente>0 },
+  { k:'7d',          lbl:'Vence em 7 dias',  cls:'',     teste:c=>{const d=diasAte(c.proxVenc);return d!==null&&d>=0&&d<=7;} },
+  { k:'encerrando',  lbl:'Encerrando',       cls:'',     teste:c=>c.statusPrograma==='encerrando' },
+  { k:'quit',        lbl:'Quitados',         cls:'',     teste:c=>c.quitado&&c.total>0 },
+  { k:'semficha',    lbl:'Sem ficha',        cls:'',     teste:c=>!c.temFicha },
+];
+function setAtalho(k){ atalho = (atalho===k && k!=='') ? '' : k; render(); }
+function renderChips(todos){
+  $('chips').innerHTML = ATALHOS.map(a=>{
+    const n = a.k==='' ? todos.length : todos.filter(a.teste).length;
+    return `<button class="chip ${a.cls}${atalho===a.k?' on':''}" onclick="setAtalho('${a.k}')">${a.lbl}<b>${n}</b></button>`;
+  }).join('');
+}
+
+/* resumo de quanto cada closer vendeu e quanto já entrou */
+function renderPorCloser(lista){
+  const el = $('por-closer');
+  const grupos = {};
+  lista.forEach(c=>{
+    const k = c.closer || '— sem closer';
+    const g = grupos[k] = grupos[k] || { n:0, v:0, r:0, ar:0, com:0 };
+    g.n++; g.v+=c.total; g.r+=c.recebido; g.ar+=c.aReceber; g.com+=c.comissoes.closer;
+  });
+  const nomes = Object.keys(grupos).sort((a,b)=>grupos[b].v-grupos[a].v);
+  const aberto = el.classList.contains('aberto');
+  el.className = 'por-closer' + (aberto?' aberto':'');
+  el.innerHTML = `
+    <div class="pc-hdr" onclick="this.parentNode.classList.toggle('aberto')">
+      <span class="pc-t">Por closer</span>
+      <span class="pc-sub">${nomes.length} ${nomes.length===1?'responsável':'responsáveis'} nesta seleção</span>
+      <span class="pc-chev">▾</span>
+    </div>
+    <div class="pc-corpo">
+      <div class="pc-row cab"><span>Closer</span><span class="pc-num">Clientes</span><span class="pc-num">Vendido</span><span class="pc-num">Recebido</span><span class="pc-num">A receber</span></div>
+      ${nomes.map(n=>{
+        const g=grupos[n];
+        return `<div class="pc-row">
+          <span class="pc-nome">${esc(n)}</span>
+          <span class="pc-num">${g.n}</span>
+          <span class="pc-num">${brl(g.v)}</span>
+          <span class="pc-num" style="color:var(--green)">${brl(g.r)}</span>
+          <span class="pc-num" style="color:${g.ar>0?'var(--yellow)':'var(--text-dim)'}">${brl(g.ar)}</span>
+        </div>`;
+      }).join('')}
+    </div>`;
+}
+
+/* baixa o que está filtrado, para conferência fora do sistema */
+function exportarCSV(){
+  const lista = filtrar(clientes.map(derivar));
+  if(!lista.length){ toast('Nada para exportar nesse filtro','error'); return; }
+  const cab = ['Cliente','Programa','Telefone','Closer','SDR','Venda','Recebido','A receber','Inadimplente','Proximo vencimento','Encerramento','Adimplencia','Comissoes'];
+  const linhas = lista.map(c=>[c.nome,c.programa,c.telefone,c.closer,c.sdr,
+    c.total.toFixed(2).replace('.',','), c.recebido.toFixed(2).replace('.',','),
+    c.aReceber.toFixed(2).replace('.',','), c.inadimplente.toFixed(2).replace('.',','),
+    c.proxVenc?fmtData(c.proxVenc):'', c.encerra?fmtData(c.encerra):'',
+    LBL_ADIMP[c.adimplencia], c.totalComissoes.toFixed(2).replace('.',',')]);
+  const csv = [cab, ...linhas].map(l=>l.map(v=>`"${String(v==null?'':v).replace(/"/g,'""')}"`).join(';')).join('\r\n');
+  const url = URL.createObjectURL(new Blob(['\ufeff'+csv], {type:'text/csv;charset=utf-8'}));
+  const a = document.createElement('a');
+  a.href = url; a.download = `receita-${hojeISO()}.csv`;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url), 1000);
+  toast(`${lista.length} ${lista.length===1?'cliente exportado':'clientes exportados'}`,'success');
 }
 
 /* cada cobrança em aberto cai numa única faixa de prazo */
@@ -616,7 +743,9 @@ function filtrar(todos){
   const nome=($('f-nome').value||'').toLowerCase().trim();
   const prog=$('f-programa').value, st=$('f-status').value, ad=$('f-inad').value;
   const venc=$('f-venc').value, enc=$('f-enc').value;
+  const at = ATALHOS.find(a=>a.k===atalho);
   return todos.filter(c=>{
+    if(at && atalho && !at.teste(c)) return false;
     if(nome && !c.nome.toLowerCase().includes(nome)) return false;
     if(prog && c.programa!==prog) return false;
     if(st && c.statusPrograma!==st) return false;
@@ -632,8 +761,28 @@ const ORDEM_PROG = { aceleracao:1, ativacao:2, mentoria:3 };
 const NOME_PROG  = { aceleracao:'Aceleração', ativacao:'Ativação', mentoria:'Mentoria' };
 const COR_PROG   = { aceleracao:'var(--blue)', ativacao:'var(--purple)', mentoria:'#14B8A6' };
 
+function ordenar(lista){
+  const ordem = $('f-ordem') ? $('f-ordem').value : 'urgencia';
+  const dias = c => { const d=diasAte(c.proxVenc); return d===null?99999:d; };
+  const diasEnc = c => c.diasEnc===null?99999:c.diasEnc;
+  return lista.slice().sort((a,b)=>{
+    switch(ordem){
+      case 'receber': return b.aReceber-a.aReceber;
+      case 'venc':    return dias(a)-dias(b);
+      case 'encerra': return diasEnc(a)-diasEnc(b);
+      case 'nome':    return a.nome.localeCompare(b.nome,'pt-BR');
+      default:
+        if((b.inadimplente>0)!==(a.inadimplente>0)) return b.inadimplente>0?1:-1;
+        if(b.inadimplente!==a.inadimplente) return b.inadimplente-a.inadimplente;
+        return dias(a)-dias(b);
+    }
+  });
+}
+
 function renderTabela(todos){
-  const lista = filtrar(todos);
+  const lista = ordenar(filtrar(todos));
+  renderChips(todos);
+  renderPorCloser(lista);
   const el = $('cards-grid');
 
   const t = lista.reduce((a,c)=>({v:a.v+c.total,r:a.r+c.recebido,ar:a.ar+c.aReceber,i:a.i+c.inadimplente,co:a.co+c.totalComissoes}),{v:0,r:0,ar:0,i:0,co:0});
@@ -655,10 +804,7 @@ function renderTabela(todos){
   const chaves = Object.keys(grupos).sort((a,b)=>(ORDEM_PROG[a]||9)-(ORDEM_PROG[b]||9));
 
   el.innerHTML = chaves.map(k=>{
-    const itens = grupos[k].sort((a,b)=>{
-      if((b.inadimplente>0)!==(a.inadimplente>0)) return b.inadimplente>0?1:-1;
-      return a.nome.localeCompare(b.nome,'pt-BR');
-    });
+    const itens = grupos[k];
     const cor = COR_PROG[k] || 'var(--text-sec)';
     return `<div class="grupo-divisor">
         <span class="grupo-nome" style="color:${cor}">${NOME_PROG[k]||'Sem modalidade'}</span>
@@ -733,6 +879,8 @@ function cardCliente(c){
 function limparFiltros(){
   ['f-nome','f-venc','f-enc'].forEach(id=>$(id).value='');
   ['f-programa','f-status','f-inad'].forEach(id=>$(id).value='');
+  $('f-ordem').value='urgencia';
+  atalho='';
   render();
 }
 
