@@ -246,6 +246,10 @@ table.tbl{width:100%;border-collapse:collapse;min-width:1080px}
 .bk-chk{width:17px;height:17px;margin-right:7px;border-radius:4px;border:1px solid var(--border);background:var(--surface2);color:var(--green);font-size:10px;line-height:1;cursor:pointer;padding:0;vertical-align:middle;transition:background-color .15s,border-color .15s}
 .bk-chk:hover{background:var(--green);color:#000;border-color:var(--green)}
 
+.moeda-wrap{position:relative;width:100%}
+.moeda-wrap .inp{padding-left:36px;text-align:right}
+.moeda-pre{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--text-dim);pointer-events:none}
+
 /* MODO DE EDIÇÃO */
 .btn-editar{display:inline-flex;align-items:center;gap:7px;padding:7px 13px;border-radius:6px;background:var(--amber-dim);border:1px solid var(--amber-border);color:var(--amber);font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;transition:background-color .15s,color .15s}
 .btn-editar:hover{background:var(--amber);color:#000}
@@ -794,6 +798,14 @@ function setR(caminho, valor){
   alvo[partes[partes.length-1]] = valor;
 }
 function setNum(caminho, valor){ setR(caminho, num(valor)); }
+/* máscara de reais: digita só número e o campo mostra 30.000,00 */
+function moedaNum(el){
+  let dig = String(el.value).replace(/\D/g,'').replace(/^0+/,'');
+  const n = dig ? Number(dig)/100 : 0;
+  el.value = n ? n.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}) : '';
+  return n;
+}
+function moedaTxt(v){ return v ? Number(v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}) : ''; }
 function marcarCobrancaR(idx){
   const ng = rascunho.ficha.negociacao;
   if(idx==='E'){
@@ -885,7 +897,7 @@ function renderCliente(){
       <button class="cob-chk${x.pago?' on':''}" ${ed?`onclick="marcarCobrancaR(${idx})"`:'disabled'} title="${ed?'Marcar ou desmarcar o recebimento':'Clique em Editar ficha para alterar'}">${x.pago?'<svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L4 7.5L10 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>':''}</button>
       <span class="cob-rot">${esc(x.rotulo)}</span>
       ${ed ? `<input class="cob-inp" type="date" value="${x.venc}" onchange="editarCobrancaR(${idx},'venc',this.value)">
-              <input class="cob-inp mono" type="number" min="0" step="0.01" value="${x.valor||''}" placeholder="0,00" onchange="editarCobrancaR(${idx},'valor',this.value)">`
+              <input class="cob-inp mono" type="text" inputmode="decimal" value="${moedaTxt(x.valor)}" placeholder="0,00" oninput="moedaNum(this)" onchange="editarCobrancaR(${idx},'valor',moedaNum(this))">`
            : `<span class="cob-ro">${x.venc?fmtData(x.venc):'sem data'}</span>
               <span class="cob-ro mono">${brl(x.valor)}</span>`}
       <span class="cob-st" style="color:${cor}">${st}</span>
@@ -918,9 +930,9 @@ function renderCliente(){
         : txt(c.programaKey==='ativacao'?'Ativação':c.programaKey==='mentoria'?'Mentoria':'Aceleração'))}
       ${linha('Data de início', ed?`<input class="inp" type="date" value="${c.inicio}" onchange="setR('startDate',this.value);renderCliente()">`:txt(c.inicio?fmtData(c.inicio):''))}
       ${linha('Encerramento', mono(c.encerra?`<span style="color:${c.diasEnc!==null&&c.diasEnc<=30?'var(--yellow)':'var(--text-sec)'}">${fmtData(c.encerra)}</span>${c.diasEnc!==null?` <span style="font-size:12px;color:var(--text-dim)">(${c.diasEnc<0?'há '+Math.abs(c.diasEnc)+' dias':'faltam '+c.diasEnc+' dias'})</span>`:''}`:'<span style="color:var(--text-dim)">defina a data de início</span>'))}
-      ${linha('Valor total da venda', ed?`<input class="inp mono" type="number" min="0" step="0.01" placeholder="soma das cobranças" value="${num(ng.valorTotal)||''}" oninput="setNum('ficha.negociacao.valorTotal',this.value)">`:mono(`<span class="v-amber">${c.total?brl(c.total):'—'}</span>`))}
-      ${linha('Valor de entrada', ed?`<input class="inp mono" type="number" min="0" step="0.01" placeholder="0,00" value="${c.entrada||''}" oninput="setNum('ficha.negociacao.entrada.valor',this.value)">`:mono(c.entrada?brl(c.entrada):'—'))}
-      ${linha('Valor da parcela', ed?`<input class="inp mono" type="number" min="0" step="0.01" placeholder="0,00" value="${c.valorParcela||''}" oninput="setNum('ficha.negociacao.valorParcela',this.value)">`:mono(c.valorParcela?brl(c.valorParcela)+` <span style="font-size:12px;color:var(--text-dim)">(${c.nParcelas}x)</span>`:'—'))}
+      ${linha('Valor total da venda', ed?`<div class="moeda-wrap"><span class="moeda-pre">R$</span><input class="inp mono" type="text" inputmode="decimal" placeholder="0,00" value="${moedaTxt(num(ng.valorTotal))}" oninput="setR('ficha.negociacao.valorTotal', moedaNum(this))"></div>`:mono(`<span class="v-amber">${c.total?brl(c.total):'—'}</span>`))}
+      ${linha('Valor de entrada', ed?`<div class="moeda-wrap"><span class="moeda-pre">R$</span><input class="inp mono" type="text" inputmode="decimal" placeholder="0,00" value="${moedaTxt(c.entrada)}" oninput="setR('ficha.negociacao.entrada.valor', moedaNum(this))"></div>`:mono(c.entrada?brl(c.entrada):'—'))}
+      ${linha('Valor da parcela', ed?`<div class="moeda-wrap"><span class="moeda-pre">R$</span><input class="inp mono" type="text" inputmode="decimal" placeholder="0,00" value="${moedaTxt(c.valorParcela)}" oninput="setR('ficha.negociacao.valorParcela', moedaNum(this))"></div>`:mono(c.valorParcela?brl(c.valorParcela)+` <span style="font-size:12px;color:var(--text-dim)">(${c.nParcelas}x)</span>`:'—'))}
       ${linha('Recebido / a receber', mono(`<span style="color:var(--green)">${brl(c.recebido)}</span> <span style="color:var(--text-dim)">/</span> <span style="color:var(--yellow)">${brl(c.aReceber)}</span>`))}
       <div style="margin-top:12px">
         <span class="campo-lbl" style="display:block;margin-bottom:6px">Observação</span>
@@ -939,7 +951,7 @@ function renderCliente(){
       <div class="com-grid" style="margin-top:14px">
         ${[['closer','Comissão closer'],['sdr','Comissão SDR'],['hunter','Comissão hunter'],['head','Comissão head']].map(([k,lbl])=>`
           <div class="com-item"><label>${lbl}</label>
-            ${ed ? `<input class="inp mono" type="number" min="0" step="0.01" placeholder="0,00" value="${c.comissoes[k]||''}" oninput="setNum('receita.comissoes.${k}',this.value)">`
+            ${ed ? `<div class="moeda-wrap"><span class="moeda-pre">R$</span><input class="inp mono" type="text" inputmode="decimal" placeholder="0,00" value="${moedaTxt(c.comissoes[k])}" oninput="setR('receita.comissoes.${k}', moedaNum(this))"></div>`
                  : `<div class="com-ro">${c.comissoes[k]?brl(c.comissoes[k]):'—'}</div>`}
           </div>`).join('')}
       </div>
