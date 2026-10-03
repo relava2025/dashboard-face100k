@@ -145,6 +145,46 @@ table.tbl{width:100%;border-collapse:collapse;min-width:1080px}
 .tbl-foot{display:flex;align-items:center;gap:16px;padding:11px 15px;border-top:1px solid var(--border);background:var(--surface2);font-size:12.5px;color:var(--text-sec);flex-wrap:wrap}
 .tbl-foot b{font-family:'JetBrains Mono',monospace;color:var(--text)}
 
+/* GRID DE CARDS */
+.totais-bar{display:flex;align-items:center;gap:18px;flex-wrap:wrap;background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:11px 16px;margin-bottom:16px;font-size:12.5px;color:var(--text-sec)}
+.totais-bar b{font-family:'JetBrains Mono',monospace;color:var(--text);font-weight:700}
+.grupo-divisor{display:flex;align-items:center;gap:12px;margin:22px 0 13px}
+.grupo-divisor:first-child{margin-top:0}
+.grupo-nome{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}
+.grupo-linha{flex:1;height:1px;background:var(--border)}
+.grupo-qtd{font-size:12.5px;color:var(--text-sec);white-space:nowrap}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:14px}
+.rc{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;transition:border-color .2s,transform .2s}
+.rc:hover{border-color:var(--amber-border);transform:translateY(-2px)}
+.rc-accent{height:3px}
+.rc-body{padding:15px 17px;flex:1}
+.rc-top{display:flex;align-items:flex-start;gap:10px;margin-bottom:11px;flex-wrap:wrap}
+.rc-av{width:38px;height:38px;border-radius:50%;background:var(--amber-dim);border:1px solid var(--amber-border);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--amber);font-family:'Montserrat',sans-serif;flex-shrink:0}
+.rc-id{flex:1;min-width:0}
+.rc-nome{font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rc-sub{font-size:12.5px;color:var(--text-sec);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rc-prog-row{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.rc-bar{flex:1;height:5px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden}
+.rc-fill{height:100%;border-radius:3px;transition:width .5s}
+.rc-pct{font-size:13px;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--text-sec);min-width:36px;text-align:right}
+.rc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px;margin-bottom:11px}
+.rc-item-lbl{font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em;font-family:'Montserrat',sans-serif;font-weight:600}
+.rc-item-val{font-size:14px;font-weight:600;font-family:'JetBrains Mono',monospace;margin-top:2px}
+.rc-faixa{display:flex;align-items:center;gap:7px;padding:7px 17px;font-size:11.5px;border-top:1px solid var(--border-light)}
+.rc-faixa-dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0;animation:blink .9s infinite alternate}
+@keyframes blink{from{opacity:.3}to{opacity:1}}
+.f-red{background:rgba(239,68,68,.07);color:var(--red)}
+.f-yellow{background:rgba(234,179,8,.06);color:var(--yellow)}
+.f-green{background:rgba(34,197,94,.06);color:var(--green)}
+.rc-acoes{display:flex;flex-wrap:wrap;gap:7px;padding:11px 17px 15px}
+.rc-btn-main{flex:1 1 100%;padding:9px;border-radius:5px;font-size:13px;font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:.03em;background:var(--amber);color:#000;border:none;cursor:pointer;transition:opacity .15s}
+.rc-btn-main:hover{opacity:.88}
+.rc-btn{padding:8px 13px;border-radius:5px;font-size:12.5px;font-weight:600;font-family:'Montserrat',sans-serif;background:var(--surface2);color:var(--text-sec);border:1px solid var(--border);cursor:pointer;text-decoration:none;transition:all .15s}
+.rc-btn:hover{border-color:var(--amber);color:var(--amber)}
+.rc-btn.zap{background:var(--green-dim);color:var(--green);border-color:var(--green-border)}
+.rc-btn.zap:hover{background:var(--green);color:#000}
+.cards-vazio{text-align:center;padding:56px 20px;color:var(--text-sec);font-size:14px}
+
 /* DRAWER DO CLIENTE */
 .scrim{position:fixed;inset:0;background:rgba(3,8,20,.66);z-index:170;opacity:0;visibility:hidden;transition:opacity .25s}
 .scrim.open{opacity:1;visibility:visible}
@@ -318,20 +358,8 @@ table.tbl{width:100%;border-collapse:collapse;min-width:1080px}
     <button class="f-limpar" onclick="limparFiltros()">Limpar</button>
   </div>
 
-  <div class="tabela-wrap">
-    <div class="tbl-scroll">
-      <table class="tbl">
-        <thead><tr>
-          <th>Cliente</th><th>Programa</th><th>Telefone</th>
-          <th class="num">Venda</th><th class="num">Entrada</th><th class="num">Parcela</th>
-          <th class="num">Recebido</th><th class="num">A receber</th>
-          <th>Próx. venc.</th><th>Encerra</th><th>Adimplência</th>
-        </tr></thead>
-        <tbody id="tbl-body"></tbody>
-      </table>
-    </div>
-    <div class="tbl-foot" id="tbl-foot"></div>
-  </div>
+  <div class="totais-bar" id="totais-bar"></div>
+  <div id="cards-grid"></div>
 </div>
 
 <!-- 1 + 2. CARD DO CLIENTE E TIME COMERCIAL -->
@@ -581,41 +609,107 @@ function filtrar(todos){
   });
 }
 
-function renderTabela(todos){
-  const lista = filtrar(todos).sort((a,b)=>{
-    if((b.inadimplente>0)!==(a.inadimplente>0)) return b.inadimplente>0?1:-1;
-    return a.nome.localeCompare(b.nome,'pt-BR');
-  });
-  const body=$('tbl-body');
-  if(!lista.length){
-    body.innerHTML=`<tr><td colspan="11"><div class="tbl-vazio">${todos.length?'Nenhum cliente nesse filtro.':'Nenhum cliente cadastrado.'}</div></td></tr>`;
-    $('tbl-foot').innerHTML='';
-    return;
-  }
-  body.innerHTML = lista.map(c=>{
-    const dv = diasAte(c.proxVenc);
-    const corVenc = dv===null?'var(--text-dim)':dv<0?'var(--red)':dv<=3?'var(--yellow)':'var(--text-sec)';
-    return `<tr onclick="abrirCliente('${c.id}')">
-      <td><div class="td-nome">${esc(c.nome)}</div><div class="td-sub">${c.closer?'Closer: '+esc(c.closer):'<span style="color:var(--red)">sem ficha de closer</span>'}</div></td>
-      <td><span class="pill ${CLS_STATUS[c.statusPrograma]}">${esc(c.programa)}</span></td>
-      <td style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--text-sec)">${esc(c.telefone)||'—'}</td>
-      <td class="td-num">${c.total?brl(c.total):'—'}</td>
-      <td class="td-num">${c.entrada?brl(c.entrada):'—'}</td>
-      <td class="td-num">${c.valorParcela?brl(c.valorParcela)+`<div class="td-sub">${c.nParcelas}x</div>`:'—'}</td>
-      <td class="td-num" style="color:var(--green)">${c.recebido?brl(c.recebido):'—'}</td>
-      <td class="td-num" style="color:${c.aReceber>0?'var(--yellow)':'var(--text-dim)'}">${c.aReceber?brl(c.aReceber):'—'}</td>
-      <td style="color:${corVenc};white-space:nowrap;font-size:12.5px">${c.proxVenc?fmtData(c.proxVenc):'—'}</td>
-      <td style="white-space:nowrap;font-size:12.5px;color:var(--text-sec)">${c.encerra?fmtData(c.encerra):'—'}${c.diasEnc!==null&&c.diasEnc>=0&&c.diasEnc<=30?`<div class="td-sub" style="color:var(--yellow)">faltam ${c.diasEnc}d</div>`:''}</td>
-      <td><span class="pill ${CLS_ADIMP[c.adimplencia]}">${LBL_ADIMP[c.adimplencia]}</span>${c.qtdVencidas?`<div class="td-sub" style="color:var(--red)">${c.qtdVencidas} vencida${c.qtdVencidas>1?'s':''}</div>`:''}</td>
-    </tr>`;
-  }).join('');
+/* cards agrupados por programa, no mesmo formato do painel de entrega */
+const ORDEM_PROG = { aceleracao:1, ativacao:2, mentoria:3 };
+const NOME_PROG  = { aceleracao:'Aceleração', ativacao:'Ativação', mentoria:'Mentoria' };
+const COR_PROG   = { aceleracao:'var(--blue)', ativacao:'var(--purple)', mentoria:'#14B8A6' };
 
-  const t = lista.reduce((a,c)=>({v:a.v+c.total,r:a.r+c.recebido,ar:a.ar+c.aReceber,i:a.i+c.inadimplente}),{v:0,r:0,ar:0,i:0});
-  $('tbl-foot').innerHTML = `<span>${lista.length} de ${todos.length} clientes</span>
+function renderTabela(todos){
+  const lista = filtrar(todos);
+  const el = $('cards-grid');
+
+  const t = lista.reduce((a,c)=>({v:a.v+c.total,r:a.r+c.recebido,ar:a.ar+c.aReceber,i:a.i+c.inadimplente,co:a.co+c.totalComissoes}),{v:0,r:0,ar:0,i:0,co:0});
+  $('totais-bar').innerHTML = `<span>${lista.length} de ${todos.length} clientes</span>
     <span>Vendido <b>${brl(t.v)}</b></span>
     <span>Recebido <b style="color:var(--green)">${brl(t.r)}</b></span>
     <span>A receber <b style="color:var(--yellow)">${brl(t.ar)}</b></span>
-    <span>Inadimplente <b style="color:var(--red)">${brl(t.i)}</b></span>`;
+    <span>Inadimplente <b style="color:var(--red)">${brl(t.i)}</b></span>
+    <span>Comissões <b style="color:var(--purple)">${brl(t.co)}</b></span>`;
+
+  if(!lista.length){
+    el.innerHTML = `<div class="cards-vazio">${todos.length?'Nenhum cliente nesse filtro.':'Nenhum cliente cadastrado.'}</div>`;
+    return;
+  }
+
+  /* agrupa por modalidade; inadimplentes primeiro dentro de cada grupo */
+  const grupos = {};
+  lista.forEach(c=>{ const k=c.programaKey||'outros'; (grupos[k]=grupos[k]||[]).push(c); });
+  const chaves = Object.keys(grupos).sort((a,b)=>(ORDEM_PROG[a]||9)-(ORDEM_PROG[b]||9));
+
+  el.innerHTML = chaves.map(k=>{
+    const itens = grupos[k].sort((a,b)=>{
+      if((b.inadimplente>0)!==(a.inadimplente>0)) return b.inadimplente>0?1:-1;
+      return a.nome.localeCompare(b.nome,'pt-BR');
+    });
+    const cor = COR_PROG[k] || 'var(--text-sec)';
+    return `<div class="grupo-divisor">
+        <span class="grupo-nome" style="color:${cor}">${NOME_PROG[k]||'Sem modalidade'}</span>
+        <span class="grupo-linha"></span>
+        <span class="grupo-qtd">${itens.length} ${itens.length===1?'cliente':'clientes'}</span>
+      </div>
+      <div class="cards">${itens.map(cardCliente).join('')}</div>`;
+  }).join('');
+}
+
+function iniciais(nome){
+  const p = String(nome||'?').trim().split(/\s+/).filter(w=>w.length>2);
+  return ((p[0]||nome||'?')[0] + (p[1]?p[1][0]:'')).toUpperCase();
+}
+
+function cardCliente(c){
+  const pct = c.total>0 ? Math.round(c.recebido/c.total*100) : 0;
+  const acc = c.adimplencia==='inad' ? 'var(--red)' : c.adimplencia==='quit' ? 'var(--green)' : c.statusPrograma==='encerrado' ? 'var(--text-dim)' : 'var(--amber)';
+  const fill = c.adimplencia==='inad' ? 'var(--red)' : pct>=100 ? 'var(--green)' : 'var(--amber)';
+  const dv = diasAte(c.proxVenc);
+  const corVenc = dv===null?'var(--text-dim)':dv<0?'var(--red)':dv<=3?'var(--yellow)':'var(--text-sec)';
+  const zap = String(c.telefone).replace(/\D/g,'');
+  const zapLink = zap ? (zap.length<=11?'55'+zap:zap) : '';
+
+  let faixa = '';
+  if(c.inadimplente>0)
+    faixa = `<div class="rc-faixa f-red"><span class="rc-faixa-dot"></span><span><b>${c.qtdVencidas} ${c.qtdVencidas===1?'cobrança vencida':'cobranças vencidas'}</b> · ${brl(c.inadimplente)} em atraso</span></div>`;
+  else if(c.diasEnc!==null && c.diasEnc>=0 && c.diasEnc<=30)
+    faixa = `<div class="rc-faixa f-yellow"><span class="rc-faixa-dot"></span><span>Encerra em ${c.diasEnc===0?'hoje':c.diasEnc+(c.diasEnc===1?' dia':' dias')} · ${c.aReceber>0?brl(c.aReceber)+' em aberto':'tudo recebido'}</span></div>`;
+  else if(c.total>0 && c.aReceber<=0)
+    faixa = `<div class="rc-faixa f-green"><span class="rc-faixa-dot"></span><span>Contrato quitado</span></div>`;
+
+  return `<div class="rc">
+    <div class="rc-accent" style="background:${acc}"></div>
+    <div class="rc-body">
+      <div class="rc-top">
+        <div class="rc-av">${esc(iniciais(c.nome))}</div>
+        <div class="rc-id">
+          <div class="rc-nome">${esc(c.nome)}</div>
+          <div class="rc-sub">${c.closer?'Closer: '+esc(c.closer):'<span style="color:var(--red)">sem ficha de closer</span>'}${c.telefone?' · '+esc(c.telefone):''}</div>
+        </div>
+        <span class="pill ${CLS_ADIMP[c.adimplencia]}">${LBL_ADIMP[c.adimplencia]}</span>
+      </div>
+
+      <div class="rc-prog-row">
+        <div class="rc-bar"><div class="rc-fill" style="width:${Math.min(100,pct)}%;background:${fill}"></div></div>
+        <span class="rc-pct">${pct}%</span>
+      </div>
+
+      <div class="rc-grid">
+        <div><div class="rc-item-lbl">Venda</div><div class="rc-item-val">${c.total?brl(c.total):'—'}</div></div>
+        <div><div class="rc-item-lbl">Recebido</div><div class="rc-item-val" style="color:${c.recebido>0?'var(--green)':'var(--text-dim)'}">${brl(c.recebido)}</div></div>
+        <div><div class="rc-item-lbl">A receber</div><div class="rc-item-val" style="color:${c.aReceber>0?'var(--yellow)':'var(--text-dim)'}">${brl(c.aReceber)}</div></div>
+        <div><div class="rc-item-lbl">Próx. vencimento</div><div class="rc-item-val" style="color:${corVenc};font-size:13px">${c.proxVenc?fmtData(c.proxVenc):'—'}</div></div>
+      </div>
+
+      <div style="display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--text-dim)">
+        <span>Encerra ${c.encerra?fmtData(c.encerra):'—'}</span>
+        ${c.totalComissoes>0?`<span>Comissões <b style="color:var(--purple);font-family:'JetBrains Mono',monospace">${brl(c.totalComissoes)}</b></span>`:''}
+      </div>
+    </div>
+    ${faixa}
+    <div class="rc-acoes">
+      <button class="rc-btn-main" onclick="abrirCliente('${c.id}')">Abrir ficha financeira</button>
+      <button class="rc-btn" onclick="abrirCliente('${c.id}');setTimeout(entrarEdicao,60)">Editar</button>
+      ${zapLink?`<a class="rc-btn zap" href="https://wa.me/${zapLink}" target="_blank" rel="noopener">WhatsApp</a>`:''}
+      <a class="rc-btn" href="cliente-entrega.html?cliente=${encodeURIComponent(c.id)}">Dashboard</a>
+    </div>
+  </div>`;
 }
 
 function limparFiltros(){
