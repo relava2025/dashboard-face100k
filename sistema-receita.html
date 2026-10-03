@@ -81,12 +81,12 @@ button,input,select,textarea{font-family:inherit}
 .sec-label:first-of-type{margin-top:0}
 
 /* KPIs */
-.kpi-row{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
 .kpi{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 18px;position:relative;overflow:hidden}
 .kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
 .k-amber::before{background:var(--amber)}.k-green::before{background:var(--green)}
 .k-yellow::before{background:var(--yellow)}.k-red::before{background:var(--red)}
-.k-blue::before{background:var(--blue)}.k-purple::before{background:var(--purple)}
+.k-blue::before{background:var(--blue)}.k-blue2::before{background:var(--blue)}.k-purple::before{background:var(--purple)}
 .kpi-lbl{font-size:10px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.14em;margin-bottom:8px;font-family:'Montserrat',sans-serif;font-weight:600}
 .kpi-val{font-size:23px;font-weight:800;font-family:'JetBrains Mono',monospace;line-height:1.1;letter-spacing:-.04em}
 .kpi-val.big{font-family:'Montserrat',sans-serif;font-size:30px;letter-spacing:-.03em}
@@ -250,6 +250,13 @@ table.tbl{width:100%;border-collapse:collapse;min-width:1080px}
 .moeda-wrap .inp{padding-left:36px;text-align:right}
 .moeda-pre{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--text-dim);pointer-events:none}
 
+.selo-quit{display:flex;align-items:center;gap:9px;padding:10px 14px;margin-bottom:12px;border-radius:8px;background:var(--green-dim);border:1px solid var(--green-border);color:var(--green);font-size:13px}
+.quit-acoes{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.btn-quitar{display:inline-flex;align-items:center;gap:7px;padding:9px 14px;border-radius:6px;background:var(--green-dim);border:1px solid var(--green-border);color:var(--green);font-family:'Montserrat',sans-serif;font-size:12.5px;font-weight:700;cursor:pointer;white-space:nowrap;transition:background-color .15s,color .15s}
+.btn-quitar:hover{background:var(--green);color:#000}
+.btn-reabrir{padding:9px 14px;border-radius:6px;background:transparent;border:1px solid var(--border);color:var(--text-sec);font-family:'Montserrat',sans-serif;font-size:12.5px;font-weight:600;cursor:pointer;white-space:nowrap}
+.btn-reabrir:hover{border-color:var(--yellow);color:var(--yellow)}
+
 /* MODO DE EDIÇÃO */
 .btn-editar{display:inline-flex;align-items:center;gap:7px;padding:7px 13px;border-radius:6px;background:var(--amber-dim);border:1px solid var(--amber-border);color:var(--amber);font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;transition:background-color .15s,color .15s}
 .btn-editar:hover{background:var(--amber);color:#000}
@@ -330,6 +337,7 @@ table.tbl{width:100%;border-collapse:collapse;min-width:1080px}
     <div class="kpi k-red"><div class="kpi-lbl">Total inadimplente</div><div class="kpi-val v-red" id="k-inad">R$ 0,00</div><div class="kpi-sub" id="k-inad-sub">—</div></div>
     <div class="kpi k-blue"><div class="kpi-lbl">Clientes ativos</div><div class="kpi-val big v-blue" id="k-ativos">0</div><div class="kpi-sub" id="k-ativos-sub">—</div></div>
     <div class="kpi k-purple"><div class="kpi-lbl">Total de comissões</div><div class="kpi-val v-purple" id="k-comissoes">R$ 0,00</div><div class="kpi-sub" id="k-comissoes-sub">—</div></div>
+    <div class="kpi k-blue2"><div class="kpi-lbl">Contratos quitados</div><div class="kpi-val v-blue" id="k-quitado">R$ 0,00</div><div class="kpi-sub" id="k-quitado-sub">—</div></div>
   </div>
 
   <!-- 4. ALERTAS DE COBRANÇA -->
@@ -435,7 +443,7 @@ function derivar(c){
   }
   (Array.isArray(ng.parcelas)?ng.parcelas:[]).forEach((p,i)=>{
     if(!p) return;
-    cobr.push({ idx:i, rotulo:'Parcela '+(p.n||i+1), valor:num(p.valor), venc:p.dataVenc||'', pago:!!p.recebido });
+    cobr.push({ idx:i, rotulo:p.rotulo || ('Parcela '+(p.n||i+1)), valor:num(p.valor), venc:p.dataVenc||'', pago:!!p.recebido });
   });
 
   const somaCobr = cobr.reduce((t,x)=>t+x.valor,0);
@@ -458,6 +466,7 @@ function derivar(c){
 
   let adimplencia = total>0 && aReceber<=0 ? 'quit' : inadimplente>0 ? 'inad' : 'dia';
   if(r.adimplenciaManual) adimplencia = r.adimplenciaManual;
+  const quitado = adimplencia==='quit';
 
   const com = r.comissoes || {};
   const comissoes = { closer:num(com.closer), sdr:num(com.sdr), hunter:num(com.hunter), head:num(com.head) };
@@ -478,6 +487,7 @@ function derivar(c){
     cobrancas: cobr, proxVenc,
     encerra, diasEnc, statusPrograma, adimplencia,
     comissoes, totalComissoes,
+    quitado, quitadoEm: r.quitadoEm || '', pagamentoTotal: !!r.pagamentoTotal,
     obs: r.obs || '',
     temFicha: !!c.ficha
   };
@@ -501,8 +511,10 @@ function render(){
 
 function renderKPIs(todos){
   const ativos = todos.filter(c=>c.statusPrograma!=='encerrado');
-  let vendido=0, recebido=0, aReceber=0, inad=0, com=0, qtdInad=0;
-  todos.forEach(c=>{ vendido+=c.total; recebido+=c.recebido; aReceber+=c.aReceber; inad+=c.inadimplente; com+=c.totalComissoes; if(c.inadimplente>0) qtdInad++; });
+  let vendido=0, recebido=0, aReceber=0, inad=0, com=0, qtdInad=0, quit=0, qtdQuit=0;
+  todos.forEach(c=>{ vendido+=c.total; recebido+=c.recebido; aReceber+=c.aReceber; inad+=c.inadimplente; com+=c.totalComissoes;
+    if(c.inadimplente>0) qtdInad++;
+    if(c.quitado && c.total>0){ quit+=c.total; qtdQuit++; } });
   const pct = vendido>0 ? Math.round(recebido/vendido*100) : 0;
 
   $('k-vendido').textContent   = brl(vendido);
@@ -511,6 +523,8 @@ function renderKPIs(todos){
   $('k-inad').textContent      = brl(inad);
   $('k-ativos').textContent    = ativos.length;
   $('k-comissoes').textContent = brl(com);
+  $('k-quitado').textContent   = brl(quit);
+  $('k-quitado-sub').textContent = qtdQuit ? `${qtdQuit} ${qtdQuit===1?'contrato pago por inteiro':'contratos pagos por inteiro'}` : 'nenhum quitado ainda';
 
   $('k-vendido-sub').textContent   = `${todos.length} ${todos.length===1?'contrato':'contratos'}`;
   $('k-recebido-sub').textContent  = `${pct}% do contratado`;
@@ -674,8 +688,8 @@ function cardCliente(c){
     faixa = `<div class="rc-faixa f-red"><span class="rc-faixa-dot"></span><span><b>${c.qtdVencidas} ${c.qtdVencidas===1?'cobrança vencida':'cobranças vencidas'}</b> · ${brl(c.inadimplente)} em atraso</span></div>`;
   else if(c.diasEnc!==null && c.diasEnc>=0 && c.diasEnc<=30)
     faixa = `<div class="rc-faixa f-yellow"><span class="rc-faixa-dot"></span><span>Encerra em ${c.diasEnc===0?'hoje':c.diasEnc+(c.diasEnc===1?' dia':' dias')} · ${c.aReceber>0?brl(c.aReceber)+' em aberto':'tudo recebido'}</span></div>`;
-  else if(c.total>0 && c.aReceber<=0)
-    faixa = `<div class="rc-faixa f-green"><span class="rc-faixa-dot"></span><span>Contrato quitado</span></div>`;
+  else if(c.quitado && c.total>0)
+    faixa = `<div class="rc-faixa f-green"><span class="rc-faixa-dot"></span><span><b>Contrato quitado</b>${c.quitadoEm?' em '+fmtData(c.quitadoEm):''}${c.pagamentoTotal?' · pagamento total':''}</span></div>`;
 
   return `<div class="rc">
     <div class="rc-accent" style="background:${acc}"></div>
@@ -851,6 +865,50 @@ function removerParcelaR(i){
   renderCliente();
 }
 
+/* quita o contrato: marca tudo como recebido de uma vez */
+function quitarR(){
+  if(!rascunho) return;
+  const ng = rascunho.ficha.negociacao;
+  const hoje = hojeISO();
+  const temEntrada = ng.entrada && (num(ng.entrada.valor)>0 || ng.entrada.data);
+
+  let somaCobr = (temEntrada ? num(ng.entrada.valor) : 0)
+               + ng.parcelas.reduce((t,p)=>t+(p?num(p.valor):0),0);
+  const alvo = num(ng.valorTotal) || somaCobr;
+  if(!alvo){ toast('Lance o valor da venda antes de quitar','error'); return; }
+
+  if(temEntrada){
+    ng.entrada.recebido = true;
+    if(!ng.entrada.dataRecebimento) ng.entrada.dataRecebimento = hoje;
+  }
+  ng.parcelas.forEach(p=>{ if(p){ p.recebido = true; if(!p.dataRecebimento) p.dataRecebimento = hoje; } });
+
+  /* o contratado pode ser maior que o que foi lançado: lança o saldo como
+     uma cobrança de quitação, para recebido bater com o total */
+  const falta = Math.round((alvo - somaCobr)*100)/100;
+  if(falta > 0){
+    ng.parcelas.push({ n:ng.parcelas.length+1, rotulo:'Pagamento total', valor:falta,
+                       dataVenc:hoje, recebido:true, dataRecebimento:hoje, quitacao:true });
+  }
+  ng.valorTotal = alvo;
+  rascunho.receita.pagamentoTotal = true;
+  rascunho.receita.quitadoEm = hoje;
+  rascunho.receita.adimplenciaManual = '';
+  renderCliente();
+}
+
+function reabrirR(){
+  if(!rascunho) return;
+  if(!confirm('Reabrir o contrato? Todas as cobranças voltam para pendente.')) return;
+  const ng = rascunho.ficha.negociacao;
+  if(ng.entrada){ ng.entrada.recebido=false; delete ng.entrada.dataRecebimento; }
+  ng.parcelas = ng.parcelas.filter(p=>!(p&&p.quitacao));
+  ng.parcelas.forEach((p,i)=>{ if(p){ p.recebido=false; delete p.dataRecebimento; p.n=i+1; } });
+  rascunho.receita.pagamentoTotal = false;
+  rascunho.receita.quitadoEm = '';
+  renderCliente();
+}
+
 /* marcar recebimento direto do alerta continua valendo um clique só */
 async function marcarCobranca(id, idx){
   if(editando && aberto===id){ toast('Termine de editar a ficha primeiro','error'); return; }
@@ -919,6 +977,10 @@ function renderCliente(){
   $('dr-body').innerHTML = `
     <div>
       <div class="dr-sec">Card do cliente</div>
+      ${c.quitado?`<div class="selo-quit">
+        <svg width="15" height="12" viewBox="0 0 13 11" fill="none"><path d="M1 5.5L4.5 9L12 1.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span><b>Contrato quitado</b>${c.quitadoEm?` em ${fmtData(c.quitadoEm)}`:''}${c.pagamentoTotal?' · pagamento total':''}</span>
+      </div>`:''}
       ${linha('Status de inadimplência', ed
         ? `<select class="inp" onchange="setR('receita.adimplenciaManual',this.value)">
              <option value="">Automático — ${LBL_ADIMP[c.adimplencia]}</option>
@@ -975,7 +1037,14 @@ function renderCliente(){
     <div>
       <div class="dr-sec">Cobranças</div>
       ${cobrHtml}
-      ${ed?`<button class="btn-add" onclick="addParcelaR()">+ Adicionar parcela</button>`:''}
+      ${ed?`<div class="quit-acoes">
+             ${c.quitado
+               ? `<button class="btn-reabrir" onclick="reabrirR()">Reabrir contrato</button>`
+               : `<button class="btn-quitar" onclick="quitarR()">
+                    <svg width="13" height="11" viewBox="0 0 13 11" fill="none"><path d="M1 5.5L4.5 9L12 1.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Marcar pagamento total</button>`}
+             <button class="btn-add" style="margin-top:0;flex:1" onclick="addParcelaR()">+ Adicionar parcela</button>
+           </div>`:''}
       <div style="margin-top:10px;font-size:11.5px;color:var(--text-dim)">
         ${ed?'As alterações só valem depois de clicar em Salvar ficha.':'Clique em <b style="color:var(--amber)">Editar ficha</b> para alterar valores, vencimentos e recebimentos.'}
       </div>
