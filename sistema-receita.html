@@ -34,7 +34,8 @@
   }
   window._fb = {
     listenClients(cb){ return snapRetry(()=>collection(db,"entrega"), snap=>{ const l=[]; snap.forEach(d=>{ const data=d.data(); if(data.status!=='excluido') l.push({id:d.id,...data}); }); cb(l); }); },
-    async saveReceita(id,receita){ await setDoc(doc(db,"entrega",id),{receita},{merge:true}); }
+    async saveReceita(id,receita){ await setDoc(doc(db,"entrega",id),{receita},{merge:true}); },
+    async saveNegociacao(id,negociacao){ await setDoc(doc(db,"entrega",id),{ficha:{negociacao}},{merge:true}); }
   };
   window.dispatchEvent(new Event("fb-ready"));
 </script>
@@ -181,6 +182,25 @@ table.tbl{width:100%;border-collapse:collapse;min-width:1080px}
 .parc-st{font-size:10px;font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:.06em;white-space:nowrap}
 .saved{font-size:10px;font-weight:700;color:var(--green);opacity:0;transition:opacity .3s;font-family:'Montserrat',sans-serif;letter-spacing:.1em}
 .saved.show{opacity:1}
+
+/* COBRANÇAS EDITÁVEIS */
+.cob-row{display:grid;grid-template-columns:24px 1fr 132px 108px 60px 22px;gap:9px;align-items:center;padding:8px 0;border-bottom:1px solid var(--border-light)}
+.cob-row:last-of-type{border-bottom:none}
+.cob-row.pago{opacity:.72}
+.cob-chk{width:22px;height:22px;border-radius:6px;border:1.5px solid var(--border);background:var(--surface2);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;flex-shrink:0;transition:background-color .15s,border-color .15s}
+.cob-chk:hover{border-color:var(--amber)}
+.cob-chk.on{background:var(--green);border-color:var(--green)}
+.cob-rot{font-size:12.5px;color:var(--text-sec);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cob-inp{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12.5px;padding:5px 7px;outline:none;transition:border-color .15s}
+.cob-inp:focus{border-color:var(--amber)}
+.cob-inp.mono{font-family:'JetBrains Mono',monospace;text-align:right}
+.cob-st{font-family:'Montserrat',sans-serif;font-size:9.5px;font-weight:700;letter-spacing:.05em;text-align:right;white-space:nowrap}
+.cob-del{background:transparent;border:none;color:var(--text-dim);font-size:17px;line-height:1;cursor:pointer;padding:0}
+.cob-del:hover{color:var(--red)}
+.btn-add{margin-top:10px;width:100%;padding:9px;border-radius:6px;background:transparent;border:1px dashed var(--border);color:var(--text-sec);font-family:'Montserrat',sans-serif;font-size:12.5px;font-weight:600;cursor:pointer;transition:border-color .15s,color .15s}
+.btn-add:hover{border-color:var(--amber);color:var(--amber)}
+.bk-chk{width:17px;height:17px;margin-right:7px;border-radius:4px;border:1px solid var(--border);background:var(--surface2);color:var(--green);font-size:10px;line-height:1;cursor:pointer;padding:0;vertical-align:middle;transition:background-color .15s,border-color .15s}
+.bk-chk:hover{background:var(--green);color:#000;border-color:var(--green)}
 
 /* TOAST + LOADING */
 .toast{position:fixed;bottom:24px;right:24px;background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--amber);border-radius:8px;padding:12px 18px;font-size:14px;z-index:999;transform:translateY(80px);opacity:0;transition:all .3s;max-width:330px}
@@ -356,11 +376,11 @@ function derivar(c){
   /* cobranças = entrada + parcelas, numa lista só */
   const cobr = [];
   if(ng.entrada && (num(ng.entrada.valor)>0 || ng.entrada.data)){
-    cobr.push({ rotulo:'Entrada', valor:num(ng.entrada.valor), venc:ng.entrada.data||'', pago:!!ng.entrada.recebido });
+    cobr.push({ idx:'E', rotulo:'Entrada', valor:num(ng.entrada.valor), venc:ng.entrada.data||'', pago:!!ng.entrada.recebido });
   }
   (Array.isArray(ng.parcelas)?ng.parcelas:[]).forEach((p,i)=>{
     if(!p) return;
-    cobr.push({ rotulo:'Parcela '+(p.n||i+1), valor:num(p.valor), venc:p.dataVenc||'', pago:!!p.recebido });
+    cobr.push({ idx:i, rotulo:'Parcela '+(p.n||i+1), valor:num(p.valor), venc:p.dataVenc||'', pago:!!p.recebido });
   });
 
   const somaCobr = cobr.reduce((t,x)=>t+x.valor,0);
@@ -473,7 +493,7 @@ function renderCobranca(todos){
       <div class="bk-total" style="color:${f.cor}">${brl(soma)}</div>
       <div class="bk-list">${ lista.length ? lista.map(i=>`
         <div class="bk-row" onclick="abrirCliente('${i.cli.id}')">
-          <span class="bk-nome">${esc(i.cli.nome)}</span>
+          <span class="bk-nome"><button class="bk-chk" onclick="event.stopPropagation();marcarCobranca('${i.cli.id}',${typeof i.idx==='number'?i.idx:"'E'"})" title="Marcar como recebida">&#10003;</button>${esc(i.cli.nome)}</span>
           <span class="bk-val" style="color:${f.cor}">${brl(i.valor)}</span>
           <span class="bk-meta">
             <span>${esc(i.rotulo)}</span>
@@ -596,13 +616,16 @@ function renderCliente(){
   const cobrHtml = c.cobrancas.length ? c.cobrancas.map(x=>{
     const d = x.pago ? null : diasAte(x.venc);
     const cor = x.pago ? 'var(--green)' : d===null ? 'var(--text-dim)' : d<0 ? 'var(--red)' : d<=3 ? 'var(--yellow)' : 'var(--text-sec)';
-    return `<div class="parc-row">
-      <span class="parc-n">${esc(x.rotulo.replace('Parcela ','').replace('Entrada','E'))}</span>
-      <span class="parc-venc">${x.venc?fmtData(x.venc):'sem data'}</span>
-      <span class="parc-val">${brl(x.valor)}</span>
-      <span class="parc-st" style="color:${cor}">${x.pago?'RECEBIDA':d===null?'—':d<0?`${Math.abs(d)}d ATRASO`:d===0?'HOJE':'PENDENTE'}</span>
+    const idx = typeof x.idx==='number' ? x.idx : "'E'";
+    return `<div class="cob-row${x.pago?' pago':''}">
+      <button class="cob-chk${x.pago?' on':''}" onclick="marcarCobranca('${c.id}',${idx})" title="${x.pago?'Desmarcar recebimento':'Marcar como recebida'}">${x.pago?'<svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L4 7.5L10 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>':''}</button>
+      <span class="cob-rot">${esc(x.rotulo)}</span>
+      <input class="cob-inp" type="date" value="${x.venc}" title="Vencimento" onchange="editarCobranca('${c.id}',${idx},'venc',this.value)">
+      <input class="cob-inp mono" type="number" min="0" step="0.01" value="${x.valor||''}" placeholder="0,00" title="Valor" onchange="editarCobranca('${c.id}',${idx},'valor',this.value)">
+      <span class="cob-st" style="color:${cor}">${x.pago?'RECEBIDA':d===null?'—':d<0?`${Math.abs(d)}d`:d===0?'HOJE':'ABERTA'}</span>
+      ${typeof x.idx==='number'?`<button class="cob-del" onclick="removerParcela('${c.id}',${x.idx})" title="Remover parcela">×</button>`:'<span></span>'}
     </div>`;
-  }).join('') : '<div style="font-size:13px;color:var(--text-dim);padding:6px 0">Nenhuma cobrança lançada na ficha do closer.</div>';
+  }).join('') : '<div style="font-size:13px;color:var(--text-dim);padding:6px 0">Nenhuma cobrança lançada ainda.</div>';
 
   $('dr-body').innerHTML = `
     <div>
@@ -617,9 +640,9 @@ function renderCliente(){
       <div class="campo"><span class="campo-lbl">Nome</span><span class="campo-val">${esc(c.nome)}</span></div>
       <div class="campo"><span class="campo-lbl">Telefone</span><span class="campo-val mono">${c.telefone?`<a href="https://wa.me/${String(c.telefone).replace(/\D/g,'').length<=11?'55'+String(c.telefone).replace(/\D/g,''):String(c.telefone).replace(/\D/g,'')}" target="_blank" rel="noopener" style="color:var(--green);text-decoration:none">${esc(c.telefone)}</a>`:'<span style="color:var(--text-dim)">não preenchido</span>'}</span></div>
       <div class="campo"><span class="campo-lbl">Programa</span><span class="campo-val">${esc(c.programa)}</span></div>
-      <div class="campo"><span class="campo-lbl">Valor total da venda</span><span class="campo-val mono v-amber">${c.total?brl(c.total):'—'}</span></div>
-      <div class="campo"><span class="campo-lbl">Valor de entrada</span><span class="campo-val mono">${c.entrada?brl(c.entrada):'—'}</span></div>
-      <div class="campo"><span class="campo-lbl">Valor da parcela</span><span class="campo-val mono">${c.valorParcela?brl(c.valorParcela)+` <span style="font-size:12px;color:var(--text-dim)">(${c.nParcelas}x)</span>`:'—'}</span></div>
+      <div class="campo"><span class="campo-lbl">Valor total da venda</span><input class="inp mono" type="number" min="0" step="0.01" placeholder="soma das cobranças" value="${num(bruto.ficha?.negociacao?.valorTotal)||''}" oninput="editarNeg('${c.id}','valorTotal',this.value)"></div>
+      <div class="campo"><span class="campo-lbl">Valor de entrada</span><input class="inp mono" type="number" min="0" step="0.01" placeholder="0,00" value="${c.entrada||''}" oninput="editarNeg('${c.id}','entradaValor',this.value)"></div>
+      <div class="campo"><span class="campo-lbl">Valor da parcela</span><input class="inp mono" type="number" min="0" step="0.01" placeholder="0,00" value="${c.valorParcela||''}" oninput="editarNeg('${c.id}','valorParcela',this.value)"></div>
       <div class="campo"><span class="campo-lbl">Recebido / a receber</span><span class="campo-val mono"><span style="color:var(--green)">${brl(c.recebido)}</span> <span style="color:var(--text-dim)">/</span> <span style="color:var(--yellow)">${brl(c.aReceber)}</span></span></div>
       <div style="margin-top:12px">
         <span class="campo-lbl" style="display:block;margin-bottom:6px">Observação</span>
@@ -650,11 +673,89 @@ function renderCliente(){
     <div>
       <div class="dr-sec">Cobranças ${c.encerra?`<span style="text-transform:none;letter-spacing:0;font-weight:400;font-size:11px;color:var(--text-dim)">· encerra em ${fmtData(c.encerra)}</span>`:''}</div>
       ${cobrHtml}
-      <div style="margin-top:12px;font-size:11.5px;color:var(--text-dim)">
-        Valores e vencimentos vêm da negociação da ficha do closer.
-        <a href="painel-fichas.html" style="color:var(--amber)">Editar na Central de Fichas</a>
+      <button class="btn-add" onclick="addParcela('${c.id}')">+ Adicionar parcela</button>
+      <div style="margin-top:10px;font-size:11.5px;color:var(--text-dim)">
+        O que você edita aqui vai direto para a negociação da ficha do closer.
       </div>
     </div>`;
+}
+
+/* ------------------------------------- edição direta da negociação */
+function negAtual(id){
+  const c = clientes.find(x=>x.id===id) || {};
+  const f = c.ficha || {};
+  const ng = JSON.parse(JSON.stringify(f.negociacao || {}));
+  if(!Array.isArray(ng.parcelas)) ng.parcelas = [];
+  if(!ng.entrada || typeof ng.entrada!=='object') ng.entrada = {};
+  return ng;
+}
+function aplicarNeg(id, ng){
+  const c = clientes.find(x=>x.id===id); if(!c) return;
+  c.ficha = Object.assign({}, c.ficha||{});
+  c.ficha.negociacao = ng;                 // otimista: a tela responde na hora
+  render();
+  agendarNeg(id, ng);
+}
+/* um clique marca ou desmarca o recebimento */
+function marcarCobranca(id, idx){
+  const ng = negAtual(id);
+  if(idx==='E'){
+    ng.entrada.recebido = !ng.entrada.recebido;
+    if(ng.entrada.recebido && !ng.entrada.dataRecebimento) ng.entrada.dataRecebimento = hojeISO();
+  } else {
+    const p = ng.parcelas[idx]; if(!p) return;
+    p.recebido = !p.recebido;
+    if(p.recebido && !p.dataRecebimento) p.dataRecebimento = hojeISO();
+  }
+  aplicarNeg(id, ng);
+}
+function editarCobranca(id, idx, campo, valor){
+  const ng = negAtual(id);
+  if(idx==='E'){
+    if(campo==='valor') ng.entrada.valor = num(valor);
+    else ng.entrada.data = valor;
+  } else {
+    const p = ng.parcelas[idx]; if(!p) return;
+    if(campo==='valor') p.valor = num(valor);
+    else p.dataVenc = valor;
+  }
+  aplicarNeg(id, ng);
+}
+function addParcela(id){
+  const ng = negAtual(id);
+  const ult = ng.parcelas[ng.parcelas.length-1];
+  const base = (ult && ult.dataVenc) || ng.entrada.data || hojeISO();
+  ng.parcelas.push({ n:ng.parcelas.length+1, valor:num(ng.valorParcela)||(ult?num(ult.valor):0), dataVenc:somaDias(base,30), recebido:false });
+  ng.nParcelas = ng.parcelas.length;
+  aplicarNeg(id, ng);
+}
+function removerParcela(id, i){
+  const c = clientes.find(x=>x.id===id);
+  const ng = negAtual(id);
+  const p = ng.parcelas[i]; if(!p) return;
+  if(!confirm(`Remover a parcela de ${brl(num(p.valor))} com vencimento em ${fmtData(p.dataVenc)}?`)) return;
+  ng.parcelas.splice(i,1);
+  ng.parcelas.forEach((x,k)=>x.n=k+1);
+  ng.nParcelas = ng.parcelas.length;
+  aplicarNeg(id, ng);
+}
+function editarNeg(id, campo, valor){
+  const ng = negAtual(id);
+  if(campo==='entradaValor') ng.entrada.valor = num(valor);
+  else ng[campo] = num(valor);
+  const c = clientes.find(x=>x.id===id);
+  if(c){ c.ficha=Object.assign({},c.ficha||{}); c.ficha.negociacao=ng; }
+  renderKPIs(clientes.map(derivar));
+  agendarNeg(id, ng);
+}
+let _negTimer=null;
+function agendarNeg(id, ng){
+  clearTimeout(_negTimer);
+  sync('saving');
+  _negTimer = setTimeout(async ()=>{
+    try{ await window._fb.saveNegociacao(id, ng); sync('ok'); piscarSalvo(); }
+    catch(e){ console.warn(e); toast('Erro ao salvar a cobrança','error'); sync('error'); }
+  }, 600);
 }
 
 /* --------------------------------------------------------- persistência */
