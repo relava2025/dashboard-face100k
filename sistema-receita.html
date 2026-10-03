@@ -798,12 +798,23 @@ function setR(caminho, valor){
   alvo[partes[partes.length-1]] = valor;
 }
 function setNum(caminho, valor){ setR(caminho, num(valor)); }
-/* máscara de reais: digita só número e o campo mostra 30.000,00 */
+/* Máscara de reais em unidade inteira: digita 30000 e vira 30.000.
+   Os centavos entram depois da vírgula, e o campo normaliza ao sair. */
 function moedaNum(el){
-  let dig = String(el.value).replace(/\D/g,'').replace(/^0+/,'');
-  const n = dig ? Number(dig)/100 : 0;
-  el.value = n ? n.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}) : '';
-  return n;
+  const limpo = String(el.value).replace(/[^\d,]/g,'');
+  const partes = limpo.split(',');
+  const inteiro = (partes[0]||'').replace(/^0+(?=\d)/,'');
+  const temVirgula = partes.length > 1;
+  const centavos = temVirgula ? partes[1].slice(0,2) : '';
+  const intFmt = inteiro ? Number(inteiro).toLocaleString('pt-BR') : (temVirgula ? '0' : '');
+  el.value = temVirgula ? intFmt + ',' + centavos : intFmt;
+  const n = Number((inteiro||'0') + '.' + (centavos.padEnd(2,'0') || '00'));
+  return isNaN(n) ? 0 : n;
+}
+/* ao sair do campo, completa os centavos: 30.000 vira 30.000,00 */
+function moedaBlur(el){
+  const n = moedaNum(el);
+  el.value = moedaTxt(n);
 }
 function moedaTxt(v){ return v ? Number(v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}) : ''; }
 function marcarCobrancaR(idx){
@@ -897,7 +908,7 @@ function renderCliente(){
       <button class="cob-chk${x.pago?' on':''}" ${ed?`onclick="marcarCobrancaR(${idx})"`:'disabled'} title="${ed?'Marcar ou desmarcar o recebimento':'Clique em Editar ficha para alterar'}">${x.pago?'<svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L4 7.5L10 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>':''}</button>
       <span class="cob-rot">${esc(x.rotulo)}</span>
       ${ed ? `<input class="cob-inp" type="date" value="${x.venc}" onchange="editarCobrancaR(${idx},'venc',this.value)">
-              <input class="cob-inp mono" type="text" inputmode="decimal" value="${moedaTxt(x.valor)}" placeholder="0,00" oninput="moedaNum(this)" onchange="editarCobrancaR(${idx},'valor',moedaNum(this))">`
+              <input class="cob-inp mono" type="text" inputmode="decimal" value="${moedaTxt(x.valor)}" placeholder="0,00" oninput="moedaNum(this)" onblur="moedaBlur(this)" onchange="editarCobrancaR(${idx},'valor',moedaNum(this))">`
            : `<span class="cob-ro">${x.venc?fmtData(x.venc):'sem data'}</span>
               <span class="cob-ro mono">${brl(x.valor)}</span>`}
       <span class="cob-st" style="color:${cor}">${st}</span>
@@ -930,9 +941,9 @@ function renderCliente(){
         : txt(c.programaKey==='ativacao'?'Ativação':c.programaKey==='mentoria'?'Mentoria':'Aceleração'))}
       ${linha('Data de início', ed?`<input class="inp" type="date" value="${c.inicio}" onchange="setR('startDate',this.value);renderCliente()">`:txt(c.inicio?fmtData(c.inicio):''))}
       ${linha('Encerramento', mono(c.encerra?`<span style="color:${c.diasEnc!==null&&c.diasEnc<=30?'var(--yellow)':'var(--text-sec)'}">${fmtData(c.encerra)}</span>${c.diasEnc!==null?` <span style="font-size:12px;color:var(--text-dim)">(${c.diasEnc<0?'há '+Math.abs(c.diasEnc)+' dias':'faltam '+c.diasEnc+' dias'})</span>`:''}`:'<span style="color:var(--text-dim)">defina a data de início</span>'))}
-      ${linha('Valor total da venda', ed?`<div class="moeda-wrap"><span class="moeda-pre">R$</span><input class="inp mono" type="text" inputmode="decimal" placeholder="0,00" value="${moedaTxt(num(ng.valorTotal))}" oninput="setR('ficha.negociacao.valorTotal', moedaNum(this))"></div>`:mono(`<span class="v-amber">${c.total?brl(c.total):'—'}</span>`))}
-      ${linha('Valor de entrada', ed?`<div class="moeda-wrap"><span class="moeda-pre">R$</span><input class="inp mono" type="text" inputmode="decimal" placeholder="0,00" value="${moedaTxt(c.entrada)}" oninput="setR('ficha.negociacao.entrada.valor', moedaNum(this))"></div>`:mono(c.entrada?brl(c.entrada):'—'))}
-      ${linha('Valor da parcela', ed?`<div class="moeda-wrap"><span class="moeda-pre">R$</span><input class="inp mono" type="text" inputmode="decimal" placeholder="0,00" value="${moedaTxt(c.valorParcela)}" oninput="setR('ficha.negociacao.valorParcela', moedaNum(this))"></div>`:mono(c.valorParcela?brl(c.valorParcela)+` <span style="font-size:12px;color:var(--text-dim)">(${c.nParcelas}x)</span>`:'—'))}
+      ${linha('Valor total da venda', ed?`<div class="moeda-wrap"><span class="moeda-pre">R$</span><input class="inp mono" type="text" inputmode="decimal" placeholder="0,00" value="${moedaTxt(num(ng.valorTotal))}" oninput="setR('ficha.negociacao.valorTotal', moedaNum(this))" onblur="moedaBlur(this)"></div>`:mono(`<span class="v-amber">${c.total?brl(c.total):'—'}</span>`))}
+      ${linha('Valor de entrada', ed?`<div class="moeda-wrap"><span class="moeda-pre">R$</span><input class="inp mono" type="text" inputmode="decimal" placeholder="0,00" value="${moedaTxt(c.entrada)}" oninput="setR('ficha.negociacao.entrada.valor', moedaNum(this))" onblur="moedaBlur(this)"></div>`:mono(c.entrada?brl(c.entrada):'—'))}
+      ${linha('Valor da parcela', ed?`<div class="moeda-wrap"><span class="moeda-pre">R$</span><input class="inp mono" type="text" inputmode="decimal" placeholder="0,00" value="${moedaTxt(c.valorParcela)}" oninput="setR('ficha.negociacao.valorParcela', moedaNum(this))" onblur="moedaBlur(this)"></div>`:mono(c.valorParcela?brl(c.valorParcela)+` <span style="font-size:12px;color:var(--text-dim)">(${c.nParcelas}x)</span>`:'—'))}
       ${linha('Recebido / a receber', mono(`<span style="color:var(--green)">${brl(c.recebido)}</span> <span style="color:var(--text-dim)">/</span> <span style="color:var(--yellow)">${brl(c.aReceber)}</span>`))}
       <div style="margin-top:12px">
         <span class="campo-lbl" style="display:block;margin-bottom:6px">Observação</span>
@@ -951,7 +962,7 @@ function renderCliente(){
       <div class="com-grid" style="margin-top:14px">
         ${[['closer','Comissão closer'],['sdr','Comissão SDR'],['hunter','Comissão hunter'],['head','Comissão head']].map(([k,lbl])=>`
           <div class="com-item"><label>${lbl}</label>
-            ${ed ? `<div class="moeda-wrap"><span class="moeda-pre">R$</span><input class="inp mono" type="text" inputmode="decimal" placeholder="0,00" value="${moedaTxt(c.comissoes[k])}" oninput="setR('receita.comissoes.${k}', moedaNum(this))"></div>`
+            ${ed ? `<div class="moeda-wrap"><span class="moeda-pre">R$</span><input class="inp mono" type="text" inputmode="decimal" placeholder="0,00" value="${moedaTxt(c.comissoes[k])}" oninput="setR('receita.comissoes.${k}', moedaNum(this))" onblur="moedaBlur(this)"></div>`
                  : `<div class="com-ro">${c.comissoes[k]?brl(c.comissoes[k]):'—'}</div>`}
           </div>`).join('')}
       </div>
