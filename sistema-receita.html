@@ -332,6 +332,20 @@ table.tbl{width:100%;border-collapse:collapse;min-width:1080px}
 .btn-reabrir{padding:9px 14px;border-radius:6px;background:transparent;border:1px solid var(--border);color:var(--text-sec);font-family:'Montserrat',sans-serif;font-size:12.5px;font-weight:600;cursor:pointer;white-space:nowrap}
 .btn-reabrir:hover{border-color:var(--yellow);color:var(--yellow)}
 
+.cob-bloco{border-bottom:1px solid var(--border-light);padding:6px 0}
+.cob-bloco:last-of-type{border-bottom:none}
+.cob-bloco .cob-row{border-bottom:none;padding:4px 0}
+.cob-extra{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:6px 0 8px 33px}
+.cob-extra label{display:block;font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em;font-family:'Montserrat',sans-serif;font-weight:600}
+.cob-extra .cob-inp{margin-top:4px}
+.cob-meta{padding:0 0 6px 33px;font-size:11.5px;color:var(--text-dim)}
+.cob-meta a{color:var(--amber);text-decoration:none}
+.com-dupla{display:grid;grid-template-columns:72px 1fr;gap:7px}
+.pct-wrap{position:relative}
+.pct-wrap .inp{padding-right:24px;text-align:right}
+.pct-pos{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:12px;color:var(--text-dim);pointer-events:none}
+.inp:disabled{opacity:.75;cursor:default}
+
 /* MODO DE EDIÇÃO */
 .btn-editar{display:inline-flex;align-items:center;gap:7px;padding:7px 13px;border-radius:6px;background:var(--amber-dim);border:1px solid var(--amber-border);color:var(--amber);font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;transition:background-color .15s,color .15s}
 .btn-editar:hover{background:var(--amber);color:#000}
@@ -505,6 +519,11 @@ table.tbl{width:100%;border-collapse:collapse;min-width:1080px}
   <div class="dr-rodape" id="dr-rodape" style="display:none"></div>
 </div>
 
+<datalist id="tipos-pgto">
+  <option value="Pix Cora"><option value="Boleto Asaas"><option value="Pix"><option value="Boleto">
+  <option value="Cartão de crédito"><option value="Transferência"><option value="Dinheiro">
+</datalist>
+
 <div class="toast" id="toast"></div>
 <script>
 /* =====================================================================
@@ -554,11 +573,13 @@ function derivar(c){
   /* cobranças = entrada + parcelas, numa lista só */
   const cobr = [];
   if(ng.entrada && (num(ng.entrada.valor)>0 || ng.entrada.data)){
-    cobr.push({ idx:'E', rotulo:'Entrada', valor:num(ng.entrada.valor), venc:ng.entrada.data||'', pago:!!ng.entrada.recebido });
+    cobr.push({ idx:'E', rotulo:'Entrada', valor:num(ng.entrada.valor), venc:ng.entrada.data||'', pago:!!ng.entrada.recebido,
+                recebidoEm:ng.entrada.dataRecebimento||'', tipo:ng.entrada.tipo||'', comprovante:ng.entrada.comprovante||'', obs:ng.entrada.obs||'' });
   }
   (Array.isArray(ng.parcelas)?ng.parcelas:[]).forEach((p,i)=>{
     if(!p) return;
-    cobr.push({ idx:i, rotulo:p.rotulo || ('Parcela '+(p.n||i+1)), valor:num(p.valor), venc:p.dataVenc||'', pago:!!p.recebido });
+    cobr.push({ idx:i, rotulo:p.rotulo || ('Parcela '+(p.n||i+1)), valor:num(p.valor), venc:p.dataVenc||'', pago:!!p.recebido,
+                recebidoEm:p.dataRecebimento||'', tipo:p.tipo||'', comprovante:p.comprovante||'', obs:p.obs||'' });
   });
 
   const somaCobr = cobr.reduce((t,x)=>t+x.valor,0);
@@ -570,7 +591,8 @@ function derivar(c){
   const emAberto = cobr.filter(x=>!x.pago && x.venc).sort((a,b)=>a.venc<b.venc?-1:1);
   const proxVenc = emAberto.length ? emAberto[0].venc : '';
 
-  const encerra = c.startDate ? somaDias(c.startDate, semanasPrograma(c)*7) : '';
+  /* a data de finalização do contrato manda; sem ela, calcula pelo programa */
+  const encerra = r.dataFinalizacao || (c.startDate ? somaDias(c.startDate, semanasPrograma(c)*7) : '');
   const diasEnc = diasAte(encerra);
 
   let statusPrograma = 'ativo';
@@ -583,8 +605,11 @@ function derivar(c){
   if(r.adimplenciaManual) adimplencia = r.adimplenciaManual;
   const quitado = adimplencia==='quit';
 
-  const com = r.comissoes || {};
-  const comissoes = { closer:num(com.closer), sdr:num(com.sdr), hunter:num(com.hunter), head:num(com.head) };
+  /* comissão: quando há percentual, o valor sai do que já foi pago */
+  const com = r.comissoes || {}, pc = r.percentuais || {};
+  const calc = quem => num(pc[quem]) > 0 ? Math.round(recebido * num(pc[quem])) / 100 : num(com[quem]);
+  const comissoes = { closer:calc('closer'), sdr:calc('sdr'), hunter:calc('hunter'), head:calc('head') };
+  const percentuais = { closer:num(pc.closer), sdr:num(pc.sdr), hunter:num(pc.hunter), head:num(pc.head) };
   const totalComissoes = comissoes.closer + comissoes.sdr + comissoes.hunter + comissoes.head;
 
   return {
@@ -601,7 +626,10 @@ function derivar(c){
     recebido, aReceber, inadimplente, qtdVencidas: vencidas.length,
     cobrancas: cobr, proxVenc,
     encerra, diasEnc, statusPrograma, adimplencia,
-    comissoes, totalComissoes,
+    comissoes, percentuais, totalComissoes,
+    contrato: r.contrato || '',
+    valorMensal: num(ng.valorParcela) || num(r.valorMensal),
+    statusContrato: r.statusContrato || '',
     quitado, quitadoEm: r.quitadoEm || '', pagamentoTotal: !!r.pagamentoTotal,
     obs: r.obs || '',
     temFicha: !!c.ficha
@@ -1174,8 +1202,13 @@ function marcarCobrancaR(idx){
 }
 function editarCobrancaR(idx, campo, valor){
   const ng = rascunho.ficha.negociacao;
-  if(idx==='E'){ if(campo==='valor') ng.entrada.valor=num(valor); else ng.entrada.data=valor; }
-  else { const p=ng.parcelas[idx]; if(!p) return; if(campo==='valor') p.valor=num(valor); else p.dataVenc=valor; }
+  const alvo = idx==='E' ? ng.entrada : ng.parcelas[idx];
+  if(!alvo) return;
+  const mapa = { valor:'valor', venc: idx==='E'?'data':'dataVenc', recebidoEm:'dataRecebimento',
+                 tipo:'tipo', comprovante:'comprovante', obs:'obs' };
+  const chave = mapa[campo]; if(!chave) return;
+  alvo[chave] = campo==='valor' ? num(valor) : valor;
+  if(campo==='recebidoEm' && valor) alvo.recebido = true;
   renderCliente();
 }
 function addParcelaR(){
@@ -1291,15 +1324,25 @@ function renderCliente(){
     const cor = x.pago ? 'var(--green)' : d===null ? 'var(--text-dim)' : d<0 ? 'var(--red)' : d<=3 ? 'var(--yellow)' : 'var(--text-sec)';
     const idx = typeof x.idx==='number' ? x.idx : "'E'";
     const st = x.pago?'RECEBIDA':d===null?'—':d<0?`${Math.abs(d)}d`:d===0?'HOJE':'ABERTA';
-    return `<div class="cob-row${x.pago?' pago':''}">
-      <button class="cob-chk${x.pago?' on':''}" ${ed?`onclick="marcarCobrancaR(${idx})"`:'disabled'} title="${ed?'Marcar ou desmarcar o recebimento':'Clique em Editar ficha para alterar'}">${x.pago?'<svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L4 7.5L10 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>':''}</button>
-      <span class="cob-rot">${esc(x.rotulo)}</span>
-      ${ed ? `<input class="cob-inp" type="date" value="${x.venc}" onchange="editarCobrancaR(${idx},'venc',this.value)">
-              <input class="cob-inp mono" type="text" inputmode="decimal" value="${moedaTxt(x.valor)}" placeholder="0,00" oninput="moedaNum(this)" onblur="moedaBlur(this)" onchange="editarCobrancaR(${idx},'valor',moedaNum(this))">`
-           : `<span class="cob-ro">${x.venc?fmtData(x.venc):'sem data'}</span>
-              <span class="cob-ro mono">${brl(x.valor)}</span>`}
-      <span class="cob-st" style="color:${cor}">${st}</span>
-      ${ed && typeof x.idx==='number' ? `<button class="cob-del" onclick="removerParcelaR(${x.idx})" title="Remover parcela">×</button>` : '<span></span>'}
+    const meta = [ x.tipo, x.pago&&x.recebidoEm?'recebido em '+fmtData(x.recebidoEm):'', x.obs ].filter(Boolean).join(' · ');
+    return `<div class="cob-bloco${x.pago?' pago':''}">
+      <div class="cob-row">
+        <button class="cob-chk${x.pago?' on':''}" ${ed?`onclick="marcarCobrancaR(${idx})"`:'disabled'} title="${ed?'Marcar ou desmarcar o recebimento':'Clique em Editar ficha para alterar'}">${x.pago?'<svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L4 7.5L10 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>':''}</button>
+        <span class="cob-rot">${esc(x.rotulo)}</span>
+        ${ed ? `<input class="cob-inp" type="date" value="${x.venc}" title="Vencimento em contrato" onchange="editarCobrancaR(${idx},'venc',this.value)">
+                <input class="cob-inp mono" type="text" inputmode="decimal" value="${moedaTxt(x.valor)}" placeholder="0,00" oninput="moedaNum(this)" onblur="moedaBlur(this)" onchange="editarCobrancaR(${idx},'valor',moedaNum(this))">`
+             : `<span class="cob-ro">${x.venc?fmtData(x.venc):'sem data'}</span>
+                <span class="cob-ro mono">${brl(x.valor)}</span>`}
+        <span class="cob-st" style="color:${cor}">${st}</span>
+        ${ed && typeof x.idx==='number' ? `<button class="cob-del" onclick="removerParcelaR(${x.idx})" title="Remover parcela">×</button>` : '<span></span>'}
+      </div>
+      ${ed ? `<div class="cob-extra">
+          <label>Tipo de pagamento<input class="cob-inp" type="text" list="tipos-pgto" value="${esc(x.tipo)}" placeholder="ex: Boleto Asaas" onchange="editarCobrancaR(${idx},'tipo',this.value)"></label>
+          <label>Data recebida<input class="cob-inp" type="date" value="${x.recebidoEm}" onchange="editarCobrancaR(${idx},'recebidoEm',this.value)"></label>
+          <label>Comprovante<input class="cob-inp" type="url" value="${esc(x.comprovante)}" placeholder="link" onchange="editarCobrancaR(${idx},'comprovante',this.value)"></label>
+          <label>Observação<input class="cob-inp" type="text" value="${esc(x.obs)}" placeholder="opcional" onchange="editarCobrancaR(${idx},'obs',this.value)"></label>
+        </div>`
+      : (meta || x.comprovante) ? `<div class="cob-meta">${esc(meta)}${x.comprovante?` · <a href="${esc(x.comprovante)}" target="_blank" rel="noopener">comprovante ↗</a>`:''}</div>` : ''}
     </div>`;
   }).join('') : '<div style="font-size:13px;color:var(--text-dim);padding:6px 0">Nenhuma cobrança lançada ainda.</div>';
 
@@ -1335,7 +1378,16 @@ function renderCliente(){
       ${linha('Valor total da venda', ed?`<div class="moeda-wrap"><span class="moeda-pre">R$</span><input class="inp mono" type="text" inputmode="decimal" placeholder="0,00" value="${moedaTxt(num(ng.valorTotal))}" oninput="setR('ficha.negociacao.valorTotal', moedaNum(this))" onblur="moedaBlur(this)"></div>`:mono(`<span class="v-amber">${c.total?brl(c.total):'—'}</span>`))}
       ${linha('Valor de entrada', ed?`<div class="moeda-wrap"><span class="moeda-pre">R$</span><input class="inp mono" type="text" inputmode="decimal" placeholder="0,00" value="${moedaTxt(c.entrada)}" oninput="setR('ficha.negociacao.entrada.valor', moedaNum(this))" onblur="moedaBlur(this)"></div>`:mono(c.entrada?brl(c.entrada):'—'))}
       ${linha('Valor da parcela', ed?`<div class="moeda-wrap"><span class="moeda-pre">R$</span><input class="inp mono" type="text" inputmode="decimal" placeholder="0,00" value="${moedaTxt(c.valorParcela)}" oninput="setR('ficha.negociacao.valorParcela', moedaNum(this))" onblur="moedaBlur(this)"></div>`:mono(c.valorParcela?brl(c.valorParcela)+` <span style="font-size:12px;color:var(--text-dim)">(${c.nParcelas}x)</span>`:'—'))}
+      ${linha('Valor mensal', ed?`<div class="moeda-wrap"><span class="moeda-pre">R$</span><input class="inp mono" type="text" inputmode="decimal" placeholder="0,00" value="${moedaTxt(base.receita?.valorMensal)}" oninput="setR('receita.valorMensal', moedaNum(this))" onblur="moedaBlur(this)"></div>`:mono(c.valorMensal?brl(c.valorMensal):'—'))}
       ${linha('Recebido / a receber', mono(`<span style="color:var(--green)">${brl(c.recebido)}</span> <span style="color:var(--text-dim)">/</span> <span style="color:var(--yellow)">${brl(c.aReceber)}</span>`))}
+      ${linha('Data de finalização', ed?`<input class="inp" type="date" value="${base.receita?.dataFinalizacao||''}" onchange="setR('receita.dataFinalizacao',this.value);renderCliente()">`:txt(base.receita?.dataFinalizacao?fmtData(base.receita.dataFinalizacao):'<span style="color:var(--text-dim)">calculada pelo programa</span>'))}
+      ${linha('Status do contrato', ed
+        ? `<select class="inp" onchange="setR('receita.statusContrato',this.value)">
+             ${['','Ativo','Encerrado','Cancelado','Renegociado'].map(o=>`<option value="${o}"${(base.receita?.statusContrato||'')===o?' selected':''}>${o||'—'}</option>`).join('')}
+           </select>`
+        : txt(esc(c.statusContrato)))}
+      ${linha('Contrato assinado', ed?`<input class="inp" type="url" placeholder="link do contrato" value="${esc(c.contrato)}" oninput="setR('receita.contrato',this.value)">`
+        : (c.contrato?`<span class="campo-val"><a href="${esc(c.contrato)}" target="_blank" rel="noopener" style="color:var(--amber);text-decoration:none">abrir contrato ↗</a></span>`:txt('')))}
       <div style="margin-top:12px">
         <span class="campo-lbl" style="display:block;margin-bottom:6px">Observação</span>
         ${ed ? `<textarea class="txt" placeholder="combinados de cobrança, renegociação, o que precisa ficar registrado" oninput="setR('receita.obs',this.value)">${esc(c.obs)}</textarea>`
@@ -1351,10 +1403,13 @@ function renderCliente(){
       ${linha('Head', ed?`<input class="inp" type="text" placeholder="nome do head" value="${esc(c.head)}" oninput="setR('receita.head',this.value)">`:txt(esc(c.head)))}
 
       <div class="com-grid" style="margin-top:14px">
-        ${[['closer','Comissão closer'],['sdr','Comissão SDR'],['hunter','Comissão hunter'],['head','Comissão head']].map(([k,lbl])=>`
+        ${[['closer','Closer'],['sdr','SDR'],['hunter','Hunter'],['head','Head']].map(([k,lbl])=>`
           <div class="com-item"><label>${lbl}</label>
-            ${ed ? `<div class="moeda-wrap"><span class="moeda-pre">R$</span><input class="inp mono" type="text" inputmode="decimal" placeholder="0,00" value="${moedaTxt(c.comissoes[k])}" oninput="setR('receita.comissoes.${k}', moedaNum(this))" onblur="moedaBlur(this)"></div>`
-                 : `<div class="com-ro">${c.comissoes[k]?brl(c.comissoes[k]):'—'}</div>`}
+            ${ed ? `<div class="com-dupla">
+                     <div class="pct-wrap"><input class="inp mono" type="number" min="0" step="0.1" placeholder="0" value="${c.percentuais[k]||''}" oninput="setR('receita.percentuais.${k}', num(this.value));renderCliente()"><span class="pct-pos">%</span></div>
+                     <div class="moeda-wrap"><span class="moeda-pre">R$</span><input class="inp mono" type="text" inputmode="decimal" placeholder="0,00" value="${moedaTxt(c.comissoes[k])}" ${c.percentuais[k]>0?'disabled title="Calculado pelo percentual sobre o recebido"':`oninput="setR('receita.comissoes.${k}', moedaNum(this))" onblur="moedaBlur(this)"`}></div>
+                   </div>`
+                 : `<div class="com-ro">${c.comissoes[k]?brl(c.comissoes[k]):'—'}${c.percentuais[k]?` <span style="font-size:11px;color:var(--text-dim)">(${c.percentuais[k]}% do recebido)</span>`:''}</div>`}
           </div>`).join('')}
       </div>
       <div class="com-total">
