@@ -226,6 +226,11 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .qp-close:hover{color:var(--text)}
 .qp-body{flex:1;padding:18px 20px;display:flex;flex-direction:column;gap:18px;overflow-y:auto}
 .qp-section{display:flex;flex-direction:column;gap:8px}
+.qp-comb{font-size:13px;line-height:1.5;color:var(--text)}
+.qp-comb-row{display:grid;grid-template-columns:86px 1fr;gap:8px;padding:5px 0;border-bottom:1px solid rgba(35,64,110,0.5)}
+.qp-comb-row:last-child{border-bottom:none}
+.qp-comb-k{font-size:11px;color:var(--text-sec);padding-top:1px}
+.qp-comb-empty{font-size:12px;color:var(--text-dim)}
 .qp-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--text-sec);font-family:'Montserrat',sans-serif;display:flex;align-items:center;gap:8px}
 .qp-saved{font-size:10px;color:var(--green);font-weight:700;opacity:0;transition:opacity .3s}
 .qp-saved.show{opacity:1}
@@ -418,6 +423,11 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
         <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--text);padding:8px 0"><input type="checkbox" id="f-traf-bonus" style="accent-color:#C9A45C;width:16px;height:16px"> 🎁 Tráfego como bônus</label>
       </div>
       <div class="form-field"><label class="form-label">Data de início *</label><input class="form-input" id="f-start" type="date"></div>
+      <div class="form-field"><label class="form-label">Prazo (meses)</label><input class="form-input" id="f-prazo" type="number" min="1" max="24" placeholder="Padrão do programa"></div>
+      <div class="form-field" style="grid-column:1/-1;margin-top:4px"><label class="form-label" style="color:var(--amber)">Combinado da venda</label></div>
+      <div class="form-field" style="grid-column:1/-1"><label class="form-label">Pagamento</label><textarea class="form-input" id="f-comb-pag" rows="2" style="resize:vertical" placeholder="Ex: R$ 5.000 de entrada + R$ 25.000 após 3 meses"></textarea></div>
+      <div class="form-field" style="grid-column:1/-1"><label class="form-label">Entrega</label><textarea class="form-input" id="f-comb-ent" rows="2" style="resize:vertical" placeholder="Ex: Normal + CRM"></textarea></div>
+      <div class="form-field" style="grid-column:1/-1"><label class="form-label">Observações</label><textarea class="form-input" id="f-comb-obs" rows="2" style="resize:vertical" placeholder="Disponibilidade, combinados especiais..."></textarea></div>
     </div>
     <div class="modal-actions">
       <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
@@ -490,6 +500,11 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
     <div class="qp-section">
       <div class="qp-lbl">Observação da semana <span class="qp-saved" id="qp-obs-saved">✓ Salvo</span></div>
       <textarea class="qp-textarea" id="qp-obs" placeholder="Contexto geral, pontos de atenção, próximos passos..." oninput="debounceSaveQPObs()"></textarea>
+    </div>
+
+    <div class="qp-section">
+      <div class="qp-lbl">Combinado da venda <button onclick="openModal(qpClientId)" style="margin-left:auto;background:none;border:none;color:var(--amber);font-size:11px;cursor:pointer;font-family:'Inter',sans-serif;text-transform:none;letter-spacing:0">Editar</button></div>
+      <div id="qp-combinado" class="qp-comb"></div>
     </div>
 
     <div class="qp-section">
@@ -577,7 +592,7 @@ function getContractStatus(c){
   if(!c.startDate) return null;
   const prog = c.program||'aceleracao';
   if(prog==='mentoria') return null;
-  const months = prog==='ativacao' ? 3 : 6;
+  const months = c.prazoMeses || (prog==='ativacao' ? 3 : 6);
   const start = new Date(c.startDate);
   const end = new Date(start);
   end.setMonth(end.getMonth() + months);
@@ -810,8 +825,12 @@ function openModal(id=null){
     document.getElementById('f-meta-base').value=c.metaBase||'';
     document.getElementById('f-meta-alvo').value=c.metaAlvo||'';
     document.getElementById('f-meta-super').value=c.metaSuper||'';
+    document.getElementById('f-prazo').value=c.prazoMeses||'';
+    document.getElementById('f-comb-pag').value=c.combinadoPagamento||'';
+    document.getElementById('f-comb-ent').value=c.combinadoEntrega||'';
+    document.getElementById('f-comb-obs').value=c.combinadoObs||'';
   } else {
-    ['f-name','f-spec','f-ig','f-esp-vendas','f-esp-prevendas','f-esp-marketing','f-contaid','f-meta-base','f-meta-alvo','f-meta-super'].forEach(i=>document.getElementById(i).value='');
+    ['f-name','f-spec','f-ig','f-esp-vendas','f-esp-prevendas','f-esp-marketing','f-contaid','f-meta-base','f-meta-alvo','f-meta-super','f-prazo','f-comb-pag','f-comb-ent','f-comb-obs'].forEach(i=>document.getElementById(i).value='');
     document.getElementById('f-program').value='aceleracao';
     document.getElementById('f-traf-bonus').checked=false;
     document.getElementById('f-start').value=new Date().toISOString().split('T')[0];
@@ -841,6 +860,10 @@ async function saveClient(){
     metaBase:parseFloat(document.getElementById('f-meta-base').value)||0,
     metaAlvo:parseFloat(document.getElementById('f-meta-alvo').value)||0,
     metaSuper:parseFloat(document.getElementById('f-meta-super').value)||0,
+    prazoMeses:parseInt(document.getElementById('f-prazo').value)||0,
+    combinadoPagamento:document.getElementById('f-comb-pag').value.trim(),
+    combinadoEntrega:document.getElementById('f-comb-ent').value.trim(),
+    combinadoObs:document.getElementById('f-comb-obs').value.trim(),
   };
   setSyncStatus('saving');
   try{
@@ -1188,6 +1211,10 @@ function openQuickPanel(id){
   document.getElementById('qp-obs').value = obs;
   document.getElementById('qp-obs-saved').classList.remove('show');
 
+  const st=getContractStatus(c);
+  const comb=[['Prazo',c.prazoMeses?`${c.prazoMeses} meses`+(st?` · até ${st.endDate.toLocaleDateString('pt-BR')}`:''):''],['Pagamento',c.combinadoPagamento],['Entrega',c.combinadoEntrega],['Obs.',c.combinadoObs]].filter(x=>x[1]);
+  const escQ=v=>String(v).replace(/[&<>]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[ch])).replace(/\n/g,'<br>');
+  document.getElementById('qp-combinado').innerHTML=comb.length?comb.map(([k,v])=>`<div class="qp-comb-row"><div class="qp-comb-k">${k}</div><div>${escQ(v)}</div></div>`).join(''):'<div class="qp-comb-empty">Nada registrado. Clique em Editar para preencher.</div>';
   document.getElementById('qp-esp-vendas').value = c.espVendas||'';
   document.getElementById('qp-esp-prevendas').value = c.espPrevendas||'';
   document.getElementById('qp-esp-marketing').value = c.espMarketing||'';

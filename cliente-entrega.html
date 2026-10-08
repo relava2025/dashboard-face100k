@@ -813,6 +813,10 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
             <div style="display:flex;flex-direction:column;gap:5px;margin-top:4px" id="ci-team"></div>
           </div>
         </div>
+        <div class="info-card" id="ci-comb-card" style="display:none;margin-bottom:14px">
+          <div class="info-label">Combinado da venda</div>
+          <div id="ci-comb" style="display:grid;grid-template-columns:90px 1fr;gap:6px 12px;margin-top:6px;font-size:13px;line-height:1.5"></div>
+        </div>
 
         <div class="section-card">
           <div class="sc-header">
@@ -1312,6 +1316,12 @@ function renderClientInfo(){
   if(info) info.textContent=S.startDate?'Semana '+w+' calculada automaticamente':'';
   renderFaseBadges();
   const team=document.getElementById('ci-team');
+  const comb=[['Prazo',S.prazoMeses?S.prazoMeses+' meses':''],['Pagamento',S.combinadoPagamento],['Entrega',S.combinadoEntrega],['Observações',S.combinadoObs]].filter(x=>x[1]);
+  const combCard=document.getElementById('ci-comb-card');
+  if(combCard){
+    combCard.style.display=comb.length?'block':'none';
+    document.getElementById('ci-comb').innerHTML=comb.map(([k,v])=>`<div style="color:var(--text-sec);font-size:12px">${k}</div><div>${escHtml(v).replace(/\n/g,'<br>')}</div>`).join('');
+  }
   const members=[['Vendas',S.espVendas],['Pré-vendas',S.espPrevendas],['Marketing',S.espMarketing]].filter(x=>x[1]);
   team.innerHTML=members.map(([role,name2])=>`<div style="display:flex;align-items:center;gap:8px"><span style="font-size:10px;background:var(--amber-dim);color:var(--amber);border:0.5px solid var(--amber-border);padding:2px 7px;border-radius:4px;font-family:'Montserrat',sans-serif;font-weight:600">${role}</span><span style="font-size:14px;color:var(--text)">${name2}</span></div>`).join('');
 }
