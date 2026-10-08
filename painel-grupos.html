@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Monitor de Grupos — System Digital</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#071228;--surface:#0C1E3F;--surface2:#0F2449;
+  --amber:#C9A45C;--amber-dim:rgba(201,164,92,0.10);--amber-border:rgba(201,164,92,0.20);
+  --border:#23406E;--text:#F7F3EA;--text-sec:#AEBBD0;--text-dim:rgba(255,255,255,0.28);
+  --green:#22C55E;--green-dim:rgba(34,197,94,0.10);--green-border:rgba(34,197,94,0.22);
+  --red:#EF4444;--red-dim:rgba(239,68,68,0.10);--red-border:rgba(239,68,68,0.25);
+  --yellow:#EAB308;--yellow-dim:rgba(234,179,8,0.10);--yellow-border:rgba(234,179,8,0.25);
+}
+html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:15px;line-height:1.5}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(0deg,transparent 24%,rgba(201,164,92,0.03) 25%,rgba(201,164,92,0.03) 26%,transparent 27%),linear-gradient(90deg,transparent 24%,rgba(201,164,92,0.03) 25%,rgba(201,164,92,0.03) 26%,transparent 27%);background-size:50px 50px;pointer-events:none;z-index:0}
+
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);height:56px;display:flex;align-items:center;padding:0 28px;gap:14px;position:sticky;top:0;z-index:50}
+.t-back{font-size:13px;color:var(--text-sec);text-decoration:none;padding:6px 12px;border:1px solid var(--border);border-radius:6px;transition:border-color .15s,color .15s}
+.t-back:hover{border-color:var(--amber-border);color:var(--amber)}
+.t-logo{font-family:'Montserrat',sans-serif;font-size:16px;font-weight:800}
+.t-logo span{color:var(--amber);font-style:italic}
+.t-sep{width:1px;height:18px;background:var(--border)}
+.t-sub{font-size:13px;color:var(--text-sec)}
+.t-right{margin-left:auto;display:flex;align-items:center;gap:10px;font-size:12px;color:var(--text-sec)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--green)}
+.dot.off{background:var(--red)}
+.btn{background:var(--surface2);color:var(--text-sec);border:1px solid var(--border);border-radius:6px;padding:6px 12px;font-size:12px;font-weight:600;font-family:'Montserrat',sans-serif;cursor:pointer;transition:border-color .15s,color .15s}
+.btn:hover{border-color:var(--amber-border);color:var(--amber)}
+.btn:focus-visible,.t-back:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+
+.content{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:24px 28px 60px}
+.regra{font-size:12px;color:var(--text-dim);margin-bottom:16px}
+
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.stat-label{font-size:10px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.14em;font-family:'Montserrat',sans-serif;font-weight:600;margin-bottom:8px}
+.stat-val{font-size:26px;font-weight:800;font-family:'Montserrat',sans-serif;line-height:1}
+.stat-sub{font-size:11px;color:var(--text-sec);margin-top:4px}
+
+.grid2{display:grid;grid-template-columns:1.2fr 1fr;gap:16px;align-items:start}
+.grid2>*{min-width:0}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:16px}
+.card-hdr{display:flex;align-items:baseline;gap:10px;padding:14px 18px;border-bottom:1px solid var(--border)}
+.card-title{font-size:14px;font-weight:700;font-family:'Montserrat',sans-serif}
+.card-sub{margin-left:auto;font-size:12px;color:var(--text-sec)}
+.empty{padding:22px 18px;font-size:13px;color:var(--text-sec)}
+
+.row{display:flex;align-items:center;gap:14px;padding:11px 18px;border-bottom:1px solid rgba(35,64,110,0.5)}
+.row:last-child{border-bottom:none}
+.r-main{flex:1;min-width:0}
+.r-name{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.r-sub{font-size:12px;color:var(--text-sec);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.r-val{font-family:'JetBrains Mono',monospace;font-size:13px;text-align:right;white-space:nowrap;flex-shrink:0;min-width:70px}
+.r-val small{display:block;font-family:'Inter',sans-serif;font-size:10px;color:var(--text-dim)}
+.c-red{color:var(--red)}.c-yellow{color:var(--yellow)}.c-green{color:var(--green)}.c-dim{color:var(--text-sec)}
+.pill{font-size:10px;font-weight:700;font-family:'Montserrat',sans-serif;text-transform:uppercase;letter-spacing:.06em;padding:2px 8px;border-radius:10px;flex-shrink:0}
+.p-red{background:var(--red-dim);color:var(--red);border:1px solid var(--red-border)}
+.p-yellow{background:var(--yellow-dim);color:var(--yellow);border:1px solid var(--yellow-border)}
+
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text-sec);font-family:'Montserrat',sans-serif;padding:10px 18px;border-bottom:1px solid var(--border);white-space:nowrap}
+td{padding:10px 18px;border-bottom:1px solid rgba(35,64,110,0.5);white-space:nowrap}
+tr:last-child td{border-bottom:none}
+td.num{font-family:'JetBrains Mono',monospace;text-align:right}
+th.num{text-align:right}
+td.nome{max-width:320px;overflow:hidden;text-overflow:ellipsis}
+.tbl-wrap{overflow-x:auto}
+.tbl-eq th,.tbl-eq td{padding:10px 10px}
+.tbl-eq th:first-child,.tbl-eq td:first-child{padding-left:18px}
+
+.gate{max-width:380px;margin:80px auto;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:26px}
+.gate h2{font-family:'Montserrat',sans-serif;font-size:18px;margin-bottom:6px}
+.gate p{font-size:13px;color:var(--text-sec);margin-bottom:16px}
+.gate input{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:7px;color:var(--text);font-size:14px;padding:10px 12px;outline:none;margin-bottom:12px}
+.gate input:focus{border-color:var(--amber)}
+.gate .btn-main{width:100%;background:var(--amber);color:#071228;border:none;border-radius:7px;padding:10px;font-weight:700;font-family:'Montserrat',sans-serif;cursor:pointer}
+.gate .err{font-size:12px;color:var(--red);margin-top:8px;min-height:16px}
+.state{padding:60px 0;text-align:center;color:var(--text-sec);font-size:14px}
+
+@media(max-width:900px){.grid2{grid-template-columns:1fr}}
+@media(max-width:640px){
+  .topbar{padding:0 16px}.t-sub,.t-sep{display:none}
+  .content{padding:18px 16px 50px}
+  .stats{grid-template-columns:1fr 1fr}
+  td,th{padding:9px 12px}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="t-back" href="painel-entrega.html">← Painel</a>
+  <div class="t-logo">FACE <span>SCALE</span></div>
+  <div class="t-sep"></div>
+  <div class="t-sub">Monitor de Grupos</div>
+  <div class="t-right"><span class="dot" id="dot"></span><span id="atualizado">—</span><button class="btn" onclick="carregar()">Atualizar</button></div>
+</div>
+
+<div class="content" id="view"><div class="state">Carregando...</div></div>
+
+<script>
+const API='https://whook.gruposystemdigital.com.br/webhook/monitor-painel-4e8b';
+const KEY='monitor_grupos_codigo';
+let codigo=''; try{ codigo=localStorage.getItem(KEY)||''; }catch(e){}
+
+function esc(s){ return String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function dur(min){ if(min===null||min===undefined) return '—'; if(min<60) return Math.round(min)+' min'; const h=Math.floor(min/60), m=Math.round(min%60); return h+'h'+(m?String(m).padStart(2,'0'):''); }
+function quando(ts){ if(!ts) return '—'; const d=new Date(ts*1000); const dd=String(d.getDate()).padStart(2,'0'), mm=String(d.getMonth()+1).padStart(2,'0'); return `${dd}/${mm} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`; }
+function nomeCurto(n){ return String(n||'').replace(/^[^\p{L}\p{N}]+/u,'').trim(); }
+function quem(q){ if(!q) return '—'; return /^\d{10,}$/.test(q) ? '+'+q : q; }
+
+function gate(msg){
+  document.getElementById('view').innerHTML=`<div class="gate">
+    <h2>Código de acesso</h2>
+    <p>Digite o código do Monitor de Grupos. Ele fica salvo neste navegador.</p>
+    <input id="cod" type="password" placeholder="Código" autocomplete="off" onkeydown="if(event.key==='Enter')entrar()">
+    <button class="btn-main" onclick="entrar()">Entrar</button>
+    <div class="err">${esc(msg||'')}</div></div>`;
+  setTimeout(()=>document.getElementById('cod')?.focus(),50);
+}
+function entrar(){ codigo=(document.getElementById('cod').value||'').trim(); try{ localStorage.setItem(KEY,codigo); }catch(e){} carregar(); }
+
+async function carregar(){
+  if(!codigo){ gate(); return; }
+  const dot=document.getElementById('dot');
+  try{
+    const r=await fetch(API+'?t='+encodeURIComponent(codigo),{cache:'no-store'});
+    const d=await r.json();
+    if(d.erro){ try{ localStorage.removeItem(KEY); }catch(e){} codigo=''; gate('Código incorreto.'); return; }
+    dot.classList.remove('off');
+    document.getElementById('atualizado').textContent='Atualizado '+new Date(d.gerado).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+    render(d);
+  }catch(e){
+    dot.classList.add('off');
+    document.getElementById('atualizado').textContent='Sem conexão';
+    if(!document.querySelector('.stats')) document.getElementById('view').innerHTML='<div class="state">Não consegui carregar os dados. Tente atualizar em instantes.</div>';
+  }
+}
+
+function render(d){
+  const R=d.resumo, A=d.regra.alerta_min, V=d.regra.vermelho_min;
+  const espera=d.espera.filter(g=>g.esperando_min>=A);
+  const recentes=d.espera.filter(g=>g.esperando_min<A);
+  const parados=d.grupos.filter(g=>g.dias_sem_msg!==null&&g.dias_sem_msg>=3).sort((a,b)=>a.dias_sem_msg-b.dias_sem_msg);
+  const todos=[...d.grupos].sort((a,b)=>(b.ultima||0)-(a.ultima||0));
+  const corT=m=>m===null?'c-dim':m>=V?'c-red':m>=A?'c-yellow':'c-green';
+
+  document.getElementById('view').innerHTML=`
+    <div class="regra">Grupos de clientes · horário útil ${esc(d.regra.horario)} · alerta com ${A/60}h úteis sem resposta, vermelho com ${V/60}h · últimos 7 dias</div>
+    <div class="stats">
+      <div class="stat"><div class="stat-label">Esperando resposta</div><div class="stat-val" style="color:${espera.length?'var(--yellow)':'var(--green)'}">${espera.length}</div><div class="stat-sub">${R.vermelho} há mais de ${V/60}h úteis</div></div>
+      <div class="stat"><div class="stat-label">Tempo médio de resposta</div><div class="stat-val" style="color:var(--amber)">${dur(R.tempo_medio)}</div><div class="stat-sub">${R.respostas7} respostas em 7 dias</div></div>
+      <div class="stat"><div class="stat-label">Grupos parados</div><div class="stat-val">${R.parados}</div><div class="stat-sub">3+ dias sem mensagem</div></div>
+      <div class="stat"><div class="stat-label">Grupos monitorados</div><div class="stat-val">${R.grupos}</div><div class="stat-sub">ativos nos últimos 45 dias</div></div>
+    </div>
+
+    <div class="grid2">
+      <div>
+        <div class="card">
+          <div class="card-hdr"><div class="card-title">Cliente esperando resposta</div><div class="card-sub">mais tempo primeiro</div></div>
+          ${espera.length?espera.map(g=>`<div class="row">
+            <div class="r-main"><div class="r-name">${esc(nomeCurto(g.nome))}</div><div class="r-sub">${esc(quem(g.quem_espera))} mandou ${quando(g.esperando_desde)}</div></div>
+            <span class="pill ${g.esperando_min>=V?'p-red':'p-yellow'}">${g.esperando_min>=V?'Atrasado':'Atenção'}</span>
+            <div class="r-val ${corT(g.esperando_min)}">${dur(g.esperando_min)}<small>úteis</small></div></div>`).join(''):'<div class="empty">Ninguém esperando há mais de '+(A/60)+'h úteis.</div>'}
+          ${recentes.length?`<div class="row" style="background:rgba(255,255,255,0.02)"><div class="r-main"><div class="r-sub" style="white-space:normal">Aguardando há menos de ${A/60}h: ${recentes.map(g=>esc(nomeCurto(g.nome))).join(' · ')}</div></div></div>`:''}
+        </div>
+
+        <div class="card">
+          <div class="card-hdr"><div class="card-title">Grupos parados</div><div class="card-sub">sem nenhuma mensagem há 3+ dias</div></div>
+          ${parados.length?parados.map(g=>`<div class="row"><div class="r-main"><div class="r-name">${esc(nomeCurto(g.nome))}</div><div class="r-sub">última mensagem ${quando(g.ultima)}</div></div><div class="r-val ${g.dias_sem_msg>=7?'c-red':'c-yellow'}">${g.dias_sem_msg}d</div></div>`).join(''):'<div class="empty">Nenhum grupo parado.</div>'}
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-hdr"><div class="card-title">Equipe</div><div class="card-sub">últimos 7 dias</div></div>
+        <div class="tbl-wrap"><table class="tbl-eq">
+          <tr><th>Pessoa</th><th class="num">Média</th><th class="num">Resp.</th><th class="num">+${A/60}h</th></tr>
+          ${d.equipe.map(p=>`<tr><td><b>${esc(p.nome)}</b><div class="r-sub">${esc(p.area||'')} · ${p.grupos} grupos</div></td><td class="num ${corT(p.tempo_medio)}">${dur(p.tempo_medio)}</td><td class="num">${p.respostas}</td><td class="num ${p.acima_2h?'c-yellow':''}">${p.acima_2h}</td></tr>`).join('')}
+        </table></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr"><div class="card-title">Todos os grupos</div><div class="card-sub">${todos.length} grupos · mais recentes primeiro</div></div>
+      <div class="tbl-wrap"><table>
+        <tr><th>Grupo</th><th>Última mensagem</th><th class="num">Msgs 7d</th><th class="num">Do cliente</th><th class="num">Tempo médio</th><th>Situação</th></tr>
+        ${todos.map(g=>{
+          const sit=g.esperando_min!==null&&g.esperando_min>=V?'<span class="pill p-red">Atrasado</span>':g.esperando_min!==null&&g.esperando_min>=A?'<span class="pill p-yellow">Atenção</span>':g.dias_sem_msg>=3?'<span class="c-dim">Parado</span>':'<span class="c-green">Em dia</span>';
+          return `<tr><td class="nome">${esc(nomeCurto(g.nome))}</td><td class="c-dim">${quando(g.ultima)}</td><td class="num">${g.msgs7}</td><td class="num">${g.cliente7}</td><td class="num ${corT(g.tempo_medio)}">${dur(g.tempo_medio)}</td><td>${sit}</td></tr>`;}).join('')}
+      </table></div>
+    </div>`;
+}
+
+carregar();
+setInterval(()=>{ if(codigo&&!document.hidden) carregar(); },120000);
+</script>
+</body>
+</html>
