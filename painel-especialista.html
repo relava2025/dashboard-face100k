@@ -99,6 +99,8 @@ a{color:inherit}
 .ev-txt b{font-weight:600}
 .ev-txt span{display:block;font-size:12px;color:var(--text-sec)}
 
+.old-row .q-step{color:var(--text-dim)}
+.seg.old{background:var(--text-sec)}
 .state{padding:60px 0;text-align:center;color:var(--text-sec);font-size:14px}
 
 @media(max-width:900px){.grid2{grid-template-columns:1fr}}
@@ -134,6 +136,9 @@ const JORNADA=[
   {fase:'Marketing',campo:'espMarketing',mkt:true,etapas:[['mkt1','CP1 — Posicionamento e Autoridade'],['mkt2','CP2 — Geração de Oportunidades'],['mkt3','CP3 — Análise de Implementação']]},
 ];
 const PARADO_DIAS=14;
+// clientes que começaram antes de 18/08/2026 seguem as 7 calls antigas (ids c2,c3,c5,c6,c7 só existem nelas)
+const CALLS_ANTIGAS=[['c1','Call de Boas-Vindas'],['c2','Call com a Equipe'],['c3','Call de Confiança'],['c4','Call de Esteira'],['c5','Entrega da Apresentação de Venda'],['c6','Call de Implementação'],['c7','Marketing e Vendas']];
+function isFormatoAntigo(c){ const o=c.callsOnb||{}; return ['c2','c3','c5','c6','c7'].some(k=>o[k]); }
 
 let clients=[], espAtual=null;
 
@@ -216,9 +221,10 @@ function render(){
   const mes=new Date().toISOString().slice(0,7);
 
   // tudo que é dele: cada par (cliente, área) em que ele é o especialista
-  const itens=[];
+  const itens=[], antigos=[];
+  clients.forEach(c=>{ if(isFormatoAntigo(c) && JORNADA.some(g=>norm(c[g.campo])===k)) antigos.push(c); });
   clients.forEach(c=>JORNADA.forEach(g=>{
-    if(norm(c[g.campo])!==k) return;
+    if(norm(c[g.campo])!==k || isFormatoAntigo(c)) return;
     const a=areaDoCliente(c,g), cur=faseAtual(c);
     const ordemCur=cur?JORNADA.findIndex(x=>x.fase===cur.fase):99, ordemG=JORNADA.indexOf(g);
     // já começou a área (mesmo fora de ordem) conta como "agora"
@@ -228,8 +234,8 @@ function render(){
     itens.push({c,g,a,status,etapaAtual,dias:diasDesde(base),baseEhInicio:!a.ultima});
   }));
 
-  const areas=[...new Set(itens.map(i=>i.g.fase))];
-  const nClientes=new Set(itens.map(i=>i.c.id)).size;
+  const areas=[...new Set(clients.flatMap(c=>JORNADA.filter(g=>norm(c[g.campo])===k).map(g=>g.fase)))];
+  const nClientes=new Set(clients.filter(c=>JORNADA.some(g=>norm(c[g.campo])===k)).map(c=>c.id)).size;
   const agora=itens.filter(i=>i.status==='agora').sort((a,b)=>(b.dias??-1)-(a.dias??-1));
   const aguardando=itens.filter(i=>i.status==='aguardando');
   const concluidos=itens.filter(i=>i.status==='concluido');
@@ -275,6 +281,13 @@ function render(){
           <div class="card-hdr"><div class="card-title">O que fazer agora</div><div class="card-sub">mais tempo sem entrega primeiro</div></div>
           ${agora.length?agora.map(i=>linha(i,true)).join(''):'<div class="empty">Nenhum cliente na sua fase agora.</div>'}
         </div>
+        ${antigos.length?`<div class="card">
+          <div class="card-hdr"><div class="card-title">Formato antigo</div><div class="card-sub">começaram antes de 18/08 · fora das contas acima</div></div>
+          ${antigos.map(c=>{ const o=c.callsOnb||{}; const f=CALLS_ANTIGAS.filter(([id])=>o[id]?.realizada).length;
+            return `<div class="q-row old-row"><div class="q-main"><div class="q-name">${esc(c.name||'—')}</div><div class="q-step">Jornada anterior · ${f}/${CALLS_ANTIGAS.length} calls</div>
+              <div class="segs">${CALLS_ANTIGAS.map(([id,t])=>`<div class="seg${o[id]?.realizada?' old':''}" title="${esc(t)}"></div>`).join('')}</div></div>
+              <a class="q-open" href="cliente-entrega.html?cliente=${encodeURIComponent(c.id)}">Abrir</a></div>`; }).join('')}
+        </div>`:''}
         ${aguardando.length||concluidos.length?`<div class="card">
           <div class="card-hdr"><div class="card-title">Demais clientes</div><div class="card-sub">${aguardando.length+concluidos.length}</div></div>
           ${aguardando.length?`<div class="sec-lbl">Aguardando chegar na sua fase</div>${aguardando.map(i=>linha(i,false)).join('')}`:''}

@@ -204,6 +204,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .jr-segs{display:flex;gap:3px}
 .jr-seg{flex:1;height:5px;border-radius:2px;background:rgba(255,255,255,0.07)}
 .jr-seg.done{background:var(--amber)}
+.jr-seg.old{background:var(--text-sec)}
 .jr-seg.now{background:transparent;box-shadow:inset 0 0 0 1px var(--amber)}
 .jr-glbl{font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim);font-family:'Montserrat',sans-serif;white-space:nowrap}
 .jr-grp.cur .jr-glbl{color:var(--text-sec)}
@@ -375,6 +376,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
     <button class="filter-btn" onclick="setFilter('fase-vendas',this)">Fase Vendas</button>
     <button class="filter-btn" onclick="setFilter('fase-prevendas',this)">Fase Pré-vendas</button>
     <button class="filter-btn" onclick="setFilter('fase-marketing',this)">Fase Marketing</button>
+    <button class="filter-btn" onclick="setFilter('formato-antigo',this)">Formato antigo</button>
     <button class="filter-btn" onclick="setFilter('traf-bonus',this)" data-filter="traf-bonus">🎁 Tráfego bônus <span id="cnt-traf-bonus" style="opacity:.7"></span></button>
     <input class="search-input" id="search" type="text" placeholder="Buscar cliente..." oninput="renderClients()">
   </div>
@@ -645,7 +647,18 @@ function getJornada(c){
   if(!cur){ for(const g of grupos.filter(g=>g.fase==='Marketing')) for(const e of g.etapas) if(!e.done&&!cur) cur={...e,fase:g.fase}; }
   return {grupos,feitas,total:n,cur};
 }
+// clientes que começaram antes de 18/08/2026 seguem as 7 calls antigas (ids c2,c3,c5,c6,c7 só existem nelas)
+const CALLS_ANTIGAS=[['c1','Call de Boas-Vindas'],['c2','Call com a Equipe'],['c3','Call de Confiança'],['c4','Call de Esteira'],['c5','Entrega da Apresentação de Venda'],['c6','Call de Implementação'],['c7','Marketing e Vendas']];
+function isFormatoAntigo(c){ const o=c.callsOnb||{}; return ['c2','c3','c5','c6','c7'].some(k=>o[k]); }
+function jornadaAntigaHtml(c){
+  const o=c.callsOnb||{};
+  const feitas=CALLS_ANTIGAS.filter(([id])=>o[id]?.realizada).length;
+  const segs=CALLS_ANTIGAS.map(([id,t])=>`<div class="jr-seg${o[id]?.realizada?' old':''}" title="${t}"></div>`).join('');
+  return `<div class="jr"><div class="jr-top"><span class="jr-fase" style="color:var(--text-sec)">Formato antigo</span><span class="jr-etapa">calls da jornada anterior a 18/08</span><span class="jr-cnt">${feitas}/${CALLS_ANTIGAS.length}</span></div><div class="jr-bar"><div class="jr-grp" style="flex:1"><div class="jr-segs">${segs}</div></div></div></div>`;
+}
+
 function jornadaHtml(c){
+  if(isFormatoAntigo(c)) return jornadaAntigaHtml(c);
   const j=getJornada(c);
   const fase=j.cur?j.cur.fase:'Concluída';
   const etapa=j.cur?`${j.cur.num}. ${j.cur.title}`:'Todas as etapas realizadas';
@@ -667,7 +680,8 @@ function renderClients(){
       (currentFilter==='aceleracao' && prog==='aceleracao') ||
       (currentFilter==='ativacao' && prog==='ativacao') ||
       (currentFilter==='traf-bonus' && !!c.trafficBonus) ||
-      (currentFilter.startsWith('fase-') && (()=>{ const cur=getJornada(c).cur; const f=cur?cur.fase:''; return {'fase-vendas':'Vendas','fase-prevendas':'Pré-vendas','fase-marketing':'Marketing'}[currentFilter]===f; })()) ||
+      (currentFilter==='formato-antigo' && isFormatoAntigo(c)) ||
+      (currentFilter.startsWith('fase-') && !isFormatoAntigo(c) && (()=>{ const cur=getJornada(c).cur; const f=cur?cur.fase:''; return {'fase-vendas':'Vendas','fase-prevendas':'Pré-vendas','fase-marketing':'Marketing'}[currentFilter]===f; })()) ||
       false;
     const matchSearch = !search || [c.name,c.spec,c.espVendas,c.espPrevendas,c.espMarketing].some(v=>(v||'').toLowerCase().includes(search));
     return matchFilter && matchSearch;
@@ -738,7 +752,7 @@ function renderClients(){
           <div class="c-avatar">${ini}</div>
           <div class="c-info">
             <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px"><div class="c-name" style="margin-bottom:0">${c.name||'—'}</div><span class="${progBadgeCls}">${progLabel}</span></div>
-            <div class="c-sub">${[c.spec, (()=>{ const f=getJornada(c).cur?.fase; const n=f&&{'Vendas':c.espVendas,'Pré-vendas':c.espPrevendas,'Marketing':c.espMarketing}[f]; return n?`${f}: ${n}`:''; })()].filter(Boolean).join(' · ')}</div>
+            <div class="c-sub">${[c.spec, isFormatoAntigo(c)?'':(()=>{ const f=getJornada(c).cur?.fase; const n=f&&{'Vendas':c.espVendas,'Pré-vendas':c.espPrevendas,'Marketing':c.espMarketing}[f]; return n?`${f}: ${n}`:''; })()].filter(Boolean).join(' · ')}</div>
           </div>
           <div class="c-status-pill ${h.cls}">${h.label}</div>
         </div>
