@@ -1319,44 +1319,71 @@ function renderAll(){
   renderFicha();
 }
 
+// fase atual da jornada (mesma regra do renderTimeline): Vendas, Pré-vendas ou Marketing
+function getFaseAtual(){
+  const onb=S.callsOnb||{}, mkt=S.callsMkt||{};
+  let atual=null, primeira=null, grupo='Vendas';
+  for(const c of CALLS_ONB){
+    if(c.grupo) grupo=c.grupo==='PRÉ-VENDAS'?'Pré-vendas':c.grupo;
+    if(onb[c.id]?.realizada) continue;
+    const r=onb[c.id]?.respostas||{};
+    if(!atual && Object.values(r).some(v=>v&&String(v).trim())) atual={fase:grupo,title:c.title};
+    if(!primeira) primeira={fase:grupo,title:c.title};
+  }
+  if(atual||primeira) return atual||primeira;
+  const m=FASES_MKT.find(c=>!mkt[c.id]?.realizada);
+  return m?{fase:'Marketing',title:m.title}:{fase:'Concluída',title:''};
+}
+function especialistaDaFase(fase){
+  return {'Vendas':S.espVendas,'Pré-vendas':S.espPrevendas,'Marketing':S.espMarketing}[fase]||'';
+}
+function renderFaseBadges(){
+  const w=getW(), totalW=S.program==='ativacao'?12:24;
+  const f=getFaseAtual().fase;
+  const tbw=document.getElementById('tb-week'); if(tbw) tbw.textContent=`${f} · S${w} / ${totalW}`;
+  const badges=document.getElementById('ci-badges');
+  const prog=S.program==='ativacao'?'Ativação 17K':'Aceleração 42K';
+  if(badges) badges.innerHTML=`<span class="badge b-amber">${f} · S${w}</span><span class="badge b-green">${prog}</span>`;
+  const esp=especialistaDaFase(f);
+  const sr=document.getElementById('sb-role'); if(sr) sr.textContent=esp?`${f}: ${esp}`:'—';
+}
+
 function renderTopbar(){
   const name = S.name||window._clientId||'Cliente';
   const w = getW();
   const totalW = S.program==='ativacao'?12:24;
-  const cp = S.checkpoint||1;
 
   document.getElementById('tb-title').textContent = name;
   const vcBtn = document.getElementById('view-client-btn');
   if(vcBtn) vcBtn.href = 'cliente-view.html?cliente='+encodeURIComponent(window._clientId||'');
   document.getElementById('tb-sub').textContent = `Liberação de Tráfego — ${name}`;
-  document.getElementById('tb-week').textContent = `CP${cp} · S${w} / ${totalW}`;
+  renderFaseBadges();
   document.getElementById('mobile-week-badge').textContent = `S${w} / ${totalW}`;
   document.title = `${name} — Dashboard FACE SCALE`;
 
   const av = document.getElementById('sb-avatar'); if(av){ av.textContent=ini(name); }
   const sn = document.getElementById('sb-name'); if(sn) sn.textContent=name;
-  const sr = document.getElementById('sb-role'); if(sr) sr.textContent=S.cs2?'CS2: '+S.cs2:'—';
+
 }
 
 
 function renderClientInfo(){
-  const name=S.name||'—'; const spec=S.spec||'—'; const cp=S.checkpoint||1; const w=getW();
+  const name=S.name||'—'; const spec=S.spec||'—'; const w=getW();
   document.getElementById('ci-name').textContent=name;
   document.getElementById('ci-spec').textContent=spec+(S.ig?' · '+S.ig:'');
-  document.getElementById('journey-sub').textContent=`Semana ${w} de ${S.program==='ativacao'?12:24} · CP${cp}`;
+  document.getElementById('journey-sub').textContent=`Semana ${w} de ${S.program==='ativacao'?12:24} · ${getFaseAtual().fase}`;
   const sdInp=document.getElementById('inp-start-date');
   if(sdInp&&S.startDate) sdInp.value=S.startDate;
   const info=document.getElementById('start-date-week-info');
   if(info) info.textContent=S.startDate?'Semana '+w+' calculada automaticamente':'';
-  const badges=document.getElementById('ci-badges');
-  const prog=S.program==='ativacao'?'Ativação 17K':'Aceleração 42K';
-  badges.innerHTML=`<span class="badge b-amber">CP${cp} · S${w}</span><span class="badge b-green">${prog}</span>`;
+  renderFaseBadges();
   const team=document.getElementById('ci-team');
   const members=[['Vendas',S.espVendas],['Pré-vendas',S.espPrevendas],['Marketing',S.espMarketing]].filter(x=>x[1]);
   team.innerHTML=members.map(([role,name2])=>`<div style="display:flex;align-items:center;gap:8px"><span style="font-size:10px;background:var(--amber-dim);color:var(--amber);border:0.5px solid var(--amber-border);padding:2px 7px;border-radius:4px;font-family:'Montserrat',sans-serif;font-weight:600">${role}</span><span style="font-size:14px;color:var(--text)">${name2}</span></div>`).join('');
 }
 
 function renderTimeline(){
+  renderFaseBadges();
   const steps=document.getElementById('timeline-steps'); if(!steps) return;
   const onb=S.callsOnb||{};
   const feitas=CALLS_ONB.filter(c=>onb[c.id]?.realizada).length;
