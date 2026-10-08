@@ -408,10 +408,9 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
           <option value="mentoria">Mentoria</option>
         </select>
       </div>
-      <div class="form-field"><label class="form-label">CS1 responsável</label><input class="form-input" id="f-cs1" type="text" placeholder="Nome do CS1"></div>
-      <div class="form-field"><label class="form-label">CS2 responsável</label><input class="form-input" id="f-cs2" type="text" placeholder="Nome do CS2"></div>
-      <div class="form-field"><label class="form-label">CS3 responsável</label><input class="form-input" id="f-cs3" type="text" placeholder="Nome do CS3"></div>
-      <div class="form-field"><label class="form-label">Head de Tráfego</label><input class="form-input" id="f-traffic" type="text" placeholder="Nome do gestor"></div>
+      <div class="form-field"><label class="form-label">Especialista de Vendas</label><input class="form-input" id="f-esp-vendas" type="text" placeholder="Ex: Alane"></div>
+      <div class="form-field"><label class="form-label">Especialista de Pré-vendas</label><input class="form-input" id="f-esp-prevendas" type="text" placeholder="Ex: Mari"></div>
+      <div class="form-field"><label class="form-label">Especialista de Marketing</label><input class="form-input" id="f-esp-marketing" type="text" placeholder="Ex: Pedro"></div>
       <div class="form-field"><label class="form-label">Tráfego</label>
         <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--text);padding:8px 0"><input type="checkbox" id="f-traf-bonus" style="accent-color:#C9A45C;width:16px;height:16px"> 🎁 Tráfego como bônus</label>
       </div>
@@ -491,11 +490,11 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
     </div>
 
     <div class="qp-section">
-      <div class="qp-lbl">Equipe</div>
+      <div class="qp-lbl">Especialistas</div>
       <div class="qp-team-row">
-        <input class="qp-input" type="text" id="qp-cs1" placeholder="CS1" onblur="saveQPTeam()">
-        <input class="qp-input" type="text" id="qp-cs2" placeholder="CS2" onblur="saveQPTeam()">
-        <input class="qp-input" type="text" id="qp-cs3" placeholder="CS3" onblur="saveQPTeam()" style="grid-column:1/-1">
+        <input class="qp-input" type="text" id="qp-esp-vendas" placeholder="Vendas" title="Especialista de Vendas" onblur="saveQPTeam()">
+        <input class="qp-input" type="text" id="qp-esp-prevendas" placeholder="Pré-vendas" title="Especialista de Pré-vendas" onblur="saveQPTeam()">
+        <input class="qp-input" type="text" id="qp-esp-marketing" placeholder="Marketing" title="Especialista de Marketing" onblur="saveQPTeam()" style="grid-column:1/-1">
       </div>
     </div>
 
@@ -669,7 +668,7 @@ function renderClients(){
       (currentFilter==='traf-bonus' && !!c.trafficBonus) ||
       (currentFilter.startsWith('fase-') && (()=>{ const cur=getJornada(c).cur; const f=cur?cur.fase:''; return {'fase-vendas':'Vendas','fase-prevendas':'Pré-vendas','fase-marketing':'Marketing'}[currentFilter]===f; })()) ||
       false;
-    const matchSearch = !search || (c.name||'').toLowerCase().includes(search) || (c.spec||'').toLowerCase().includes(search) || (c.cs2||'').toLowerCase().includes(search);
+    const matchSearch = !search || [c.name,c.spec,c.espVendas,c.espPrevendas,c.espMarketing].some(v=>(v||'').toLowerCase().includes(search));
     return matchFilter && matchSearch;
   });
 
@@ -738,7 +737,7 @@ function renderClients(){
           <div class="c-avatar">${ini}</div>
           <div class="c-info">
             <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px"><div class="c-name" style="margin-bottom:0">${c.name||'—'}</div><span class="${progBadgeCls}">${progLabel}</span></div>
-            <div class="c-sub">${c.spec||''} ${c.cs2?'CS2: '+c.cs2:''}</div>
+            <div class="c-sub">${[c.spec, (()=>{ const f=getJornada(c).cur?.fase; const n=f&&{'Vendas':c.espVendas,'Pré-vendas':c.espPrevendas,'Marketing':c.espMarketing}[f]; return n?`${f}: ${n}`:''; })()].filter(Boolean).join(' · ')}</div>
           </div>
           <div class="c-status-pill ${h.cls}">${h.label}</div>
         </div>
@@ -788,17 +787,16 @@ function openModal(id=null){
     document.getElementById('f-ig').value=c.ig||'';
     document.getElementById('f-contaid').value=c.flashboardContaId||'';
     document.getElementById('f-program').value=c.program||'aceleracao';
-    document.getElementById('f-cs1').value=c.cs1||'';
-    document.getElementById('f-cs2').value=c.cs2||'';
-    document.getElementById('f-cs3').value=c.cs3||'';
-    document.getElementById('f-traffic').value=c.traffic||'';
+    document.getElementById('f-esp-vendas').value=c.espVendas||'';
+    document.getElementById('f-esp-prevendas').value=c.espPrevendas||'';
+    document.getElementById('f-esp-marketing').value=c.espMarketing||'';
     document.getElementById('f-traf-bonus').checked=!!c.trafficBonus;
     document.getElementById('f-start').value=c.startDate||'';
     document.getElementById('f-meta-base').value=c.metaBase||'';
     document.getElementById('f-meta-alvo').value=c.metaAlvo||'';
     document.getElementById('f-meta-super').value=c.metaSuper||'';
   } else {
-    ['f-name','f-spec','f-ig','f-cs1','f-cs2','f-cs3','f-traffic','f-contaid','f-meta-base','f-meta-alvo','f-meta-super'].forEach(i=>document.getElementById(i).value='');
+    ['f-name','f-spec','f-ig','f-esp-vendas','f-esp-prevendas','f-esp-marketing','f-contaid','f-meta-base','f-meta-alvo','f-meta-super'].forEach(i=>document.getElementById(i).value='');
     document.getElementById('f-program').value='aceleracao';
     document.getElementById('f-traf-bonus').checked=false;
     document.getElementById('f-start').value=new Date().toISOString().split('T')[0];
@@ -820,10 +818,9 @@ async function saveClient(){
     ig:document.getElementById('f-ig').value.trim(),
     flashboardContaId:document.getElementById('f-contaid').value.trim(),
     program:document.getElementById('f-program').value,
-    cs1:document.getElementById('f-cs1').value.trim(),
-    cs2:document.getElementById('f-cs2').value.trim(),
-    cs3:document.getElementById('f-cs3').value.trim(),
-    traffic:document.getElementById('f-traffic').value.trim(),
+    espVendas:document.getElementById('f-esp-vendas').value.trim(),
+    espPrevendas:document.getElementById('f-esp-prevendas').value.trim(),
+    espMarketing:document.getElementById('f-esp-marketing').value.trim(),
     trafficBonus:document.getElementById('f-traf-bonus').checked,
     startDate:document.getElementById('f-start').value,
     metaBase:parseFloat(document.getElementById('f-meta-base').value)||0,
@@ -1176,9 +1173,9 @@ function openQuickPanel(id){
   document.getElementById('qp-obs').value = obs;
   document.getElementById('qp-obs-saved').classList.remove('show');
 
-  document.getElementById('qp-cs1').value = c.cs1||'';
-  document.getElementById('qp-cs2').value = c.cs2||'';
-  document.getElementById('qp-cs3').value = c.cs3||'';
+  document.getElementById('qp-esp-vendas').value = c.espVendas||'';
+  document.getElementById('qp-esp-prevendas').value = c.espPrevendas||'';
+  document.getElementById('qp-esp-marketing').value = c.espMarketing||'';
 
   // Histórico health score
   const hist = c.healthHistory||{};
@@ -1329,12 +1326,12 @@ async function saveQPField(key, value){
 
 async function saveQPTeam(){
   if(!qpClientId) return;
-  const cs1 = document.getElementById('qp-cs1').value.trim();
-  const cs2 = document.getElementById('qp-cs2').value.trim();
-  const cs3 = document.getElementById('qp-cs3').value.trim();
+  const espVendas = document.getElementById('qp-esp-vendas').value.trim();
+  const espPrevendas = document.getElementById('qp-esp-prevendas').value.trim();
+  const espMarketing = document.getElementById('qp-esp-marketing').value.trim();
   const c = allClients.find(x=>x.id===qpClientId);
-  if(c){ c.cs1=cs1; c.cs2=cs2; c.cs3=cs3; }
-  await window._fb.save(qpClientId,{cs1,cs2,cs3});
+  if(c){ c.espVendas=espVendas; c.espPrevendas=espPrevendas; c.espMarketing=espMarketing; }
+  await window._fb.save(qpClientId,{espVendas,espPrevendas,espMarketing});
   renderClients();
 }
 

@@ -1108,7 +1108,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
     </div>
     <div class="form-field">
       <label class="form-label">Responsável</label>
-      <input class="form-input" type="text" id="call-resp" placeholder="Ex: Ruanna — CS3">
+      <input class="form-input" type="text" id="call-resp" placeholder="Ex: Alane — Vendas">
     </div>
     <div class="form-field">
       <label class="form-label">Resumo da call</label>
@@ -1352,7 +1352,7 @@ function renderClientInfo(){
   const prog=S.program==='ativacao'?'Ativação 17K':'Aceleração 42K';
   badges.innerHTML=`<span class="badge b-amber">CP${cp} · S${w}</span><span class="badge b-green">${prog}</span>`;
   const team=document.getElementById('ci-team');
-  const members=[['CS1',S.cs1],['CS2',S.cs2],['CS3',S.cs3],['Tráfego',S.traffic]].filter(x=>x[1]);
+  const members=[['Vendas',S.espVendas],['Pré-vendas',S.espPrevendas],['Marketing',S.espMarketing]].filter(x=>x[1]);
   team.innerHTML=members.map(([role,name2])=>`<div style="display:flex;align-items:center;gap:8px"><span style="font-size:10px;background:var(--amber-dim);color:var(--amber);border:0.5px solid var(--amber-border);padding:2px 7px;border-radius:4px;font-family:'Montserrat',sans-serif;font-weight:600">${role}</span><span style="font-size:14px;color:var(--text)">${name2}</span></div>`).join('');
 }
 

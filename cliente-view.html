@@ -918,7 +918,7 @@ function renderMsg(){
   const ws=getWeekState(getW()),obs=ws._obs||'';
   const card=document.getElementById('msg-card');
   if(!obs){card.style.display='none';return}
-  const resp=S.cs3||S.cs2||S.cs1||'System Digital';
+  const resp=S.espVendas||S.espPrevendas||S.espMarketing||'System Digital';
   card.style.display='flex';
   document.getElementById('msg-avatar').textContent=ini(resp);
   document.getElementById('msg-from').textContent=resp+' — System Digital';
@@ -926,7 +926,7 @@ function renderMsg(){
 }
 
 function renderTeam(){
-  const members=[['CS1',S.cs1],['CS2 — Implementação',S.cs2],['CS3 — Resultados',S.cs3],['Head de Tráfego',S.traffic]].filter(x=>x[1]);
+  const members=[['Especialista de Vendas',S.espVendas],['Especialista de Pré-vendas',S.espPrevendas],['Especialista de Marketing',S.espMarketing]].filter(x=>x[1]);
   const grid=document.getElementById('team-grid');
   if(!members.length){grid.innerHTML='<div style="color:var(--text-sec);font-size:14px">Equipe não configurada</div>';return}
   grid.innerHTML=members.map(([role,name])=>`
