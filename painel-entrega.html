@@ -79,7 +79,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .content{position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:24px 28px 60px}
 
 /* STATS */
-.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:20px}
 .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 18px;position:relative;overflow:hidden}
 .stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
 .sc-total::before{background:var(--amber)}
@@ -204,6 +204,11 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .cp-badge{font-size:10px;padding:2px 8px;border-radius:4px;font-weight:600;font-family:'Montserrat',sans-serif;background:var(--amber-dim);color:var(--amber);border:0.5px solid var(--amber-border)}
 .prog-badge-acel{font-size:10px;padding:2px 8px;border-radius:4px;font-weight:600;font-family:'Montserrat',sans-serif;background:var(--blue-dim);color:var(--blue);border:0.5px solid var(--blue-border)}
 .prog-badge-ativ{font-size:10px;padding:2px 8px;border-radius:4px;font-weight:600;font-family:'Montserrat',sans-serif;background:rgba(168,85,247,0.1);color:#A855F7;border:0.5px solid rgba(168,85,247,0.25)}
+.c-card.is-traf-bonus{border-color:rgba(201,164,92,0.45)}
+.c-card.is-traf-bonus:hover{border-color:var(--amber)}
+.tb-band{display:flex;align-items:center;gap:6px;padding:6px 18px;border-bottom:0.5px solid var(--amber-border);background:var(--amber-dim);color:var(--amber);font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+.sc-traf-bonus{cursor:pointer;transition:border-color .15s}
+.sc-traf-bonus:hover{border-color:var(--amber-border)}
 .prog-badge-ment{font-size:10px;padding:2px 8px;border-radius:4px;font-weight:600;font-family:'Montserrat',sans-serif;background:rgba(20,184,166,0.1);color:#14B8A6;border:0.5px solid rgba(20,184,166,0.25)}
 
 /* TUTORIAS MODAL SESSION ROW */
@@ -364,7 +369,8 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
     <div class="stat-card sc-attention"><div class="stat-label">Em atenção</div><div class="stat-val sv-yellow" id="st-attention">0</div><div class="stat-sub">health score 40–79</div></div>
     <div class="stat-card sc-healthy"><div class="stat-label">Health boa</div><div class="stat-val sv-green" id="st-healthy">0</div><div class="stat-sub">score 80 ou mais</div></div>
     <div class="stat-card" style="border-color:rgba(201,164,92,0.25);cursor:pointer" onclick="setFilter('cp-call',document.querySelector('[data-filter=cp-call]'))"><div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--amber)"></div><div class="stat-label">Call de Checkpoint</div><div class="stat-val sv-amber" id="st-cp-call">0</div><div class="stat-sub">aguardando chamada</div></div>
-    <div class="stat-card" style="border-color:rgba(34,197,94,0.25)"><div class="stat-card" style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--green)"></div><div class="stat-label">Bônus desbloqueado</div><div class="stat-val sv-green" id="st-bonus">R$ 0</div><div class="stat-sub" id="st-bonus-sub">0 marcos atingidos</div></div>
+    <div class="stat-card" style="border-color:rgba(34,197,94,0.25)"><div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--green)"></div><div class="stat-label">Bônus desbloqueado</div><div class="stat-val sv-green" id="st-bonus">R$ 0</div><div class="stat-sub" id="st-bonus-sub">0 marcos atingidos</div></div>
+    <div class="stat-card sc-traf-bonus" tabindex="0" onclick="setFilter('traf-bonus',document.querySelector('[data-filter=traf-bonus]'))" onkeydown="if(event.key==='Enter')this.click()"><div class="stat-label">🎁 Tráfego bônus</div><div class="stat-val sv-amber" id="st-traf-bonus">0</div><div class="stat-sub" id="st-traf-bonus-sub">clientes com tráfego cortesia</div></div>
   </div>
 
   <!-- REUNIÕES DE CHECKPOINT -->
@@ -388,6 +394,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
     <button class="filter-btn" onclick="setFilter('expiring',this)">Vencendo</button>
     <button class="filter-btn" onclick="setFilter('aceleracao',this)">Aceleração</button>
     <button class="filter-btn" onclick="setFilter('ativacao',this)">Ativação</button>
+    <button class="filter-btn" onclick="setFilter('traf-bonus',this)" data-filter="traf-bonus">🎁 Tráfego bônus <span id="cnt-traf-bonus" style="opacity:.7"></span></button>
     <input class="search-input" id="search" type="text" placeholder="Buscar cliente..." oninput="renderClients()">
   </div>
 
@@ -425,6 +432,9 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
       <div class="form-field"><label class="form-label">CS2 responsável</label><input class="form-input" id="f-cs2" type="text" placeholder="Nome do CS2"></div>
       <div class="form-field"><label class="form-label">CS3 responsável</label><input class="form-input" id="f-cs3" type="text" placeholder="Nome do CS3"></div>
       <div class="form-field"><label class="form-label">Head de Tráfego</label><input class="form-input" id="f-traffic" type="text" placeholder="Nome do gestor"></div>
+      <div class="form-field"><label class="form-label">Tráfego</label>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--text);padding:8px 0"><input type="checkbox" id="f-traf-bonus" style="accent-color:#C9A45C;width:16px;height:16px"> 🎁 Tráfego como bônus</label>
+      </div>
       <div class="form-field"><label class="form-label">Data de início *</label><input class="form-input" id="f-start" type="date"></div>
       <div class="form-field"><label class="form-label">Checkpoint atual</label>
         <select class="form-select" id="f-cp">
@@ -672,6 +682,14 @@ function renderAll(){
   if(bonusEl) bonusEl.textContent = 'R$ '+totalBonus.toLocaleString('pt-BR');
   if(bonusSubEl) bonusSubEl.textContent = totalMarcos+' marco'+(totalMarcos!==1?'s':'')+' atingido'+(totalMarcos!==1?'s':'');
 
+  const tbCnt = allClients.filter(c=>c.trafficBonus).length;
+  const tbEl = document.getElementById('cnt-traf-bonus');
+  if(tbEl) tbEl.textContent = tbCnt ? '('+tbCnt+')' : '';
+  const tbStat = document.getElementById('st-traf-bonus');
+  if(tbStat) tbStat.textContent = tbCnt;
+  const tbSub = document.getElementById('st-traf-bonus-sub');
+  if(tbSub) tbSub.textContent = tbCnt ? (tbCnt===1?'cliente':'clientes')+' com tráfego cortesia' : 'nenhum cliente marcado';
+
   renderCPMeetings();
   renderClients();
 }
@@ -743,6 +761,7 @@ function renderClients(){
       (currentFilter==='expiring' && (()=>{ const st=getContractStatus(c); return st&&(st.status==='expiring'||st.status==='expired'); })()) ||
       (currentFilter==='aceleracao' && prog==='aceleracao') ||
       (currentFilter==='ativacao' && prog==='ativacao') ||
+      (currentFilter==='traf-bonus' && !!c.trafficBonus) ||
       currentFilter===cp;
     const matchSearch = !search || (c.name||'').toLowerCase().includes(search) || (c.spec||'').toLowerCase().includes(search) || (c.cs2||'').toLowerCase().includes(search);
     return matchFilter && matchSearch;
@@ -810,8 +829,9 @@ function renderClients(){
           : `<div style="padding:5px 18px;background:rgba(34,197,94,0.05);border-top:.5px solid rgba(34,197,94,0.12);display:flex;align-items:center;gap:6px"><span style="font-size:8px;padding:1px 6px;border-radius:4px;background:rgba(34,197,94,0.15);color:#22C55E;font-weight:700;font-family:'Montserrat',sans-serif">FLASHBOARD</span><span style="font-size:11px;color:#22C55E">${dias===0?'Preencheu hoje':'Há '+dias+'d'}</span></div>`)
       : '';
 
-    html += `<div class="c-card" onclick="openQuickPanel('${c.id}')">
+    html += `<div class="c-card${c.trafficBonus?' is-traf-bonus':''}" onclick="openQuickPanel('${c.id}')">
       <div class="c-accent ${h.accentCls}"></div>
+      ${c.trafficBonus?`<div class="tb-band" title="Tráfego entregue como bônus">🎁 Tráfego bônus</div>`:''}
       <div class="c-body">
         <div class="c-top">
           <div class="c-avatar">${ini}</div>
@@ -888,6 +908,7 @@ function openModal(id=null){
     document.getElementById('f-cs2').value=c.cs2||'';
     document.getElementById('f-cs3').value=c.cs3||'';
     document.getElementById('f-traffic').value=c.traffic||'';
+    document.getElementById('f-traf-bonus').checked=!!c.trafficBonus;
     document.getElementById('f-start').value=c.startDate||'';
     document.getElementById('f-cp').value=c.checkpoint||'1';
     document.getElementById('f-meta-base').value=c.metaBase||'';
@@ -896,6 +917,7 @@ function openModal(id=null){
   } else {
     ['f-name','f-spec','f-ig','f-cs1','f-cs2','f-cs3','f-traffic','f-contaid','f-meta-base','f-meta-alvo','f-meta-super'].forEach(i=>document.getElementById(i).value='');
     document.getElementById('f-program').value='aceleracao';
+    document.getElementById('f-traf-bonus').checked=false;
     document.getElementById('f-cp').value='1';
     document.getElementById('f-start').value=new Date().toISOString().split('T')[0];
   }
@@ -920,6 +942,7 @@ async function saveClient(){
     cs2:document.getElementById('f-cs2').value.trim(),
     cs3:document.getElementById('f-cs3').value.trim(),
     traffic:document.getElementById('f-traffic').value.trim(),
+    trafficBonus:document.getElementById('f-traf-bonus').checked,
     startDate:document.getElementById('f-start').value,
     checkpoint:parseInt(document.getElementById('f-cp').value)||1,
     metaBase:parseFloat(document.getElementById('f-meta-base').value)||0,
@@ -1355,7 +1378,7 @@ function openQuickPanel(id){
 
   document.getElementById('qp-name').textContent = c.name||'—';
   const prog = c.program==='ativacao'?'Ativação':c.program==='aceleracao'?'Aceleração':'Mentoria';
-  document.getElementById('qp-sub').textContent = [c.spec, prog].filter(Boolean).join(' · ');
+  document.getElementById('qp-sub').textContent = [c.spec, prog, c.trafficBonus?'🎁 Tráfego bônus':''].filter(Boolean).join(' · ');
 
   const score = c.healthScore||0;
   document.querySelectorAll('.qp-hs-btn').forEach(btn=>btn.classList.toggle('selected',parseInt(btn.dataset.score)===score));
