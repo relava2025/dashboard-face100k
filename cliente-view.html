@@ -107,6 +107,23 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .hero-greeting{font-size:11px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.16em;font-family:'Montserrat',sans-serif;font-weight:600;margin-bottom:4px}
 .hero-name{font-size:23px;font-weight:800;font-family:'Montserrat',sans-serif;margin-bottom:4px;line-height:1.2}
 .hero-sub{font-size:14px;color:var(--text-sec);margin-bottom:22px}
+.jv{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;align-items:start}
+.jv-fase{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px 14px 10px}
+.jv-fase.cur{border-color:var(--amber-border)}
+.jv-hdr{display:flex;align-items:baseline;gap:8px;margin-bottom:2px}
+.jv-nome{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-family:'Montserrat',sans-serif;color:var(--text-sec)}
+.jv-fase.cur .jv-nome{color:var(--amber)}
+.jv-fase.ok .jv-nome{color:var(--green)}
+.jv-cnt{margin-left:auto;font-size:11px;color:var(--text-dim);font-family:'Montserrat',sans-serif;font-weight:600}
+.jv-esp{font-size:11px;color:var(--text-dim);margin-bottom:10px}
+.jv-step{display:flex;align-items:flex-start;gap:9px;padding:6px 0}
+.jv-dot{width:18px;height:18px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;border:1px solid var(--border);background:var(--surface)}
+.jv-step.done .jv-dot{background:var(--green);border-color:var(--green)}
+.jv-step.now .jv-dot{border:1.5px solid var(--amber);box-shadow:0 0 0 3px var(--amber-dim)}
+.jv-tit{font-size:13px;color:var(--text-dim);line-height:1.35}
+.jv-step.done .jv-tit{color:var(--text-sec)}
+.jv-step.now .jv-tit{color:var(--text);font-weight:600}
+.jv-now-tag{display:block;font-size:10px;color:var(--amber);font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-top:2px}
 .cp-bars-lbl{font-size:10px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.14em;font-family:'Montserrat',sans-serif;font-weight:600;margin-bottom:10px}
 .cp-bar-item{margin-bottom:9px}
 .cp-bar-item:last-child{margin-bottom:0}
@@ -152,14 +169,6 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .team-role{font-size:11px;color:var(--text-sec)}
 
 /* TIMELINE */
-.timeline-wrap{position:relative;padding:8px 0}
-.timeline-line{position:absolute;top:18px;left:18px;right:18px;height:1px;background:var(--border)}
-.timeline{display:flex;position:relative;z-index:1}
-.tl-step{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1}
-.tl-dot{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;font-family:'Montserrat',sans-serif;transition:all .3s}
-.td-done{background:var(--green);color:#000}.td-active{background:var(--amber);color:#000}.td-future{background:var(--surface2);color:var(--text-sec);border:1px solid var(--border)}
-.tl-name{font-size:11px;color:var(--text-sec);text-align:center;max-width:80px;line-height:1.4}
-.tl-status{font-size:10px;text-align:center;font-weight:600;font-family:'Montserrat',sans-serif}
 
 /* METAS */
 .metas-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
@@ -276,9 +285,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
   .apres-btn{width:100%;text-align:center}
   .fat-card{flex-direction:column;align-items:flex-start;gap:10px}
   .fat-badge{align-self:flex-start}
-  .timeline-line{display:none}
-  .timeline{flex-wrap:wrap;gap:14px;justify-content:center}
-  .tl-step{min-width:80px}
+  .jv{grid-template-columns:1fr}
   .scard-body{padding:14px 16px}
   .scard-hdr{padding:12px 16px}
   .chart-wrap{height:160px}
@@ -413,7 +420,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
         <div class="hero-greeting" id="hero-greeting">Olá</div>
         <div class="hero-name" id="hero-name">—</div>
         <div class="hero-sub" id="hero-sub">—</div>
-        <div class="cp-bars-lbl">PROGRESSO POR CHECKPOINT</div>
+        <div class="cp-bars-lbl">PROGRESSO POR FASE</div>
         <div id="cp-bars"></div>
       </div>
 
@@ -428,7 +435,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
       <div class="stat-sub" id="st-week-sub">do programa</div>
     </div>
     <div class="stat s-white">
-      <div class="stat-label">Checkpoint</div>
+      <div class="stat-label">Fase atual</div>
       <div class="stat-val sv-white" id="st-cp" style="font-size:17px;padding-top:4px">—</div>
       <div class="stat-sub" id="st-cp-sub">—</div>
     </div>
@@ -469,13 +476,10 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
       <div class="scard-hdr">
         <div class="scard-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2l1.5 4h4l-3.5 2.5 1.5 4L8 10l-3.5 2.5 1.5-4L2.5 6h4z" stroke="#C9A45C" stroke-width="1.3" stroke-linejoin="round"/></svg></div>
         <div class="scard-title">Minha jornada</div>
-        <div class="scard-sub" id="journey-sub">4 checkpoints</div>
+        <div class="scard-sub" id="journey-sub">—</div>
       </div>
       <div class="scard-body">
-        <div class="timeline-wrap">
-          <div class="timeline-line"></div>
-          <div class="timeline" id="timeline"></div>
-        </div>
+        <div class="jv" id="timeline"></div>
       </div>
     </div>
 
@@ -714,14 +718,12 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 <script>
 const RING_CIRC = 414.69; // 2*π*66
 
-const CPS=[
-  {id:1,title:'Primeira venda',sub:'S1–S4',weeks:[1,2,3,4]},
-  {id:2,title:'Consistência de vendas',sub:'S5–S12',weeks:[5,6,7,8,9,10,11,12]},
-  {id:3,title:'Metas batendo',sub:'S13–S20',weeks:[13,14,15,16,17,18,19,20]},
-  {id:4,title:'Escala e recompra',sub:'S21–S24',weeks:[21,22,23,24]},
+// jornada de 13 etapas — mesma do cliente-entrega.html (CALLS_ONB + FASES_MKT)
+const JORNADA=[
+  {fase:'Vendas',esp:'espVendas',etapas:[['c1','Call de Boas-vindas'],['diag','Call de Diagnóstico'],['c4','Call de Vendas — Esteira de Produtos'],['apres','Apresentação de Vendas'],['cp1v','Checkpoint 1 — Vendas'],['consultas','Consultas Gravadas'],['cp2v','Checkpoint 2 — Vendas e Dúvidas']]},
+  {fase:'Pré-vendas',esp:'espPrevendas',etapas:[['prev','Call de Pré-vendas'],['cp1p','Checkpoint 1 — Pré-vendas'],['cp2p','Checkpoint 2 — Pré-vendas']]},
+  {fase:'Marketing',esp:'espMarketing',mkt:true,etapas:[['mkt1','Posicionamento e Autoridade'],['mkt2','Geração de Oportunidades'],['mkt3','Análise de Implementação e Próximos Passos']]},
 ];
-const CP_NEXT={1:'Realizar primeira venda',2:'Garantir 4 vendas/semana',3:'Bater meta mensal',4:'Validar resultado'};
-
 let S={};
 let fatChart=null;
 
@@ -747,45 +749,35 @@ function getHealthLabel(s){
   return'🔴 Em crise';
 }
 function getHealthClass(s){if(s>=80)return'hc-green';if(s>=60)return'hc-yellow';return'hc-red'}
-function getCPForWeek(w){for(const cp of CPS){if(cp.weeks.includes(w))return cp}return CPS[0]}
-function getActiveCPs(){return S.program==='ativacao'?CPS.slice(0,2):CPS}
-function calcProgress(){
-  const w=getW(),totalW=S.program==='ativacao'?12:24;
-  return Math.max(0,Math.min(100,Math.round((w-1)/totalW*100)));
+// etapa atual: primeira pendente do onboarding que já tem resposta, senão a primeira pendente;
+// marketing entra quando o onboarding acabou (ou já tem item marcado)
+function getJornada(){
+  const onb=S.callsOnb||{}, mkt=S.callsMkt||{};
+  let n=0, feitas=0, atual=null, primeira=null, mktAtual=null;
+  const grupos=JORNADA.map(g=>({fase:g.fase,esp:S[g.esp]||'',etapas:g.etapas.map(([id,title])=>{
+    n++;
+    const src=g.mkt?mkt[id]:onb[id];
+    const done=!!src?.realizada;
+    if(done) feitas++;
+    else if(g.mkt){ if(!mktAtual&&Object.values(src?.itens||{}).some(v=>v&&v.ok)) mktAtual={id,title,fase:g.fase}; }
+    else {
+      if(!primeira) primeira={id,title,fase:g.fase};
+      if(!atual&&Object.values(src?.respostas||{}).some(v=>v&&String(v).trim())) atual={id,title,fase:g.fase};
+    }
+    return {id,title,done};
+  })}));
+  let cur=atual||primeira||mktAtual;
+  if(!cur){ const g=grupos[2], e=g.etapas.find(x=>!x.done); if(e) cur={...e,fase:g.fase}; }
+  return {grupos,feitas,total:n,cur};
 }
-function getCPProgress(cp,w){
-  const s=cp.weeks[0],e=cp.weeks[cp.weeks.length-1];
-  if(w<=s)return 0;
-  if(w>e)return 100;
-  return Math.round((w-s)/(e-s+1)*100);
-}
-function getPandaId(url){
-  if(!url)return null;
-  if(url.includes('pandavideo.com')||url.includes('player-vz-')){
-    const m=url.match(/v=([a-f0-9-]{36})/);
-    return m?m[1]:null;
-  }
-  return null;
-}
-function getResIcon(name){
-  const n=(name||'').toLowerCase();
-  if(n.includes('flashboard'))return`<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 13V9M6 13V6M9 13V4M12 13V8" stroke="#C9A45C" stroke-width="1.3" stroke-linecap="round"/></svg>`;
-  if(n.includes('drive'))return`<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3L14 13H2L8 3z" stroke="#C9A45C" stroke-width="1.3" stroke-linejoin="round"/></svg>`;
-  if(n.includes('crm'))return`<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><ellipse cx="8" cy="5" rx="5" ry="2" stroke="#C9A45C" stroke-width="1.3"/><path d="M3 5v3c0 1.1 2.2 2 5 2s5-.9 5-2V5" stroke="#C9A45C" stroke-width="1.3"/><path d="M3 8v3c0 1.1 2.2 2 5 2s5-.9 5-2V8" stroke="#C9A45C" stroke-width="1.3"/></svg>`;
-  if(n.includes('apresenta'))return`<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="10" rx="1.5" stroke="#C9A45C" stroke-width="1.3"/><path d="M5 14h6M8 12v2" stroke="#C9A45C" stroke-width="1.3" stroke-linecap="round"/></svg>`;
-  if(n.includes('whatsapp'))return`<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M14 8c0 3.3-2.7 6-6 6a5.9 5.9 0 01-3-.8L2 14l.8-3A6 6 0 1114 8z" stroke="#C9A45C" stroke-width="1.3"/></svg>`;
-  if(n.includes('chatgpt')||n.includes('gpt')||n.includes(' ia'))return`<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="#C9A45C" stroke-width="1.3"/><circle cx="8" cy="8" r="1.5" fill="#C9A45C"/><path d="M8 3.5v2M8 10.5v2M3.5 8h2M10.5 8h2" stroke="#C9A45C" stroke-width="1.3" stroke-linecap="round"/></svg>`;
-  if(n.includes('aula')||n.includes('plataforma'))return`<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="9" rx="1.5" stroke="#C9A45C" stroke-width="1.3"/><path d="M7 6.5l3 1.5-3 1.5V6.5z" fill="#C9A45C"/></svg>`;
-  return`<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M7 9a3 3 0 004.2.3l1.5-1.5a3 3 0 00-4.2-4.2L7.1 5" stroke="#C9A45C" stroke-width="1.3" stroke-linecap="round"/><path d="M9 7a3 3 0 00-4.2-.3L3.3 8.2a3 3 0 004.2 4.2l1.4-1.4" stroke="#C9A45C" stroke-width="1.3" stroke-linecap="round"/></svg>`;
-}
-
 function renderAll(){
-  const w=getW(),cp=getCPForWeek(w),prog=calcProgress();
+  const w=getW(),J=getJornada(),prog=Math.round(J.feitas/J.total*100);
+  const fase=J.cur?J.cur.fase:'Concluída';
   const score=S.healthScore||0,totalW=S.program==='ativacao'?12:24,name=S.name||'Cliente';
 
   document.title=`${name} — Meu Programa FACE SCALE`;
   document.getElementById('tb-client').textContent=`Meu programa — ${name}`;
-  document.getElementById('tb-week').textContent=`CP${cp.id} · S${w}`;
+  document.getElementById('tb-week').textContent=`${fase} · S${w}`;
 
   // RING ANIMADO
   const arc=document.getElementById('ring-arc');
@@ -797,17 +789,16 @@ function renderAll(){
   chip.className='health-chip '+(score?getHealthClass(score):'hc-gray');
   document.getElementById('health-chip-txt').textContent=score?getHealthLabel(score):'Health Score';
 
-  // CP BARS
-  const activeCPs=getActiveCPs();
-  document.getElementById('cp-bars').innerHTML=activeCPs.map(c=>{
-    const pct=getCPProgress(c,w);
-    const isDone=w>c.weeks[c.weeks.length-1],isCurrent=c.id===cp.id;
-    const color=isDone?'var(--green)':isCurrent?'var(--amber)':'var(--border)';
-    const txtColor=isDone?'var(--green)':isCurrent?'var(--amber)':'var(--text-dim)';
+  // PROGRESSO POR FASE
+  document.getElementById('cp-bars').innerHTML=J.grupos.map(g=>{
+    const ok=g.etapas.filter(e=>e.done).length, pct=Math.round(ok/g.etapas.length*100);
+    const isDone=ok===g.etapas.length, isCur=g.fase===fase;
+    const color=isDone?'var(--green)':isCur?'var(--amber)':'var(--border)';
+    const txtColor=isDone?'var(--green)':isCur?'var(--amber)':'var(--text-dim)';
     return`<div class="cp-bar-item">
       <div class="cp-bar-hdr">
-        <span class="cp-bar-name">CP${c.id} — ${c.title}</span>
-        <span class="cp-bar-pct" style="color:${txtColor}">${pct}%</span>
+        <span class="cp-bar-name">${g.fase}</span>
+        <span class="cp-bar-pct" style="color:${txtColor}">${ok}/${g.etapas.length}</span>
       </div>
       <div class="cp-bar-track"><div class="cp-bar-fill" style="width:${pct}%;background:${color}"></div></div>
     </div>`;
@@ -822,9 +813,10 @@ function renderAll(){
   // STATS
   document.getElementById('st-week').textContent=w;
   document.getElementById('st-week-sub').textContent=`de ${totalW} semanas`;
-  document.getElementById('st-cp').textContent=`CP${cp.id}`;
-  document.getElementById('st-cp-sub').textContent=cp.title;
-  document.getElementById('st-next').textContent=CP_NEXT[cp.id]||'—';
+  const espAtual=J.cur?(J.grupos.find(g=>g.fase===fase)?.esp||''):'';
+  document.getElementById('st-cp').textContent=fase;
+  document.getElementById('st-cp-sub').textContent=espAtual?'com '+espAtual:`${J.feitas} de ${J.total} etapas`;
+  document.getElementById('st-next').textContent=J.cur?J.cur.title:'Programa concluído';
   const fats=S.faturamento||{};
   const fatMeses=Object.keys(fats).sort((a,b)=>b.localeCompare(a));
   const lastFat=fatMeses.length?fats[fatMeses[0]]:null;
@@ -833,7 +825,7 @@ function renderAll(){
 
   renderMsg();
   renderTeam();
-  renderTimeline(cp.id,w,activeCPs);
+  renderTimeline(J);
   renderMetas(fats,fatMeses);
   renderRecursos();
   renderPlaybook();
@@ -862,18 +854,18 @@ function renderTeam(){
     </div>`).join('');
 }
 
-function renderTimeline(currentCP,w,activeCPs){
-  document.getElementById('journey-sub').textContent=`${activeCPs.length} checkpoints · ${S.program==='ativacao'?12:24} semanas`;
-  document.getElementById('timeline').innerHTML=activeCPs.map(cp=>{
-    const allDone=cp.weeks.every(wk=>wk<w),isActive=cp.id===currentCP;
-    const dotCls=allDone?'td-done':isActive?'td-active':'td-future';
-    const inner=allDone?`<svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`:cp.id;
-    const statusColor=allDone?'var(--green)':isActive?'var(--amber)':'var(--text-dim)';
-    const statusTxt=allDone?'Concluído':isActive?'Em andamento':'Em breve';
-    return`<div class="tl-step">
-      <div class="tl-dot ${dotCls}">${inner}</div>
-      <div class="tl-name">CP${cp.id} — ${cp.title}</div>
-      <div class="tl-status" style="color:${statusColor}">${statusTxt}</div>
+function renderTimeline(J){
+  document.getElementById('journey-sub').textContent=`${J.feitas} de ${J.total} etapas concluídas`;
+  const check=`<svg width="10" height="8" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  document.getElementById('timeline').innerHTML=J.grupos.map(g=>{
+    const ok=g.etapas.filter(e=>e.done).length, isCur=J.cur&&J.cur.fase===g.fase, isDone=ok===g.etapas.length;
+    return`<div class="jv-fase${isCur?' cur':isDone?' ok':''}">
+      <div class="jv-hdr"><span class="jv-nome">${g.fase}</span><span class="jv-cnt">${ok}/${g.etapas.length}</span></div>
+      <div class="jv-esp">${g.esp?'Especialista: '+g.esp:'&nbsp;'}</div>
+      ${g.etapas.map(e=>{
+        const now=J.cur&&J.cur.id===e.id;
+        return`<div class="jv-step${e.done?' done':now?' now':''}"><div class="jv-dot">${e.done?check:''}</div><div class="jv-tit">${e.title}${now?'<span class="jv-now-tag">Em andamento</span>':''}</div></div>`;
+      }).join('')}
     </div>`;
   }).join('');
 }
