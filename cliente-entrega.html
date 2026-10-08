@@ -287,45 +287,6 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .btn-save-decision{margin-top:10px;padding:8px 20px;background:var(--amber);color:#000;border:none;border-radius:5px;font-size:13px;font-weight:700;font-family:'Montserrat',sans-serif;cursor:pointer;letter-spacing:.04em}
 .btn-save-decision:hover{opacity:.88}
 
-/* MARCOS */
-.marcos-summary{background:var(--surface);border:1px solid var(--amber-border);border-radius:12px;padding:20px 24px;display:flex;align-items:center;gap:24px;margin-bottom:20px;position:relative;overflow:hidden;flex-wrap:wrap}
-.marcos-summary::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,rgba(201,164,92,0),var(--amber),rgba(201,164,92,0))}
-.ms-total-bonus{font-size:36px;font-weight:800;font-family:'Montserrat',sans-serif;color:var(--amber);line-height:1}
-.ms-total-lbl{font-size:10px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.12em;margin-top:3px}
-.ms-progress{flex:1;min-width:180px}
-.ms-prog-text{font-size:14px;color:var(--text-sec);margin-bottom:6px}
-.ms-prog-bar{height:5px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden}
-.ms-prog-fill{height:100%;background:var(--amber);border-radius:3px;transition:width .5s}
-.marco-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 22px;margin-bottom:12px;position:relative;overflow:hidden;transition:border-color .25s}
-.marco-card.achieved{border-color:var(--amber-border)}
-.marco-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--border);transition:background .25s}
-.marco-card.achieved::before{background:linear-gradient(90deg,var(--amber),rgba(201,164,92,0.2))}
-.marco-top{display:flex;align-items:flex-start;gap:14px;margin-bottom:14px}
-.marco-num{width:40px;height:40px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;font-family:'Montserrat',sans-serif;color:var(--text-sec);flex-shrink:0;transition:all .25s}
-.marco-card.achieved .marco-num{border-color:var(--amber);background:var(--amber);color:#000}
-.marco-info{flex:1}
-.marco-title{font-size:16px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--text);margin-bottom:5px;transition:color .25s}
-.marco-card.achieved .marco-title{color:var(--amber)}
-.marco-vendas-tag{display:inline-flex;font-size:11px;font-weight:600;padding:2px 9px;border-radius:4px;background:var(--surface2);color:var(--text-sec);border:0.5px solid var(--border);font-family:'Montserrat',sans-serif}
-.marco-bonus{text-align:right;flex-shrink:0}
-.marco-bonus-val{font-size:25px;font-weight:800;font-family:'Montserrat',sans-serif;color:var(--text-sec);line-height:1;transition:color .25s}
-.marco-card.achieved .marco-bonus-val{color:var(--green)}
-.marco-bonus-lbl{font-size:10px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.1em;margin-top:3px}
-.marco-criterio{font-size:14px;color:var(--text-sec);line-height:1.6;padding:10px 12px;background:var(--surface2);border-radius:6px;margin-bottom:14px;border-left:2px solid var(--border)}
-.marco-card.achieved .marco-criterio{border-left-color:var(--amber-border)}
-.marco-footer{display:flex;align-items:center;gap:10px}
-.btn-atingir{padding:8px 18px;border-radius:6px;font-size:13px;font-weight:700;font-family:'Montserrat',sans-serif;cursor:pointer;transition:all .18s;border:1px solid var(--border);background:var(--surface2);color:var(--text-sec)}
-.btn-atingir:hover{border-color:var(--amber);color:var(--amber);background:var(--amber-dim)}
-.btn-atingido{padding:8px 18px;border-radius:6px;font-size:13px;font-weight:700;font-family:'Montserrat',sans-serif;background:var(--green-dim);color:var(--green);border:1px solid var(--green-border);display:flex;align-items:center;gap:6px;cursor:default}
-.btn-desfazer{font-size:11px;color:var(--text-dim);background:transparent;border:none;cursor:pointer;padding:4px 8px;border-radius:4px;transition:color .15s}
-.btn-desfazer:hover{color:var(--red)}
-.btn-marcar-pago{padding:7px 16px;border-radius:6px;font-size:13px;font-weight:700;font-family:'Montserrat',sans-serif;cursor:pointer;transition:all .18s;border:1px solid var(--green-border);background:var(--green-dim);color:var(--green)}
-.btn-marcar-pago:hover{background:var(--green);color:#fff;border-color:var(--green)}
-.btn-pago{padding:8px 18px;border-radius:6px;font-size:13px;font-weight:700;font-family:'Montserrat',sans-serif;background:#D1FAE5;color:#065F46;border:1px solid #6EE7B7;display:flex;align-items:center;gap:6px;cursor:default}
-.btn-desfazer-pag{font-size:11px;color:var(--text-dim);background:transparent;border:none;cursor:pointer;padding:4px 8px;border-radius:4px;transition:color .15s;margin-left:auto}
-.btn-desfazer-pag:hover{color:var(--red)}
-.marco-card.paid{border-color:#6EE7B7}
-.marco-card.paid::before{background:linear-gradient(90deg,var(--green),rgba(5,150,105,0.15))!important}
 /* CRONOGRAMA */
 .cron-flow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 18px;margin-bottom:20px}
 .cron-flow-tag{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);font-weight:700;margin-right:10px;white-space:nowrap;font-family:'Montserrat',sans-serif}
@@ -791,10 +752,6 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
         <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.3"/><path d="M8 5v3l2 1.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
         Histórico de calls
       </button>
-      <button class="nav-btn" onclick="showPage('cronograma',this,'mnav-cron')">
-        <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M8 2L9.5 5.5L13 6l-2.5 2.5.5 3.5L8 10.5 5 12l.5-3.5L3 6l3.5-.5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
-        Marcos
-      </button>
       <button class="nav-btn" onclick="showPage('ficha',this,'mnav-ficha')">
         <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M3 2h10a1 1 0 011 1v10a1 1 0 01-1 1H3a1 1 0 01-1-1V3a1 1 0 011-1z" stroke="currentColor" stroke-width="1.3"/><path d="M5 5.5h6M5 8h6M5 10.5h3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
         Ficha do closer
@@ -963,17 +920,6 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
           </div>
         </div>
 
-        <!-- CRONOGRAMA PREVIEW -->
-        <div class="section-card">
-          <div class="sc-header" style="cursor:pointer" onclick="showPage('cronograma',document.querySelector('[onclick*=mnav-cron]'),'mnav-cron')">
-            <div>
-              <div class="sc-title">Marcos de resultado</div>
-              <div class="sc-sub" id="cron-prev-sub">—</div>
-            </div>
-            <span style="margin-left:auto;font-size:13px;color:var(--amber);font-weight:600">Ver todos →</span>
-          </div>
-          <div class="sc-body" id="cron-preview-body"></div>
-        </div>
 
 
       </div>
@@ -1081,10 +1027,6 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 
 
       <!-- PAGE: CRONOGRAMA -->
-      <div id="page-cronograma" class="page">
-        <div class="brand-rail"></div>
-        <div id="cron-container"></div>
-      </div>
 
 
       <!-- PAGE: ONBOARDING -->
@@ -1125,10 +1067,6 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
     <button class="mobile-nav-btn" id="mnav-calls" onclick="showPage('calls',this,'mnav-calls')">
       <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.3"/><path d="M8 5v3l2 1.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
       Calls
-    </button>
-    <button class="mobile-nav-btn" id="mnav-cron" onclick="showPage('cronograma',this,'mnav-cron')">
-      <svg viewBox="0 0 16 16" fill="none"><path d="M8 2L9.5 5.5L13 6l-2.5 2.5.5 3.5L8 10.5 5 12l.5-3.5L3 6l3.5-.5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
-      Marcos
     </button>
     <button class="mobile-nav-btn" id="mnav-ficha" onclick="showPage('ficha',this,'mnav-ficha')">
       <svg viewBox="0 0 16 16" fill="none"><path d="M3 2h10a1 1 0 011 1v10a1 1 0 01-1 1H3a1 1 0 01-1-1V3a1 1 0 011-1z" stroke="currentColor" stroke-width="1.3"/><path d="M5 5.5h6M5 8h6M5 10.5h3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
@@ -1199,42 +1137,6 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
     <div class="modal-actions">
       <button class="btn-cancel" onclick="closeMetaModal()">Cancelar</button>
       <button class="btn-primary" onclick="saveMeta()">Salvar</button>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL MARCO -->
-<div class="modal-overlay" id="marco-modal" onclick="closeMarcoModalOutside(event)">
-  <div class="modal-box" style="max-width:440px">
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
-      <div style="width:32px;height:32px;border-radius:8px;background:var(--amber-dim);border:1px solid var(--amber-border);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-        <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M7.5 1.5L9 5.5L13.5 6l-3.5 3 1 4.5L7.5 11 4 13.5l1-4.5L1.5 6 6 5.5z" stroke="var(--amber)" stroke-width="1.3" stroke-linejoin="round"/></svg>
-      </div>
-      <div>
-        <div class="modal-title" id="marco-modal-title">Registrar marco</div>
-        <div style="font-size:11px;color:var(--text-sec)" id="marco-modal-bonus"></div>
-      </div>
-    </div>
-    <div style="font-size:13px;color:var(--text-sec);background:var(--surface2);border-radius:6px;padding:10px 12px;margin:12px 0;border-left:2px solid var(--amber-border)" id="marco-modal-criterio"></div>
-    <div class="form-field">
-      <label class="form-label">Vendas comprovadas</label>
-      <input class="form-input" type="number" min="0" id="marco-vendas-input" placeholder="Quantas vendas o cliente realizou?">
-    </div>
-    <div class="form-field">
-      <label class="form-label">Responsável pelo registro</label>
-      <input class="form-input" type="text" id="marco-resp-input" placeholder="Seu nome">
-    </div>
-    <div class="form-field">
-      <label class="form-label">Observação / evidência <span style="color:var(--text-dim);font-weight:400;text-transform:none;letter-spacing:0">(opcional)</span></label>
-      <textarea class="obs-field" id="marco-obs-input" placeholder="Descreva a evidência, contexto ou link de comprovação..."></textarea>
-    </div>
-    <div style="padding:10px 12px;background:rgba(201,164,92,0.06);border:0.5px solid var(--amber-border);border-radius:6px;margin-bottom:4px">
-      <div style="font-size:11px;color:var(--amber);font-weight:600;font-family:'Montserrat',sans-serif;margin-bottom:4px">Confirmo que:</div>
-      <div style="font-size:13px;color:var(--text-sec);line-height:1.6">O cliente utilizou a metodologia e a esteira de produtos, e está adimplente no momento do registro.</div>
-    </div>
-    <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeMarcoModal()">Cancelar</button>
-      <button class="btn-primary" onclick="confirmarMarco()">Confirmar marco</button>
     </div>
   </div>
 </div>
@@ -1412,8 +1314,6 @@ function renderAll(){
   renderHealthScore();
   renderMetas();
   renderCalls();
-  renderMarcos();
-  renderMarcosPreview();
   renderDiagnostico();
   renderCase();
   renderFicha();
@@ -2804,32 +2704,6 @@ function renderTutorias(data){
   ['tut-grid','tut-grid-preview'].forEach(id=>{ const el=document.getElementById(id); if(el) el.innerHTML=html; });
 }
 
-function renderMarcosPreview(){
-  const body=document.getElementById('cron-preview-body');
-  const sub=document.getElementById('cron-prev-sub');
-  if(!body) return;
-  const ms=S.marcos||{};
-  const MARCOS_DEF=[{id:1,title:'Primeira venda',bonus:200},{id:2,title:'Validação da metodologia (Checkpoint 2)',bonus:300},{id:3,title:'Previsibilidade (Checkpoint 3)',bonus:400},{id:4,title:'Escala (Checkpoint 4)',bonus:500}];
-  const achieved=MARCOS_DEF.filter(m=>ms[m.id]?.achieved);
-  const totalBonus=achieved.reduce((s,m)=>s+m.bonus,0);
-  if(sub) sub.textContent=`${achieved.length} de 4 marcos atingidos`;
-  const checkSvg=`<svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-  body.innerHTML=`
-    <div style="display:flex;gap:6px;margin-bottom:12px">
-      ${MARCOS_DEF.map(m=>{
-        const ok=ms[m.id]?.achieved;
-        return`<div style="flex:1;padding:8px 6px;border-radius:7px;border:1px solid ${ok?'var(--amber-border)':'var(--border)'};background:${ok?'var(--amber-dim)':'var(--surface2)'};text-align:center">
-          <div style="font-size:13px;font-weight:700;color:${ok?'var(--amber)':'var(--text-sec)'};font-family:'Montserrat',sans-serif">M${m.id}</div>
-          <div style="font-size:10px;color:${ok?'var(--amber)':'var(--text-dim)'};margin-top:2px">${ok?checkSvg:'—'}</div>
-        </div>`;
-      }).join('')}
-    </div>
-    <div style="display:flex;justify-content:space-between;align-items:center">
-      <span style="font-size:13px;color:var(--text-sec)">${achieved.length} de 4 atingidos</span>
-      <span style="font-size:15px;font-weight:700;color:${totalBonus?'var(--green)':'var(--text-sec)'};font-family:'Montserrat',sans-serif">R$ ${totalBonus.toLocaleString('pt-BR')} desbloqueados</span>
-    </div>`;
-}
-
 window.addEventListener('fb-ready',async()=>{
   setSyncStatus('connecting');
   document.getElementById('loading-txt').textContent='Sincronizando com Firebase...';
@@ -3256,177 +3130,6 @@ function renderOnboarding(){
     if(body) body.style.display = 'block';
     if(chev) chev.style.transform = 'rotate(180deg)';
   }
-}
-</script>
-<script>
-// ── MARCOS DE RESULTADO ────────────────────────────────────────────────
-const MARCOS = [
-  {id:1, title:'Primeira venda',                        vendas:'1 venda',     criterio:'Cliente realizou a primeira venda utilizando a metodologia e a esteira de produtos.', bonus:200},
-  {id:2, title:'Validação da metodologia (Checkpoint 2)',vendas:'3–5 vendas',  criterio:'Cliente realizou de 3 a 5 vendas, com resultado comprovado e utilizando a metodologia e a esteira de produtos.', bonus:300},
-  {id:3, title:'Previsibilidade (Checkpoint 3)',          vendas:'15–20 vendas',criterio:'Cliente realizou de 15 a 20 vendas, com faturamento crescente, processo comercial funcionando com constância e utilização da metodologia e da esteira de produtos.', bonus:400},
-  {id:4, title:'Escala (Checkpoint 4)',                   vendas:'20–30 vendas',criterio:'Cliente realizou de 20 a 30 vendas, com faturamento consolidado, operação rodando com previsibilidade e uso da metodologia e da esteira de produtos.', bonus:500},
-];
-
-function renderMarcos(){
-  const container=document.getElementById('cron-container'); if(!container) return;
-  const ms=S.marcos||{};
-  const achieved=MARCOS.filter(m=>ms[m.id]?.achieved);
-  const totalBonus=achieved.reduce((s,m)=>s+m.bonus,0);
-  const totalPossivel=MARCOS.reduce((s,m)=>s+m.bonus,0);
-  const pct=Math.round(achieved.length/MARCOS.length*100);
-
-  const checkSvg=`<svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="#000" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-  const checkSvgGreen=`<svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="var(--green)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-
-  const paid=MARCOS.filter(m=>ms[m.id]?.paid);
-  const totalPago=paid.reduce((s,m)=>s+m.bonus,0);
-  const totalAPagar=totalBonus-totalPago;
-
-  const summaryHtml=`
-    <div class="marcos-summary">
-      <div>
-        <div class="ms-total-bonus">R$ ${totalBonus.toLocaleString('pt-BR')}</div>
-        <div class="ms-total-lbl">Bônus desbloqueado</div>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:4px;padding:0 8px;border-left:1px solid var(--border)">
-        <div style="display:flex;align-items:center;gap:8px">
-          <span style="font-size:11px;font-weight:600;color:#065F46;background:#D1FAE5;border:1px solid #6EE7B7;border-radius:4px;padding:2px 8px">Pago</span>
-          <span style="font-size:16px;font-weight:800;font-family:'Montserrat',sans-serif;color:#065F46">R$ ${totalPago.toLocaleString('pt-BR')}</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:8px">
-          <span style="font-size:11px;font-weight:600;color:var(--amber);background:var(--amber-dim);border:1px solid var(--amber-border);border-radius:4px;padding:2px 8px">A pagar</span>
-          <span style="font-size:16px;font-weight:800;font-family:'Montserrat',sans-serif;color:var(--amber)">R$ ${totalAPagar.toLocaleString('pt-BR')}</span>
-        </div>
-      </div>
-      <div class="ms-progress">
-        <div class="ms-prog-text">${achieved.length} de ${MARCOS.length} marcos atingidos · ${paid.length} pago${paid.length!==1?'s':''}</div>
-        <div class="ms-prog-bar"><div class="ms-prog-fill" style="width:${pct}%"></div></div>
-        <div style="display:flex;justify-content:space-between;margin-top:5px">
-          <span style="font-size:10px;color:var(--text-dim)">Início</span>
-          <span style="font-size:10px;color:var(--amber);font-weight:600;font-family:'Montserrat',sans-serif">Total possível: R$ ${totalPossivel.toLocaleString('pt-BR')}</span>
-        </div>
-      </div>
-    </div>`;
-
-  const marcosHtml=MARCOS.map(m=>{
-    const state=ms[m.id]||{};
-    const isAchieved=!!state.achieved;
-    const isPaid=!!state.paid;
-    const dateStr=state.date?new Date(state.date).toLocaleDateString('pt-BR'):'';
-    const paidDateStr=state.paidDate?new Date(state.paidDate).toLocaleDateString('pt-BR'):'';
-    const cardClass=`marco-card${isAchieved?(isPaid?' achieved paid':' achieved'):''}`;
-    const moneyIcon=`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v12M9 9h4.5a1.5 1.5 0 0 1 0 3H10.5a1.5 1.5 0 0 0 0 3H15"/></svg>`;
-    return`<div class="${cardClass}">
-      <div class="marco-top">
-        <div class="marco-num">${isAchieved?checkSvg:m.id}</div>
-        <div class="marco-info">
-          <div class="marco-title">Marco ${m.id} — ${m.title}</div>
-          <span class="marco-vendas-tag">${m.vendas}</span>
-        </div>
-        <div class="marco-bonus">
-          <div class="marco-bonus-val">R$ ${m.bonus}</div>
-          <div class="marco-bonus-lbl">bônus equipe</div>
-        </div>
-      </div>
-      <div class="marco-criterio">${m.criterio}</div>
-      ${isAchieved && (state.vendas||state.resp||state.obs) ? `
-      <div style="display:flex;gap:16px;font-size:13px;color:var(--text-sec);margin-bottom:12px;flex-wrap:wrap">
-        ${state.vendas?`<span><strong style="color:var(--text)">${state.vendas}</strong> vendas comprovadas</span>`:''}
-        ${state.resp?`<span>Registrado por <strong style="color:var(--text)">${state.resp}</strong></span>`:''}
-        ${state.obs?`<span style="font-style:italic">"${state.obs}"</span>`:''}
-      </div>` : ''}
-      <div class="marco-footer">
-        ${isAchieved
-          ? isPaid
-            ? `<div class="btn-atingido">${checkSvgGreen} Atingido em ${dateStr}</div>
-               <div class="btn-pago">${moneyIcon} Pago em ${paidDateStr}</div>
-               <button class="btn-desfazer-pag" onclick="desfazerPagamento(${m.id})">Desfazer pagamento</button>`
-            : `<div class="btn-atingido">${checkSvgGreen} Atingido em ${dateStr}</div>
-               <button class="btn-marcar-pago" onclick="marcarComoPago(${m.id})">Marcar como pago</button>
-               <button class="btn-desfazer" onclick="desfazerMarco(${m.id})">Desfazer</button>`
-          : `<button class="btn-atingir" onclick="atingirMarco(${m.id})">Marcar como atingido</button>`
-        }
-      </div>
-    </div>`;
-  }).join('');
-
-  container.innerHTML=summaryHtml+marcosHtml;
-}
-
-let _marcoModalId = null;
-
-function atingirMarco(id){
-  const m = MARCOS.find(x=>x.id===id);
-  if(!m) return;
-  _marcoModalId = id;
-  document.getElementById('marco-modal-title').textContent = `Marco ${id} — ${m.title}`;
-  document.getElementById('marco-modal-bonus').textContent = `Bônus da equipe: R$ ${m.bonus}`;
-  document.getElementById('marco-modal-criterio').textContent = m.criterio;
-  document.getElementById('marco-vendas-input').value = '';
-  document.getElementById('marco-resp-input').value = '';
-  document.getElementById('marco-obs-input').value = '';
-  document.getElementById('marco-modal').classList.add('open');
-}
-
-function closeMarcoModal(){
-  document.getElementById('marco-modal').classList.remove('open');
-  _marcoModalId = null;
-}
-
-function closeMarcoModalOutside(e){
-  if(e.target.id==='marco-modal') closeMarcoModal();
-}
-
-async function confirmarMarco(){
-  const vendas = document.getElementById('marco-vendas-input').value;
-  const resp   = document.getElementById('marco-resp-input').value.trim();
-  if(!vendas){ showToast('Informe o número de vendas comprovadas','error'); return; }
-  if(!resp){ showToast('Informe o responsável pelo registro','error'); return; }
-  const obs = document.getElementById('marco-obs-input').value.trim();
-  if(!S.marcos) S.marcos={};
-  S.marcos[_marcoModalId]={
-    achieved: true,
-    date: new Date().toISOString(),
-    vendas: parseInt(vendas),
-    resp,
-    obs
-  };
-  closeMarcoModal();
-  await save({marcos:S.marcos});
-  renderMarcos();
-  renderMarcosPreview();
-  const m = MARCOS.find(x=>x.id===_marcoModalId);
-  showToast(`Marco ${_marcoModalId} registrado! Bônus R$ ${m?.bonus} desbloqueado.`,'success');
-}
-
-async function desfazerMarco(id){
-  if(!S.marcos) return;
-  delete S.marcos[id];
-  await save({marcos:S.marcos});
-  renderMarcos();
-  renderMarcosPreview();
-  showToast('Marco desfeito.','');
-}
-
-async function marcarComoPago(id){
-  if(!S.marcos?.[id]?.achieved) return;
-  S.marcos[id].paid = true;
-  S.marcos[id].paidDate = new Date().toISOString();
-  await save({marcos:S.marcos});
-  renderMarcos();
-  renderMarcosPreview();
-  const m = MARCOS.find(x=>x.id===id);
-  showToast(`Bônus R$ ${m?.bonus} marcado como pago!`,'success');
-}
-
-async function desfazerPagamento(id){
-  if(!S.marcos?.[id]) return;
-  delete S.marcos[id].paid;
-  delete S.marcos[id].paidDate;
-  await save({marcos:S.marcos});
-  renderMarcos();
-  renderMarcosPreview();
-  showToast('Pagamento desfeito.','');
 }
 </script>
 <script>if("serviceWorker" in navigator){window.addEventListener("load",()=>{navigator.serviceWorker.register("/sw.js").then(()=>console.log("SW ok")).catch(e=>console.log("SW err",e));});}</script>

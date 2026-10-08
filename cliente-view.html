@@ -137,26 +137,6 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .scard-sub{font-size:11px;color:var(--text-sec);white-space:nowrap}
 .scard-body{padding:18px 20px}
 
-/* CONQUISTAS */
-.conquistas-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.cq-card{border-radius:10px;padding:14px 16px;border:1px solid var(--border);background:var(--surface2);position:relative;overflow:hidden;transition:border-color .2s}
-.cq-card.cq-done{border-color:var(--amber-border);background:linear-gradient(135deg,rgba(201,164,92,0.07),rgba(201,164,92,0.02))}
-.cq-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--border)}
-.cq-card.cq-done::before{background:linear-gradient(90deg,var(--amber),rgba(201,164,92,0.2))}
-.cq-top{display:flex;align-items:center;gap:10px;margin-bottom:8px}
-.cq-badge{width:32px;height:32px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;font-family:'Montserrat',sans-serif;color:var(--text-dim);flex-shrink:0;transition:all .2s}
-.cq-card.cq-done .cq-badge{border-color:var(--amber);background:var(--amber);color:#000}
-.cq-title{font-size:15px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--text-dim)}
-.cq-card.cq-done .cq-title{color:var(--amber)}
-.cq-vendas{font-size:13px;color:var(--text-dim);margin-bottom:6px}
-.cq-card.cq-done .cq-vendas{color:var(--text-sec)}
-.cq-date{font-size:13px;color:var(--green);font-family:'JetBrains Mono',monospace}
-.cq-pending{font-size:13px;color:var(--text-dim);font-style:italic}
-.cq-summary{background:linear-gradient(135deg,rgba(201,164,92,0.07),rgba(201,164,92,0.02));border:1px solid var(--amber-border);border-radius:10px;padding:14px 16px;margin-bottom:12px;display:flex;align-items:center;gap:14px}
-.cq-sum-num{font-size:28px;font-weight:800;font-family:'Montserrat',sans-serif;color:var(--amber);line-height:1;flex-shrink:0}
-.cq-sum-lbl{font-size:13px;color:var(--text-sec)}
-.cq-sum-sub{font-size:11px;color:var(--text-dim);margin-top:2px}
-@media(max-width:560px){.conquistas-grid{grid-template-columns:1fr}}
 /* MSG */
 .msg-card{background:rgba(201,164,92,0.06);border:1px solid rgba(201,164,92,0.2);border-radius:12px;padding:18px 20px;display:flex;gap:14px;align-items:flex-start}
 .msg-avatar{width:40px;height:40px;border-radius:50%;background:var(--amber-dim);border:1px solid var(--amber-border);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:var(--amber);font-family:'Montserrat',sans-serif;flex-shrink:0}
@@ -535,16 +515,6 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
       </div>
     </div>
 
-    <!-- CONQUISTAS -->
-    <div class="scard" id="conquistas-card">
-      <div class="scard-hdr">
-        <div class="scard-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2L9.5 5.5L13.5 6l-2.5 2.5.5 3.5L8 10.5 5 12l.5-3.5L3 6l3.5-.5z" stroke="#C9A45C" stroke-width="1.3" stroke-linejoin="round"/></svg></div>
-        <div class="scard-title">Minhas conquistas</div>
-        <div class="scard-sub" id="conquistas-sub">marcos do programa</div>
-      </div>
-      <div class="scard-body" id="conquistas-body"></div>
-    </div>
-
     <!-- METAS -->
     <div class="scard">
       <div class="scard-hdr">
@@ -901,49 +871,10 @@ function renderAll(){
   renderMsg();
   renderTeam();
   renderTimeline(cp.id,w,activeCPs);
-  renderConquistas();
   renderMetas(fats,fatMeses);
   renderRecursos();
   renderPlaybook();
   renderCalls();
-}
-
-function renderConquistas(){
-  const MARCOS_DEF=[
-    {id:1,title:'Primeira venda',vendas:'1 venda'},
-    {id:2,title:'Validação da metodologia (Checkpoint 2)',vendas:'3–5 vendas'},
-    {id:3,title:'Previsibilidade (Checkpoint 3)',vendas:'15–20 vendas'},
-    {id:4,title:'Escala (Checkpoint 4)',vendas:'20–30 vendas'},
-  ];
-  const ms=S.marcos||{};
-  const achieved=MARCOS_DEF.filter(m=>ms[m.id]?.achieved);
-  const body=document.getElementById('conquistas-body');
-  const sub=document.getElementById('conquistas-sub');
-  if(!body) return;
-  if(sub) sub.textContent=achieved.length?`${achieved.length} de ${MARCOS_DEF.length} marcos atingidos`:'marcos do programa';
-  const checkSvg=`<svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="#000" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-  const summaryHtml=achieved.length?`
-    <div class="cq-summary">
-      <div class="cq-sum-num">${achieved.length}</div>
-      <div>
-        <div class="cq-sum-lbl">${achieved.length===1?'marco atingido':'marcos atingidos'} no programa</div>
-        <div class="cq-sum-sub">Continue avançando para desbloquear os próximos</div>
-      </div>
-    </div>`:'';
-  const cardsHtml=MARCOS_DEF.map(m=>{
-    const state=ms[m.id]||{};
-    const done=!!state.achieved;
-    const dateStr=state.date?new Date(state.date).toLocaleDateString('pt-BR'):'';
-    return`<div class="cq-card${done?' cq-done':''}">
-      <div class="cq-top">
-        <div class="cq-badge">${done?checkSvg:m.id}</div>
-        <div class="cq-title">Marco ${m.id} — ${m.title}</div>
-      </div>
-      <div class="cq-vendas">${m.vendas}</div>
-      ${done?`<div class="cq-date">Atingido em ${dateStr}</div>`:`<div class="cq-pending">Ainda não atingido</div>`}
-    </div>`;
-  }).join('');
-  body.innerHTML=summaryHtml+`<div class="conquistas-grid">${cardsHtml}</div>`;
 }
 
 function calcCPMeetings(){
