@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel do Especialista — System Digital</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+  import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+  const app = initializeApp({
+    apiKey:"AIzaSyAyupUdCsEb6pPVmTs2clhayS84-TUovGA",
+    authDomain:"dashboard-e465d.firebaseapp.com",
+    projectId:"dashboard-e465d",
+    storageBucket:"dashboard-e465d.firebasestorage.app",
+    messagingSenderId:"865986158280",
+    appId:"1:865986158280:web:1531d13630f9835a9f0ffd"
+  });
+  const db = getFirestore(app);
+  // só leitura: esta tela não grava nada
+  onSnapshot(collection(db,"entrega"),
+    snap=>{ const l=[]; snap.forEach(d=>{ const x=d.data(); if(x.status!=='excluido') l.push({id:d.id,...x}); }); window.onClients(l); },
+    e=>{ console.warn('fb err',e); window.onClientsError(); });
+</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#071228;--surface:#0C1E3F;--surface2:#0F2449;--surface3:#1B3A6B;
+  --amber:#C9A45C;--amber-dim:rgba(201,164,92,0.10);--amber-border:rgba(201,164,92,0.20);
+  --border:#23406E;--text:#F7F3EA;--text-sec:#AEBBD0;--text-dim:rgba(255,255,255,0.28);
+  --green:#22C55E;--green-dim:rgba(34,197,94,0.10);--green-border:rgba(34,197,94,0.22);
+  --red:#EF4444;--red-dim:rgba(239,68,68,0.10);--red-border:rgba(239,68,68,0.22);
+  --yellow:#EAB308;--yellow-dim:rgba(234,179,8,0.10);--yellow-border:rgba(234,179,8,0.22);
+}
+html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:15px;line-height:1.5}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(0deg,transparent 24%,rgba(201,164,92,0.03) 25%,rgba(201,164,92,0.03) 26%,transparent 27%),linear-gradient(90deg,transparent 24%,rgba(201,164,92,0.03) 25%,rgba(201,164,92,0.03) 26%,transparent 27%);background-size:50px 50px;pointer-events:none;z-index:0}
+a{color:inherit}
+
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);height:56px;display:flex;align-items:center;padding:0 28px;gap:14px;position:sticky;top:0;z-index:50}
+.t-back{font-size:13px;color:var(--text-sec);text-decoration:none;padding:6px 12px;border:1px solid var(--border);border-radius:6px;transition:border-color .15s,color .15s}
+.t-back:hover{border-color:var(--amber-border);color:var(--amber)}
+.t-back:focus-visible,.esp-pill:focus-visible,.q-open:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+.t-logo{font-family:'Montserrat',sans-serif;font-size:16px;font-weight:800}
+.t-logo span{color:var(--amber);font-style:italic}
+.t-sep{width:1px;height:18px;background:var(--border)}
+.t-sub{font-size:13px;color:var(--text-sec)}
+
+.content{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:24px 28px 60px}
+
+.esp-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:22px}
+.esp-lbl{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text-sec);font-family:'Montserrat',sans-serif;margin-right:4px}
+.esp-pill{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:600;font-family:'Montserrat',sans-serif;border:1px solid var(--border);background:transparent;color:var(--text-sec);cursor:pointer;transition:border-color .15s,color .15s,background .15s}
+.esp-pill:hover{border-color:var(--text-sec);color:var(--text)}
+.esp-pill.active{background:var(--amber-dim);color:var(--amber);border-color:var(--amber-border)}
+.esp-pill small{font-weight:500;opacity:.7;margin-left:4px}
+
+.hero{display:flex;align-items:center;gap:16px;margin-bottom:20px}
+.hero-av{width:52px;height:52px;border-radius:50%;background:var(--amber-dim);border:1px solid var(--amber-border);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:var(--amber);font-family:'Montserrat',sans-serif;flex-shrink:0}
+.hero-name{font-size:22px;font-weight:800;font-family:'Montserrat',sans-serif;line-height:1.2}
+.hero-sub{font-size:13px;color:var(--text-sec)}
+.hero-link{margin-left:auto;font-size:12px;color:var(--text-sec);background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:7px 12px;cursor:pointer;font-family:'Inter',sans-serif;transition:border-color .15s,color .15s}
+.hero-link:hover{border-color:var(--amber-border);color:var(--amber)}
+
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.stat-label{font-size:10px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.14em;font-family:'Montserrat',sans-serif;font-weight:600;margin-bottom:8px}
+.stat-val{font-size:26px;font-weight:800;font-family:'Montserrat',sans-serif;line-height:1}
+.stat-sub{font-size:11px;color:var(--text-sec);margin-top:4px}
+
+.grid2{display:grid;grid-template-columns:1.6fr 1fr;gap:16px;align-items:start}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:16px}
+.card-hdr{display:flex;align-items:baseline;gap:10px;padding:14px 18px;border-bottom:1px solid var(--border)}
+.card-title{font-size:14px;font-weight:700;font-family:'Montserrat',sans-serif}
+.card-sub{margin-left:auto;font-size:12px;color:var(--text-sec)}
+.empty{padding:22px 18px;font-size:13px;color:var(--text-sec)}
+
+.q-row{display:flex;align-items:center;gap:14px;padding:12px 18px;border-bottom:1px solid rgba(35,64,110,0.5)}
+.q-row:last-child{border-bottom:none}
+.q-main{flex:1;min-width:0}
+.q-name{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.q-step{font-size:12px;color:var(--text-sec);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.q-step b{color:var(--amber);font-weight:600}
+.segs{display:flex;gap:3px;margin-top:7px;max-width:240px}
+.seg{flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,0.07)}
+.seg.done{background:var(--amber)}
+.seg.now{background:transparent;box-shadow:inset 0 0 0 1px var(--amber)}
+.q-days{font-size:12px;font-family:'JetBrains Mono',monospace;text-align:right;white-space:nowrap;flex-shrink:0;min-width:64px}
+.q-days small{display:block;font-family:'Inter',sans-serif;font-size:10px;color:var(--text-dim)}
+.d-ok{color:var(--green)}.d-warn{color:var(--yellow)}.d-late{color:var(--red)}
+.q-open{font-size:12px;font-weight:700;font-family:'Montserrat',sans-serif;padding:6px 12px;border-radius:6px;background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border);text-decoration:none;flex-shrink:0;transition:background .15s,color .15s}
+.q-open:hover{background:var(--amber);color:#000}
+
+.sec-lbl{padding:10px 18px 4px;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);font-family:'Montserrat',sans-serif}
+
+.ev{display:flex;gap:12px;padding:10px 18px;border-bottom:1px solid rgba(35,64,110,0.5)}
+.ev:last-child{border-bottom:none}
+.ev-date{font-size:12px;font-family:'JetBrains Mono',monospace;color:var(--text-sec);min-width:42px;padding-top:1px}
+.ev-txt{font-size:13px;line-height:1.4;min-width:0}
+.ev-txt b{font-weight:600}
+.ev-txt span{display:block;font-size:12px;color:var(--text-sec)}
+
+.state{padding:60px 0;text-align:center;color:var(--text-sec);font-size:14px}
+
+@media(max-width:900px){.grid2{grid-template-columns:1fr}}
+@media(max-width:640px){
+  .topbar{padding:0 16px}.t-sub,.t-sep{display:none}
+  .content{padding:18px 16px 50px}
+  .stats{grid-template-columns:1fr 1fr}
+  .hero-link{display:none}
+  .q-row{flex-wrap:wrap}
+  .q-open{width:100%;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="t-back" href="painel-entrega.html">← Painel</a>
+  <div class="t-logo">FACE <span>SCALE</span></div>
+  <div class="t-sep"></div>
+  <div class="t-sub">Painel do Especialista</div>
+</div>
+
+<div class="content">
+  <div class="esp-row" id="esp-row"><span class="esp-lbl">Especialista</span></div>
+  <div id="view"><div class="state">Carregando...</div></div>
+</div>
+
+<script>
+// mesma jornada do cliente-entrega.html / painel-entrega.html / cliente-view.html
+const JORNADA=[
+  {fase:'Vendas',campo:'espVendas',etapas:[['c1','Call de Boas-vindas'],['diag','Call de Diagnóstico'],['c4','Call de Vendas — Esteira de Produtos'],['apres','Apresentação de Vendas'],['cp1v','Checkpoint 1 — Vendas'],['consultas','Consultas Gravadas'],['cp2v','Checkpoint 2 — Vendas e Dúvidas']]},
+  {fase:'Pré-vendas',campo:'espPrevendas',etapas:[['prev','Call de Pré-vendas'],['cp1p','Checkpoint 1 — Pré-vendas'],['cp2p','Checkpoint 2 — Pré-vendas']]},
+  {fase:'Marketing',campo:'espMarketing',mkt:true,etapas:[['mkt1','CP1 — Posicionamento e Autoridade'],['mkt2','CP2 — Geração de Oportunidades'],['mkt3','CP3 — Análise de Implementação']]},
+];
+const PARADO_DIAS=14;
+
+let clients=[], espAtual=null;
+
+function norm(s){ return (s||'').trim().toLowerCase(); }
+function esc(s){ return String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function ini(n){ return (n||'?').split(' ').filter(Boolean).slice(0,2).map(x=>x[0]).join('').toUpperCase(); }
+function diasDesde(iso){ if(!iso) return null; return Math.floor((Date.now()-new Date(iso.slice(0,10)+'T12:00:00').getTime())/86400000); }
+function fmtData(iso){ return iso&&iso.length>=10 ? iso.slice(8,10)+'/'+iso.slice(5,7) : '—'; }
+
+// etapa atual (mesma regra do renderTimeline do cliente-entrega)
+function faseAtual(c){
+  const onb=c.callsOnb||{}, mkt=c.callsMkt||{};
+  let atual=null, primeira=null, mktAtual=null;
+  for(const g of JORNADA) for(const [id,title] of g.etapas){
+    const src=g.mkt?mkt[id]:onb[id];
+    if(src?.realizada) continue;
+    if(g.mkt){ if(!mktAtual&&Object.values(src?.itens||{}).some(v=>v&&v.ok)) mktAtual={id,title,fase:g.fase}; }
+    else {
+      if(!primeira) primeira={id,title,fase:g.fase};
+      if(!atual&&Object.values(src?.respostas||{}).some(v=>v&&String(v).trim())) atual={id,title,fase:g.fase};
+    }
+  }
+  let cur=atual||primeira||mktAtual;
+  if(!cur){ const g=JORNADA[2]; const m=c.callsMkt||{}; const e=g.etapas.find(([id])=>!m[id]?.realizada); if(e) cur={id:e[0],title:e[1],fase:g.fase}; }
+  return cur;
+}
+
+// o que o cliente c tem na área g
+function areaDoCliente(c,g){
+  const src=g.mkt?(c.callsMkt||{}):(c.callsOnb||{});
+  const etapas=g.etapas.map(([id,title])=>({id,title,done:!!src[id]?.realizada,data:src[id]?.data||''}));
+  const datas=etapas.filter(e=>e.done&&e.data).map(e=>e.data).sort();
+  return {etapas,feitas:etapas.filter(e=>e.done).length,total:etapas.length,ultima:datas[datas.length-1]||''};
+}
+
+function especialistas(){
+  const m=new Map();
+  clients.forEach(c=>JORNADA.forEach(g=>{
+    const n=(c[g.campo]||'').trim(); if(!n) return;
+    const k=norm(n);
+    if(!m.has(k)) m.set(k,{nome:n,areas:new Set(),clientes:new Set()});
+    m.get(k).areas.add(g.fase); m.get(k).clientes.add(c.id);
+  }));
+  const ordem=f=>JORNADA.findIndex(g=>g.fase===f);
+  return [...m.values()].sort((a,b)=>ordem([...a.areas][0])-ordem([...b.areas][0])||a.nome.localeCompare(b.nome));
+}
+
+window.onClientsError=()=>{ if(!clients.length) document.getElementById('view').innerHTML='<div class="state">Não consegui carregar os clientes. Recarregue a página.</div>'; };
+window.onClients=list=>{
+  clients=list;
+  const esps=especialistas();
+  if(!espAtual){
+    let p=null; try{ p=new URLSearchParams(location.search).get('esp')||localStorage.getItem('esp_painel'); }catch(e){}
+    espAtual=(p&&esps.find(e=>norm(e.nome)===norm(p))?.nome)||esps[0]?.nome||null;
+  }
+  renderPills(esps);
+  render();
+};
+
+function renderPills(esps){
+  const row=document.getElementById('esp-row');
+  row.innerHTML='<span class="esp-lbl">Especialista</span>'+esps.map(e=>
+    `<button class="esp-pill${norm(e.nome)===norm(espAtual)?' active':''}" onclick="escolher('${esc(e.nome).replace(/'/g,"\\'")}')">${esc(e.nome)}<small>${[...e.areas].join(' · ')}</small></button>`).join('');
+}
+function escolher(nome){
+  espAtual=nome;
+  try{ localStorage.setItem('esp_painel',nome); }catch(e){}
+  const u=new URL(location.href); u.searchParams.set('esp',nome); history.replaceState(null,'',u);
+  renderPills(especialistas()); render();
+}
+function copiarLink(){
+  const u=new URL(location.href); u.searchParams.set('esp',espAtual);
+  navigator.clipboard?.writeText(u.toString()).then(()=>{ const b=document.getElementById('btn-link'); if(b){ b.textContent='✓ Link copiado'; setTimeout(()=>b.textContent='🔗 Copiar meu link',1800);} });
+}
+
+function render(){
+  const view=document.getElementById('view');
+  if(!espAtual){ view.innerHTML='<div class="state">Nenhum especialista cadastrado ainda. Preencha os especialistas no cadastro dos clientes.</div>'; return; }
+  const k=norm(espAtual);
+  const mes=new Date().toISOString().slice(0,7);
+
+  // tudo que é dele: cada par (cliente, área) em que ele é o especialista
+  const itens=[];
+  clients.forEach(c=>JORNADA.forEach(g=>{
+    if(norm(c[g.campo])!==k) return;
+    const a=areaDoCliente(c,g), cur=faseAtual(c);
+    const ordemCur=cur?JORNADA.findIndex(x=>x.fase===cur.fase):99, ordemG=JORNADA.indexOf(g);
+    // já começou a área (mesmo fora de ordem) conta como "agora"
+    const status = a.feitas===a.total ? 'concluido' : (cur&&cur.fase===g.fase) ? 'agora' : (ordemCur<ordemG && a.feitas===0) ? 'aguardando' : 'agora';
+    const etapaAtual = status==='agora' ? (cur&&cur.fase===g.fase ? cur : a.etapas.find(e=>!e.done)) : null;
+    const base = a.ultima || c.startDate || '';
+    itens.push({c,g,a,status,etapaAtual,dias:diasDesde(base),baseEhInicio:!a.ultima});
+  }));
+
+  const areas=[...new Set(itens.map(i=>i.g.fase))];
+  const nClientes=new Set(itens.map(i=>i.c.id)).size;
+  const agora=itens.filter(i=>i.status==='agora').sort((a,b)=>(b.dias??-1)-(a.dias??-1));
+  const aguardando=itens.filter(i=>i.status==='aguardando');
+  const concluidos=itens.filter(i=>i.status==='concluido');
+  const parados=agora.filter(i=>(i.dias??0)>=PARADO_DIAS);
+  const entregas=[];
+  itens.forEach(i=>i.a.etapas.forEach(e=>{ if(e.done) entregas.push({c:i.c,g:i.g,e}); }));
+  entregas.sort((a,b)=>(b.e.data||'').localeCompare(a.e.data||''));
+  const noMes=entregas.filter(x=>(x.e.data||'').startsWith(mes)).length;
+  const pendentes=itens.reduce((s,i)=>s+(i.a.total-i.a.feitas),0);
+
+  const segs=i=>`<div class="segs">${i.a.etapas.map(e=>`<div class="seg${e.done?' done':i.etapaAtual&&i.etapaAtual.id===e.id?' now':''}" title="${esc(e.title)}"></div>`).join('')}</div>`;
+  const diasCls=d=>d===null?'':d>=PARADO_DIAS?'d-late':d>=7?'d-warn':'d-ok';
+  const linha=(i,comDias)=>`<div class="q-row">
+      <div class="q-main">
+        <div class="q-name">${esc(i.c.name||'—')}</div>
+        <div class="q-step">${areas.length>1?esc(i.g.fase)+' · ':''}${i.etapaAtual?`<b>${esc(i.etapaAtual.title)}</b>`:i.status==='concluido'?'Área concluída':'Aguardando a fase anterior'} · ${i.a.feitas}/${i.a.total}</div>
+        ${segs(i)}
+      </div>
+      ${comDias?`<div class="q-days ${diasCls(i.dias)}">${i.dias===null?'—':i.dias+'d'}<small>${i.baseEhInicio?'desde o início':'sem entrega'}</small></div>`:''}
+      <a class="q-open" href="cliente-entrega.html?cliente=${encodeURIComponent(i.c.id)}">Abrir</a>
+    </div>`;
+
+  view.innerHTML=`
+    <div class="hero">
+      <div class="hero-av">${ini(espAtual)}</div>
+      <div>
+        <div class="hero-name">${esc(espAtual)}</div>
+        <div class="hero-sub">Especialista de ${areas.join(' e ')} · ${nClientes} cliente${nClientes!==1?'s':''}</div>
+      </div>
+      <button class="hero-link" id="btn-link" onclick="copiarLink()">🔗 Copiar meu link</button>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="stat-label">Na minha fase agora</div><div class="stat-val" style="color:var(--amber)">${agora.length}</div><div class="stat-sub">${aguardando.length} aguardando chegar</div></div>
+      <div class="stat"><div class="stat-label">Entregas no mês</div><div class="stat-val" style="color:var(--green)">${noMes}</div><div class="stat-sub">etapas realizadas em ${new Date().toLocaleString('pt-BR',{month:'long'})}</div></div>
+      <div class="stat"><div class="stat-label">Etapas pendentes</div><div class="stat-val">${pendentes}</div><div class="stat-sub">${concluidos.length} cliente${concluidos.length!==1?'s':''} com a área concluída</div></div>
+      <div class="stat"><div class="stat-label">Parados</div><div class="stat-val" style="color:${parados.length?'var(--red)':'var(--text)'}">${parados.length}</div><div class="stat-sub">${PARADO_DIAS}+ dias sem entrega</div></div>
+    </div>
+
+    <div class="grid2">
+      <div>
+        <div class="card">
+          <div class="card-hdr"><div class="card-title">O que fazer agora</div><div class="card-sub">mais tempo sem entrega primeiro</div></div>
+          ${agora.length?agora.map(i=>linha(i,true)).join(''):'<div class="empty">Nenhum cliente na sua fase agora.</div>'}
+        </div>
+        ${aguardando.length||concluidos.length?`<div class="card">
+          <div class="card-hdr"><div class="card-title">Demais clientes</div><div class="card-sub">${aguardando.length+concluidos.length}</div></div>
+          ${aguardando.length?`<div class="sec-lbl">Aguardando chegar na sua fase</div>${aguardando.map(i=>linha(i,false)).join('')}`:''}
+          ${concluidos.length?`<div class="sec-lbl">Área concluída</div>${concluidos.map(i=>linha(i,false)).join('')}`:''}
+        </div>`:''}
+      </div>
+      <div class="card">
+        <div class="card-hdr"><div class="card-title">Entregas recentes</div><div class="card-sub">${entregas.length} no total</div></div>
+        ${entregas.length?entregas.slice(0,20).map(x=>`<div class="ev"><div class="ev-date">${fmtData(x.e.data)}</div><div class="ev-txt"><b>${esc(x.e.title)}</b><span>${esc(x.c.name||'—')}</span></div></div>`).join(''):'<div class="empty">Nenhuma etapa realizada ainda.</div>'}
+      </div>
+    </div>`;
+}
+</script>
+</body>
+</html>
