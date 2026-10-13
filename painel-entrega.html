@@ -385,6 +385,9 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
     <button class="filter-btn" onclick="setFilter('fase-vendas',this)">Fase Vendas</button>
     <button class="filter-btn" onclick="setFilter('fase-prevendas',this)">Fase Pré-vendas</button>
     <button class="filter-btn" onclick="setFilter('fase-marketing',this)">Fase Marketing</button>
+    <button class="filter-btn" onclick="setFilter('prod-completo',this)">Completo</button>
+    <button class="filter-btn" onclick="setFilter('prod-vendas',this)">Só Vendas <span id="cnt-prod-vendas" style="opacity:.7"></span></button>
+    <button class="filter-btn" onclick="setFilter('prod-prevendas',this)">Só Pré-vendas <span id="cnt-prod-prevendas" style="opacity:.7"></span></button>
     <button class="filter-btn" onclick="setFilter('formato-antigo',this)">Formato antigo</button>
     <button class="filter-btn" onclick="setFilter('fat-pendente',this)" data-filter="fat-pendente">💰 Faturamento pendente <span id="cnt-fat-pend" style="opacity:.7"></span></button>
     <button class="filter-btn" onclick="setFilter('traf-bonus',this)" data-filter="traf-bonus">🎁 Tráfego bônus <span id="cnt-traf-bonus" style="opacity:.7"></span></button>
@@ -646,6 +649,7 @@ function renderAll(){
   const tbSub = document.getElementById('st-traf-bonus-sub');
   if(tbSub) tbSub.textContent = tbCnt ? (tbCnt===1?'cliente':'clientes')+' com tráfego cortesia' : 'nenhum cliente marcado';
 
+  ['vendas','prevendas'].forEach(p=>{ const n=allClients.filter(c=>c.produto===p).length; const el=document.getElementById('cnt-prod-'+p); if(el) el.textContent=n?'('+n+')':''; });
   const fpCnt = allClients.filter(c=>fatFaltando(c).length).length;
   const fpEl = document.getElementById('cnt-fat-pend'); if(fpEl) fpEl.textContent = fpCnt ? '('+fpCnt+')' : '';
   const fpSt = document.getElementById('st-fat-pend'); if(fpSt) fpSt.textContent = fpCnt;
@@ -730,6 +734,9 @@ function renderClients(){
       (currentFilter==='ativacao' && prog==='ativacao') ||
       (currentFilter==='traf-bonus' && !!c.trafficBonus) ||
       (currentFilter==='fat-pendente' && fatFaltando(c).length>0) ||
+      (currentFilter==='prod-completo' && !PRODUTO_LABEL[c.produto]) ||
+      (currentFilter==='prod-vendas' && c.produto==='vendas') ||
+      (currentFilter==='prod-prevendas' && c.produto==='prevendas') ||
       (currentFilter==='formato-antigo' && isFormatoAntigo(c)) ||
       (currentFilter.startsWith('fase-') && !isFormatoAntigo(c) && (()=>{ const cur=getJornada(c).cur; const f=cur?cur.fase:''; return {'fase-vendas':'Vendas','fase-prevendas':'Pré-vendas','fase-marketing':'Marketing'}[currentFilter]===f; })()) ||
       false;
