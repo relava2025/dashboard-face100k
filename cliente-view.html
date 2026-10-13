@@ -171,7 +171,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 /* TIMELINE */
 
 /* METAS */
-.metas-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.metas-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
 .meta-card{background:var(--surface2);border:.5px solid var(--border);border-radius:10px;padding:14px 16px;position:relative;overflow:hidden}
 .meta-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--amber)}
 .meta-label{font-size:10px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.12em;font-family:'Montserrat',sans-serif;font-weight:600;margin-bottom:8px}
@@ -515,8 +515,9 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 
         <div class="metas-grid">
           <div class="meta-card"><div class="meta-label">Antes do programa</div><div class="meta-val" id="m-base">R$ —</div><div class="meta-sub">faturamento anterior</div></div>
+          <div class="meta-card"><div class="meta-label">Meta base</div><div class="meta-val" id="m-meta-base">R$ —</div><div class="meta-sub">primeiro objetivo</div></div>
           <div class="meta-card"><div class="meta-label">Meta alvo</div><div class="meta-val" id="m-alvo">R$ —</div><div class="meta-sub">objetivo do programa</div></div>
-          <div class="meta-card"><div class="meta-label">Super meta</div><div class="meta-val">R$ 100K</div><div class="meta-sub">por semana</div></div>
+          <div class="meta-card"><div class="meta-label">Super meta</div><div class="meta-val" id="m-super">R$ —</div><div class="meta-sub">objetivo final</div></div>
         </div>
         <div class="fat-card">
           <div>
@@ -874,7 +875,9 @@ function renderMetas(fats,fatMeses){
   const ini=S.faturamentoInicial||0;
   const metas=S.metas||{};
   document.getElementById('m-base').textContent=ini?fmtCurrency(ini):'R$ —';
-  document.getElementById('m-alvo').textContent=fmtCurrency(metas.alvo);
+  document.getElementById('m-meta-base').textContent=fmtCurrency(S.metaBase||null);
+  document.getElementById('m-alvo').textContent=fmtCurrency(S.metaAlvo||metas.alvo||null);
+  document.getElementById('m-super').textContent=fmtCurrency(S.metaSuper||null);
   const lastMes=fatMeses&&fatMeses[0],lastFat=lastMes?fats[lastMes]:null;
   document.getElementById('fat-atual').textContent=fmtCurrency(lastFat);
   document.getElementById('fat-sub').textContent=lastMes?fmtMes(lastMes):'registrado pela equipe';

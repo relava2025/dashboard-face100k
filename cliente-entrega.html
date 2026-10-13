@@ -1504,7 +1504,7 @@ function renderFatChart(){
   }
   if(fatChart) fatChart.destroy();
   if(!meses.length) return;
-  const meta=S.metas?.alvo||0;
+  const meta=S.metaAlvo||S.metas?.alvo||0;
   fatChart=new Chart(canvas,{
     type:'line',
     data:{
@@ -1846,13 +1846,43 @@ function syncLinkBtn(input){
   a.style.display=v?'':'none';
 }
 
+// numeros da call de Boas-vindas <-> campos de metas/faturamento do cliente
+const C1_NUM={fat_atual:'faturamentoInicial',meta_base:'metaBase',meta_alvo:'metaAlvo',super_meta:'metaSuper'};
+// "R$ 120.000", "50,000", "30 mil", "45k" -> numero; faixa ("30.000 a 100.000") ou texto -> 0
+function parseValorBR(v){
+  const t=String(v||'').toLowerCase(), m=t.match(/\d[\d.,]*/g);
+  if(!m||m.length!==1) return 0;
+  const x=m[0].replace(/[.,]$/,'');
+  let n=/^\d{1,3}([.,]\d{3})+$/.test(x)?parseFloat(x.replace(/[.,]/g,'')):parseFloat(x.replace(',','.'));
+  if(isNaN(n)) return 0;
+  if(/\d\s*(mil\b|k\b)/.test(t)) n*=1000;
+  return Math.round(n);
+}
+function fmtValorBR(n){ return n?'R$ '+Number(n).toLocaleString('pt-BR'):''; }
+function syncC1ToMetas(){
+  const r=((S.callsOnb||{}).c1||{}).respostas||{}, upd={};
+  Object.entries(C1_NUM).forEach(([q,k])=>{ if(q in r){ const n=parseValorBR(r[q]); if(n!==(S[k]||0)){ S[k]=n; upd[k]=n; } } });
+  return upd;
+}
+function syncMetaToC1(key){
+  const q=Object.keys(C1_NUM).find(x=>C1_NUM[x]===key); if(!q) return;
+  if(!S.callsOnb) S.callsOnb={};
+  if(!S.callsOnb.c1) S.callsOnb.c1={};
+  if(!S.callsOnb.c1.respostas) S.callsOnb.c1.respostas={};
+  S.callsOnb.c1.respostas[q]=fmtValorBR(S[key]);
+}
+
 function saveCallOnbResp(callId, qId, val){
   if(!S.callsOnb) S.callsOnb={};
   if(!S.callsOnb[callId]) S.callsOnb[callId]={};
   if(!S.callsOnb[callId].respostas) S.callsOnb[callId].respostas={};
   S.callsOnb[callId].respostas[qId]=val;
   clearTimeout(_callOnbTimer);
-  _callOnbTimer=setTimeout(()=>{ save({callsOnb:S.callsOnb}); renderDiagnostico(); }, 900);
+  _callOnbTimer=setTimeout(()=>{
+    const upd=callId==='c1'?syncC1ToMetas():{};
+    save({callsOnb:S.callsOnb,...upd}); renderDiagnostico();
+    if(Object.keys(upd).length) renderMetas();
+  }, 900);
 }
 
 async function toggleCallOnb(id, val){
@@ -2253,7 +2283,7 @@ const CASE_CAMPOS=[
 // faturamento inicial: registrado na call de Boas-vindas
 function caseFatInicial(){
   const r=((S.callsOnb||{})['c1']||{}).respostas||{};
-  return (r.fat_atual||'').trim();
+  return (r.fat_atual||'').trim()||fmtValorBR(S.faturamentoInicial);
 }
 
 // so os digitos, p/ conseguir calcular o multiplicador de "30.000" e "R$ 30 mil"
@@ -2447,11 +2477,11 @@ async function deletarMesFat(mes){
 }
 
 function editMeta(key){ currentMetaKey=key; const labels={metaBase:'Meta Base',metaAlvo:'Meta Alvo',metaSuper:'Super Meta'}; document.getElementById('meta-modal-title').textContent='Editar — '+(labels[key]||key); document.getElementById('meta-input').value=S[key]||''; document.getElementById('meta-modal').classList.add('open'); setTimeout(()=>document.getElementById('meta-input').focus(),100); }
-async function saveMeta(){ if(!currentMetaKey) return; const v=document.getElementById('meta-input').value.replace(/\D/g,''); S[currentMetaKey]=parseInt(v)||0; await save({[currentMetaKey]:S[currentMetaKey]}); closeMetaModal(); showToast('Meta salva!','success'); renderMetas(); }
+async function saveMeta(){ if(!currentMetaKey) return; const v=document.getElementById('meta-input').value.replace(/\D/g,''); S[currentMetaKey]=parseInt(v)||0; syncMetaToC1(currentMetaKey); await save({[currentMetaKey]:S[currentMetaKey],callsOnb:S.callsOnb}); renderCallsOnb(); closeMetaModal(); showToast('Meta salva!','success'); renderMetas(); }
 function editFaturamentoInicial(){ document.getElementById('meta-modal-title').textContent='Faturamento antes do programa'; document.getElementById('meta-input').value=S.faturamentoInicial||''; currentMetaKey='__fat_inicial__'; document.getElementById('meta-modal').classList.add('open'); setTimeout(()=>document.getElementById('meta-input').focus(),100); }
 // Override saveMeta para tratar fat inicial
 const _saveMeta=saveMeta;
-saveMeta=async function(){ if(currentMetaKey==='__fat_inicial__'){ const v=document.getElementById('meta-input').value.replace(/\D/g,''); S.faturamentoInicial=parseInt(v)||0; await save({faturamentoInicial:S.faturamentoInicial}); closeMetaModal(); showToast('Faturamento salvo!','success'); renderMetas(); } else { await _saveMeta(); } };
+saveMeta=async function(){ if(currentMetaKey==='__fat_inicial__'){ const v=document.getElementById('meta-input').value.replace(/\D/g,''); S.faturamentoInicial=parseInt(v)||0; syncMetaToC1('faturamentoInicial'); await save({faturamentoInicial:S.faturamentoInicial,callsOnb:S.callsOnb}); renderCallsOnb(); closeMetaModal(); showToast('Faturamento salvo!','success'); renderMetas(); } else { await _saveMeta(); } };
 function closeMetaModal(){ document.getElementById('meta-modal').classList.remove('open'); currentMetaKey=null; }
 function closeMetaModalOutside(e){ if(e.target===document.getElementById('meta-modal')) closeMetaModal(); }
 

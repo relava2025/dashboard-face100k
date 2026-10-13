@@ -407,6 +407,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
         </label>
         <input class="form-input" id="f-contaid" type="text" placeholder="Ex: a1b2c3d4-e5f6-...">
       </div>
+      <div class="form-field"><label class="form-label">Faturamento inicial (R$)</label><input class="form-input" id="f-fat-inicial" type="number" min="0" placeholder="Ex: 20000"></div>
       <div class="form-field"><label class="form-label">Meta Base (R$)</label><input class="form-input" id="f-meta-base" type="number" min="0" placeholder="Ex: 30000"></div>
       <div class="form-field"><label class="form-label">Meta Alvo (R$)</label><input class="form-input" id="f-meta-alvo" type="number" min="0" placeholder="Ex: 50000"></div>
       <div class="form-field"><label class="form-label">Super Meta (R$)</label><input class="form-input" id="f-meta-super" type="number" min="0" placeholder="Ex: 80000"></div>
@@ -783,7 +784,7 @@ function renderClients(){
         </div>
         <div class="health-chip"><div class="h-dot" style="background:${h.dotColor}"></div>${score?getHealthStatusLabel(score):'Sem health score'}${staleBadge}</div>
         ${obsPreview}
-        ${(c.metaBase||c.metaAlvo||c.metaSuper)?`<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">${c.metaBase?`<div style="font-size:11px;color:var(--text-sec)">Meta Base <strong style="color:var(--text);font-family:'JetBrains Mono',monospace">R$ ${Number(c.metaBase).toLocaleString('pt-BR')}</strong></div>`:''}${c.metaAlvo?`<div style="font-size:11px;color:var(--text-sec)">Meta Alvo <strong style="color:var(--amber);font-family:'JetBrains Mono',monospace">R$ ${Number(c.metaAlvo).toLocaleString('pt-BR')}</strong></div>`:''}${c.metaSuper?`<div style="font-size:11px;color:var(--text-sec)">Super Meta <strong style="color:var(--green);font-family:'JetBrains Mono',monospace">R$ ${Number(c.metaSuper).toLocaleString('pt-BR')}</strong></div>`:''}</div>`: ''}
+        ${(c.faturamentoInicial||c.metaBase||c.metaAlvo||c.metaSuper)?`<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">${c.faturamentoInicial?`<div style="font-size:11px;color:var(--text-sec)">Fat. inicial <strong style="color:var(--text);font-family:'JetBrains Mono',monospace">R$ ${Number(c.faturamentoInicial).toLocaleString('pt-BR')}</strong></div>`:''}${c.metaBase?`<div style="font-size:11px;color:var(--text-sec)">Meta Base <strong style="color:var(--text);font-family:'JetBrains Mono',monospace">R$ ${Number(c.metaBase).toLocaleString('pt-BR')}</strong></div>`:''}${c.metaAlvo?`<div style="font-size:11px;color:var(--text-sec)">Meta Alvo <strong style="color:var(--amber);font-family:'JetBrains Mono',monospace">R$ ${Number(c.metaAlvo).toLocaleString('pt-BR')}</strong></div>`:''}${c.metaSuper?`<div style="font-size:11px;color:var(--text-sec)">Super Meta <strong style="color:var(--green);font-family:'JetBrains Mono',monospace">R$ ${Number(c.metaSuper).toLocaleString('pt-BR')}</strong></div>`:''}</div>`: ''}
       </div>
       ${contractBanner}
       ${fbBanner}
@@ -825,6 +826,7 @@ function openModal(id=null){
     document.getElementById('f-esp-marketing').value=c.espMarketing||'';
     document.getElementById('f-traf-bonus').checked=!!c.trafficBonus;
     document.getElementById('f-start').value=c.startDate||'';
+    document.getElementById('f-fat-inicial').value=c.faturamentoInicial||'';
     document.getElementById('f-meta-base').value=c.metaBase||'';
     document.getElementById('f-meta-alvo').value=c.metaAlvo||'';
     document.getElementById('f-meta-super').value=c.metaSuper||'';
@@ -835,7 +837,7 @@ function openModal(id=null){
     document.getElementById('f-comb-ent').value=c.combinadoEntrega||'';
     document.getElementById('f-comb-obs').value=c.combinadoObs||'';
   } else {
-    ['f-name','f-spec','f-ig','f-esp-vendas','f-esp-prevendas','f-esp-marketing','f-contaid','f-meta-base','f-meta-alvo','f-meta-super','f-prazo','f-comb-pag','f-comb-ent','f-comb-obs','f-whatsapp','f-link-grupo'].forEach(i=>document.getElementById(i).value='');
+    ['f-name','f-spec','f-ig','f-esp-vendas','f-esp-prevendas','f-esp-marketing','f-contaid','f-fat-inicial','f-meta-base','f-meta-alvo','f-meta-super','f-prazo','f-comb-pag','f-comb-ent','f-comb-obs','f-whatsapp','f-link-grupo'].forEach(i=>document.getElementById(i).value='');
     document.getElementById('f-program').value='aceleracao';
     document.getElementById('f-traf-bonus').checked=false;
     document.getElementById('f-start').value=new Date().toISOString().split('T')[0];
@@ -865,6 +867,7 @@ async function saveClient(){
     metaBase:parseFloat(document.getElementById('f-meta-base').value)||0,
     metaAlvo:parseFloat(document.getElementById('f-meta-alvo').value)||0,
     metaSuper:parseFloat(document.getElementById('f-meta-super').value)||0,
+    faturamentoInicial:parseFloat(document.getElementById('f-fat-inicial').value)||0,
     prazoMeses:parseInt(document.getElementById('f-prazo').value)||0,
     whatsapp:document.getElementById('f-whatsapp').value.replace(/\D/g,''),
     linkGrupo:document.getElementById('f-link-grupo').value.trim(),
@@ -872,6 +875,14 @@ async function saveClient(){
     combinadoEntrega:document.getElementById('f-comb-ent').value.trim(),
     combinadoObs:document.getElementById('f-comb-obs').value.trim(),
   };
+  // mesmos numeros aparecem na call de Boas-vindas (aba Calls do cliente)
+  const brl=n=>n?'R$ '+Number(n).toLocaleString('pt-BR'):'';
+  // so mexe no que mudou, p/ nao apagar resposta escrita la que nao virou numero
+  const orig=allClients.find(x=>x.id===editingId)||{}, resp={};
+  [['fat_atual','faturamentoInicial'],['meta_base','metaBase'],['meta_alvo','metaAlvo'],['super_meta','metaSuper']].forEach(([q,k])=>{
+    if((data[k]||0)!==(orig[k]||0)) resp[q]=brl(data[k]);
+  });
+  if(Object.keys(resp).length) data.callsOnb={c1:{respostas:resp}};
   setSyncStatus('saving');
   try{
     await window._fb.save(id,data);
