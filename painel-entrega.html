@@ -390,6 +390,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
     <button class="filter-btn" onclick="setFilter('prod-prevendas',this)">Só Pré-vendas <span id="cnt-prod-prevendas" style="opacity:.7"></span></button>
     <button class="filter-btn" onclick="setFilter('formato-antigo',this)">Formato antigo</button>
     <button class="filter-btn" onclick="setFilter('fat-pendente',this)" data-filter="fat-pendente">💰 Faturamento pendente <span id="cnt-fat-pend" style="opacity:.7"></span></button>
+    <button class="filter-btn" onclick="setFilter('crm-bonus',this)">🎁 CRM bônus <span id="cnt-crm-bonus" style="opacity:.7"></span></button>
     <button class="filter-btn" onclick="setFilter('traf-bonus',this)" data-filter="traf-bonus">🎁 Tráfego bônus <span id="cnt-traf-bonus" style="opacity:.7"></span></button>
     <input class="search-input" id="search" type="text" placeholder="Buscar cliente..." oninput="renderClients()">
   </div>
@@ -437,6 +438,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
       <div class="form-field"><label class="form-label">Especialista de Marketing</label><input class="form-input" id="f-esp-marketing" type="text" placeholder="Ex: Pedro"></div>
       <div class="form-field"><label class="form-label">Tráfego</label>
         <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--text);padding:8px 0"><input type="checkbox" id="f-traf-bonus" style="accent-color:#C9A45C;width:16px;height:16px"> 🎁 Tráfego como bônus</label>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--text);padding:8px 0"><input type="checkbox" id="f-crm-bonus" style="accent-color:#C9A45C;width:16px;height:16px"> 🎁 CRM como bônus</label>
       </div>
       <div class="form-field"><label class="form-label">Data de início *</label><input class="form-input" id="f-start" type="date"></div>
       <div class="form-field"><label class="form-label">WhatsApp do cliente</label><input class="form-input" id="f-whatsapp" type="text" placeholder="Ex: 11999998888"></div>
@@ -641,6 +643,8 @@ function renderAll(){
   document.getElementById('st-healthy').textContent = tots.healthy;
 
 
+  const crmCnt = allClients.filter(c=>c.crmBonus).length;
+  const crmEl = document.getElementById('cnt-crm-bonus'); if(crmEl) crmEl.textContent = crmCnt ? '('+crmCnt+')' : '';
   const tbCnt = allClients.filter(c=>c.trafficBonus).length;
   const tbEl = document.getElementById('cnt-traf-bonus');
   if(tbEl) tbEl.textContent = tbCnt ? '('+tbCnt+')' : '';
@@ -733,6 +737,7 @@ function renderClients(){
       (currentFilter==='aceleracao' && prog==='aceleracao') ||
       (currentFilter==='ativacao' && prog==='ativacao') ||
       (currentFilter==='traf-bonus' && !!c.trafficBonus) ||
+      (currentFilter==='crm-bonus' && !!c.crmBonus) ||
       (currentFilter==='fat-pendente' && fatFaltando(c).length>0) ||
       (currentFilter==='prod-completo' && !PRODUTO_LABEL[c.produto]) ||
       (currentFilter==='prod-vendas' && c.produto==='vendas') ||
@@ -801,9 +806,9 @@ function renderClients(){
           : `<div style="padding:5px 18px;background:rgba(34,197,94,0.05);border-top:.5px solid rgba(34,197,94,0.12);display:flex;align-items:center;gap:6px"><span style="font-size:8px;padding:1px 6px;border-radius:4px;background:rgba(34,197,94,0.15);color:#22C55E;font-weight:700;font-family:'Montserrat',sans-serif">FLASHBOARD</span><span style="font-size:11px;color:#22C55E">${dias===0?'Preencheu hoje':'Há '+dias+'d'}</span></div>`)
       : '';
 
-    html += `<div class="c-card${c.trafficBonus?' is-traf-bonus':''}" onclick="openQuickPanel('${c.id}')">
+    html += `<div class="c-card${c.trafficBonus||c.crmBonus?' is-traf-bonus':''}" onclick="openQuickPanel('${c.id}')">
       <div class="c-accent ${h.accentCls}"></div>
-      ${c.trafficBonus?`<div class="tb-band" title="Tráfego entregue como bônus">🎁 Tráfego bônus</div>`:''}
+      ${c.trafficBonus||c.crmBonus?`<div class="tb-band" title="Entregue como bônus">🎁 ${[c.trafficBonus?'Tráfego':'',c.crmBonus?'CRM':''].filter(Boolean).join(' + ')} bônus</div>`:''}
       <div class="c-body">
         <div class="c-top">
           <div class="c-avatar">${ini}</div>
@@ -865,6 +870,7 @@ function openModal(id=null){
     document.getElementById('f-esp-prevendas').value=c.espPrevendas||'';
     document.getElementById('f-esp-marketing').value=c.espMarketing||'';
     document.getElementById('f-traf-bonus').checked=!!c.trafficBonus;
+    document.getElementById('f-crm-bonus').checked=!!c.crmBonus;
     document.getElementById('f-start').value=c.startDate||'';
     document.getElementById('f-fat-inicial').value=c.faturamentoInicial||'';
     document.getElementById('f-meta-base').value=c.metaBase||'';
@@ -881,6 +887,7 @@ function openModal(id=null){
     document.getElementById('f-program').value='aceleracao';
     document.getElementById('f-produto').value='completo';
     document.getElementById('f-traf-bonus').checked=false;
+    document.getElementById('f-crm-bonus').checked=false;
     document.getElementById('f-start').value=new Date().toISOString().split('T')[0];
   }
   document.getElementById('modal').classList.add('open');
@@ -905,6 +912,7 @@ async function saveClient(){
     espPrevendas:document.getElementById('f-esp-prevendas').value.trim(),
     espMarketing:document.getElementById('f-esp-marketing').value.trim(),
     trafficBonus:document.getElementById('f-traf-bonus').checked,
+    crmBonus:document.getElementById('f-crm-bonus').checked,
     startDate:document.getElementById('f-start').value,
     metaBase:parseFloat(document.getElementById('f-meta-base').value)||0,
     metaAlvo:parseFloat(document.getElementById('f-meta-alvo').value)||0,
@@ -1256,7 +1264,7 @@ function openQuickPanel(id){
 
   document.getElementById('qp-name').textContent = c.name||'—';
   const prog = c.program==='ativacao'?'Ativação':c.program==='aceleracao'?'Aceleração':'Mentoria';
-  document.getElementById('qp-sub').textContent = [c.spec, prog, c.trafficBonus?'🎁 Tráfego bônus':''].filter(Boolean).join(' · ');
+  document.getElementById('qp-sub').textContent = [c.spec, prog, c.trafficBonus?'🎁 Tráfego bônus':'', c.crmBonus?'🎁 CRM bônus':''].filter(Boolean).join(' · ');
 
   const score = c.healthScore||0;
   document.querySelectorAll('.qp-hs-btn').forEach(btn=>btn.classList.toggle('selected',parseInt(btn.dataset.score)===score));
