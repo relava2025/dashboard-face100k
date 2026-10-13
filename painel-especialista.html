@@ -289,7 +289,7 @@ function render(){
         </div>
         ${fatPend.length?`<div class="card">
           <div class="card-hdr"><div class="card-title">💰 Faturamento a preencher</div><div class="card-sub">últimos 3 meses · ${fatPend.length} cliente${fatPend.length!==1?'s':''}</div></div>
-          ${fatPend.map(x=>`<div class="q-row"><div class="q-main"><div class="q-name">${esc(x.c.name||'—')}</div><div class="q-step">Falta: <b>${x.falta.map(mesCurto).join(', ')}</b></div></div>
+          ${fatPend.map(x=>`<div class="q-row"><div class="q-main"><div class="q-name">${esc(x.c.name||'—')}</div><div class="q-step">Falta: <b>${x.falta.map(m=>['1º','2º','3º'][ms3.indexOf(m)]+' mês ('+mesCurto(m)+')').join(', ')}</b></div></div>
             <a class="q-open" href="cliente-entrega.html?cliente=${encodeURIComponent(x.c.id)}">Preencher</a></div>`).join('')}
         </div>`:''}
         ${antigos.length?`<div class="card">

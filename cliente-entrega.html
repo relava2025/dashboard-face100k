@@ -2492,8 +2492,8 @@ function renderFat3(){
       <div><div class="fat3-tit">Últimos 3 meses</div><div class="fat3-resp">Responsável: ${resp?escHtml(resp):'especialista da fase atual'}</div></div>
       <span class="fat3-tag${falta?'':' ok'}">${falta?falta+' pendente'+(falta>1?'s':''):'Em dia ✓'}</span>
     </div>
-    <div class="fat3-grid">${ms.map(m=>`<div>
-      <div class="fat3-mes">${fmtMes(m)}</div>
+    <div class="fat3-grid">${ms.map((m,i)=>`<div>
+      <div class="fat3-mes">${['Primeiro','Segundo','Terceiro'][i]} mês <span style="color:var(--text-dim);font-weight:500">· ${fmtMes(m)}</span></div>
       <input class="form-input fat3-in${fats[m]?'':' vazio'}" inputmode="numeric" placeholder="R$ a preencher" value="${fats[m]?'R$ '+Number(fats[m]).toLocaleString('pt-BR'):''}" onchange="saveFat3('${m}',this.value)">
     </div>`).join('')}</div>
   </div>`;
