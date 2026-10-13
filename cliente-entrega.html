@@ -982,7 +982,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
         <div class="brand-rail"></div>
 
         <!-- Fases de Marketing -->
-        <div class="section-card">
+        <div class="section-card" id="mkt-card">
           <div class="sc-header">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="flex-shrink:0"><path d="M2 12.5V9M6 12.5V5.5M10 12.5V3M14 12.5V7" stroke="var(--green)" stroke-width="1.4" stroke-linecap="round"/></svg>
             <div class="sc-title">Fases de Marketing</div>
@@ -1273,10 +1273,18 @@ function renderAll(){
 }
 
 // fase atual da jornada (mesma regra do renderTimeline): Vendas, Pré-vendas ou Marketing
+// produto define quais areas da jornada o cliente tem
+const PRODUTO_FASES={completo:['Vendas','Pré-vendas','Marketing'],vendas:['Vendas'],prevendas:['Pré-vendas']};
+function fasesProduto(){ return PRODUTO_FASES[S.produto]||PRODUTO_FASES.completo; }
+function callsOnbDoProduto(){
+  const f=fasesProduto(); let g='Vendas';
+  return CALLS_ONB.filter(c=>{ if(c.grupo) g=c.grupo==='PRÉ-VENDAS'?'Pré-vendas':c.grupo; return f.includes(g); }).map((c,i)=>({...c,num:i+1}));
+}
+function fasesMktDoProduto(){ return fasesProduto().includes('Marketing')?FASES_MKT:[]; }
 function getFaseAtual(){
   const onb=S.callsOnb||{}, mkt=S.callsMkt||{};
   let atual=null, primeira=null, grupo='Vendas';
-  for(const c of CALLS_ONB){
+  for(const c of callsOnbDoProduto()){
     if(c.grupo) grupo=c.grupo==='PRÉ-VENDAS'?'Pré-vendas':c.grupo;
     if(onb[c.id]?.realizada) continue;
     const r=onb[c.id]?.respostas||{};
@@ -1284,7 +1292,7 @@ function getFaseAtual(){
     if(!primeira) primeira={fase:grupo,title:c.title};
   }
   if(atual||primeira) return atual||primeira;
-  const m=FASES_MKT.find(c=>!mkt[c.id]?.realizada);
+  const m=fasesMktDoProduto().find(c=>!mkt[c.id]?.realizada);
   return m?{fase:'Marketing',title:m.title}:{fase:'Concluída',title:''};
 }
 function especialistaDaFase(fase){
@@ -1337,20 +1345,20 @@ function renderClientInfo(){
     combCard.style.display=comb.length?'block':'none';
     document.getElementById('ci-comb').innerHTML=comb.map(([k,v])=>`<div style="color:var(--text-sec);font-size:12px">${k}</div><div>${escHtml(v).replace(/\n/g,'<br>')}</div>`).join('');
   }
-  const members=[['Vendas',S.espVendas],['Pré-vendas',S.espPrevendas],['Marketing',S.espMarketing]].filter(x=>x[1]);
+  const members=[['Vendas',S.espVendas],['Pré-vendas',S.espPrevendas],['Marketing',S.espMarketing]].filter(x=>x[1]&&fasesProduto().includes(x[0]));
   team.innerHTML=members.map(([role,name2])=>`<div style="display:flex;align-items:center;gap:8px"><span style="font-size:10px;background:var(--amber-dim);color:var(--amber);border:0.5px solid var(--amber-border);padding:2px 7px;border-radius:4px;font-family:'Montserrat',sans-serif;font-weight:600">${role}</span><span style="font-size:14px;color:var(--text)">${name2}</span></div>`).join('');
 }
 
 function renderTimeline(){
   renderFaseBadges();
   const steps=document.getElementById('timeline-steps'); if(!steps) return;
-  const onb=S.callsOnb||{};
-  const feitas=CALLS_ONB.filter(c=>onb[c.id]?.realizada).length;
+  const onb=S.callsOnb||{}, ONB=callsOnbDoProduto(), MKT=fasesMktDoProduto();
+  const feitas=ONB.filter(c=>onb[c.id]?.realizada).length;
 
   // etapa "em andamento" = primeira nao realizada que ja tem alguma resposta,
   // senao a primeira pendente logo apos a ultima realizada
   let atualId=null;
-  for(const c of CALLS_ONB){
+  for(const c of ONB){
     if(onb[c.id]?.realizada) continue;
     const r=onb[c.id]?.respostas||{};
     if(Object.values(r).some(v=>v&&v.trim())){ atualId=c.id; break; }
@@ -1359,19 +1367,19 @@ function renderTimeline(){
 
   /* as 3 fases de marketing entram como um grupo no fim da jornada */
   const mkt=S.callsMkt||{};
-  const feitasMkt=FASES_MKT.filter(c=>mkt[c.id]?.realizada).length;
+  const feitasMkt=MKT.filter(c=>mkt[c.id]?.realizada).length;
   let atualMkt=null;
-  for(const c of FASES_MKT){
+  for(const c of MKT){
     if(mkt[c.id]?.realizada) continue;
     const it=mkt[c.id]?.itens||{};
     if(Object.values(it).some(v=>v&&v.ok)){ atualMkt=c.id; break; }
   }
-  const etapasMkt=FASES_MKT.map((c,i)=>({
-    id:c.id, num:CALLS_ONB.length+i+1, title:c.title.replace(/^Checkpoint (\d) — /,'CP$1 — '),
+  const etapasMkt=MKT.map((c,i)=>({
+    id:c.id, num:ONB.length+i+1, title:c.title.replace(/^Checkpoint (\d) — /,'CP$1 — '),
     grupo: i===0 ? 'Marketing' : null, tipo:'mkt',
     done: !!mkt[c.id]?.realizada, ativo: c.id===atualMkt, data: mkt[c.id]?.data||''
   }));
-  const etapasOnb=CALLS_ONB.map(c=>({
+  const etapasOnb=ONB.map(c=>({
     id:c.id, num:c.num, title:c.title, grupo:c.grupo||null, tipo:'onb',
     done: !!onb[c.id]?.realizada, ativo: c.id===atualId, data: onb[c.id]?.data||''
   }));
@@ -1605,14 +1613,15 @@ function renderCalls(){
 
 function renderCallsOnb(){
   const container=document.getElementById('calls-onb-list'); if(!container) return;
+  const ONB=callsOnbDoProduto();
   const onbData=S.callsOnb||{};
   if(!window._callsOnbOpen) window._callsOnbOpen={};
-  const done=CALLS_ONB.filter(c=>onbData[c.id]?.realizada).length;
-  const callCount=CALLS_ONB.filter(c=>c.type!=='delivery').length;
+  const done=ONB.filter(c=>onbData[c.id]?.realizada).length;
+  const callCount=ONB.filter(c=>c.type!=='delivery').length;
   const sub=document.getElementById('calls-onb-sub'); if(sub) sub.textContent=done+' de '+callCount+' realizadas';
   const checkSvg=`<svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L4 7.5L10 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 
-  container.innerHTML=CALLS_ONB.map(c=>{
+  container.innerHTML=ONB.map(c=>{
     const d=onbData[c.id]||{};
     const resps=d.respostas||{};
     const isDone=!!d.realizada;
@@ -1697,14 +1706,16 @@ let _mktTimer=null;
 
 function renderMkt(){
   const container=document.getElementById('mkt-list'); if(!container) return;
+  const MKT=fasesMktDoProduto();
+  const card=document.getElementById('mkt-card'); if(card) card.style.display=MKT.length?'':'none';
   const dados=S.callsMkt||{};
   if(!window._mktOpen) window._mktOpen={};
-  const done=FASES_MKT.filter(c=>dados[c.id]?.realizada).length;
+  const done=MKT.filter(c=>dados[c.id]?.realizada).length;
   const sub=document.getElementById('mkt-sub');
-  if(sub) sub.textContent=done+' de '+FASES_MKT.length+' checkpoints';
+  if(sub) sub.textContent=done+' de '+MKT.length+' checkpoints';
   const checkSvg=`<svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L4 7.5L10 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 
-  container.innerHTML=FASES_MKT.map(c=>{
+  container.innerHTML=MKT.map(c=>{
     const d=dados[c.id]||{};
     const it=d.itens||{};
     const isDone=!!d.realizada;
@@ -2144,9 +2155,9 @@ function renderFicha(){
 function renderDiagnostico(){
   const container=document.getElementById('diag-container'); if(!container) return;
   const onbData=S.callsOnb||{};
-  const totalItems=CALLS_ONB.length;
-  const doneCnt=CALLS_ONB.filter(c=>onbData[c.id]?.realizada).length;
-  const partialCnt=CALLS_ONB.filter(c=>{ const r=onbData[c.id]?.respostas||{}; return Object.values(r).some(v=>v&&v.trim()); }).length;
+  const totalItems=callsOnbDoProduto().length;
+  const doneCnt=callsOnbDoProduto().filter(c=>onbData[c.id]?.realizada).length;
+  const partialCnt=callsOnbDoProduto().filter(c=>{ const r=onbData[c.id]?.respostas||{}; return Object.values(r).some(v=>v&&v.trim()); }).length;
   const pct=Math.round(doneCnt/totalItems*100);
   const stageColor=doneCnt===0?'var(--text-sec)':doneCnt===totalItems?'var(--green)':'var(--amber)';
   const stageLabel=doneCnt===0?'Não iniciado':doneCnt===totalItems?'Diagnóstico completo':'Em construção';
@@ -2218,7 +2229,7 @@ function renderDiagnostico(){
 
   // ── REGISTRO POR CALL (detalhe, como antes) ──
   html+=`<div class="diag-sec-label">Registro por call</div>`;
-  CALLS_ONB.forEach(c=>{
+  callsOnbDoProduto().forEach(c=>{
     const d=onbData[c.id]||{};
     const resps=d.respostas||{};
     const isRealizada=!!d.realizada;
@@ -2481,7 +2492,7 @@ function ultimos3Meses(){
 }
 function respFaturamento(){
   const f=getFaseAtual().fase;
-  return especialistaDaFase(f)||S.espVendas||'';
+  return especialistaDaFase(f)||especialistaDaFase(fasesProduto()[0])||'';
 }
 function renderFat3(){
   const el=document.getElementById('fat-3m'); if(!el) return;

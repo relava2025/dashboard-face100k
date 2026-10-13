@@ -209,6 +209,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .jr-seg.now{background:transparent;box-shadow:inset 0 0 0 1px var(--amber)}
 .jr-glbl{font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim);font-family:'Montserrat',sans-serif;white-space:nowrap}
 .jr-grp.cur .jr-glbl{color:var(--text-sec)}
+.prod-badge{font-size:10px;padding:2px 8px;border-radius:4px;font-weight:600;font-family:'Montserrat',sans-serif;background:rgba(255,255,255,0.05);color:var(--text-sec);border:0.5px solid var(--border)}
 .prog-badge-ment{font-size:10px;padding:2px 8px;border-radius:4px;font-weight:600;font-family:'Montserrat',sans-serif;background:rgba(20,184,166,0.1);color:#14B8A6;border:0.5px solid rgba(20,184,166,0.25)}
 
 /* TUTORIAS MODAL SESSION ROW */
@@ -419,6 +420,13 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
           <option value="aceleracao">Aceleração — 42K (6 meses)</option>
           <option value="ativacao">Ativação — 17K (90 dias)</option>
           <option value="mentoria">Mentoria</option>
+        </select>
+      </div>
+      <div class="form-field"><label class="form-label">Produto (áreas da entrega)</label>
+        <select class="form-select" id="f-produto">
+          <option value="completo">Completo: Vendas, Pré-vendas e Marketing</option>
+          <option value="vendas">Só Vendas</option>
+          <option value="prevendas">Só Pré-vendas</option>
         </select>
       </div>
       <div class="form-field"><label class="form-label">Especialista de Vendas</label><input class="form-input" id="f-esp-vendas" type="text" placeholder="Ex: Alane"></div>
@@ -664,10 +672,14 @@ const JORNADA=[
 ];
 // etapa atual: onboarding = primeira pendente que já tem resposta, senão a primeira pendente;
 // marketing só entra quando todo o onboarding foi feito (ou já tem item marcado)
+// produto define quais areas da jornada o cliente tem
+const PRODUTO_FASES={completo:['Vendas','Pré-vendas','Marketing'],vendas:['Vendas'],prevendas:['Pré-vendas']};
+const PRODUTO_LABEL={vendas:'Só Vendas',prevendas:'Só Pré-vendas'};
+function jornadaDo(c){ const f=PRODUTO_FASES[c.produto]||PRODUTO_FASES.completo; return JORNADA.filter(g=>f.includes(g.fase)); }
 function getJornada(c){
   const onb=c.callsOnb||{}, mkt=c.callsMkt||{};
   let n=0, feitas=0, atual=null, primeiraPend=null, mktAtual=null;
-  const grupos=JORNADA.map(g=>({fase:g.fase,etapas:g.etapas.map(([id,title])=>{
+  const grupos=jornadaDo(c).map(g=>({fase:g.fase,etapas:g.etapas.map(([id,title])=>{
     n++;
     const src=g.mkt?mkt[id]:onb[id];
     const done=!!src?.realizada;
@@ -789,7 +801,7 @@ function renderClients(){
         <div class="c-top">
           <div class="c-avatar">${ini}</div>
           <div class="c-info">
-            <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px"><div class="c-name" style="margin-bottom:0">${c.name||'—'}</div><span class="${progBadgeCls}">${progLabel}</span></div>
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px"><div class="c-name" style="margin-bottom:0">${c.name||'—'}</div><span class="${progBadgeCls}">${progLabel}</span>${PRODUTO_LABEL[c.produto]?`<span class="prod-badge">${PRODUTO_LABEL[c.produto]}</span>`:''}</div>
             <div class="c-sub">${[c.spec, isFormatoAntigo(c)?'':(()=>{ const f=getJornada(c).cur?.fase; const n=f&&{'Vendas':c.espVendas,'Pré-vendas':c.espPrevendas,'Marketing':c.espMarketing}[f]; return n?`${f}: ${n}`:''; })()].filter(Boolean).join(' · ')}</div>
           </div>
           <div class="c-status-pill ${h.cls}">${h.label}</div>
@@ -841,6 +853,7 @@ function openModal(id=null){
     document.getElementById('f-ig').value=c.ig||'';
     document.getElementById('f-contaid').value=c.flashboardContaId||'';
     document.getElementById('f-program').value=c.program||'aceleracao';
+    document.getElementById('f-produto').value=c.produto||'completo';
     document.getElementById('f-esp-vendas').value=c.espVendas||'';
     document.getElementById('f-esp-prevendas').value=c.espPrevendas||'';
     document.getElementById('f-esp-marketing').value=c.espMarketing||'';
@@ -859,6 +872,7 @@ function openModal(id=null){
   } else {
     ['f-name','f-spec','f-ig','f-esp-vendas','f-esp-prevendas','f-esp-marketing','f-contaid','f-fat-inicial','f-meta-base','f-meta-alvo','f-meta-super','f-prazo','f-comb-pag','f-comb-ent','f-comb-obs','f-whatsapp','f-link-grupo'].forEach(i=>document.getElementById(i).value='');
     document.getElementById('f-program').value='aceleracao';
+    document.getElementById('f-produto').value='completo';
     document.getElementById('f-traf-bonus').checked=false;
     document.getElementById('f-start').value=new Date().toISOString().split('T')[0];
   }
@@ -879,6 +893,7 @@ async function saveClient(){
     ig:document.getElementById('f-ig').value.trim(),
     flashboardContaId:document.getElementById('f-contaid').value.trim(),
     program:document.getElementById('f-program').value,
+    produto:document.getElementById('f-produto').value,
     espVendas:document.getElementById('f-esp-vendas').value.trim(),
     espPrevendas:document.getElementById('f-esp-prevendas').value.trim(),
     espMarketing:document.getElementById('f-esp-marketing').value.trim(),

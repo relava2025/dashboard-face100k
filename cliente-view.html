@@ -755,7 +755,8 @@ function getHealthClass(s){if(s>=80)return'hc-green';if(s>=60)return'hc-yellow';
 function getJornada(){
   const onb=S.callsOnb||{}, mkt=S.callsMkt||{};
   let n=0, feitas=0, atual=null, primeira=null, mktAtual=null;
-  const grupos=JORNADA.map(g=>({fase:g.fase,esp:S[g.esp]||'',etapas:g.etapas.map(([id,title])=>{
+  const PF={vendas:['Vendas'],prevendas:['Pré-vendas']}[S.produto]||['Vendas','Pré-vendas','Marketing'];
+  const grupos=JORNADA.filter(g=>PF.includes(g.fase)).map(g=>({fase:g.fase,esp:S[g.esp]||'',etapas:g.etapas.map(([id,title])=>{
     n++;
     const src=g.mkt?mkt[id]:onb[id];
     const done=!!src?.realizada;
@@ -768,7 +769,7 @@ function getJornada(){
     return {id,title,done};
   })}));
   let cur=atual||primeira||mktAtual;
-  if(!cur){ const g=grupos[2], e=g.etapas.find(x=>!x.done); if(e) cur={...e,fase:g.fase}; }
+  if(!cur){ const g=grupos.find(x=>x.fase==='Marketing'), e=g&&g.etapas.find(x=>!x.done); if(e) cur={...e,fase:g.fase}; }
   return {grupos,feitas,total:n,cur};
 }
 function renderAll(){

@@ -138,6 +138,9 @@ const JORNADA=[
 const PARADO_DIAS=14;
 // clientes que começaram antes de 18/08/2026 seguem as 7 calls antigas (ids c2,c3,c5,c6,c7 só existem nelas)
 const CALLS_ANTIGAS=[['c1','Call de Boas-Vindas'],['c2','Call com a Equipe'],['c3','Call de Confiança'],['c4','Call de Esteira'],['c5','Entrega da Apresentação de Venda'],['c6','Call de Implementação'],['c7','Marketing e Vendas']];
+// produto define quais areas da jornada o cliente tem
+const PRODUTO_FASES={completo:['Vendas','Pré-vendas','Marketing'],vendas:['Vendas'],prevendas:['Pré-vendas']};
+function jornadaDo(c){ const f=PRODUTO_FASES[c.produto]||PRODUTO_FASES.completo; return JORNADA.filter(g=>f.includes(g.fase)); }
 function isFormatoAntigo(c){ const o=c.callsOnb||{}; return ['c2','c3','c5','c6','c7'].some(k=>o[k]); }
 
 let clients=[], espAtual=null;
@@ -152,7 +155,7 @@ function fmtData(iso){ return iso&&iso.length>=10 ? iso.slice(8,10)+'/'+iso.slic
 function faseAtual(c){
   const onb=c.callsOnb||{}, mkt=c.callsMkt||{};
   let atual=null, primeira=null, mktAtual=null;
-  for(const g of JORNADA) for(const [id,title] of g.etapas){
+  for(const g of jornadaDo(c)) for(const [id,title] of g.etapas){
     const src=g.mkt?mkt[id]:onb[id];
     if(src?.realizada) continue;
     if(g.mkt){ if(!mktAtual&&Object.values(src?.itens||{}).some(v=>v&&v.ok)) mktAtual={id,title,fase:g.fase}; }
@@ -162,7 +165,7 @@ function faseAtual(c){
     }
   }
   let cur=atual||primeira||mktAtual;
-  if(!cur){ const g=JORNADA[2]; const m=c.callsMkt||{}; const e=g.etapas.find(([id])=>!m[id]?.realizada); if(e) cur={id:e[0],title:e[1],fase:g.fase}; }
+  if(!cur){ const g=jornadaDo(c).find(x=>x.mkt); const m=c.callsMkt||{}; const e=g&&g.etapas.find(([id])=>!m[id]?.realizada); if(e) cur={id:e[0],title:e[1],fase:g.fase}; }
   return cur;
 }
 
@@ -176,7 +179,7 @@ function areaDoCliente(c,g){
 
 function especialistas(){
   const m=new Map();
-  clients.forEach(c=>JORNADA.forEach(g=>{
+  clients.forEach(c=>jornadaDo(c).forEach(g=>{
     const n=(c[g.campo]||'').trim(); if(!n) return;
     const k=norm(n);
     if(!m.has(k)) m.set(k,{nome:n,areas:new Set(),clientes:new Set()});
@@ -222,8 +225,8 @@ function render(){
 
   // tudo que é dele: cada par (cliente, área) em que ele é o especialista
   const itens=[], antigos=[];
-  clients.forEach(c=>{ if(isFormatoAntigo(c) && JORNADA.some(g=>norm(c[g.campo])===k)) antigos.push(c); });
-  clients.forEach(c=>JORNADA.forEach(g=>{
+  clients.forEach(c=>{ if(isFormatoAntigo(c) && jornadaDo(c).some(g=>norm(c[g.campo])===k)) antigos.push(c); });
+  clients.forEach(c=>jornadaDo(c).forEach(g=>{
     if(norm(c[g.campo])!==k || isFormatoAntigo(c)) return;
     const a=areaDoCliente(c,g), cur=faseAtual(c);
     const ordemCur=cur?JORNADA.findIndex(x=>x.fase===cur.fase):99, ordemG=JORNADA.indexOf(g);
@@ -234,8 +237,8 @@ function render(){
     itens.push({c,g,a,status,etapaAtual,dias:diasDesde(base),baseEhInicio:!a.ultima});
   }));
 
-  const areas=[...new Set(clients.flatMap(c=>JORNADA.filter(g=>norm(c[g.campo])===k).map(g=>g.fase)))];
-  const nClientes=new Set(clients.filter(c=>JORNADA.some(g=>norm(c[g.campo])===k)).map(c=>c.id)).size;
+  const areas=[...new Set(clients.flatMap(c=>jornadaDo(c).filter(g=>norm(c[g.campo])===k).map(g=>g.fase)))];
+  const nClientes=new Set(clients.filter(c=>jornadaDo(c).some(g=>norm(c[g.campo])===k)).map(c=>c.id)).size;
   const agora=itens.filter(i=>i.status==='agora').sort((a,b)=>(b.dias??-1)-(a.dias??-1));
   const aguardando=itens.filter(i=>i.status==='aguardando');
   const concluidos=itens.filter(i=>i.status==='concluido');
@@ -249,7 +252,7 @@ function render(){
   // faturamento dos 3 ultimos meses: cobra do especialista da fase atual (formato antigo: Vendas)
   const ms3=(()=>{ const d=new Date(),o=[]; for(let i=3;i>=1;i--){ const x=new Date(d.getFullYear(),d.getMonth()-i,1); o.push(x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')); } return o; })();
   const mesCurto=m=>['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'][Number(m.slice(5))-1];
-  const respFat=c=>{ if(isFormatoAntigo(c)) return c.espVendas; const cur=faseAtual(c); const g=cur&&JORNADA.find(x=>x.fase===cur.fase); return (g&&c[g.campo])||c.espVendas; };
+  const respFat=c=>{ if(isFormatoAntigo(c)) return c.espVendas; const cur=faseAtual(c); const g=cur&&JORNADA.find(x=>x.fase===cur.fase); return (g&&c[g.campo])||c[jornadaDo(c)[0].campo]; };
   const fatPend=clients.filter(c=>norm(respFat(c))===k).map(c=>({c,falta:ms3.filter(m=>!(c.faturamento||{})[m])})).filter(x=>x.falta.length);
 
   const segs=i=>`<div class="segs">${i.a.etapas.map(e=>`<div class="seg${e.done?' done':i.etapaAtual&&i.etapaAtual.id===e.id?' now':''}" title="${esc(e.title)}"></div>`).join('')}</div>`;
