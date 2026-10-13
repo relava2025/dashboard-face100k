@@ -354,6 +354,19 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .form-input{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'Inter',sans-serif;font-size:14px;padding:9px 12px;outline:none;transition:border-color .15s}
 .form-input:focus{border-color:var(--amber)}
 .form-input::placeholder{color:var(--text-dim)}
+/* faturamento dos ultimos 3 meses (equipe preenche) */
+.fat3{border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:18px;background:var(--surface2)}
+.fat3.pend{border-color:var(--amber-border)}
+.fat3-hdr{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.fat3-tit{font-size:13px;font-weight:700;color:var(--text);font-family:'Montserrat',sans-serif}
+.fat3-resp{font-size:12px;color:var(--text-sec);margin-top:2px}
+.fat3-tag{font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;font-family:'Montserrat',sans-serif;background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border)}
+.fat3-tag.ok{background:var(--green-dim);color:var(--green);border-color:var(--green-border)}
+.fat3-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.fat3-mes{font-size:11px;color:var(--text-sec);font-weight:600;text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px;font-family:'Montserrat',sans-serif}
+.fat3-in.vazio{border-color:var(--amber-border)}
+.fat3-outro{font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.12em;font-weight:700;margin-bottom:8px;font-family:'Montserrat',sans-serif}
+@media(max-width:600px){.fat3-grid{grid-template-columns:1fr}}
 .form-label{font-size:11px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.12em;font-family:'Montserrat',sans-serif;font-weight:600;margin-bottom:6px;display:block}
 .form-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
 .form-field{margin-bottom:10px}
@@ -943,6 +956,8 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
             <div class="sc-sub">Registre o faturamento de cada mês</div>
           </div>
           <div class="sc-body">
+            <div id="fat-3m"></div>
+            <div class="fat3-outro">Outro mês</div>
             <div class="form-grid-2" style="margin-bottom:14px">
               <div class="form-field">
                 <label class="form-label">Mês</label>
@@ -1487,6 +1502,7 @@ function renderFatChart(){
   const fats=S.faturamento||{};
   const meses=Object.keys(fats).sort((a,b)=>a.localeCompare(b));
   // lista de meses registrados
+  renderFat3();
   const fatList=document.getElementById('fat-list');
   if(fatList){
     if(meses.length){
@@ -2455,6 +2471,40 @@ async function selectHealthStatus(score){
   await save({healthScore:score,healthHistory:S.healthHistory});
   const msg=document.getElementById('hs-saved-msg');
   if(msg){ msg.style.display='block'; setTimeout(()=>msg.style.display='none',1800); }
+}
+
+// os 3 ultimos meses fechados: a equipe e responsavel por preencher
+function ultimos3Meses(){
+  const d=new Date(), out=[];
+  for(let i=3;i>=1;i--){ const x=new Date(d.getFullYear(),d.getMonth()-i,1); out.push(x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')); }
+  return out;
+}
+function respFaturamento(){
+  const f=getFaseAtual().fase;
+  return especialistaDaFase(f)||S.espVendas||'';
+}
+function renderFat3(){
+  const el=document.getElementById('fat-3m'); if(!el) return;
+  const fats=S.faturamento||{}, ms=ultimos3Meses();
+  const falta=ms.filter(m=>!fats[m]).length, resp=respFaturamento();
+  el.innerHTML=`<div class="fat3${falta?' pend':''}">
+    <div class="fat3-hdr">
+      <div><div class="fat3-tit">Últimos 3 meses</div><div class="fat3-resp">Responsável: ${resp?escHtml(resp):'especialista da fase atual'}</div></div>
+      <span class="fat3-tag${falta?'':' ok'}">${falta?falta+' pendente'+(falta>1?'s':''):'Em dia ✓'}</span>
+    </div>
+    <div class="fat3-grid">${ms.map(m=>`<div>
+      <div class="fat3-mes">${fmtMes(m)}</div>
+      <input class="form-input fat3-in${fats[m]?'':' vazio'}" inputmode="numeric" placeholder="R$ a preencher" value="${fats[m]?'R$ '+Number(fats[m]).toLocaleString('pt-BR'):''}" onchange="saveFat3('${m}',this.value)">
+    </div>`).join('')}</div>
+  </div>`;
+}
+async function saveFat3(mes,val){
+  const v=parseInt(String(val).replace(/\D/g,''))||0;
+  if(!S.faturamento) S.faturamento={};
+  if(v) S.faturamento[mes]=v; else delete S.faturamento[mes];
+  await save({faturamento:S.faturamento});
+  showToast(v?'Faturamento de '+fmtMes(mes)+' salvo!':'Mês limpo','success');
+  renderFatChart();
 }
 
 async function saveFaturamento(){

@@ -246,6 +246,12 @@ function render(){
   const noMes=entregas.filter(x=>(x.e.data||'').startsWith(mes)).length;
   const pendentes=itens.reduce((s,i)=>s+(i.a.total-i.a.feitas),0);
 
+  // faturamento dos 3 ultimos meses: cobra do especialista da fase atual (formato antigo: Vendas)
+  const ms3=(()=>{ const d=new Date(),o=[]; for(let i=3;i>=1;i--){ const x=new Date(d.getFullYear(),d.getMonth()-i,1); o.push(x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')); } return o; })();
+  const mesCurto=m=>['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'][Number(m.slice(5))-1];
+  const respFat=c=>{ if(isFormatoAntigo(c)) return c.espVendas; const cur=faseAtual(c); const g=cur&&JORNADA.find(x=>x.fase===cur.fase); return (g&&c[g.campo])||c.espVendas; };
+  const fatPend=clients.filter(c=>norm(respFat(c))===k).map(c=>({c,falta:ms3.filter(m=>!(c.faturamento||{})[m])})).filter(x=>x.falta.length);
+
   const segs=i=>`<div class="segs">${i.a.etapas.map(e=>`<div class="seg${e.done?' done':i.etapaAtual&&i.etapaAtual.id===e.id?' now':''}" title="${esc(e.title)}"></div>`).join('')}</div>`;
   const diasCls=d=>d===null?'':d>=PARADO_DIAS?'d-late':d>=7?'d-warn':'d-ok';
   const linha=(i,comDias)=>`<div class="q-row">
@@ -281,6 +287,11 @@ function render(){
           <div class="card-hdr"><div class="card-title">O que fazer agora</div><div class="card-sub">mais tempo sem entrega primeiro</div></div>
           ${agora.length?agora.map(i=>linha(i,true)).join(''):'<div class="empty">Nenhum cliente na sua fase agora.</div>'}
         </div>
+        ${fatPend.length?`<div class="card">
+          <div class="card-hdr"><div class="card-title">💰 Faturamento a preencher</div><div class="card-sub">últimos 3 meses · ${fatPend.length} cliente${fatPend.length!==1?'s':''}</div></div>
+          ${fatPend.map(x=>`<div class="q-row"><div class="q-main"><div class="q-name">${esc(x.c.name||'—')}</div><div class="q-step">Falta: <b>${x.falta.map(mesCurto).join(', ')}</b></div></div>
+            <a class="q-open" href="cliente-entrega.html?cliente=${encodeURIComponent(x.c.id)}">Preencher</a></div>`).join('')}
+        </div>`:''}
         ${antigos.length?`<div class="card">
           <div class="card-hdr"><div class="card-title">Formato antigo</div><div class="card-sub">começaram antes de 18/08 · fora das contas acima</div></div>
           ${antigos.map(c=>{ const o=c.callsOnb||{}; const f=CALLS_ANTIGAS.filter(([id])=>o[id]?.realizada).length;

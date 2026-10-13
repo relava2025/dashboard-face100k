@@ -192,6 +192,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .c-card.is-traf-bonus{border-color:rgba(201,164,92,0.45)}
 .c-card.is-traf-bonus:hover{border-color:var(--amber)}
 .tb-band{display:flex;align-items:center;gap:6px;padding:6px 18px;border-bottom:0.5px solid var(--amber-border);background:var(--amber-dim);color:var(--amber);font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+.fat-pend{margin-top:8px;font-size:11px;color:var(--amber);background:rgba(201,164,92,0.08);border:1px solid rgba(201,164,92,0.22);border-radius:6px;padding:4px 8px;display:inline-block}
 .sc-traf-bonus{cursor:pointer;transition:border-color .15s}
 .sc-traf-bonus:hover{border-color:var(--amber-border)}
 .jr{margin-bottom:12px}
@@ -371,6 +372,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
     <div class="stat-card sc-attention"><div class="stat-label">Em atenção</div><div class="stat-val sv-yellow" id="st-attention">0</div><div class="stat-sub">health score 40–79</div></div>
     <div class="stat-card sc-healthy"><div class="stat-label">Health boa</div><div class="stat-val sv-green" id="st-healthy">0</div><div class="stat-sub">score 80 ou mais</div></div>
     <div class="stat-card sc-traf-bonus" tabindex="0" onclick="setFilter('traf-bonus',document.querySelector('[data-filter=traf-bonus]'))" onkeydown="if(event.key==='Enter')this.click()"><div class="stat-label">🎁 Tráfego bônus</div><div class="stat-val sv-amber" id="st-traf-bonus">0</div><div class="stat-sub" id="st-traf-bonus-sub">clientes com tráfego cortesia</div></div>
+    <div class="stat-card sc-traf-bonus" tabindex="0" onclick="setFilter('fat-pendente',document.querySelector('[data-filter=fat-pendente]'))" onkeydown="if(event.key==='Enter')this.click()"><div class="stat-label">💰 Faturamento pendente</div><div class="stat-val sv-amber" id="st-fat-pend">0</div><div class="stat-sub" id="st-fat-pend-sub">últimos 3 meses</div></div>
   </div>
 
   <div class="filters-row">
@@ -383,6 +385,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
     <button class="filter-btn" onclick="setFilter('fase-prevendas',this)">Fase Pré-vendas</button>
     <button class="filter-btn" onclick="setFilter('fase-marketing',this)">Fase Marketing</button>
     <button class="filter-btn" onclick="setFilter('formato-antigo',this)">Formato antigo</button>
+    <button class="filter-btn" onclick="setFilter('fat-pendente',this)" data-filter="fat-pendente">💰 Faturamento pendente <span id="cnt-fat-pend" style="opacity:.7"></span></button>
     <button class="filter-btn" onclick="setFilter('traf-bonus',this)" data-filter="traf-bonus">🎁 Tráfego bônus <span id="cnt-traf-bonus" style="opacity:.7"></span></button>
     <input class="search-input" id="search" type="text" placeholder="Buscar cliente..." oninput="renderClients()">
   </div>
@@ -635,8 +638,22 @@ function renderAll(){
   const tbSub = document.getElementById('st-traf-bonus-sub');
   if(tbSub) tbSub.textContent = tbCnt ? (tbCnt===1?'cliente':'clientes')+' com tráfego cortesia' : 'nenhum cliente marcado';
 
+  const fpCnt = allClients.filter(c=>fatFaltando(c).length).length;
+  const fpEl = document.getElementById('cnt-fat-pend'); if(fpEl) fpEl.textContent = fpCnt ? '('+fpCnt+')' : '';
+  const fpSt = document.getElementById('st-fat-pend'); if(fpSt) fpSt.textContent = fpCnt;
+  const fpSub = document.getElementById('st-fat-pend-sub'); if(fpSub) fpSub.textContent = fpCnt ? 'sem faturamento de '+ultimos3Meses().map(fmtMesCurto).join(', ') : 'tudo preenchido';
+
   renderClients();
 }
+
+// faturamento dos 3 ultimos meses fechados: responsabilidade da equipe
+function ultimos3Meses(){
+  const d=new Date(), out=[];
+  for(let i=3;i>=1;i--){ const x=new Date(d.getFullYear(),d.getMonth()-i,1); out.push(x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')); }
+  return out;
+}
+function fatFaltando(c){ const f=c.faturamento||{}; return ultimos3Meses().filter(m=>!f[m]); }
+function fmtMesCurto(k){ return ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'][Number(k.slice(5))-1]; }
 
 // mesma jornada do cliente-entrega.html (CALLS_ONB + FASES_MKT)
 const JORNADA=[
@@ -699,6 +716,7 @@ function renderClients(){
       (currentFilter==='aceleracao' && prog==='aceleracao') ||
       (currentFilter==='ativacao' && prog==='ativacao') ||
       (currentFilter==='traf-bonus' && !!c.trafficBonus) ||
+      (currentFilter==='fat-pendente' && fatFaltando(c).length>0) ||
       (currentFilter==='formato-antigo' && isFormatoAntigo(c)) ||
       (currentFilter.startsWith('fase-') && !isFormatoAntigo(c) && (()=>{ const cur=getJornada(c).cur; const f=cur?cur.fase:''; return {'fase-vendas':'Vendas','fase-prevendas':'Pré-vendas','fase-marketing':'Marketing'}[currentFilter]===f; })()) ||
       false;
@@ -784,6 +802,7 @@ function renderClients(){
         </div>
         <div class="health-chip"><div class="h-dot" style="background:${h.dotColor}"></div>${score?getHealthStatusLabel(score):'Sem health score'}${staleBadge}</div>
         ${obsPreview}
+        ${(()=>{ const f=fatFaltando(c); return f.length?`<div class="fat-pend" title="A equipe precisa preencher na aba Metas e faturamento">💰 Faturamento pendente: ${f.map(fmtMesCurto).join(', ')}</div>`:''; })()}
         ${(c.faturamentoInicial||c.metaBase||c.metaAlvo||c.metaSuper)?`<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">${c.faturamentoInicial?`<div style="font-size:11px;color:var(--text-sec)">Fat. inicial <strong style="color:var(--text);font-family:'JetBrains Mono',monospace">R$ ${Number(c.faturamentoInicial).toLocaleString('pt-BR')}</strong></div>`:''}${c.metaBase?`<div style="font-size:11px;color:var(--text-sec)">Meta Base <strong style="color:var(--text);font-family:'JetBrains Mono',monospace">R$ ${Number(c.metaBase).toLocaleString('pt-BR')}</strong></div>`:''}${c.metaAlvo?`<div style="font-size:11px;color:var(--text-sec)">Meta Alvo <strong style="color:var(--amber);font-family:'JetBrains Mono',monospace">R$ ${Number(c.metaAlvo).toLocaleString('pt-BR')}</strong></div>`:''}${c.metaSuper?`<div style="font-size:11px;color:var(--text-sec)">Super Meta <strong style="color:var(--green);font-family:'JetBrains Mono',monospace">R$ ${Number(c.metaSuper).toLocaleString('pt-BR')}</strong></div>`:''}</div>`: ''}
       </div>
       ${contractBanner}
