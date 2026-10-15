@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-  import { getFirestore, collection, onSnapshot, doc, setDoc, deleteDoc, getDoc, updateDoc, enableNetwork } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+  import { getFirestore, collection, onSnapshot, doc, setDoc, deleteDoc, getDoc, getDocs, updateDoc, enableNetwork } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
   const firebaseConfig = {
     apiKey:"AIzaSyAyupUdCsEb6pPVmTs2clhayS84-TUovGA",
     authDomain:"dashboard-e465d.firebaseapp.com",
@@ -38,7 +38,23 @@
     async exclude(id){ await updateDoc(doc(db,"entrega",id),{status:'excluido',excluidoEm:new Date().toISOString()}); },
     async delete(id){ await deleteDoc(doc(db,"entrega",id)); },
     async getDoc(id){ const s=await getDoc(doc(db,"entrega",id)); return s.exists()?s.data():null; },
-    async updateCronograma(id,cronograma){ await updateDoc(doc(db,"entrega",id),{cronograma}); }
+    async updateCronograma(id,cronograma){ await updateDoc(doc(db,"entrega",id),{cronograma}); },
+    // espelha no painel Instagram (colecao "dashboards"): casa por entregaId, depois @ do insta, depois nome
+    async espelharInstagram(id,c){
+      const norm=s=>(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim().replace(/\s+/g,' ');
+      const hdl=s=>{ s=(s||'').trim(); const m=s.match(/instagram\.com\/([^/?#]+)/i); if(m) s=m[1]; return s.replace(/^@/,'').toLowerCase(); };
+      const snap=await getDocs(collection(db,"dashboards"));
+      let alvo=null;
+      snap.forEach(d=>{ if(!alvo&&d.data().entregaId===id) alvo=d.id; });
+      if(!alvo&&hdl(c.ig)) snap.forEach(d=>{ if(!alvo&&hdl(d.data().ig)===hdl(c.ig)) alvo=d.id; });
+      if(!alvo&&c.name) snap.forEach(d=>{ if(!alvo&&norm(d.data().name)===norm(c.name)) alvo=d.id; });
+      const p={entregaId:id,name:c.name};
+      if(c.ig) p.ig=c.ig;
+      if(c.spec) p.spec=c.spec;
+      if(c.whatsapp) p.contato=c.whatsapp;
+      if(alvo) await setDoc(doc(db,"dashboards",alvo),p,{merge:true});
+      else await setDoc(doc(db,"dashboards",id),{...p,ativo:true,procedimentos:[]},{merge:true});
+    }
   };
   window.dispatchEvent(new Event("fb-ready"));
 </script>
@@ -936,6 +952,7 @@ async function saveClient(){
   setSyncStatus('saving');
   try{
     await window._fb.save(id,data);
+    try{ await window._fb.espelharInstagram(id,data); }catch(e){ console.warn('Falha ao espelhar no painel Instagram:',e); }
     closeModal();
     showToast(editingId?'Cliente atualizado!':'Cliente cadastrado!','success');
   } catch(e){ showToast('Erro ao salvar','error'); setSyncStatus('error'); }
